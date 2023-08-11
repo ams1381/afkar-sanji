@@ -1,0 +1,48 @@
+.otp_sms
+{
+    letter-spacing: 10px;
+}
+.otp__change_number i {
+    background: url('../../public/Icons/EditNumber.svg') center no-repeat;
+    width: 30px;
+}
+.otp_section {
+    display: flex;
+    justify-content: space-between;
+    margin: 0.4rem 0 0.7rem 0;
+    font-family: IRANSans;
+    color: var(--primary-color);
+}
+.otp__change_number {
+    display: flex;
+    cursor: pointer;
+}
+.resend_otp_sms 
+{
+    position: absolute;
+    right: 0.6rem;
+    display: flex;
+    cursor: pointer;
+    color: var(--primary-color);
+    font-family: IRANSans;
+    font-size: 14px;
+    top: 0.55rem;
+    cursor: pointer;
+    
+}
+.login__header {
+    margin-bottom: 5.2rem;
+}
+.confirm_button
+{
+    width: 100%;
+    padding: 6px 14px 6px 14px;
+    border: 1px solid var(--login-confirm-btn-border);
+    font-size: 1rem;
+    font-family: IRANSans;
+    border-radius: 2px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
