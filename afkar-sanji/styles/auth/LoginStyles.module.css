@@ -38,11 +38,33 @@
     width: 100%;
     padding: 6px 14px 6px 14px;
     border: 1px solid var(--login-confirm-btn-border);
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-family: IRANSans;
     border-radius: 2px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-top: 0.8rem;
+    height: 40px;
+}
+.input_error_occur
+{
+    border: 2px solid var(--login-err-message-color) !important;
+}
+.otp_input
+{
+    letter-spacing: 10px;
+}
+.otp_input::placeholder
+{
+    letter-spacing: 5px;
+}
+.input_box_active
+{
+    border: 2px solid #7ACCFF !important;
+}
+.otp_header_text::after 
+{
+    width: 50% !important;
 }

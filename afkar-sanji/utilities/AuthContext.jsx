@@ -4,8 +4,14 @@ export const AuthContext =  React.createContext();
 
 const AuthContextProvider = ({ children }) => {
     const [ PhoneNumber , SetPhoneNumber ] =  useState(null);
-
-    return <AuthContext.Provider value={{ PhoneNumber : PhoneNumber , changePhone : SetPhoneNumber }}>
+    const [ otpSMS , SetOTP ] = useState(null);
+    const InitialValue = {
+         PhoneNumber : PhoneNumber , 
+         changePhone : SetPhoneNumber ,
+         SMSCode : otpSMS,
+         ChangeOTP : SetOTP
+    }
+    return <AuthContext.Provider value={InitialValue}>
         { children }
     </AuthContext.Provider>
 }

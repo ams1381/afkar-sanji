@@ -10,6 +10,7 @@ export const Button = styled.button`
     font-family: IRANSans;
     border-radius: 2px;
     cursor: pointer;
+    margin-top: 0.6rem;
 `
 export const LoginContainer = styled.div`
     width: 100%;
@@ -25,6 +26,7 @@ export const LoginContainer = styled.div`
         opacity: 50%;
         filter: blur(142px);
         border-radius: 50%;
+        z-index: -2;
     }
     &::before 
     {
@@ -41,6 +43,7 @@ export const LoginForm = styled.form`
   height: 100%;
   display: flex;
   flex-direction: column;
+  text-align : right;
 `
 export const LoginHeaderText = styled.h2`
     margin: 20px auto;
@@ -50,31 +53,33 @@ export const LoginHeaderText = styled.h2`
     -webkit-text-fill-color: white;
     -webkit-text-stroke: 1px var(--primary-color);
     position: relative;
+    font-family: Arial, Helvetica, sans-serif;
+    overflow: hidden;
 
     &::after 
     {
-        content: 'Afkar Sanji';
+        content: 'Afkar-Sanji';
         position: absolute;
         top: 0;
         left: 0;
         -webkit-text-fill-color: var(--primary-color);
         width: 0;
         overflow: hidden;
-        transition: .6s;
+        transition: .3s;
+        text-overflow: clip;
+        text-align: left;
     }
 `
 export const LoginInput = styled.input`
     width: 100%;
-    border: 2px solid var(--login-input-border-color);
+    border : none;
     background: var(--login-input-bg-color);
     padding: 8px 12px 8px 12px;
     outline: none;
     -moz-appearance: textfield;
     color: var(--login-input-text-color);
     font-family: 'IRANSANS';
-    border-radius: 4px;
-    transition: 0.3s border;
-
+    
     &::placeholder 
     {
         color: var(--login-input-placeholder-color);
@@ -110,6 +115,10 @@ export const InputBox = styled.div`
     flex-wrap: wrap;
     margin: 0.8rem 0 0.5rem 0;
     position: relative;
+    border-radius: 4px;
+    justify-content: space-between;
+    border: 2px solid ${p => p.focused ? 'var(--login-input-default-border)' : '#7ACCFF'} ;
+    transition: 0.3s border;
 `
 export const FormChildDiv = styled.div`
     color: var(--form-body-header-color);
@@ -120,20 +129,27 @@ export const FormChildDiv = styled.div`
     font-family: IRANSans;
 `
 export const ClearLoginInputButton = styled.span`
-    position: absolute;
-    right: 0.6rem;
-    top: 0.8rem;
     display: flex;
+    width: 10%;
+    background: white;
+    position: absolute;
+    height: 100%;
+    top: 0;
+    right: 0;
     cursor: pointer;
+    justify-content: center;
+    align-items: center;
 
     & i 
     {
-        background: url('../../public/Icons/Shape.svg');
-        width: 15px;
-        height: 15px;
-        background-repeat: no-repeat;
+        background: url('/Icons/ClearInput.svg') no-repeat;
         background-position: center;
+        width : 15px;
+        height : 15px;
     }
+    
+
+
 `
 export const LoginErrorMessage = styled.span`
     margin: 0.5rem 0 0.5rem 0;
@@ -141,5 +157,6 @@ export const LoginErrorMessage = styled.span`
     color: var(--login-err-message-color);
     font-weight: 700;
     font-family: 'IRANSANS';
-    font-size: 19px;
+    font-size: 14px;
+    transition : 0.3s;
 `

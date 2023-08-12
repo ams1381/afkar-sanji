@@ -1,3 +1,11 @@
+@font-face {
+  font-family: IRANSans;
+  src: url('../public/Fonts/IRANSans\ Regular.woff');
+}
+@font-face {
+  font-family: Gilory;
+  src: url('../public/Fonts/Gilroy-Light.woff');
+}
 * {
   box-sizing: border-box;
   padding: 0;
@@ -11,9 +19,8 @@
   --login-input-border-color : #7ACCFF;
   --login-input-bg-color : #FEFEFE;
   --login-input-placeholder-color : #A3A3A3;
+  --login-input-default-border : #D9D9D9;
   --form-body-header-color : #8F8F8F;
   --login-confirm-btn-border : #7C86FA;
   --login-err-message-color : #FF4D4F;
-
-
 }
