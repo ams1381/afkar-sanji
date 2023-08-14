@@ -1,13 +1,16 @@
 import Login_container from '@/components/auth/LoginContainer';
 import { AuthContext } from '@/utilities/AuthContext';
 import { axiosInstance } from '@/utilities/axios';
+import { useLocalStorage } from '@/utilities/useLocalStorage';
 import { message } from 'antd';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { useContext } from 'react'
 
 
 const OTPSms = () => {
   const [LoginMessage, contextHolder] = message.useMessage();
+  const { setItem } = useLocalStorage();
   const router = useRouter();
   const Auth = useContext(AuthContext);
   Auth.Login_Context_value = {
@@ -17,15 +20,18 @@ const OTPSms = () => {
   }
 
   Auth.Login_Function = async () => {
-    const number_phone_res = await axiosInstance.post('/user-api/auth/verify-otp/' , { 'token' : Auth.SMSCode , 'phone_number' : Auth.PhoneNumber });
-    if(number_phone_res.status == 201) 
+    const otp_res = await axiosInstance.post('/user-api/auth/verify-otp/' , { 'token' : Auth.SMSCode , 'phone_number' : Auth.PhoneNumber });
+    if(otp_res.status == 201) 
     {
       LoginMessage.success({
         content : 'ورود با موفقیت انجام شد' ,
         duration : 4
       })
-      Auth.cookie = number_phone_res.data.access;
-      router.push("/folders")
+      setItem('phoneNumber',Auth.PhoneNumber);
+      setItem('cookie',otp_res.data.access);
+      axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + otp_res.data.access;
+
+      router.push("../")
     }
     else
     {
@@ -37,6 +43,9 @@ const OTPSms = () => {
    }
   return (
     <>
+    <Head>
+        <title>Afkar Sanji</title>
+    </Head>
     {contextHolder}
     <Login_container />
     </>

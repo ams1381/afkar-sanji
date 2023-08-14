@@ -1,11 +1,16 @@
 import axios from "axios";
+import { useRouter } from "next/router";
+import { AuthContext } from "./AuthContext";
 axios.defaults.baseURL = 'https://mostafarm7.pythonanywhere.com';
+
+// const router = useRouter();
 
 export const axiosInstance = axios.create({
     headers: {
         'Content-Type': 'application/json'
     }
 });
+
 axiosInstance.interceptors.request.use(function (config) {
     // Do something before request is sent
     return config;
@@ -20,11 +25,22 @@ axiosInstance.interceptors.response.use(function (response) {
     // Do something with response data
     
     return response;
-}, function (error) {
+}, async function  (error) {
     console.log(error)
     switch(error.response.status)
     {
         case 401:
+            if(AuthContext.Cookie)
+            {
+                let { refresh }  = await axiosInstance.post('/user-api/auth/refresh-token/');
+                AuthContext.Cookie = refresh
+                axiosInstance.request(error.config)
+            }
+            else
+            {
+                return
+            }
+            // axiosInstance.request(error.config)
             break;
         case 404:
             break;

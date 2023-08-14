@@ -15,6 +15,12 @@
 { 
   --primary-color : #5360ED;
 
+  /* Folders Page */
+  --Neutral-Gray9 : #525252;
+  --Neutral-Gray10 : #3D3D3D;
+  --SideBar-header-border : #0000000F;
+  --Error-color : #FF4D4F;
+  /* Login Page */
   --login-input-text-color : #656565;
   --login-input-border-color : #7ACCFF;
   --login-input-bg-color : #FEFEFE;

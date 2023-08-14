@@ -1,10 +1,37 @@
+import { Header } from '@/components/common/Header';
+import SideBar from '@/components/common/SideBar';
+import { ScreenMask } from '@/styles/common';
+import { CornerAddButton } from '@/styles/folders/cornerAdd';
+import AddPopoverContent from '@/components/Folders/AddPopoverContent';
+import { ContentBox } from '@/styles/folders/Questionnaire';
+import QuestionnaireBox from '@/components/Folders/questionnaire';
+import { Popover } from 'antd';
+import { Icon } from '@/styles/folders/icons';
 import Head from 'next/head'
-import Image from 'next/image'
-// import { Inter } from 'next/font/google'
-
-// const inter = Inter({ subsets: ['latin'] })
+import { useEffect, useState } from 'react';
+import { axiosInstance } from '@/utilities/axios';
+import { useRouter } from 'next/router';
+import FolderPopoverContent from '@/components/Folders/FolderPopover';
+import { QuestionnaireContainer , MainContainer ,
+   FolderEditContainer, FolderPopoverToggle 
+   , EmptyFolderContainer} from '@/styles/folders/Questionnaire';
 
 export default function Home() {
+  const router = useRouter();
+  const [ folders , setFolder ] = useState(null);
+  const [ SelectedFolder , SelectFolder ] = useState(0);
+  useEffect(() => {
+    const getData = async () => {
+     let response = await axiosInstance.get('/user-api/folders/');
+     response ? setFolder(response.data) : '' 
+    }
+    getData();
+  },[])
+  
+  const [ SideBarOpen , setOpen ] = useState(false);
+  const [ addPopOver , setAddPopover ]= useState(false);
+  const [ FolderPopover , setFolderPopover ]= useState(false)
+
   return (
     <>
       <Head>
@@ -13,7 +40,67 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
+      <>
+    <Head>
+        <title>Afkar Sanji</title>
+    </Head>
+      <Header SetSideBar={() => setOpen(!SideBarOpen)} />
+      <SideBar folders={folders} IsOpen={SideBarOpen}  ChangeFolder={SelectFolder}
+      SetSideBar={() => setOpen(!SideBarOpen)}/>
+      <ScreenMask shown={SideBarOpen ? 'true' : null} onClick={() => setOpen(false)}/>
+      <Popover
+            content={AddPopoverContent}
+            trigger="click"
+            open={addPopOver}
+            onOpenChange={() => setAddPopover(false)}
+            style={{marginRight : 15}}
+            >
+                <CornerAddButton clicked={addPopOver ? 'true' : null} onClick={() => setAddPopover(!addPopOver)}>
+                  <Icon name='add' />
+                </CornerAddButton>
+        </Popover>
+    </>
+    <ContentBox>
+      {
+        folders && folders.length !== 0 ? <MainContainer>
+   <>
+        
+        <FolderEditContainer>
+            <Popover
+            trigger="click"
+            content={FolderPopoverContent}
+            open={FolderPopover}
+            placement="bottom"
+            onOpenChange={() => setFolderPopover(false)}>
+                  <FolderPopoverToggle onClick={() => setFolderPopover(!FolderPopover)}>
+                    <Icon name='Menu' /> 
+                  </FolderPopoverToggle>
+            </Popover>
+                  <p>{folders[SelectedFolder].name}</p>
+              </FolderEditContainer>
+              
+      <QuestionnaireContainer>
+        {folders[SelectedFolder].questionnaires.map((item) => <QuestionnaireBox Questionnaire={item} key={item.id} />)} 
+         
+      </QuestionnaireContainer>
+        </> 
+        </MainContainer> 
+        : folders ?  <EmptyFolderContainer>
+            <p>برای مدیریت کردن پرسشنامه پوشه درست کنید</p>
+            <button onClick={() => setOpen(true)}>
+                <p>پوشه ها</p>
+                <i>
+                    <svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5.20669 1.5H5.17539L4.06235 0.609566C3.97369 0.53864 3.86354 0.5 3.75 0.5H2C0.89543 0.5 0 1.39543 0 2.5V2.99998H3.5567L5.20669 1.5Z" fill="#EEF0FF"/>
+                        <path d="M6.6933 1.5L4.08633 3.86995C3.9943 3.95362 3.87438 3.99998 3.75 3.99998H0V8.5C0 9.60457 0.89543 10.5 2 10.5H10C11.1046 10.5 12 9.60457 12 8.5V3.5C12 2.39543 11.1046 1.5 10 1.5H6.6933Z" fill="#EEF0FF"/>
+                        </svg>
+                        
+                </i>
+               </button>
+        </EmptyFolderContainer> : 'loading'
+      }
+    </ContentBox>
+    
     </>
   )
 }

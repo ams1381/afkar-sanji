@@ -1,0 +1,9 @@
+.QuestionnaireDiv
+{
+    width: 95%;
+    margin: 0.2rem auto;
+    height: fit-content;
+    border: 1px dotted #CCCCCC;
+    border-radius: 2px;
+    font-family: 'IRANSans';
+}
