@@ -16,6 +16,7 @@ export const LoginContainer = styled.div`
     width: 100%;
     position: relative;
     height: 100vh;
+    
     &::before , &::after 
     {
         width: 30%;
@@ -27,16 +28,33 @@ export const LoginContainer = styled.div`
         filter: blur(142px);
         border-radius: 50%;
         z-index: -2;
+        animation-delay: 1s;
     }
     &::before 
     {
         left: 0;
         top: 0;
+        animation : ${p => p.filltext ? 'LoginContainerBeforeAnim 2s ease' : 'none'};
     }
     &::after 
     {
         right: 0;
         bottom: 0;
+
+    }
+    @keyframes LoginContainerBeforeAnim
+    {
+        25% { bottom : 0 }
+        50% { top : 0  }
+        75% { bottom : 0 }
+        100% { top : 0 }
+    }
+    @keyframes LoginContainerAfterAnim
+    {
+        25% { top : 0  }
+        50% { bottom : 0  }
+        75% { top : 0  }
+        100% { bottom : 0 }
     }
 `
 export const LoginForm = styled.form`
@@ -55,10 +73,13 @@ export const LoginHeaderText = styled.h2`
     position: relative;
     font-family: Arial, Helvetica, sans-serif;
     overflow: hidden;
+    transition : 0.3s;
+    animation : ${p => p.filltext ? 'LoginTitleAnim 2s ease' : 'none'};
+    animation-delay: 1s;
 
     &::after 
     {
-        content: 'Afkar-Sanji';
+        content: 'AfkarSanji';
         position: absolute;
         top: 0;
         left: 0;
@@ -68,6 +89,14 @@ export const LoginHeaderText = styled.h2`
         transition: .3s;
         text-overflow: clip;
         text-align: left;
+        width : ${p => p.filltext ? '100% !important' : ''};
+    }
+    @keyframes LoginTitleAnim 
+    {
+        25% { transform : scale(1.5)  }
+        50% { transform : scale(1)  }
+        75% { transform : scale(1.5)  }
+        100% { transform : scale(1)  }
     }
 `
 export const LoginInput = styled.input`

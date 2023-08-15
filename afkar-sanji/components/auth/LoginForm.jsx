@@ -10,7 +10,7 @@ import { Button , ConfigProvider , message } from 'antd';
 import { themeContext } from '@/utilities/ThemeContext';
 import { AuthValidator } from '@/utilities/AuthValidators';
 
-export const Login_form = () => {
+export const Login_form = ({ setLoggedIn }) => {
   const [ loadingState , setLoading ] = useState(false);
   const [ errMessage , setErMessage ] = useState(null);
   const [messageApi, contextHolder] = message.useMessage()
@@ -29,18 +29,16 @@ export const Login_form = () => {
         throw AuthValidator(form_input,LoginContext.Login_Context_value.FormType)
       
       await LoginContext.Login_Function(e);
+      if(LoginContext.Login_Context_value.FormType == 'OTP_SMS')
+        setLoggedIn();
     }
     catch(error)
     {
       console.log(error)
       if(typeof error == 'string')
         setErMessage(error)
-      if(typeof error == 'object')
+      if(typeof error == 'object' && error.response)
         setErMessage(error.response.data[0])
-      // if(typeof error != 'string' && Array.isArray(error.response.data))
-      //   setErMessage(error.response.data[0])
-      // else
-      //   setErMessage(error)
     }
     finally
     {
@@ -55,7 +53,7 @@ export const Login_form = () => {
         <div>
           { LoginContext.Login_Context_value.FormType == 'PhoneNumber' ? 
           <LoginFormInput ErrorHandler={{message : errMessage , SetNull : setErMessage}}/> :
-            <LoginFormOTPInput ErrorHandler={{message : errMessage , SetNull : setErMessage}} /> 
+            <LoginFormOTPInput  ErrorHandler={{message : errMessage , SetNull : setErMessage}} /> 
           }
           <ConfigProvider theme={themeContext}>
               <Button onClick={authentication} className={StyleModules['confirm_button']} type="primary" loading={loadingState}>

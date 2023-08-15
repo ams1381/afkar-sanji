@@ -2,6 +2,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { AuthContext } from "./AuthContext";
 axios.defaults.baseURL = 'https://mostafarm7.pythonanywhere.com';
+import { message } from "antd";
 
 // const router = useRouter();
 
@@ -26,21 +27,19 @@ axiosInstance.interceptors.response.use(function (response) {
     
     return response;
 }, async function  (error) {
-    console.log(error)
     switch(error.response.status)
     {
         case 401:
-            if(AuthContext.Cookie)
+            try
             {
                 let { refresh }  = await axiosInstance.post('/user-api/auth/refresh-token/');
-                AuthContext.Cookie = refresh
+                axiosInstance.defaults.headers['Authorization'] = refresh;
                 axiosInstance.request(error.config)
             }
-            else
+            catch(err)
             {
-                return
+                window.location.pathname = '/auth'
             }
-            // axiosInstance.request(error.config)
             break;
         case 404:
             break;

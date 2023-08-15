@@ -9,31 +9,36 @@ import { useLocalStorage } from '@/utilities/useLocalStorage';
 
 export const LoginFormOTPInput = ({ErrorHandler}) => {
     const Router = useRouter();
-    const [ timeOut , ChangeTimeOut]  = useState(false);
+    const [ timeOutState , ChangeTimeOutState]  = useState(false);
     const { getItem } = useLocalStorage();
-    const [ timer , SetTimer ] = useState(120);
-    const [InputFocus , SetFocus ] = useState(false);
+    const [ timer , SetTimer ] = useState(60);
+    const [InputFocusState , SetFocusState ] = useState(false);
     const CountDown = Statistic.Countdown;
     const LoginContext =  useContext(AuthContext);
-    setTimeout(() => {
-        SetTimer(timer - 1)
-    },1000);
+
     useEffect(() => {
         LoginContext.ChangeOTP(null);
         if (typeof window !== 'undefined') {
             LoginContext.changePhone(getItem('phoneNumber'));
           }
-          
     },[])
+    setTimeout(() => {
+        if(timer == 0)
+        {
+            clearTimeout(this);
+            ChangeTimeOutState(true)
+            return
+        }
+        SetTimer(timer - 1)
+
+    },1000);
+    
     const resend_sms = async () => {
         try 
         {
             await axiosInstance.post('/user-api/auth/gateway/', { phone_number : LoginContext.PhoneNumber })
-            ChangeTimeOut(false);
-            SetTimer(120)
-            setTimeout(() => {
-                SetTimer(timer - 1)
-            },1000)
+            ChangeTimeOutState(false);
+            SetTimer(60)
         }
         catch(error)
         {
@@ -52,22 +57,22 @@ export const LoginFormOTPInput = ({ErrorHandler}) => {
   return (
     <>
     <InputBox className={ErrorHandler.message ? OtpClasses['input_error_occur'] : '' }
-        focused={!InputFocus ? 'true' : null}>
+        focused={!InputFocusState ? 'true' : null}>
         <LoginInput type="number"  name="otp_code" maxLength="5" 
         
-        disabled={timeOut.current ? true : false}
+        
         required pattern="[0-9]{5}"
         value={LoginContext.SMSCode ? LoginContext.SMSCode : ''}
             placeholder="_ _ _ _ _" 
             onChange={input_change_handler}
-            onFocus={() => SetFocus(true)}
+            onFocus={() => SetFocusState(true)}
             onBlur={() => {
-            SetFocus(false)
+            SetFocusState(false)
             }}
             className={OtpClasses['otp_input']} 
             />
             {
-                timeOut ? <span className={OtpClasses["resend_otp_sms"]} onClick={resend_sms}>
+                timeOutState ? <span className={OtpClasses["resend_otp_sms"]} onClick={resend_sms}>
                 <p>ارسال دوباره</p>
             </span>
                 : <ClearLoginInputButton onClick={() => LoginContext.ChangeOTP(null)}>
@@ -82,9 +87,9 @@ export const LoginFormOTPInput = ({ErrorHandler}) => {
         <div className={OtpClasses["otp__timer"]}>
             <CountDown 
             format='mm:ss' 
-            value={!timeOut ? (Date.now() + timer * 1000 ): null}
+            value={!timeOutState ? (Date.now() + timer * 1000 ) : null}
             valueStyle = {{ color : 'var(--primary-color)' , fontSize : 16 }}
-            onFinish={() => ChangeTimeOut(true)}
+            onFinish={() => ChangeTimeOutState(true)}
                 />
         </div>
         <div className={OtpClasses["otp__change_number"]} onClick={() => Router.push('./')}>

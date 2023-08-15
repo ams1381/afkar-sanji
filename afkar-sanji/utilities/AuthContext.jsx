@@ -9,7 +9,8 @@ const AuthContextProvider = ({ children }) => {
          PhoneNumber : PhoneNumber , 
          changePhone : SetPhoneNumber ,
          SMSCode : otpSMS,
-         ChangeOTP : SetOTP
+         ChangeOTP : SetOTP,
+         isLoggedIn : false
     }
     return <AuthContext.Provider value={InitialValue}>
         { children }

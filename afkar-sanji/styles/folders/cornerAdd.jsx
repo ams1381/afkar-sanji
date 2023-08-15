@@ -12,7 +12,7 @@ export const CornerAddButton = styled.button`
     position: fixed;
     bottom: 1rem;
     right: 1rem;
-    z-index: 5;
+    z-index: 1;
     transition : 0.3s;
     display: flex;
     justify-content: center;

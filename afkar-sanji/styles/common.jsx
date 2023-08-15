@@ -58,7 +58,7 @@ export const SideBarContainer = styled.div`
     box-shadow: 2px 0 10px #00000040;
     font-family: IRANSans;
     transition: 0.3s;
-    z-index: 2;
+    z-index: 3;
 `
 export const SideBarHeader = styled.div`
     display: flex;
@@ -86,7 +86,13 @@ export const SideBarInputBox = styled.div`
     text-align: right;
     color: var(--Neutral-Gray9);
     width: 95%;
-    margin: 0 auto;
+    margin: 0.8rem auto;
+
+    & p 
+    {
+        font-size: 13px;
+        margin-right: 0.7rem;
+    }
 `
 export const SideBarInput = styled.input`
     width: 95%;
@@ -131,6 +137,7 @@ export const SideBarConfirmButton = styled.button`
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    outline: none;
 `
 export const SideBarTitle = styled.div`
     display: flex;
@@ -160,5 +167,5 @@ export const ScreenMask = styled.div`
     background : var(--Neutral-Gray10);
     transition : 0.4s;
     cursor : pointer;
-    z-index : ${p => p.shown ? '1' : '-1'}
+    z-index : ${p => p.shown ? '2' : '-1'}
 `

@@ -1,34 +1,36 @@
 import { styled } from "styled-components";
 
 export const FolderPopoverContainer = styled.div`
-    width: 137px;
     height: 100px;
     margin: 0 auto;
     display: flex;
     justify-content: space-around;
     flex-direction: column;
     font-family: 'IRANSANS';
-    padding: 0 0.5rem 0 0.5rem;
+    padding: 0 1rem 0 1rem;
 `
 export const FolderPopoverItem =  styled.div`
-    width : 95%;
-    margin : 0.5rem auto;
-    display : flex;
-    justify-content : space-between;
-    cursor : pointer;
-    color : ${p => p.deleteitem ? 'red' : ''};
-
+    width: 105%;
+    margin: 0.5rem auto;
+    display: flex;
+    justify-content: space-between;
+    
     & button
     {
-        background : none;
-        border : none;
-        display : flex;
-        justify-content : center;
-        align-items : center;
+        background: none;
+        border: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: 'IRANSANS';
+        width: 100%;
+        cursor: pointer;
+        color : ${p => p.deleteitem ? 'red' : ''};
     }
     & button i 
     {
         display : flex;
+        margin-right : 2rem
     }
 ` 
 export const SharePopoverContainer = styled.div`

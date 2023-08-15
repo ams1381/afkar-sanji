@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { HeaderComponent, UserAvatarLogout , 
     SideBarToggleButton , LogoutPopOverInfo, LogoutPopOverLayout} from '@/styles/common';
 import { Button, ConfigProvider, Popover } from 'antd';
@@ -6,27 +6,17 @@ import { AuthContext } from '@/utilities/AuthContext';
 import { themeContext } from '@/utilities/ThemeContext';
 import { useLocalStorage } from '@/utilities/useLocalStorage';
 import { Icon } from '@/styles/folders/icons';
+import AvatarComponent from './LogoutPopover';
 
 export const Header = ({SetSideBar}) => {
     const [ logoutPopOver , switchPopover ] = useState(false);
     const { getItem , setItem} = useLocalStorage();
     const Auth = useContext(AuthContext);
-    Auth.changePhone(getItem('phoneNumber'))
-    const AvatarComponent = <LogoutPopOverLayout>
-    <LogoutPopOverInfo>
-        <i>
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M10 2C7.79086 2 6 3.79086 6 6C6 8.20914 7.79086 10 10 10C12.2091 10 14 8.20914 14 6C14 3.79086 12.2091 2 10 2ZM5.00873 11C3.90315 11 3 11.8869 3 13C3 14.6912 3.83281 15.9663 5.13499 16.7966C6.41697 17.614 8.14526 18 10 18C11.8547 18 13.583 17.614 14.865 16.7966C16.1672 15.9663 17 14.6912 17 13C17 11.8956 16.1045 11 15 11L5.00873 11Z" fill="#525252"/>
-            </svg>
-        </i>
-        <p>
-            { Auth.PhoneNumber }
-        </p>
-    </LogoutPopOverInfo>
-    <ConfigProvider theme={themeContext}>
-        <Button type='primary'> خروج از حساب </Button>
-    </ConfigProvider>
-    </LogoutPopOverLayout>
+    useEffect(() => {
+        Auth.changePhone(getItem('phoneNumber'))
+    },[])
+    
+    // const AvatarComponent = 
   return (
     <HeaderComponent>
         <ConfigProvider theme={themeContext}>
@@ -34,15 +24,12 @@ export const Header = ({SetSideBar}) => {
             content={AvatarComponent}
             trigger="click"
             open={logoutPopOver}
+            overlayInnerStyle={{ marginLeft : 15}}
             onOpenChange={() => switchPopover(false)}
             style={{width : 190}}
             >
                 <UserAvatarLogout onClick={() => switchPopover(!logoutPopOver)}>
                     <Icon name='User' />
-                    {/* <i><svg width="14" height="17" viewBox="0 0 14 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M7 0.5C4.79086 0.5 3 2.29086 3 4.5C3 6.70914 4.79086 8.5 7 8.5C9.20914 8.5 11 6.70914 11 4.5C11 2.29086 9.20914 0.5 7 0.5ZM2.00873 9.5C0.903151 9.5 0 10.3869 0 11.5C0 13.1912 0.83281 14.4663 2.13499 15.2966C3.41697 16.114 5.14526 16.5 7 16.5C8.85474 16.5 10.583 16.114 11.865 15.2966C13.1672 14.4663 14 13.1912 14 11.5C14 10.3956 13.1045 9.50001 12 9.50001L2.00873 9.5Z" fill="#EEF0FF"/>
-                        </svg>
-                    </i> */}
                 </UserAvatarLogout>
             </Popover>
         </ConfigProvider>

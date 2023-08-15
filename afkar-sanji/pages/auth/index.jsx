@@ -14,7 +14,7 @@ const AuthMainPage = () => {
   const { removeItem , setItem} = useLocalStorage();
   const router = useRouter();
   const Auth = useContext(AuthContext);
-  console.log(Auth)
+
   removeItem('cookie')
   Auth.Login_Context_value = {
     FormBodyMessage : 'لطفا شماره همراهت را وارد کن',

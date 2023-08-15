@@ -2,19 +2,36 @@ import { styled } from "styled-components";
 
 export const QuestionnaireContainer = styled.div`
     width: 95%;
-    margin: 0 auto;
+    margin: 0.6rem auto;
+    padding-bottom: 1rem;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(351px, 1fr));
-    gap: 1rem;
+    row-gap: 2rem;
+    grid-template-columns: repeat(auto-fill,minmax(406px,1fr));
+    justify-items: baseline;
+    direction: rtl;
+    grid-auto-flow: dense;
+
+    @media screen and (max-width : 480px)
+    {
+        grid-template-columns: auto;
+    }
 `
 export const QuestionnaireDiv = styled.div`
-    width: 80%;
-    margin: 0.2rem auto;
     height: fit-content;
     border: 1px dotted #CCCCCC;
     border-radius: 2px;
     font-family: 'IRANSans';
+    width: 420px;
+    direction: ltr;
 
+    @media screen and (max-width : 680px)
+    {
+        &
+        {
+           margin : 0.4rem auto;
+        }
+       
+    }
     @media screen and (max-width : 480px)
     {
         &
@@ -33,6 +50,7 @@ export const QuestionnaireHeader = styled.div`
     padding: 0.7rem 0 0.5rem 0;
     color: var(--Neutral-Gray9);
     border-bottom: 1px solid #F0F0F0;
+    word-break: break-word;
 `
 export const QuestionnaireBodyStat = styled.div`
     display: flex;
@@ -56,10 +74,10 @@ export const QuestionnaireNameInput = styled.input`
     color: var(--Neutral-Gray9);
     font-weight: 600;
     font-size: 1rem;
-    width: 100px;
     transition : 0.3s;
     margin-left: 0.4rem;
     outline: none;
+    max-width: 264px;
 
     &::selection 
     {
@@ -170,6 +188,7 @@ export const EmptyFolderContainer = styled.div`
         align-items: center;
         font-family: IRANSans;
         margin: 0.8rem auto;
+        direction : ltr;
     }
     & button i 
     {

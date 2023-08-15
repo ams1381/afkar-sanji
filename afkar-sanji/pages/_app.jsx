@@ -3,22 +3,22 @@ import AuthContextProvider, { AuthContext } from '@/utilities/AuthContext'
 import { axiosInstance } from '@/utilities/axios'
 import { useLocalStorage } from '@/utilities/useLocalStorage'
 import { useRouter } from 'next/router'
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 
 export default function App({ Component, pageProps }) {
   const router = useRouter();
-  // const auth = useContext(AuthContext);
 
   const { getItem , setItem } = useLocalStorage();
+
     const authentication = async () => {
     if(getItem('cookie'))
     {
+      axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + getItem('cookie');
       try
       {
-        axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + getItem('cookie');
         let { data } = await axiosInstance.get('/user-api/users/me/');
         setItem('phoneNumber',data.phone_number)
-        
+        return
       }
       catch(err)
       {
@@ -29,20 +29,11 @@ export default function App({ Component, pageProps }) {
     }
     else
         router.push('/auth')
-  //     //  
-  //     console.log(await axiosInstance.get('/user-api/users/me/'))
-  //     // 
-  //     }
-  //     catch(err)
-  //     {
-  //         router.push('/auth')
-  //         return
-  //     }
   }
-  useEffect(() => {
-    authentication();
-  },[])
-  // authentication();
+
+    if(router.pathname !== '/auth' && router.pathname !== '/auth/otpSms')
+      authentication();
+
   return <AuthContextProvider>
     <Component {...pageProps} />
   </AuthContextProvider> 

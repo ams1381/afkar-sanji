@@ -1,30 +1,31 @@
 import { SharePopoverContainer , SharePopoverButton } from '@/styles/folders/Popovers'
+import { Icon } from '@/styles/folders/icons'
 import React from 'react'
 
 
-export const SharePopOver = () => {
+export const SharePopOverContent = () => {
   return (
     <>
     <SharePopoverContainer>
     <div>
-      <p>
-        تلگرام
-      </p>
+      <a>
+        <Icon name='Linkedin' />
+      </a>
     </div>
     <div>
-      <p>
-        ایتا
-      </p>
+      <a>
+        <Icon name='Instagram' />
+      </a>
     </div>
     <div>
-      <p>
-        تلگرام
-      </p>
+       <a>
+        <Icon name='Whatsapp'/>
+      </a>
     </div>
     <div>
-      <p>
-        تلگرام
-      </p>
+      <a>
+        <Icon name='Eaita'/>
+      </a>
     </div>
   </SharePopoverContainer>
   <SharePopoverButton>

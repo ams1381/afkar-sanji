@@ -5,28 +5,29 @@ import { AuthContext } from '@/utilities/AuthContext';
 
 const LoginFormInput = ({ErrorHandler}) => {
   const LoginContext =  useContext(AuthContext);
-  const [InputFocus , SetFocus ] = useState(false);
-  const [ showClear , SetClear ] = useState(false);
+  const [InputFocusState , SetFocusState ] = useState(false);
+  const [ showClearState , SetClearState ] = useState(false);
+  
 
   return (
     <>
     <InputBox className={ErrorHandler.message ? OtpClasses['input_error_occur'] : ''}
-        focused={!InputFocus ? 'true' : null}>
+        focused={!InputFocusState ? 'true' : null}>
         <LoginInput type="number"
           name="phoneNumber"
           value={LoginContext.PhoneNumber ? LoginContext.PhoneNumber : ''}
-          onFocus={() => SetFocus(true)}
+          onFocus={() => SetFocusState(true)}
           onBlur={() => {
-          SetFocus(false)
+          SetFocusState(false)
           }}
           onChange={(e) =>  {
-          SetClear(true);
+          SetClearState(true);
           LoginContext.changePhone(e.target.value);
           ErrorHandler.SetNull(null);
           }}
           placeholder="09** *** ***" /> 
           {
-          showClear ? <ClearLoginInputButton onClick={() => LoginContext.changePhone(null)}>
+          showClearState ? <ClearLoginInputButton onClick={() => LoginContext.changePhone(null)}>
           <i></i>
         </ClearLoginInputButton> : ''
           }

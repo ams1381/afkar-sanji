@@ -3,16 +3,19 @@ import { QuestionnaireFooter , QuestionnaireFooterItem , QuestionnaireFooterButt
 } from '@/styles/folders/Questionnaire'
 import { Icon } from '@/styles/folders/icons'
 import { Popover } from 'antd';
-import { SharePopOver } from './SharePopover'
+import { SharePopOverContent } from './SharePopover'
+import RemovePopoverContent from './RemovePopover';
+import Link from 'next/link';
 
-const QuestionnaireFooterPart = () => {
+const QuestionnaireFooterPart = ({ questionnaire , FolderReload }) => {
     const [ SharePopover , setSharePopOver] = useState(false);
+    const [ DeletePopoverState , setDeletePopoverState ] = useState(false);
 
   return (
     <QuestionnaireFooter>
         <QuestionnaireFooterItem>
             <Popover
-            content={SharePopOver}
+            content={SharePopOverContent}
             trigger="click"
             open={SharePopover}
             onOpenChange={() => setSharePopOver(false)}
@@ -24,13 +27,27 @@ const QuestionnaireFooterPart = () => {
             
         </QuestionnaireFooterItem>
         <QuestionnaireFooterItem>
-            <QuestionnaireFooterButton>
+            <Popover 
+            content={<RemovePopoverContent FolderReload={FolderReload} questionnairesUUID={questionnaire.uuid}/>}
+            trigger="click"
+            open={DeletePopoverState}
+            onOpenChange={() => setDeletePopoverState(false)}
+            >
+            <QuestionnaireFooterButton onClick={() => setDeletePopoverState(!DeletePopoverState)}>
                 <Icon name='trash' />
             </QuestionnaireFooterButton>
+            </Popover>
         </QuestionnaireFooterItem>
         <QuestionnaireFooterItem>
             <QuestionnaireFooterButton>
-            <Icon name='GrayPen' />
+                <Link href={{
+                    pathname : '/questionnaire/',
+                    query : {
+                        uuid : questionnaire.uuid
+                    }
+                }}>
+                    <Icon name='GrayPen' />
+                </Link>
             </QuestionnaireFooterButton>
         </QuestionnaireFooterItem>
         <QuestionnaireFooterItem>
@@ -38,7 +55,6 @@ const QuestionnaireFooterPart = () => {
             <Icon name='statics' />
             </QuestionnaireFooterButton>
         </QuestionnaireFooterItem>
-        
         <QuestionnaireFooterItem>
             <QuestionnaireFooterButton>
             <Icon name='pdf' />
