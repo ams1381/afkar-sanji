@@ -4,7 +4,7 @@ import {  QuestionnaireHeader ,  QuestionnaireBodyStat ,
 import { QuestionnaireDiv , QuestionnaireSeeResultButton , RenameSpan } from '@/styles/folders/Questionnaire';
 import BadgeStyle from '@/styles/folders/Questionnaire.module.css'
 import jalaali from 'jalaali-js';
-import { Badge, Card, Space } from 'antd';
+import { Badge, Card, Skeleton, Space } from 'antd';
 import PN from "persian-number";
 import QuestionnaireFooterPart from './questionnaireFooter';
 import { axiosInstance } from '@/utilities/axios';
@@ -22,7 +22,7 @@ const QuestionnaireBox = ({Questionnaire , FolderReload}) => {
     const nameRef = useRef(null);
     
     useEffect(() => {
-            nameRef.current ? nameRef.current.style.width = ((nameRef.current.value.length * 7)+ 5) + 'px' : ''
+            nameRef.current ? nameRef.current.style.width = ((nameRef.current.value.length * 7) + 10) + 'px' : ''
     },[])
     const RenameStateHandler = () => {
         setChangeNameState(!ChangeNameActive)
@@ -54,7 +54,7 @@ const QuestionnaireBox = ({Questionnaire , FolderReload}) => {
         <Badge.Ribbon className={BadgeStyle['QuestionnaireBadge']} color={Questionnaire.is_active ? "green" : "red"} text={Questionnaire.is_active ? 'فعال' : 'غیر فعال'}  
      style={{marginTop : 30 , fontFamily : 'IRANSans' , fontSize : 13 , color : '#00000040'}}>
          <QuestionnaireHeader>
-             <QuestionnaireNameContainer>
+             {Questionnaire ? <QuestionnaireNameContainer>
                  <QuestionnaireNameInput ref={nameRef} type="text" onChange={nameInputChangeHandler}
                   value={QuestionnaireName} disabled={!ChangeNameActive}/>
                  <RenameSpan clickable={(ChangeNameActive && !QuestionnaireName) ? null : 'true'} 
@@ -62,7 +62,7 @@ const QuestionnaireBox = ({Questionnaire , FolderReload}) => {
              
                     {!ChangeNameActive ? <Icon name='RenameQuestionnaire' /> : <Icon name='RenameQuestionnaireCheck' />}
                  </RenameSpan>
-             </QuestionnaireNameContainer>
+             </QuestionnaireNameContainer> : <Skeleton active /> }
              <div className="questionnaire_preview">
                  <QuestionnairePreviewButton>
                      پیش نمایش
@@ -71,14 +71,15 @@ const QuestionnaireBox = ({Questionnaire , FolderReload}) => {
          </QuestionnaireHeader>
          <div className="questionnaire_body">
              <div className="questionnaire_stats">
-                 <QuestionnaireBodyStat>
+                { Questionnaire ?
+                <> <QuestionnaireBodyStat>
                      <p>{PN.convertEnToPe(convertToJalaliDate(Questionnaire.pub_date))}</p>
                      <p>درست شده در</p>
                  </QuestionnaireBodyStat>
                  <QuestionnaireBodyStat>
                      <p>{PN.convertEnToPe(Questionnaire.answer_count)}</p>
                      <p>تعداد پاسخ دهنده:</p>
-                 </QuestionnaireBodyStat>
+                 </QuestionnaireBodyStat> </>: <Skeleton active />}
              </div>
              <div className="questionnaire_see_result">
                  <QuestionnaireSeeResultButton>

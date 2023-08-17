@@ -45,12 +45,31 @@ export const QuestionnaireDirectoryContainer = styled.div`
         padding: 0.2rem;
         margin-right : 0.5rem;
     }
+    & > div
+    {
+        display : flex;
+    }
 `
 export const QuestionnaireDirectoryPath = styled.div`
-    color : #A3A3A3;
     margin-left: 0.5rem;
     align-items: center;
     display : flex;
+
+    & span 
+    {
+        color : #A3A3A3;
+        margin-left: 0.4rem;
+    }
+    & p 
+    {
+        font-weight: 700;
+    }
+    & a 
+    {
+        text-decoration: none;
+        color: var(--Neutral-Gray9);
+        margin-left: 0.5rem;
+    }
 `
 export const QuestionnaireEditItemsContainer = styled.div`
     display: flex;
@@ -58,6 +77,11 @@ export const QuestionnaireEditItemsContainer = styled.div`
     flex-direction: row-reverse;
     font: 13px IRANSans;
     margin: 1rem auto;
+
+    @media screen and (max-width : 768px)
+    {
+        flex-direction: column-reverse;
+    }
 `
 export const QuestionnaireEditItemsInnerContainer = styled.div`
     display: flex;
@@ -101,6 +125,6 @@ export const QuestionnaireEditButtonContainer = styled.div`
     }
     @media screen and (max-width : 480px)
     {
-        display : none;
+        margin-bottom: 0.7rem;
     }
 `

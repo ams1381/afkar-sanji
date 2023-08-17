@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Button, ConfigProvider, Modal } from 'antd'
-import RemoveFolderPopUpContent from './RemoveFolderPopUp';
+import RemoveFolderPopUpContent from '../Folders/RemoveFolderPopUp';
 import { RemoveModalButtonsContainer } from '@/styles/folders/Popup';
 const RemovePopup = ({ onOkay , DeleteState , setDeleteState , title}) => {
   const [ Loading , SetLoading ] = useState(false);

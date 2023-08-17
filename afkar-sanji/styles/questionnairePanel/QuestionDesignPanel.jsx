@@ -67,9 +67,9 @@ export const QuestionDesignBox = styled.div`
         {
             width: 100%;
         }
-        & div:last-child
+        & .QuestionDesignLeftContainer
         {
-            display: none;
+            display : none;
         }
     }
 `
@@ -78,6 +78,17 @@ export const QuestionDesignItem = styled.div`
     border: 2px solid #D9D9D9;
     border-radius: 2px;
     margin: 0.6rem auto;
+
+    .question_bold_info 
+    {
+        display : flex;
+    }
+    .question_bold_info  .question_type_selector {
+        border: 1px solid var(--primary-color);
+        background: #F5F5F5;
+        display: flex;
+        align-items: center;
+}
 `
 export const QuestionItemSurface = styled.div`
     width: 100%;
@@ -96,9 +107,17 @@ export const DropDownQuestionButton = styled.button`
     border: none;
     cursor: pointer;
     outline: none;
+    margin-left: 0.5rem;
+
+    & i 
+    {
+        transition : 0.3s;
+        transform : ${p => p.dropped ? 'rotate(-90deg)' : 'none'};
+    }
+    
 `
 export const QuestionItemButtonContainer = styled.div`
-    width: 10%;
+    width: 20%;
     display: flex;
     justify-content: space-between;
 
@@ -110,5 +129,74 @@ export const QuestionItemButtonContainer = styled.div`
         display: flex;
         align-items: center;
         cursor: pointer;
+        
+    }
+    @media screen and (max-width : 480px)
+    {
+        width: 35%;
+    }
+   
+`
+export const QuestionItemActionSelector = styled.div`
+    width: 100%;
+    margin-top: 0.8rem;
+    border-top: 1px solid #0000000F;
+    display: flex;
+`
+export const QuestionItemActionButton = styled.button`
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    background: none;
+    border: none;
+    border-bottom : ${p => p.selected ? '1px solid var(--primary-color)' : 'none'};
+    color : ${p => p.selected ? 'var(--primary-color)' : '--Neutral-Gray9'};
+    flex-direction: row-reverse;
+    font: 12px IRANSans;
+    height: 40px;
+    align-items: center;
+    cursor: pointer;
+    margin-top: 0.4rem;
+    transition : 0.3s;
+    & p 
+    {
+        margin-left: 0.5rem
+    }
+    & svg
+    {
+        transition : 0.3s;
+        fill : ${p => p.selected ? 'var(--primary-color)' : '#8F8F8F'}
+    }
+`
+export const QuestionItemSettingContainer = styled.div`
+    width: 100%;
+    margin-top: 1rem;
+`
+export const QuestionItemTitleContainer = styled.div`
+    height: 40px;
+    border: 1px solid var(--primary-color);
+    border-radius: 2px;
+    width: 100%;
+`
+export const QuestionItemTitleInput = styled.input` 
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    text-align: right;
+    font-family: 'IRANSANS';
+    padding: 0.7rem;
+`
+export const QuestionItemFooter = styled.div`
+    display : flex;
+    gap : 10px;
+    margin-top: 0.7rem;
+    button 
+    {
+        width : 50%;
+        height : 34px;
+        border-radius : 2px;
+        text-align : center;
+        font-family : IRANSans;
     }
 `

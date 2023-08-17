@@ -5,6 +5,7 @@ import { AddFolderButtons, SideBarCancelButton, SideBarConfirmButton, SideBarCon
 import { Icon } from '@/styles/icons';
 import { axiosInstance } from '@/utilities/axios';
 import { Skeleton } from 'antd';
+import PN from "persian-number";
 import React, { useState } from 'react'
 
 const SideBar = ({ IsOpen , SetSideBar , folders , SelectedFolder , ChangeFolder , FolderReload}) => {
@@ -71,7 +72,7 @@ const SideBar = ({ IsOpen , SetSideBar , folders , SelectedFolder , ChangeFolder
             {
                 folders ? folders.map((item,index) => <SideBarFolderItem selected={SelectedFolder == index ? 'true' : null} 
                 key={item.id} onClick={() => ChangeFolder(index)} >
-                <p>{item.questionnaires ? item.questionnaires.length : index + 1}</p>
+                <p>{item.questionnaires ?  PN.convertEnToPe(item.questionnaires.length) : PN.convertEnToPe(index + 1)}</p>
                 <p>{item.name}</p>
             </SideBarFolderItem>) : <Skeleton />
             }

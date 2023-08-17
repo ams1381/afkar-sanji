@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react'
 import QuestionnairePanelHeader from '@/components/QuestionnairePanel/QuestionnairePanelHeader';
 import { Skeleton } from 'antd';
 import { QuestionnairePanelContainer , PanelInnerContainer} from '@/styles/questionnairePanel/QuestionnairePanelHeader';
-
+import useSWR from 'swr'
 import { Icon } from '@/styles/icons';
 import SettingPanel from '@/components/QuestionnairePanel/SettingPanel';
 import QuestionDesignPanel from '@/components/QuestionnairePanel/QuestionDesignPanel';
@@ -17,7 +17,7 @@ const QuestionnairePanel = () => {
     const [ QuestionnaireInfo , SetQuestionnaireInfo ] = useState(null);
     const [ SideState , SetSideState ] = useState('question_design');
     
-
+  
     useEffect(() => {
         const QuestionnaireRetriever = async () => {
            let  { data } =  await axiosInstance.get(`/question-api/questionnaires/${router.query.QuestionnaireID}/`);
@@ -37,7 +37,7 @@ const QuestionnairePanel = () => {
       
       <QuestionnairePanelContainer>
         <PanelInnerContainer> 
-          { QuestionnaireInfo ?  <QuestionnairePanelHeader SideState={SideState} ChangeSide={SetSideState} QuestionnaireName={QuestionnaireInfo.name}/> : <Skeleton active rows={5} />}
+          { QuestionnaireInfo ?  <QuestionnairePanelHeader SideState={SideState} ChangeSide={SetSideState} Questionnaire={QuestionnaireInfo}/> : <Skeleton active rows={5} />}
           {
             SideState == 'question_design' ? <QuestionDesignPanel Questionnaire={QuestionnaireInfo}/> 
             : <SettingPanel Questionnaire={QuestionnaireInfo}/>

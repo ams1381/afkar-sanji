@@ -1,17 +1,35 @@
-import { FolderPopoverContainer } from '@/styles/folders/Popovers';
-import React from 'react'
-import RemovePopup from '../Folders/RemovePopup';
+import { FolderPopoverContainer, FolderPopoverItem } from '@/styles/folders/Popovers';
+import React, { useState } from 'react'
+import RemovePopup from '../common/RemovePopup';
+import { Icon } from '@/styles/icons';
+import Link from 'next/link';
+import { axiosInstance } from '@/utilities/axios';
+import { useRouter } from 'next/router';
 
-export const QuestionnairePopover = ({ RenameInput , RenameFolderState , SelectedFolderNumber , closeEditPopover, Folders , SelectFolder }) => {
+export const QuestionnairePopover = ({ Questionnaire , RenameInput  , RenameChangeState , SetQuestionnairePopoverState }) => {
+  const router = useRouter();
+  const [ DeleteQuestionnaireState , SetDeleteQuestionnaireState ] = useState(false);
+  const [ RemovePopupState , SetRemovePopupState ] = useState(false);
     const RemoveQuestionnaireStateHandler = () => {
-         
+      SetQuestionnairePopoverState(false);
+      SetDeleteQuestionnaireState(true);
     }
-
+    const DeleteQuestionnaireHandler = async () => {
+      await axiosInstance.delete(`/question-api/questionnaires/${Questionnaire.uuid}/`)
+      SetDeleteQuestionnaireState(false);
+      router.push('../')
+    }
   return (
-    <FolderPopoverContainer>
+    <FolderPopoverContainer style={{ height : 'auto' }}>
+      <FolderPopoverItem>
+        <button>
+          <Icon name='statics' />
+          <p>نمودار</p>
+        </button>
+      </FolderPopoverItem>
         <FolderPopoverItem>
           <button onClick={() => {
-            RenameFolderState(true);
+            RenameChangeState(true);
             setTimeout(()=> {
               RenameInput.current.select();
             },100)
@@ -23,7 +41,8 @@ export const QuestionnairePopover = ({ RenameInput , RenameFolderState , Selecte
         <FolderPopoverItem deleteitem={'true'}>
           <RemovePopup 
           title='این پرسشنامه حذف شود؟'
-          onOkay={deleteFolder} DeleteState={deleteFolderState} setDeleteState={setDeleteFolderState}>
+          onOkay={DeleteQuestionnaireHandler} 
+          DeleteState={DeleteQuestionnaireState} setDeleteState={SetDeleteQuestionnaireState}>
           </RemovePopup>
           <button onClick={RemoveQuestionnaireStateHandler}>
               <Icon name='RedTrash' />

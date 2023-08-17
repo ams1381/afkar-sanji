@@ -7,6 +7,7 @@ export const AddQuestionnaireModalInput = styled.input`
     outline: none;
     border: 1px solid var(--Neutral-Gray10);
     transition : border 0.3s;
+    font-family: 'IRANSans';
 
     &:focus
     {

@@ -4,7 +4,7 @@ import { FolderPopoverContainer , FolderPopoverItem } from '@/styles/folders/Pop
 import { axiosInstance } from '@/utilities/axios';
 import { Button, ConfigProvider, Modal } from 'antd'
 import RemoveFolderPopUpContent from '../Folders/RemoveFolderPopUp';
-import RemovePopup from '../Folders/RemovePopup';
+import RemovePopup from './RemovePopup';
 
 const FolderPopoverContent = ({ FolderReload , RenameInput , RenameFolderState , SelectedFolderNumber , closeEditPopover, Folders , SelectFolder }) => {
   const [ deleteFolderState , setDeleteFolderState ] = useState(false);

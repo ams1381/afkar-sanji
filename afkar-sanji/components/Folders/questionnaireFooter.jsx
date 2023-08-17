@@ -4,7 +4,7 @@ import { QuestionnaireFooter , QuestionnaireFooterItem , QuestionnaireFooterButt
 import { Icon } from '@/styles/icons'
 import { Popover } from 'antd';
 import { SharePopOverContent } from './SharePopover'
-import RemovePopoverContent from './RemovePopover';
+import RemovePopoverContent from '../common/RemovePopover';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
