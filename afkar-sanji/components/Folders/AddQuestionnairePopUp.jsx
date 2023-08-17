@@ -12,15 +12,18 @@ const AddQuestionnairePopUp = ({ AddQuestionnaireModal , FolderReload , folders 
   const [ OperatingState , SetOperatingState ] = useState(false);
 
     const AddQuestionnaireHandler = async () => {
+        SetOperatingState(true);
         if(!NewQuestionnaireName)
         {
             SetErrMessage('لطفا نام پرسشنامه را وارد کنید');
+            SetOperatingState(false);
             return
         }
         await axiosInstance.post('/question-api/questionnaires/',{ name : NewQuestionnaireName , folder: folders[SelectedFolderNumber].id });
         folders.push({})
         setQuestionnaireModalState(false);
         FolderReload();
+        SetOperatingState(false);
     }
     const CancelPopup = () => {
         setQuestionnaireModalState(false)
@@ -36,7 +39,7 @@ const AddQuestionnairePopUp = ({ AddQuestionnaireModal , FolderReload , folders 
             style={{ padding : 10 , borderRadius : 2}}
             footer={
                 <ModalButtonsContainer>
-                    <Button type='primary' onClick={AddQuestionnaireHandler}>
+                    <Button type='primary' onClick={AddQuestionnaireHandler} loading={OperatingState}>
                         تایید
                     </Button>
                     <Button onClick={() => setQuestionnaireModalState(false)}>

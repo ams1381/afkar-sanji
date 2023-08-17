@@ -1,16 +1,20 @@
 import React, { useState } from 'react'
 import { QuestionnaireFooter , QuestionnaireFooterItem , QuestionnaireFooterButton
 } from '@/styles/folders/Questionnaire'
-import { Icon } from '@/styles/folders/icons'
+import { Icon } from '@/styles/icons'
 import { Popover } from 'antd';
 import { SharePopOverContent } from './SharePopover'
 import RemovePopoverContent from './RemovePopover';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 const QuestionnaireFooterPart = ({ questionnaire , FolderReload }) => {
     const [ SharePopover , setSharePopOver] = useState(false);
     const [ DeletePopoverState , setDeletePopoverState ] = useState(false);
+    
+    const router = useRouter();
 
+   
   return (
     <QuestionnaireFooter>
         <QuestionnaireFooterItem>
@@ -40,12 +44,7 @@ const QuestionnaireFooterPart = ({ questionnaire , FolderReload }) => {
         </QuestionnaireFooterItem>
         <QuestionnaireFooterItem>
             <QuestionnaireFooterButton>
-                <Link href={{
-                    pathname : '/questionnaire/',
-                    query : {
-                        uuid : questionnaire.uuid
-                    }
-                }}>
+                <Link href={`questionnaire/${questionnaire.uuid}}/`}>
                     <Icon name='GrayPen' />
                 </Link>
             </QuestionnaireFooterButton>

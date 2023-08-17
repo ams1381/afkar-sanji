@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import OtpClasses from '@/styles/auth/LoginStyles.module.css'
 import { ClearLoginInputButton, InputBox, LoginErrorMessage, LoginInput } from '@/styles/auth/Login'
 import { AuthContext } from '@/utilities/AuthContext'
@@ -59,7 +59,7 @@ export const LoginFormOTPInput = ({ErrorHandler}) => {
     <InputBox className={ErrorHandler.message ? OtpClasses['input_error_occur'] : '' }
         focused={!InputFocusState ? 'true' : null}>
         <LoginInput type="number"  name="otp_code" maxLength="5" 
-        
+        disabled={timeOutState}
         
         required pattern="[0-9]{5}"
         value={LoginContext.SMSCode ? LoginContext.SMSCode : ''}
@@ -89,7 +89,10 @@ export const LoginFormOTPInput = ({ErrorHandler}) => {
             format='mm:ss' 
             value={!timeOutState ? (Date.now() + timer * 1000 ) : null}
             valueStyle = {{ color : 'var(--primary-color)' , fontSize : 16 }}
-            onFinish={() => ChangeTimeOutState(true)}
+            onFinish={() => {
+                ChangeTimeOutState(true)
+                InputFocusState(false);
+            }}
                 />
         </div>
         <div className={OtpClasses["otp__change_number"]} onClick={() => Router.push('./')}>

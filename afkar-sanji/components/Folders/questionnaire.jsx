@@ -8,7 +8,7 @@ import { Badge, Card, Space } from 'antd';
 import PN from "persian-number";
 import QuestionnaireFooterPart from './questionnaireFooter';
 import { axiosInstance } from '@/utilities/axios';
-import { Icon } from '@/styles/folders/icons';
+import { Icon } from '@/styles/icons';
 
 const convertToJalaliDate = (inputDate) => {
     const [year, month, day] = inputDate.split('-');
@@ -16,14 +16,13 @@ const convertToJalaliDate = (inputDate) => {
     return `${jDate.jy}/${jDate.jm}/${jDate.jd}`;
 }
 const QuestionnaireBox = ({Questionnaire , FolderReload}) => {
-    // const [ Questionnaire , setInfo ] = useState(null);
     const [ ChangeNameActive , setChangeNameState ] = useState(false);
     const [ QuestionnaireName , setQuestionnaireName ] = useState(Questionnaire.name);
     const [ NameInputWidth , SetInputWidth ] = useState(null);
     const nameRef = useRef(null);
     
     useEffect(() => {
-            nameRef.current ? nameRef.current.style.width = nameRef.current.value.length * 12 + 'px' : ''
+            nameRef.current ? nameRef.current.style.width = ((nameRef.current.value.length * 7)+ 5) + 'px' : ''
     },[])
     const RenameStateHandler = () => {
         setChangeNameState(!ChangeNameActive)
@@ -47,13 +46,12 @@ const QuestionnaireBox = ({Questionnaire , FolderReload}) => {
     }
     const nameInputChangeHandler = (e) => {
         setQuestionnaireName(e.target.value)
-        nameRef.current ? nameRef.current.style.width = nameRef.current.value.length * 10 + 'px' : ''
-        nameRef.current.value.length == 0 ? nameRef.current ? nameRef.current.style.width = '20px' : '' : ''
+        nameRef.current ? nameRef.current.style.width = ((nameRef.current.value.length * 7)+ 5) + 'px' : ''
     }
     
   return (
      <QuestionnaireDiv>
-        <Badge.Ribbon className={BadgeStyle['QuestionnaireBadge']} color="green" text={Questionnaire.is_active ? 'فعال' : 'غیر فعال'}  
+        <Badge.Ribbon className={BadgeStyle['QuestionnaireBadge']} color={Questionnaire.is_active ? "green" : "red"} text={Questionnaire.is_active ? 'فعال' : 'غیر فعال'}  
      style={{marginTop : 30 , fontFamily : 'IRANSans' , fontSize : 13 , color : '#00000040'}}>
          <QuestionnaireHeader>
              <QuestionnaireNameContainer>

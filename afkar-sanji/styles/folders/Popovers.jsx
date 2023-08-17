@@ -14,7 +14,12 @@ export const FolderPopoverItem =  styled.div`
     margin: 0.5rem auto;
     display: flex;
     justify-content: space-between;
+    padding: 0.4rem;
     
+    &:hover
+    {
+        background : var(--popover-hover-bg);
+    }
     & button
     {
         background: none;
@@ -49,4 +54,16 @@ export const SharePopoverButton = styled.div`
     font-family: 'IRANSans';
     TEXT-ALIGN: CENTER;
     margin-top: 0.8rem;
+`
+export const RemovePopoverContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    font: 14px IRANSans;
+    align-items: center;
+
+    & button 
+    {
+        width : 100% !important;
+        margin-top : 0.8rem;
+    }
 `

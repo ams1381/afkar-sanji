@@ -3,20 +3,22 @@ import SideBar from '@/components/common/SideBar';
 import { ScreenMask } from '@/styles/common';
 import { CornerAddButton } from '@/styles/folders/cornerAdd';
 import AddPopoverContent from '@/components/Folders/AddPopoverContent';
-import { ContentBox } from '@/styles/folders/Questionnaire';
+import { ContentBox, QuestionnaireNameInput } from '@/styles/folders/Questionnaire';
 import QuestionnaireBox from '@/components/Folders/questionnaire';
-import { Popover } from 'antd';
-import { Icon } from '@/styles/folders/icons';
-import Head from 'next/head'
-import { Suspense , lazy } from 'react';
+import { Popover, Progress } from 'antd';
+import { Icon } from '@/styles/icons';
+import { Skeleton, Switch } from 'antd';
+import Head from 'next/head';
+import { Suspense , lazy, useRef } from 'react';
 import { useEffect, useState } from 'react';
 import { axiosInstance } from '@/utilities/axios';
 import { useRouter } from 'next/router';
-import FolderPopoverContent from '@/components/Folders/FolderPopover';
+import FolderPopoverContent from '@/components/common/FolderPopover';
 import { QuestionnaireContainer , MainContainer ,
    FolderEditContainer, FolderPopoverToggle 
    , EmptyFolderContainer} from '@/styles/folders/Questionnaire';
 import AddQuestionnairePopUp from '@/components/Folders/AddQuestionnairePopUp';
+import ProgressBarLoading from '@/styles/ProgressBarLoading';
 
 export default function Home() {
   const router = useRouter();
@@ -27,18 +29,46 @@ export default function Home() {
   const [ SideBarOpen , setOpen ] = useState(false);
   const [ addPopOver , setAddPopover ]= useState(false);
   const [ FolderPopover , setFolderPopover ]= useState(false)
+  const CornerButton = useRef(null);
+  
+  const FolderNameInput = useRef(null);
+  const [ ChangeFolderName , SetChangeFolderNameState ] = useState(false);
+  const [ FolderName , SetFolderName ] = useState(null);
 
   useEffect(() => {
+    let scroll_position = 0;
+    let scroll_direction;
     const getData = async () => {
-        let response = await axiosInstance.get('/user-api/folders/');
-        response ? setFolder(response.data) : '' 
+        let { data } = await axiosInstance.get('/user-api/folders/');
+        setFolder(data);
         SetFolderReload(false);
+        SetFolderName(data[SelectedFolder].name)
+        FolderNameInput.current ? FolderNameInput.current.style.width = ((FolderNameInput.current.value.length * 7) + 9) + 'px' : '';
     }
+    window.addEventListener('scroll', function(e){
+        scroll_direction = (document.body.getBoundingClientRect()).top > scroll_position ? 'up' : 'down';
+        scroll_position = (document.body.getBoundingClientRect()).top;
+        if(this.window.innerWidth  < 480 && CornerButton.current)
+        {
+          scroll_direction == 'down' ? CornerButton.current.setAttribute('style',' right : -30%;') :
+           CornerButton.current.setAttribute('style','right : 1rem;');
+        }
+    });
     getData();
+    
+    
   },[FolderReload])
-  
-  
 
+
+  const folderNameChangeHandler = (e) => {
+    SetFolderName(e.target.value);
+    FolderNameInput.current ? FolderNameInput.current.style.width = ((FolderNameInput.current.value.length * 7)+ 5) + 'px' : ''
+  }
+  const folderRenameConfirm = async () => {
+    console.log(FolderName)
+   console.log(await axiosInstance.patch(`/user-api/folders/${folders[SelectedFolder].id}/`, { 'name' : FolderName }));
+    SetChangeFolderNameState(false);
+  }
   return (
     <>
       <Head>
@@ -48,8 +78,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <>
+      <ProgressBarLoading />
       <Header SetSideBar={() => setOpen(!SideBarOpen)} />
-      <SideBar folders={folders} IsOpen={SideBarOpen} FolderReload={() => SetFolderReload(true)}  ChangeFolder={SelectFolder}
+      <SideBar folders={folders} SelectedFolder={SelectedFolder} IsOpen={SideBarOpen} FolderReload={() => SetFolderReload(true)}  ChangeFolder={SelectFolder}
       SetSideBar={() => setOpen(!SideBarOpen)}/>
       <ScreenMask shown={SideBarOpen ? 'true' : null} onClick={() => setOpen(false)}/>
       <Popover
@@ -62,32 +93,35 @@ export default function Home() {
             onOpenChange={() => setAddPopover(false)}
             style={{marginRight : 15}}
             >
-                <CornerAddButton clicked={addPopOver ? 'true' : null} onClick={() => setAddPopover(!addPopOver)}>
+                <CornerAddButton ref={CornerButton} clicked={addPopOver ? 'true' : null} onClick={() => setAddPopover(!addPopOver)}>
                   <Icon name='add' />
                 </CornerAddButton>
         </Popover>
     </>
-    <ContentBox>
-      {
+    <ContentBox >
+      { 
         folders && folders.length !== 0 ? <MainContainer>
-   <>
         <FolderEditContainer>
             <Popover
             trigger="click"
-            content={<FolderPopoverContent SelectFolder={SelectFolder} FolderReload={() => SetFolderReload(true)} closeEditPopover={() => setFolderPopover(false)}
+            content={<FolderPopoverContent RenameFolderState={SetChangeFolderNameState} RenameInput={FolderNameInput}
+            SelectFolder={SelectFolder} FolderReload={() => SetFolderReload(true)} 
+            closeEditPopover={() => setFolderPopover(false)}
              SelectedFolderNumber={SelectedFolder} Folders={folders} />}
             open={FolderPopover}
             placement="bottom"
             overlayInnerStyle={{ marginRight : 15}}
             onOpenChange={() => setFolderPopover(false)}>
-                  <FolderPopoverToggle onClick={() => setFolderPopover(!FolderPopover)}>
-                    <Icon name='Menu' /> 
+                  <FolderPopoverToggle onClick={ChangeFolderName ? folderRenameConfirm : () => setFolderPopover(!FolderPopover)}
+                  style={FolderName ? { pointerEvents : 'all'} : { pointerEvents : 'none'}}>
+                    {ChangeFolderName ? <Icon name='GrayCheck' /> : <Icon name='Menu' /> }
                   </FolderPopoverToggle>
             </Popover>
-                  <p>{folders[SelectedFolder] ? folders[SelectedFolder].name : ''}</p>
-              </FolderEditContainer>
-              
-      <QuestionnaireContainer>
+              <QuestionnaireNameInput type='text' ref={FolderNameInput} value={FolderName} onChange={folderNameChangeHandler}
+               disabled={!ChangeFolderName} /> 
+          </FolderEditContainer>
+      <QuestionnaireContainer>        
+        <>
         {
           folders[SelectedFolder].questionnaires.length ? folders[SelectedFolder].questionnaires.map((item) => 
           <QuestionnaireBox FolderReload={() => SetFolderReload(true)}  Questionnaire={item} key={item.id} />)
@@ -101,33 +135,21 @@ export default function Home() {
           />
           <button onClick={() => setAddQuestionnaireState(true)}>
               <p>ایجاد نظر سنجی</p>
-              <i>
-                  <svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M5.20669 1.5H5.17539L4.06235 0.609566C3.97369 0.53864 3.86354 0.5 3.75 0.5H2C0.89543 0.5 0 1.39543 0 2.5V2.99998H3.5567L5.20669 1.5Z" fill="#EEF0FF"/>
-                      <path d="M6.6933 1.5L4.08633 3.86995C3.9943 3.95362 3.87438 3.99998 3.75 3.99998H0V8.5C0 9.60457 0.89543 10.5 2 10.5H10C11.1046 10.5 12 9.60457 12 8.5V3.5C12 2.39543 11.1046 1.5 10 1.5H6.6933Z" fill="#EEF0FF"/>
-                      </svg>
-                      
-              </i>
+              <Icon name='folder' style={{ width : 14 }} />
              </button>
-      </EmptyFolderContainer>
-        } 
+          </EmptyFolderContainer> 
+        }
+      </>
       </QuestionnaireContainer>
-        </> 
         </MainContainer> 
         : folders ?  <EmptyFolderContainer>
             <p>برای مدیریت کردن پرسشنامه پوشه درست کنید</p>
             <button onClick={() => setOpen(true)}>
                 <p>پوشه ها</p>
-                <i>
-                    <svg width="12" height="11" viewBox="0 0 12 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M5.20669 1.5H5.17539L4.06235 0.609566C3.97369 0.53864 3.86354 0.5 3.75 0.5H2C0.89543 0.5 0 1.39543 0 2.5V2.99998H3.5567L5.20669 1.5Z" fill="#EEF0FF"/>
-                        <path d="M6.6933 1.5L4.08633 3.86995C3.9943 3.95362 3.87438 3.99998 3.75 3.99998H0V8.5C0 9.60457 0.89543 10.5 2 10.5H10C11.1046 10.5 12 9.60457 12 8.5V3.5C12 2.39543 11.1046 1.5 10 1.5H6.6933Z" fill="#EEF0FF"/>
-                        </svg>
-                        
-                </i>
+                <Icon name='folder' />
                </button>
-        </EmptyFolderContainer> : 'loading'
-      }
+        </EmptyFolderContainer> :  <Skeleton block style={{ width : '90%' , height : 200 , margin : '2rem auto'}} loading={true} active />
+      } 
     </ContentBox>
     </>
   )

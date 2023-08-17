@@ -20,7 +20,12 @@
   --Neutral-Gray10 : #3D3D3D;
   --SideBar-header-border : #0000000F;
   --Error-color : #FF4D4F;
-  /* Login Page */
+
+  
+  --popover-hover-bg : #FAFAFA;
+  --questionnaire-edit-item-bg : #F5F5F5;
+
+    /* Login Page */
   --login-input-text-color : #656565;
   --login-input-border-color : #7ACCFF;
   --login-input-bg-color : #FEFEFE;
@@ -29,4 +34,10 @@
   --form-body-header-color : #8F8F8F;
   --login-confirm-btn-border : #7C86FA;
   --login-err-message-color : #FF4D4F;
+}
+html::-webkit-scrollbar-thumb
+{
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 9px;
+  width: 10px;
 }

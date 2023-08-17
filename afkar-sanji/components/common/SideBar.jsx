@@ -2,11 +2,12 @@ import { LoginErrorMessage } from '@/styles/auth/Login';
 import { AddFolderButtons, SideBarCancelButton, SideBarConfirmButton, SideBarContainer, SideBarFolderItem,
      SideBarInput, SideBarInputBox, SideBarHeader , SideBarTitle,
       SideBarToggleButton } from '@/styles/common';
-import { Icon } from '@/styles/folders/icons';
+import { Icon } from '@/styles/icons';
 import { axiosInstance } from '@/utilities/axios';
+import { Skeleton } from 'antd';
 import React, { useState } from 'react'
 
-const SideBar = ({ IsOpen , SetSideBar , folders , ChangeFolder , FolderReload}) => {
+const SideBar = ({ IsOpen , SetSideBar , folders , SelectedFolder , ChangeFolder , FolderReload}) => {
     const [ AddFolderState , SetAddFolderState ] = useState(false);
     const [ newFolderName , setNewFolderName ] = useState(null);
     const [ ErrorMessage , SetErrorMessage ] = useState(null);
@@ -68,10 +69,11 @@ const SideBar = ({ IsOpen , SetSideBar , folders , ChangeFolder , FolderReload})
         }
         <div className="sideBar_folders" style={{ marginTop : 16 }}>
             {
-                folders ? folders.map((item,index) => <SideBarFolderItem key={item.id} onClick={() => ChangeFolder(index)} >
-                <p>{index + 1}</p>
+                folders ? folders.map((item,index) => <SideBarFolderItem selected={SelectedFolder == index ? 'true' : null} 
+                key={item.id} onClick={() => ChangeFolder(index)} >
+                <p>{item.questionnaires ? item.questionnaires.length : index + 1}</p>
                 <p>{item.name}</p>
-            </SideBarFolderItem>) : 'Loaing'
+            </SideBarFolderItem>) : <Skeleton />
             }
         </div>
     </SideBarContainer>

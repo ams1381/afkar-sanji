@@ -1,6 +1,6 @@
 import { RemoveFolderModalContainer , RemoveFolderModalHeader ,
     RemoveModalTextContent , RemoveModalIcon } from '@/styles/folders/Popup'
-import { Icon } from '@/styles/folders/icons'
+import { Icon } from '@/styles/icons'
 import React from 'react'
 
 const RemoveFolderPopUpContent = ({title}) => {

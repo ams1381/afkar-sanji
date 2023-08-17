@@ -8,7 +8,6 @@ const LoginFormInput = ({ErrorHandler}) => {
   const [InputFocusState , SetFocusState ] = useState(false);
   const [ showClearState , SetClearState ] = useState(false);
   
-
   return (
     <>
     <InputBox className={ErrorHandler.message ? OtpClasses['input_error_occur'] : ''}
@@ -21,9 +20,9 @@ const LoginFormInput = ({ErrorHandler}) => {
           SetFocusState(false)
           }}
           onChange={(e) =>  {
-          SetClearState(true);
-          LoginContext.changePhone(e.target.value);
-          ErrorHandler.SetNull(null);
+            !(e.target.value) ? SetClearState(false) : SetClearState(true)
+            LoginContext.changePhone(e.target.value);
+            ErrorHandler.SetNull(null);
           }}
           placeholder="09** *** ***" /> 
           {

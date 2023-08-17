@@ -75,9 +75,15 @@ export const QuestionnaireNameInput = styled.input`
     font-weight: 600;
     font-size: 1rem;
     transition : 0.3s;
-    margin-left: 0.4rem;
+    // margin-left: 0.4rem;
     outline: none;
-    max-width: 264px;
+    // max-width: 264px;
+    min-width:50px!important;
+    max-width: 280px;
+    transition: width 0.25s;
+    padding-left: 4px;
+    box-sizing: content-box;
+    text-align: right;
 
     &::selection 
     {

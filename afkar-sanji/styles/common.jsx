@@ -73,12 +73,13 @@ export const SideBarFolderItem = styled.div`
     justify-content: space-between;
     width: 90%;
     margin: 0.4rem auto;
-    color: var(--primary-color);
-    border: 1px solid var(--primary-color);
+    color: ${p => p.selected ? 'var(--primary-color)' : '#7A7A7A'};
+    border: 1px solid ${p => p.selected ? 'var(--primary-color)' : 'var(--login-input-default-border)'};
     padding: 0.5rem;
     border-radius: 2px;
     cursor: pointer;
     font-size : 14px;
+    transition : 0.3s;
 `
 export const SideBarInputBox = styled.div`
     display: flex;

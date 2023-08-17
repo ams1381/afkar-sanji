@@ -2,6 +2,7 @@ import { themeContext } from '@/utilities/ThemeContext';
 import { axiosInstance } from '@/utilities/axios';
 import { Button, ConfigProvider } from 'antd';
 import React, { useState } from 'react'
+import { RemovePopoverContainer } from '@/styles/folders/Popovers';
 
 const RemovePopoverContent = ({ questionnairesUUID , FolderReload}) => {
   const [ OperatingState, SetOperatingState ] = useState(false);
@@ -22,15 +23,18 @@ const RemovePopoverContent = ({ questionnairesUUID , FolderReload}) => {
     }
   }
   return (
-    <div>
+    <RemovePopoverContainer>
       <ConfigProvider theme={themeContext}>
+        <p>
+          این نظر سنجی حذف شود؟
+        </p>
         <Button type='primary' loading={OperatingState ? true : false}
          style={{ width : 120 }} danger shape='default' onClick={RemoveQuestionnaireHandler}>
           تایید
         </Button>
       </ConfigProvider>
      
-    </div>
+    </RemovePopoverContainer>
   )
 }
 export default RemovePopoverContent;

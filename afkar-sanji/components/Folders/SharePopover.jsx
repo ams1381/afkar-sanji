@@ -1,5 +1,5 @@
 import { SharePopoverContainer , SharePopoverButton } from '@/styles/folders/Popovers'
-import { Icon } from '@/styles/folders/icons'
+import { Icon } from '@/styles/icons'
 import React from 'react'
 
 

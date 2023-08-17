@@ -17,8 +17,10 @@ export const Login_form = ({ setLoggedIn }) => {
   const LoginContext =  useContext(AuthContext);
   
   useEffect(() => {
-    if(typeof window !== 'undefined') 
-      LoginContext.changePhone(localStorage.getItem('phoneNumber'))
+      window.addEventListener('keypress',(e) => {
+        if(e.key == 'Enter')
+          e.preventDefault();
+      })
   },[])
   const authentication = async (e) => {
     setLoading(true)
@@ -46,7 +48,7 @@ export const Login_form = ({ setLoggedIn }) => {
     }
   }
   return (
-    <LoginForm>
+    <LoginForm onSubmit={authentication}>
       {contextHolder}
         <LoginFormHeader title="ورود با رمز یکبار مصرف" />
         <LoginFormBody body_message={LoginContext.Login_Context_value.FormBodyMessage} />
