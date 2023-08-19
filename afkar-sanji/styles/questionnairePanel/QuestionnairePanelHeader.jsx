@@ -89,7 +89,7 @@ export const QuestionnaireEditItemsInnerContainer = styled.div`
     gap: 7px;
     flex-direction: row-reverse;
     font: 13px IRANSans;
-    @media screen and (max-width : 480px)
+    @media screen and (max-width : 768px)
     {
         width : 100%;
     }
@@ -123,7 +123,7 @@ export const QuestionnaireEditButtonContainer = styled.div`
         justify-content: center;
         display: flex;
     }
-    @media screen and (max-width : 480px)
+    @media screen and (max-width : 768px)
     {
         margin-bottom: 0.7rem;
     }

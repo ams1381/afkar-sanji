@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react'
 import OtpClasses from '@/styles/auth/LoginStyles.module.css'
 import { LoginInput , InputBox, LoginErrorMessage , ClearLoginInputButton} from '@/styles/auth/Login';
 import { AuthContext } from '@/utilities/AuthContext';
+import PN from 'persian-number';
 
 const LoginFormInput = ({ErrorHandler}) => {
   const LoginContext =  useContext(AuthContext);

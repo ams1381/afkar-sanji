@@ -36,7 +36,6 @@ export const Login_form = ({ setLoggedIn }) => {
     }
     catch(error)
     {
-      console.log(error)
       if(typeof error == 'string')
         setErMessage(error)
       if(typeof error == 'object' && error.response)
@@ -55,7 +54,7 @@ export const Login_form = ({ setLoggedIn }) => {
         <div>
           { LoginContext.Login_Context_value.FormType == 'PhoneNumber' ? 
           <LoginFormInput ErrorHandler={{message : errMessage , SetNull : setErMessage}}/> :
-            <LoginFormOTPInput  ErrorHandler={{message : errMessage , SetNull : setErMessage}} /> 
+            <LoginFormOTPInput  ErrorHandler={{message : errMessage , SetNull : setErMessage}} authentication={authentication}  /> 
           }
           <ConfigProvider theme={themeContext}>
               <Button onClick={authentication} className={StyleModules['confirm_button']} type="primary" loading={loadingState}>

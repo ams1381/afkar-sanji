@@ -27,6 +27,7 @@ const FolderPopoverContent = ({ FolderReload , RenameInput , RenameFolderState ,
             setTimeout(()=> {
               RenameInput.current.select();
             },100)
+            closeEditPopover()
             }}>
               <Icon name='GrayPen'/>
               <p>تغییر نام</p>

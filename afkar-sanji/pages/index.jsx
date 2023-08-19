@@ -19,18 +19,19 @@ import { QuestionnaireContainer , MainContainer ,
    , EmptyFolderContainer} from '@/styles/folders/Questionnaire';
 import AddQuestionnairePopUp from '@/components/Folders/AddQuestionnairePopUp';
 import ProgressBarLoading from '@/styles/ProgressBarLoading';
+import { useLocalStorage } from '@/utilities/useLocalStorage';
 
 export default function Home() {
   const router = useRouter();
+  const { getItem , removeItem } = useLocalStorage();
   const [ folders , setFolder ] = useState(null);
-  const [ SelectedFolder , SelectFolder ] = useState(0);
+  const [ SelectedFolder , SelectFolder ] = useState(getItem('SelectedFolder') || 0);
   const [ FolderReload , SetFolderReload ] = useState(false);
   const [ AddQuestionnaireState , setAddQuestionnaireState ] = useState(false);
   const [ SideBarOpen , setOpen ] = useState(false);
   const [ addPopOver , setAddPopover ]= useState(false);
   const [ FolderPopover , setFolderPopover ]= useState(false)
   const CornerButton = useRef(null);
-  
   const FolderNameInput = useRef(null);
   const [ ChangeFolderName , SetChangeFolderNameState ] = useState(false);
   const [ FolderName , SetFolderName ] = useState(null);
@@ -42,8 +43,15 @@ export default function Home() {
         let { data } = await axiosInstance.get('/user-api/folders/');
         setFolder(data);
         SetFolderReload(false);
-        SetFolderName(data[SelectedFolder].name)
-        FolderNameInput.current ? FolderNameInput.current.style.width = ((FolderNameInput.current.value.length * 7) + 9) + 'px' : '';
+        if(data[SelectedFolder])
+          SetFolderName(data[SelectedFolder].name) 
+        else
+        {
+          SelectFolder(0);
+          removeItem('SelectedFolder')
+        }
+          
+        
     }
     window.addEventListener('scroll', function(e){
         scroll_direction = (document.body.getBoundingClientRect()).top > scroll_position ? 'up' : 'down';
@@ -55,18 +63,15 @@ export default function Home() {
         }
     });
     getData();
-    
-    
   },[FolderReload])
 
-
+  FolderNameInput.current ? FolderNameInput.current.style.width = ((FolderNameInput.current.value.length * 7) + 26) + 'px' : '';
   const folderNameChangeHandler = (e) => {
     SetFolderName(e.target.value);
-    FolderNameInput.current ? FolderNameInput.current.style.width = ((FolderNameInput.current.value.length * 7)+ 5) + 'px' : ''
+    FolderNameInput.current ? FolderNameInput.current.style.width = ((FolderNameInput.current.value.length * 7)+ 8) + 'px' : ''
   }
   const folderRenameConfirm = async () => {
-    console.log(FolderName)
-   console.log(await axiosInstance.patch(`/user-api/folders/${folders[SelectedFolder].id}/`, { 'name' : FolderName }));
+   await axiosInstance.patch(`/user-api/folders/${folders[SelectedFolder].id}/`, { 'name' : FolderName });
     SetChangeFolderNameState(false);
   }
   return (
@@ -81,7 +86,7 @@ export default function Home() {
       <ProgressBarLoading />
       <Header SetSideBar={() => setOpen(!SideBarOpen)} />
       <SideBar folders={folders} SelectedFolder={SelectedFolder} IsOpen={SideBarOpen} FolderReload={() => SetFolderReload(true)}  ChangeFolder={SelectFolder}
-      SetSideBar={() => setOpen(!SideBarOpen)}/>
+      SetSideBar={() => setOpen(!SideBarOpen)} ChangeFolderName={SetFolderName}/>
       <ScreenMask shown={SideBarOpen ? 'true' : null} onClick={() => setOpen(false)}/>
       <Popover
             content={<AddPopoverContent SelectedFolderNumber={SelectedFolder} 

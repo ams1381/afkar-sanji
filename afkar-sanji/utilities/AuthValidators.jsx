@@ -9,7 +9,9 @@ export const AuthValidator = (Input,AuthLevel) => {
         }
         else
         {
-            if(!Input || Input.length < 5)
+            if(!Input)
+                return('کد ارسال شده را وارد کنید')
+            else if(Input.length < 5)
                 return('کد وارد شده اشتباه است');
         }
 }   

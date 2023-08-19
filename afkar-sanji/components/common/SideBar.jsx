@@ -4,15 +4,16 @@ import { AddFolderButtons, SideBarCancelButton, SideBarConfirmButton, SideBarCon
       SideBarToggleButton } from '@/styles/common';
 import { Icon } from '@/styles/icons';
 import { axiosInstance } from '@/utilities/axios';
+import { useLocalStorage } from '@/utilities/useLocalStorage';
 import { Skeleton } from 'antd';
 import PN from "persian-number";
 import React, { useState } from 'react'
 
-const SideBar = ({ IsOpen , SetSideBar , folders , SelectedFolder , ChangeFolder , FolderReload}) => {
+const SideBar = ({ IsOpen , SetSideBar , folders , SelectedFolder , ChangeFolder , FolderReload , ChangeFolderName}) => {
+    const { setItem } = useLocalStorage();
     const [ AddFolderState , SetAddFolderState ] = useState(false);
     const [ newFolderName , setNewFolderName ] = useState(null);
     const [ ErrorMessage , SetErrorMessage ] = useState(null);
-    const [ InputSelect , SetSelect ] = useState(false);
     
     const AddFolder = async () => {
         if(!newFolderName)
@@ -70,13 +71,17 @@ const SideBar = ({ IsOpen , SetSideBar , folders , SelectedFolder , ChangeFolder
         }
         <div className="sideBar_folders" style={{ marginTop : 16 }}>
             {
-                folders ? folders.map((item,index) => <SideBarFolderItem selected={SelectedFolder == index ? 'true' : null} 
-                key={item.id} onClick={() => ChangeFolder(index)} >
+                folders ? folders.map((item,index) => <SideBarFolderItem selected={SelectedFolder == index ? 'checked' : null} 
+                key={item.id} onClick={() => {
+                ChangeFolder(index)
+                setItem('SelectedFolder',index)
+                ChangeFolderName(folders[index].name)
+                }} >
                 <p>{item.questionnaires ?  PN.convertEnToPe(item.questionnaires.length) : PN.convertEnToPe(index + 1)}</p>
                 <p>{item.name}</p>
             </SideBarFolderItem>) : <Skeleton />
             }
-        </div>
+        </div> 
     </SideBarContainer>
   )
 }

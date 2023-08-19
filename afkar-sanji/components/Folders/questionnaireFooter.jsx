@@ -8,6 +8,7 @@ import RemovePopoverContent from '../common/RemovePopover';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
+
 const QuestionnaireFooterPart = ({ questionnaire , FolderReload }) => {
     const [ SharePopover , setSharePopOver] = useState(false);
     const [ DeletePopoverState , setDeletePopoverState ] = useState(false);
@@ -22,8 +23,7 @@ const QuestionnaireFooterPart = ({ questionnaire , FolderReload }) => {
             content={SharePopOverContent}
             trigger="click"
             open={SharePopover}
-            onOpenChange={() => setSharePopOver(false)}
-            >
+            onOpenChange={() => setSharePopOver(false)}>
             <QuestionnaireFooterButton onClick={() => setSharePopOver(!SharePopover)}>
                 <Icon name='Share' />
             </QuestionnaireFooterButton>
@@ -35,8 +35,7 @@ const QuestionnaireFooterPart = ({ questionnaire , FolderReload }) => {
             content={<RemovePopoverContent FolderReload={FolderReload} questionnairesUUID={questionnaire.uuid}/>}
             trigger="click"
             open={DeletePopoverState}
-            onOpenChange={() => setDeletePopoverState(false)}
-            >
+            onOpenChange={() => setDeletePopoverState(false)}>
             <QuestionnaireFooterButton onClick={() => setDeletePopoverState(!DeletePopoverState)}>
                 <Icon name='trash' />
             </QuestionnaireFooterButton>

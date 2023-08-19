@@ -6,13 +6,15 @@ import { CountdownProps , Statistic } from 'antd';
 import { useRouter } from 'next/router'
 import { axiosInstance } from '@/utilities/axios'
 import { useLocalStorage } from '@/utilities/useLocalStorage';
+import PN from 'persian-number';
 
-export const LoginFormOTPInput = ({ErrorHandler}) => {
+export const LoginFormOTPInput = ({ErrorHandler , authentication}) => {
     const Router = useRouter();
     const [ timeOutState , ChangeTimeOutState]  = useState(false);
     const { getItem } = useLocalStorage();
     const [ timer , SetTimer ] = useState(60);
     const [InputFocusState , SetFocusState ] = useState(false);
+    const [ showClearState , SetClearState ] = useState(false);
     const CountDown = Statistic.Countdown;
     const LoginContext =  useContext(AuthContext);
 
@@ -49,10 +51,17 @@ export const LoginFormOTPInput = ({ErrorHandler}) => {
         }
     }
     const input_change_handler = async (e) => {
+
         if(e.target.value.length > 5)
             return
+        
         LoginContext.ChangeOTP(e.target.value);
         ErrorHandler.SetNull(null);
+        console.log(LoginContext)
+        if(!e.target.value)
+            SetClearState(false);
+        else
+            SetClearState(true)
     }
   return (
     <>
@@ -75,9 +84,9 @@ export const LoginFormOTPInput = ({ErrorHandler}) => {
                 timeOutState ? <span className={OtpClasses["resend_otp_sms"]} onClick={resend_sms}>
                 <p>ارسال دوباره</p>
             </span>
-                : <ClearLoginInputButton onClick={() => LoginContext.ChangeOTP(null)}>
+                : showClearState ?  <ClearLoginInputButton onClick={() => LoginContext.ChangeOTP(null)}>
                     <i></i>
-                </ClearLoginInputButton>
+                </ClearLoginInputButton> : ''
             }
     </InputBox>
     {ErrorHandler.message ? <LoginErrorMessage>
@@ -85,15 +94,14 @@ export const LoginFormOTPInput = ({ErrorHandler}) => {
             </LoginErrorMessage> : ''}
     <div className={OtpClasses["otp_section"]}>
         <div className={OtpClasses["otp__timer"]}>
-            <CountDown 
+           { !timeOutState ? <CountDown 
             format='mm:ss' 
             value={!timeOutState ? (Date.now() + timer * 1000 ) : null}
             valueStyle = {{ color : 'var(--primary-color)' , fontSize : 16 }}
             onFinish={() => {
                 ChangeTimeOutState(true)
                 InputFocusState(false);
-            }}
-                />
+            }}/> : ''}
         </div>
         <div className={OtpClasses["otp__change_number"]} onClick={() => Router.push('./')}>
             <i></i>

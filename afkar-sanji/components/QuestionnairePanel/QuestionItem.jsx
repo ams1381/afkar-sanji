@@ -7,27 +7,43 @@ import Dropdown from 'react-dropdown';
 import { Question_types } from '@/utilities/QuestionTypes';
 import 'react-dropdown/style.css';
 import { UploadOutlined } from '@ant-design/icons';
-import React, { useState } from 'react'
+import React, { useReducer, useState } from 'react'
+import {useDispatch, useSelector} from 'react-redux'
 import { Button, Select, Skeleton, Upload } from 'antd';
+import { QuestionFileUploadContainer } from '@/styles/questionnairePanel/QuestionSetting';
+import PN from "persian-number";
+import QuestionDescription from './Question Components/Common/Description';
+import QuestionComponent from '../Questions/Question';
+import FileUpload from './Question Components/Common/FileUpload';
+import MultipleAnswer from './Question Components/Multiple Choice/WriteMultipleAnswer';
 
-export const QuestionItem = () => {
+export const QuestionItem = ({ question , SetQuestionToPreview , QuestionToPreview}) => {
+  const  user  = useSelector(state => state)
   const [ QuestionRootOpenState , SetQuestionRootOpenState ] = useState(false);
   const [ QuestionActionState , SetQuestionActionState ] = useState('edit');
+
+  // const [ QuestionData , QuestionDispatcher ] = useReducer(QuestionReducer,question)
+  const regex = /(<([^>]+)>)/gi;
   const DeleteQuestion = async () => {
+  }
+  const Duplicate_question = () => {
 
   }
-  const duplicate_question = () => {
+  const QuestionOpenHandler = () => {
+    !QuestionRootOpenState ? SetQuestionToPreview(question) : SetQuestionToPreview(null);
+    SetQuestionRootOpenState(!QuestionRootOpenState);
+    
 
   }
-  
   return (
     <QuestionDesignItem>
+      
       <QuestionItemSurface>
           <div className="question_item_info">
-              <DropDownQuestionButton dropped={QuestionRootOpenState ? 'true' : null} onClick={() => SetQuestionRootOpenState(!QuestionRootOpenState)}>
+              <DropDownQuestionButton dropped={QuestionRootOpenState ? 'true' : null} onClick={QuestionOpenHandler}>
                   <Icon name='ArrowDown' />                                         
               </DropDownQuestionButton>
-              <p>سوال<span>1 .</span></p>
+              <p>{question.title.replace(regex,"")}<span>{PN.convertEnToPe(question.placement)} .</span></p>
           </div>
           <QuestionItemButtonContainer>
               <button>
@@ -42,8 +58,14 @@ export const QuestionItem = () => {
           </QuestionItemButtonContainer>
 
       </QuestionItemSurface>
-      { QuestionRootOpenState ? <div class="question_item__root">
+      { QuestionRootOpenState ? <div className="question_item__root">
         <QuestionItemActionSelector>
+        <QuestionItemActionButton selected={QuestionActionState == 'view' ? 'selected' : null} className='view_question' onClick={() => SetQuestionActionState('view')}>
+              <p>نمایش سوال</p>
+              <svg width="20" height="13" viewBox="0 0 20 13" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9.83334 4.00462C12.0425 4.00462 13.8333 5.79549 13.8333 8.00462C13.8333 10.2138 12.0425 12.0046 9.83334 12.0046C7.6242 12.0046 5.83334 10.2138 5.83334 8.00462C5.83334 5.79549 7.6242 4.00462 9.83334 4.00462ZM9.83334 0.5C14.4469 0.5 18.4294 3.65001 19.5345 8.06439C19.635 8.4662 19.3908 8.87348 18.989 8.97406C18.5872 9.07465 18.1799 8.83045 18.0794 8.42863C17.1405 4.67796 13.7547 2 9.83334 2C5.91027 2 2.52344 4.68026 1.5862 8.43315C1.48583 8.83502 1.07869 9.07944 0.676823 8.97908C0.274952 8.87872 0.0305309 8.47158 0.130894 8.06971C1.23398 3.65272 5.21782 0.5 9.83334 0.5Z"/>
+              </svg>
+        </QuestionItemActionButton>
         <QuestionItemActionButton selected={QuestionActionState == 'setting' ? 'selected' : null} onClick={() => SetQuestionActionState('setting')}>
               <p>تنظیمات</p>
               <svg width="20" height="20" viewBox="0 0 20 20"  xmlns="http://www.w3.org/2000/svg">
@@ -55,16 +77,19 @@ export const QuestionItem = () => {
                 <svg width="21" height="21" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
                 <path d="M14.5577 1.04825C15.9551 -0.349357 18.221 -0.349424 19.6185 1.0481C21.0159 2.4455 21.016 4.71112 19.6187 6.10861L18.7268 7.00057L13.6661 1.93991L14.5577 1.04825ZM12.6055 3.00064L2.60767 12.9997C2.20135 13.4061 1.91574 13.9172 1.78264 14.4762L0.687052 19.0777C0.626727 19.3311 0.702163 19.5976 0.886326 19.7817C1.07049 19.9659 1.33701 20.0413 1.59037 19.981L6.19162 18.8855C6.75082 18.7523 7.2621 18.4666 7.66855 18.0601L17.6662 8.06129L12.6055 3.00064Z"/>
                 </svg>
-              </QuestionItemActionButton>   
+            </QuestionItemActionButton>   
+           
+            
         </QuestionItemActionSelector>
         { QuestionActionState == 'edit' ? <QuestionItemSettingContainer>
-            <div class="question_bold_info">
+            <div className="question_bold_info">
                 <QuestionItemTitleContainer>
                     <QuestionItemTitleInput type="text" placeholder='عنوان سوال' />
                 </QuestionItemTitleContainer>
-                <div class="question_type_selector">
+                <div className="question_type_selector">
                 <Select
                     bordered={false}
+                    maxTagTextLength={6}
                     labelInValue
                     defaultValue={{ value: <h3>Hii</h3>, label: <p>Hello Wrold</p> }}
                     style={{ width: 120 , border : 'none'}}
@@ -73,22 +98,19 @@ export const QuestionItem = () => {
                     options={Question_types}
                   />
                 </div>
+               
             </div>
-        </QuestionItemSettingContainer> : <div>
-        <Upload
-          action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-          listType="picture"
-          
-          className="upload-list-inline"
-        >
-          <Button icon={<UploadOutlined />}>Upload</Button>
-        </Upload>
-          </div>}
+            <QuestionDescription />
+            <MultipleAnswer />
+        </QuestionItemSettingContainer> : QuestionActionState == 'setting' ? 
+        <FileUpload /> : <>
+          <QuestionComponent QuestionInfo={QuestionToPreview} />
+          </>}
         { QuestionRootOpenState ? <QuestionItemFooter>
           <Button type='primary'>
             <p>ذخیره</p>
           </Button>
-          <Button danger onClick={() => SetQuestionRootOpenState(false)}>
+          <Button danger onClick={QuestionOpenHandler}>
             <p>انصراف</p>
           </Button>
         </QuestionItemFooter> : <Skeleton active /> }

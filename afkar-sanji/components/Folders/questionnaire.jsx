@@ -22,7 +22,7 @@ const QuestionnaireBox = ({Questionnaire , FolderReload}) => {
     const nameRef = useRef(null);
     
     useEffect(() => {
-            nameRef.current ? nameRef.current.style.width = ((nameRef.current.value.length * 7) + 10) + 'px' : ''
+        nameRef.current ? nameRef.current.style.width = ((nameRef.current.value.length * 7) + 14) + 'px' : ''
     },[])
     const RenameStateHandler = () => {
         setChangeNameState(!ChangeNameActive)

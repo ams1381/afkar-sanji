@@ -100,6 +100,7 @@ export const QuestionItemSurface = styled.div`
     {
         display: flex;
         flex-direction: row-reverse;
+        text-align : right;
     }
 `
 export const DropDownQuestionButton = styled.button`
@@ -142,6 +143,18 @@ export const QuestionItemActionSelector = styled.div`
     margin-top: 0.8rem;
     border-top: 1px solid #0000000F;
     display: flex;
+
+    & .view_question
+    {
+        display: none;
+    }
+    @media screen and (max-width : 768px)
+    {
+        .view_question
+        {
+            display: flex;
+        }
+    }
 `
 export const QuestionItemActionButton = styled.button`
     width: 50%;
@@ -199,4 +212,65 @@ export const QuestionItemFooter = styled.div`
         text-align : center;
         font-family : IRANSans;
     }
+`
+export const DescriptionTextField = styled.input`
+    
+`
+export const OptionalInputItem = styled.input`
+    width: 80%;
+    border: 1px solid #D9D9D9;
+    border-radius: 2px;
+    padding: 5px 12px;
+    height: 40px;
+    text-align: right;
+    outline: none;
+    font-family: 'IRANSANS';
+
+    &::placeholder 
+    {
+        color: #D9D9D9;
+    }
+`
+export const InputOptionsContainer = styled.div`
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: center;
+
+    & button 
+    {
+        background: none;
+        border: none;
+        outline: none;
+        cursor: pointer;
+    }
+    & button i 
+    {
+        width : 25px;
+        height : 25px;
+    }
+    .option_button_container
+    {
+        display : flex;
+        gap : 10px;
+    }
+`
+export const OptionWritingContainer = styled.div`
+    text-align : right;
+    & p 
+    {
+        margin : 0.6rem 0;
+        color: var(--Neutral-Gray9);
+    }
+`
+export const AddOptionButton = styled.button`
+    width: 100%;
+    margin-top: 0.8rem;
+    border: 1px solid #D9D9D9;
+    padding: 5px 12px 5px 12px;
+    text-align: right;
+    font: 13px IRANSans;
+    color: #D9D9D9;
+    background: none;
+    cursor : pointer;
 `

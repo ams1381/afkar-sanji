@@ -25,21 +25,22 @@ export const SideBarToggleButton = styled.button`
     }
 `
 export const UserAvatarLogout = styled.button`
-    background: var(--primary-color);
     outline: none;
     height: 41px;
+    background: none;
     width: 41px;
     padding: 4px 10px 4px 10px;
     border-radius: 2px;
     cursor: pointer;
-    border: 2px solid var(--primary-color);
+    border: 2px solid #D9D9D9;
 `
 export const LogoutPopOverInfo = styled.div`
     width : 95%;
     margin : 0.4rem auto;
     display : flex;
     justify-content : space-between;
-    color : var(--Neutral-Gray9)
+    color : var(--Neutral-Gray9);
+    font-family: 'IRANSans';
 `
 export const LogoutPopOverLayout = styled.div`
     width: 150px;

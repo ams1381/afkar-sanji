@@ -8,6 +8,7 @@ import { useLocalStorage } from '@/utilities/useLocalStorage';
 import { Icon } from '@/styles/icons';
 import AvatarComponent from './LogoutPopover';
 import { Router, useRouter } from 'next/router';
+import PN from 'persian-number';
 
 export const Header = ({SetSideBar , goToFolders}) => {
     const [ logoutPopOver , switchPopover ] = useState(false);
@@ -32,7 +33,7 @@ export const Header = ({SetSideBar , goToFolders}) => {
             style={{width : 190}}
             >
                 <UserAvatarLogout onClick={() => switchPopover(!logoutPopOver)}>
-                    <Icon name='User' />
+                    <Icon name='GrayUser' />
                 </UserAvatarLogout>
             </Popover>
         </ConfigProvider>

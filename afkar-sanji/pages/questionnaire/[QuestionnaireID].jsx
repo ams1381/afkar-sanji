@@ -6,7 +6,6 @@ import React, { useEffect, useState } from 'react'
 import QuestionnairePanelHeader from '@/components/QuestionnairePanel/QuestionnairePanelHeader';
 import { Skeleton } from 'antd';
 import { QuestionnairePanelContainer , PanelInnerContainer} from '@/styles/questionnairePanel/QuestionnairePanelHeader';
-import useSWR from 'swr'
 import { Icon } from '@/styles/icons';
 import SettingPanel from '@/components/QuestionnairePanel/SettingPanel';
 import QuestionDesignPanel from '@/components/QuestionnairePanel/QuestionDesignPanel';

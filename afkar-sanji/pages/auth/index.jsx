@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { message } from 'antd';
 import Head from 'next/head';
 import { useLocalStorage } from '@/utilities/useLocalStorage';
+import ProgressBarLoading from '@/styles/ProgressBarLoading';
 
 export const LoginPageContext = React.createContext();
 
@@ -45,6 +46,7 @@ const AuthMainPage = () => {
         <title>Afkar Sanji | Login</title>
     </Head>
       {contextHolder}
+      <ProgressBarLoading />
       <Login_container />
     </>
       

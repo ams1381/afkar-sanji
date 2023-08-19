@@ -9,6 +9,11 @@ export const QuestionnaireDatePickerContainer  = styled.div`
     margin: 0.7rem 0;
     padding-bottom: 1rem;
     border-bottom: 1px solid #CCCCCC;
+
+    & .ant-picker .ant-picker-input >input:placeholder-shown
+    {
+        font-family : IRANSans;
+    }
 `
 export const QuestionnaireSettingContainer = styled.div`
     display : flex;

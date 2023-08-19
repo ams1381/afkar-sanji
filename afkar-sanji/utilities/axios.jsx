@@ -27,6 +27,8 @@ axiosInstance.interceptors.response.use(function (response) {
     
     return response;
 }, async function  (error) {
+    if(!error.response)
+        return
     switch(error.response.status)
     {
         case 401:
@@ -44,6 +46,7 @@ axiosInstance.interceptors.response.use(function (response) {
         case 404:
             break;
         case 500:
+            console.log('50000000000000')
             break;
     }
     // Any status codes that falls outside the range of 2xx cause this function to trigger

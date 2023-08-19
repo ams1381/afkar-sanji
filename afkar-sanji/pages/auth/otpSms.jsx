@@ -1,4 +1,5 @@
 import Login_container from '@/components/auth/LoginContainer';
+import ProgressBarLoading from '@/styles/ProgressBarLoading';
 import { AuthContext } from '@/utilities/AuthContext';
 import { axiosInstance } from '@/utilities/axios';
 import { useLocalStorage } from '@/utilities/useLocalStorage';
@@ -50,6 +51,7 @@ const OTPSms = () => {
         <title>Afkar Sanji</title>
     </Head>
     {contextHolder}
+    <ProgressBarLoading />
     <Login_container />
     </>
    
