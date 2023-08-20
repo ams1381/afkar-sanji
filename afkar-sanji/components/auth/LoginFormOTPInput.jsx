@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import OtpClasses from '@/styles/auth/LoginStyles.module.css'
 import { ClearLoginInputButton, InputBox, LoginErrorMessage, LoginInput } from '@/styles/auth/Login'
 import { AuthContext } from '@/utilities/AuthContext'
-import { CountdownProps , Statistic } from 'antd';
+import {  Statistic } from 'antd';
 import { useRouter } from 'next/router'
 import { axiosInstance } from '@/utilities/axios'
 import { useLocalStorage } from '@/utilities/useLocalStorage';
@@ -102,7 +102,7 @@ export const LoginFormOTPInput = ({ErrorHandler , authentication}) => {
                 InputFocusState(false);
             }}/> : ''}
         </div>
-        <div className={OtpClasses["otp__change_number"]} onClick={() => Router.push('./')}>
+        <div className={OtpClasses["otp__change_number"]} onClick={() => Router.push('/')}>
             <i></i>
             <p>{LoginContext.PhoneNumber ? LoginContext.PhoneNumber : ''}</p>
         </div>
