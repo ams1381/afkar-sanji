@@ -1,10 +1,7 @@
 import axios from "axios";
-import { useRouter } from "next/router";
 import { AuthContext } from "./AuthContext";
 axios.defaults.baseURL = 'https://mostafarm7.pythonanywhere.com';
-import { message } from "antd";
 
-// const router = useRouter();
 
 export const axiosInstance = axios.create({
     headers: {
