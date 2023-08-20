@@ -23,17 +23,19 @@ export default function App({ Component, pageProps }) {
       }
       catch(err)
       {
-        router.push('/auth')
+         typeof window !== 'undefined' ? router.push('/auth') : ''
           return
       }
       
     }
     else
-        router.push('/auth')
+    typeof window !== 'undefined' ? router.push('/auth') : ''
   }
 
-    if(router.pathname !== '/auth' && router.pathname !== '/auth/otpSms')
-      authentication();
+    useEffect(() => {
+      if(router.pathname !== '/auth' && router.pathname !== '/auth/otpSms')
+          authentication();
+    },[])
 
   return <AuthContextProvider>
       <Component {...pageProps} />

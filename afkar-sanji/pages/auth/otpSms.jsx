@@ -32,7 +32,7 @@ const OTPSms = () => {
       setItem('cookie',otp_res.data.access);
       axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + otp_res.data.access;
       setTimeout(() => {
-        router.push("../")
+        typeof window !== 'undefined' ? router.push("../") : ''
       },2000)
       
     }

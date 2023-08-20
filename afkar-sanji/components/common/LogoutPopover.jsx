@@ -12,7 +12,7 @@ const AvatarComponent = () => {
     const router = useRouter();
 
     const LogoutHandler = () => {
-        router.push('./auth')
+        typeof window !== 'undefined' ?  router.push('./auth') : ''
     }
   return (
     <LogoutPopOverLayout>

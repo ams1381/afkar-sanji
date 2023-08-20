@@ -27,7 +27,7 @@ const AuthMainPage = () => {
     if(number_phone_res.status == 201)
     {
       setItem('phoneNumber',Auth.PhoneNumber)
-      router.push('auth/otpSms/') 
+      typeof window !== 'undefined' ? router.push('auth/otpSms/') : ''
     }
     else 
     {

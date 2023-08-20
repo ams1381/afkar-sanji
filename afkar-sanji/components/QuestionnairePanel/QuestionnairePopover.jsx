@@ -17,7 +17,7 @@ export const QuestionnairePopover = ({ Questionnaire , RenameInput  , RenameChan
     const DeleteQuestionnaireHandler = async () => {
       await axiosInstance.delete(`/question-api/questionnaires/${Questionnaire.uuid}/`)
       SetDeleteQuestionnaireState(false);
-      router.push('../')
+      typeof window !== 'undefined' ? router.push('../') : ''
     }
   return (
     <FolderPopoverContainer style={{ height : 'auto' }}>

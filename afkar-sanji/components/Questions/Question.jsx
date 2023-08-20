@@ -7,6 +7,8 @@ import DropDown from './DropDown';
 import Prioritize from './Prioritize';
 import Email from './Email';
 import RateQuestion from './Rate';
+import WelcomeComponent from './Welcome';
+import ThankComponent from './Thanks';
 
 const QuestionComponentBodyProvider = (QuestionType,QuestionInfo) => {
   switch(QuestionType)
@@ -30,11 +32,9 @@ const QuestionComponentBodyProvider = (QuestionType,QuestionInfo) => {
         case 'file':
             return <></>
         case 'numberanswer':
-            return <></>
+            return <InputAnswer InputPlaceholder='یک عدد وارد کنید' QuestionInfo={QuestionInfo}/>
         case 'textanswer':
-            return <InputAnswer QuestionInfo={QuestionInfo}/>
-        case 'number' :
-            return <InputAnswer QuestionInfo={QuestionInfo}/>
+            return <InputAnswer InputPlaceholder='sample@sample.com' QuestionInfo={QuestionInfo}/>
   }
 }
 
@@ -43,7 +43,8 @@ const QuestionComponent = ({ QuestionInfo }) => {
   const regex = /(<([^>]+)>)/gi;
 
   return (
-    <QuestionComponentContainer>
+    QuestionInfo.question_type == 'welcome_page' ? <WelcomeComponent WelcomeInfo={QuestionInfo} /> 
+    : QuestionInfo.question_type != 'thanks_page' ? <QuestionComponentContainer>
         <div className='question_header'>
         <QuestionTitle>
             { QuestionInfo.show_number ? <span className='question_number'>
@@ -56,8 +57,9 @@ const QuestionComponent = ({ QuestionInfo }) => {
              QuestionInfo.question_text ? QuestionInfo.question_text.replace(regex,"") : ''}</p>
         </QuestionDescription>
         </div>
-        {/* {QuestionBodyComponent} */}
-    </QuestionComponentContainer>
+        {QuestionBodyComponent}
+    </QuestionComponentContainer> 
+      : <ThankComponent QuestionInfo={QuestionInfo}/>
   )
 }
 export default QuestionComponent;

@@ -102,7 +102,9 @@ export const LoginFormOTPInput = ({ErrorHandler , authentication}) => {
                 InputFocusState(false);
             }}/> : ''}
         </div>
-        <div className={OtpClasses["otp__change_number"]} onClick={() => Router.push('/')}>
+        <div className={OtpClasses["otp__change_number"]} onClick={() => {
+            typeof window !== 'undefined' ? Router.push('/') : ''
+            }}>
             <i></i>
             <p>{LoginContext.PhoneNumber ? LoginContext.PhoneNumber : ''}</p>
         </div>
