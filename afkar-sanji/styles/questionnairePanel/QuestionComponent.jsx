@@ -103,3 +103,27 @@ export const DropDownContainer = styled.div`
         font-size : 13px;
     }
 `
+export const EmailInputContainer = styled.div`
+    display: flex;
+    border: 1px solid #D9D9D9;
+    align-items: center;
+    height: 40px;
+    
+    & input 
+    {
+        border: none;
+        text-align: right;
+    }
+    & input:focus
+    {
+        border : none;
+        box-shadow : none;
+    }
+    & span 
+    {
+        height: 100%;
+        align-items: center;
+        margin: 0 0.8rem 0 0.6rem;
+        display: flex;
+    }
+`

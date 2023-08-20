@@ -1,23 +1,45 @@
 import React, { useEffect, useState } from 'react'
 import { QuestionTitle  , QuestionDescription , QuestionComponentContainer
 } from '@/styles/questionnairePanel/QuestionComponent'
-import Optional from './optional';
+import OptionalComponent from './Optional';
 import InputAnswer from './InputAnswer';
 import DropDown from './DropDown';
 import Prioritize from './Prioritize';
+import Email from './Email';
+import RateQuestion from './Rate';
 
-const QuestionComponentBodyGenerator = (QuestionType) => <QuestionType/>;
+const QuestionComponentBodyProvider = (QuestionType,QuestionInfo) => {
+  switch(QuestionType)
+    {
+        case 'optional':
+            return <OptionalComponent QuestionInfo={QuestionInfo} />
+        case 'drop_down':
+            return <></>
+        case 'integer_selective':
+            return <RateQuestion QuestionInfo={QuestionInfo} />
+        case 'integer_range':
+            return <></>
+        case 'sort':
+            return <Prioritize QuestionInfo={QuestionInfo}/>
+        case 'link':
+            return <InputAnswer QuestionInfo={QuestionInfo}/>
+        case 'email_field':
+            return <Email QuestionInfo={QuestionInfo}/>
+        case 'dropdown':
+            return <DropDown QuestionInfo={QuestionInfo}/>
+        case 'file':
+            return <></>
+        case 'numberanswer':
+            return <></>
+        case 'textanswer':
+            return <InputAnswer QuestionInfo={QuestionInfo}/>
+        case 'number' :
+            return <InputAnswer QuestionInfo={QuestionInfo}/>
+  }
+}
 
 const QuestionComponent = ({ QuestionInfo }) => {
-  // let QuestionBodyType = QuestionInfo['question_type'];
-  // console.log(QuestionBodyType)
-  const  QuestionBodyType = QuestionInfo.question_type.charAt(0).toUpperCase() + QuestionInfo.question_type.slice(1);
-  // QuestionBodyType = QuestionBodyType.charAt(0).toUpperCase() + QuestionInfo.question_type.slice(1);
-  const QuestionBodyComponent = QuestionComponentBodyGenerator(QuestionBodyType);
-  // useEffect(() => {
-    // SetQuestionBodyType(QuestionInfo.question_type.charAt(0).toUpperCase() + QuestionInfo.question_type.slice(1))
-  // },[])
-  // SetQuestionBodyType(QuestionBodyType.replace("_",""))
+  const QuestionBodyComponent = QuestionComponentBodyProvider(QuestionInfo.question_type,QuestionInfo);
   const regex = /(<([^>]+)>)/gi;
 
   return (
@@ -34,7 +56,7 @@ const QuestionComponent = ({ QuestionInfo }) => {
              QuestionInfo.question_text ? QuestionInfo.question_text.replace(regex,"") : ''}</p>
         </QuestionDescription>
         </div>
-        {QuestionBodyComponent}
+        {/* {QuestionBodyComponent} */}
     </QuestionComponentContainer>
   )
 }

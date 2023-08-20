@@ -60,13 +60,16 @@ export const QuestionDesignBox = styled.div`
 
     & > div
     {
-        width: 50%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
     }
     @media screen and (max-width : 768px) {
-        & div:first-child
-        {
-            width: 100%;
-        }
+        // & div:first-child
+        // {
+        //     width: 100%;
+        // }
         & .QuestionDesignLeftContainer
         {
             display : none;
@@ -77,7 +80,8 @@ export const QuestionDesignItem = styled.div`
     padding: 1rem;
     border: 2px solid #D9D9D9;
     border-radius: 2px;
-    margin: 0.6rem auto;
+    margin: 0.6rem 0;
+    width: 50%;
 
     .question_bold_info 
     {
@@ -89,6 +93,28 @@ export const QuestionDesignItem = styled.div`
         display: flex;
         align-items: center;
 }
+`
+export const QuestionItemRow = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+
+    & .question_preview
+    {
+        width : 50%;
+    }
+    @media screen and (max-width : 768px)
+    {
+        & .question_design_item
+        {
+            width : 100%;
+        }
+        & .question_preview
+        {
+            display : none;
+        }
+    }
 `
 export const QuestionItemSurface = styled.div`
     width: 100%;
@@ -113,7 +139,7 @@ export const DropDownQuestionButton = styled.button`
     & i 
     {
         transition : 0.3s;
-        transform : ${p => p.dropped ? 'rotate(-90deg)' : 'none'};
+        transform : ${p => p?.dropped ? 'rotate(-90deg)' : 'none'};
     }
     
 `

@@ -5,6 +5,7 @@ import { useLocalStorage } from '@/utilities/useLocalStorage'
 import { useRouter } from 'next/router'
 import { useContext, useEffect, useState } from 'react'
 
+
 export default function App({ Component, pageProps }) {
   const router = useRouter();
 
@@ -35,6 +36,6 @@ export default function App({ Component, pageProps }) {
       authentication();
 
   return <AuthContextProvider>
-    <Component {...pageProps} />
+      <Component {...pageProps} />
   </AuthContextProvider> 
 }

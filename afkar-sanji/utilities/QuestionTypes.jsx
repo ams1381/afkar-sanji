@@ -4,10 +4,10 @@ import { styled } from "styled-components"
 export const QuestionTypeContainer = styled.div`
   display : flex;
   justify-content : space-between;
-  color : black;
   font-family : IRANSans;
   font-size : 13px;
   align-items: center;
+  color: var(--primary-color);
 `
 const QuestionTypeComponent = (Type  , TypeText) => 
   <QuestionTypeContainer>
@@ -39,15 +39,29 @@ export const Question_types = [
       },
       {
         value: 'درجه بندی',
-        label: QuestionTypeComponent('Link',' لینک'),
-        type : 'Link'
+        label: QuestionTypeComponent('Link',' درجه بندی'),
+        type : 'Degree'
       },
       {
         value: 'ایمیل',
         label: QuestionTypeComponent('Email','ایمیل'),
         type : 'multiple-option'
       },
-      
+      {
+        value: 'متنی بدون پاسخ',
+        label: QuestionTypeComponent('QWOutAnswer','متنی بدون پاسخ'),
+        type : 'question-without-answer'
+      },
+      {
+        value: 'ایمیل',
+        label: QuestionTypeComponent('Email','ایمیل'),
+        type : 'multiple-option'
+      },
+      {
+        value: 'اولویت بندی',
+        label: QuestionTypeComponent('Prioritize','اولویت دهی'),
+        type : 'prioritize'
+      },
       {
         value: 'صفحه ی تشکر',
         label: QuestionTypeComponent('Thanks','صفحه ی تشکر'),

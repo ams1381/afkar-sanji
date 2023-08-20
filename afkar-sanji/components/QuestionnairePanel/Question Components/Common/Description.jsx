@@ -2,8 +2,8 @@ import { QuestionDescriptionContainer , DescriptionTextField} from '@/styles/que
 import { Checkbox } from 'antd'
 import React, { useState } from 'react'
 
-const QuestionDescription = () => {
-    const [ openDescriptionField , SetOpenDescriptionField ] = useState(false);
+const QuestionDescription = ({ questionDescription }) => {
+    const [ openDescriptionField , SetOpenDescriptionField ] = useState(questionDescription);
   return (
     <QuestionDescriptionContainer>
         <div className='Description_checkbox_container' onClick={() => SetOpenDescriptionField(!openDescriptionField)}>
@@ -11,7 +11,7 @@ const QuestionDescription = () => {
             <Checkbox checked={openDescriptionField}/>
         </div>
         { openDescriptionField ? <div className='DescriptionInputContainer'>
-            <DescriptionTextField />
+            <DescriptionTextField value={questionDescription} />
       </div> : ''}
     </QuestionDescriptionContainer>
   )

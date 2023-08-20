@@ -57,7 +57,6 @@ export const LoginFormOTPInput = ({ErrorHandler , authentication}) => {
         
         LoginContext.ChangeOTP(e.target.value);
         ErrorHandler.SetNull(null);
-        console.log(LoginContext)
         if(!e.target.value)
             SetClearState(false);
         else

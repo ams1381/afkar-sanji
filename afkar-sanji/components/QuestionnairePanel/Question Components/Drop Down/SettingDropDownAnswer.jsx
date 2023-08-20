@@ -1,12 +1,10 @@
-import React, { useState } from 'react'
 import { AlphabetNumberContainer, ToggleContainer } from '@/styles/questionnairePanel/QuestionSetting';
-import ToggleCheckBoxItem from '../Common/Toggle';
-import { Checkbox, Input, InputNumber, Switch } from 'antd';
+import { Checkbox, InputNumber, Switch } from 'antd';
+import React, { useState } from 'react'
 
-const SettingMultipleAnswer = () => {
+export const SettingDropDownAnswer = () => {
     const [ AdditionalOptionState , SetAdditionalOptionState ] = useState(false);
     const [ MultipleAnswerState , SetMultipleAnswerState ] = useState(false);
-
   return (
     <ToggleContainer>
         <div className='checkbox_container' onClick={() => SetMultipleAnswerState(!MultipleAnswerState)}>
@@ -44,20 +42,6 @@ const SettingMultipleAnswer = () => {
                 </div>
             </div> : ''}
         </div>
-        <div className='checkbox_container'>
-            <p>پاسخ به سوال اجباری باشد</p>
-            <Switch/>
-        </div>
-        <div className='checkbox_container'>
-            <p>عدم نمایش شماره ی سوال</p>
-            <Switch/>
-        </div>
-        <div className='checkbox_container'>
-            <p>گزینه ها عمودی چیده شوند</p>
-            <Switch/>
-        </div>
     </ToggleContainer>
-    
   )
 }
-export default SettingMultipleAnswer;
