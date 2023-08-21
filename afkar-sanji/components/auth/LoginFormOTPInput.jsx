@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import OtpClasses from '@/styles/auth/LoginStyles.module.css'
 import { ClearLoginInputButton, InputBox, LoginErrorMessage, LoginInput } from '@/styles/auth/Login'
 import { AuthContext } from '@/utilities/AuthContext'
-import {  Statistic } from 'antd';
+import {  Button, Statistic } from 'antd';
 import { useRouter } from 'next/router'
 import { axiosInstance } from '@/utilities/axios'
 import { useLocalStorage } from '@/utilities/useLocalStorage';
@@ -16,6 +16,7 @@ export const LoginFormOTPInput = ({ErrorHandler , authentication}) => {
     const [InputFocusState , SetFocusState ] = useState(false);
     const [ showClearState , SetClearState ] = useState(false);
     const CountDown = Statistic.Countdown;
+    const [ resendLoading , SetResendLoading ] = useState(false);
     const LoginContext =  useContext(AuthContext);
 
     useEffect(() => {
@@ -38,6 +39,7 @@ export const LoginFormOTPInput = ({ErrorHandler , authentication}) => {
     const resend_sms = async () => {
         try 
         {
+            SetResendLoading(true)
             await axiosInstance.post('/user-api/auth/gateway/', { phone_number : LoginContext.PhoneNumber })
             ChangeTimeOutState(false);
             SetTimer(60)
@@ -48,6 +50,10 @@ export const LoginFormOTPInput = ({ErrorHandler , authentication}) => {
                 content : error.response.data,
                 duration : 4
             })
+        }
+        finally
+        {
+            SetResendLoading(false)
         }
     }
     const input_change_handler = async (e) => {
@@ -80,9 +86,9 @@ export const LoginFormOTPInput = ({ErrorHandler , authentication}) => {
             className={OtpClasses['otp_input']} 
             />
             {
-                timeOutState ? <span className={OtpClasses["resend_otp_sms"]} onClick={resend_sms}>
+                timeOutState ? <Button loading={resendLoading} className={OtpClasses["resend_otp_sms"]} onClick={resend_sms}>
                 <p>ارسال دوباره</p>
-            </span>
+            </Button>
                 : showClearState ?  <ClearLoginInputButton onClick={() => LoginContext.ChangeOTP(null)}>
                     <i></i>
                 </ClearLoginInputButton> : ''
@@ -103,7 +109,7 @@ export const LoginFormOTPInput = ({ErrorHandler , authentication}) => {
             }}/> : ''}
         </div>
         <div className={OtpClasses["otp__change_number"]} onClick={() => {
-            typeof window !== 'undefined' ? Router.push('/') : ''
+            typeof window !== 'undefined' ? Router.push('./') : ''
             }}>
             <i></i>
             <p>{LoginContext.PhoneNumber ? LoginContext.PhoneNumber : ''}</p>

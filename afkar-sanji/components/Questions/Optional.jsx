@@ -3,7 +3,7 @@ import { Checkbox, Input } from 'antd';
 import React from 'react'
 
 const OptionalComponent = ({QuestionInfo}) => {
-  console.log(QuestionInfo)
+
   return (
     <OptionalAnswerBlockContainer>
       {QuestionInfo.options.map(item => <div className='OptionalAnswerItemContainer' key={item.id}>

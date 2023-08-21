@@ -4,6 +4,7 @@ import { QWanswerWrite } from './QWanswer/WriteQWanswer'
 import { WritePrioritize } from './Prioritize/WritePrioritize'
 import { RateQuestionWrite } from './Rating/RateQuestionWrite'
 import { WriteDropDownAnswer } from './Drop Down/WriteDropDownAnswer'
+import { RangeWrite } from './Range/RangeWrite'
 
 export const WritingSectionProvider = (Type , QuestionInfo) => {
   switch(Type)
@@ -15,7 +16,7 @@ export const WritingSectionProvider = (Type , QuestionInfo) => {
         case 'integer_selective':
             return <RateQuestionWrite QuestionInfo={QuestionInfo}/>
         case 'integer_range':
-            return <></>
+            return <RangeWrite QuestionInfo={QuestionInfo} />
         case 'sort':
             return <WritePrioritize QuestionInfo={QuestionInfo}/>
         case 'link':

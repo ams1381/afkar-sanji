@@ -2,10 +2,10 @@ import { Icon } from '@/styles/icons'
 import { Rate } from 'antd'
 import React from 'react'
 
-const RateQuestion = () => {
+const RateQuestion = ({ QuestionInfo }) => {
   return (
     <div>
-        <Rate />
+        <Rate count={QuestionInfo.max} character={<Icon name={QuestionInfo.shapeIcon} />}/>
     </div>
   )
 }

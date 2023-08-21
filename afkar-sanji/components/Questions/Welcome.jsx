@@ -7,9 +7,9 @@ const WelcomeComponent = ({ WelcomeInfo }) => {
   return (
     <QuestionComponentContainer>
       <WelcomeComponentContainer>
-          <p>{WelcomeInfo.title.replace(regex,"")}</p>
-          <p>{WelcomeInfo.description.replace(regex,"")}</p>
-          <Button type='primary'>{WelcomeInfo.button_text.replace(regex,"")}</Button>
+          <p>{WelcomeInfo.title ? WelcomeInfo.title.replace(regex,"") : ''}</p>
+          <p>{WelcomeInfo.description ? WelcomeInfo.description.replace(regex,"") : ''}</p>
+          <Button type='primary'>{WelcomeInfo.button_text ? WelcomeInfo.button_text.replace(regex,"") : ''}</Button>
       </WelcomeComponentContainer>
     </QuestionComponentContainer>
   )

@@ -1,35 +1,22 @@
 import React, { useState } from 'react'
 import { ToggleContainer } from '@/styles/questionnairePanel/QuestionSetting';
 import ToggleCheckBoxItem from '../Common/Toggle';
-import { Checkbox } from 'antd';
+import { Checkbox, Switch } from 'antd';
+import { useDispatch } from 'react-redux';
+import { ChangeToggleHandler } from '@/utilities/QuestionStore';
 
-export const SettingPrioritize = () => {
+export const SettingPrioritize = ({ QuestionInfo }) => {
     const [ AdditionalOptionState , SetAdditionalOptionState ] = useState(false);
+    const PrioritizeDispatcher = useDispatch();
+
+    const RegularToggleHandler = (Event , TName) => {
+        PrioritizeDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : TName , ToggleValue : Event}))
+    }
   return (
     <ToggleContainer>
-        <div className='checkbox_container' >
-            <p>سوال چند انتخابی باشد</p>
-            <Checkbox />
-        </div>
-         <div className='additional_options_container'>
-            <div className='additional_option_toggle' onClick={() => SetAdditionalOptionState(!AdditionalOptionState)}>
-                <Checkbox checked={AdditionalOptionState} />
-                <p>گزینه های اضافی</p>
-            </div>
-            {AdditionalOptionState ? <div className='additional_option_checkboxes_container'>
-                <div className='additional_checkbox'>
-                    <Checkbox />
-                    <p>همه گزینه ها</p>
-                </div>
-                <div className='additional_checkbox'>
-                    <Checkbox />
-                    <p>هیچ کدام</p>
-                </div>
-                <div className='additional_checkbox'>
-                    <Checkbox />
-                    <p>سایر</p>
-                </div>
-            </div> : ''}
+         <div className='checkbox_container' onClick={e => RegularToggleHandler(!QuestionInfo.is_random_options,'is_random_options')}>
+            <p>تصادفی سازی ترتیب گزینه ها</p>
+            <Switch checked={QuestionInfo.is_random_options}/>
         </div>
     </ToggleContainer>
   )

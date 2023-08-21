@@ -20,14 +20,16 @@
 .resend_otp_sms 
 {
     position: absolute;
-    right: 0.6rem;
+    right: 0;
     display: flex;
-    cursor: pointer;
+    align-items: center;
     color: var(--primary-color);
     font-family: IRANSans;
     font-size: 14px;
-    top: 0.55rem;
+    top: 0em;
+    height: 100%;
     cursor: pointer;
+    border: none;
     
 }
 .login__header {

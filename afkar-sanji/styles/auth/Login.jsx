@@ -89,8 +89,15 @@ export const LoginHeaderText = styled.h2`
         transition: .3s;
         text-overflow: clip;
         text-align: left;
-        width : ${p => p.filltext ? '100% !important' : ''};
+        animation : ${p => p.halfFill ? 'OTPAnimation 1s ease' : 'none'};
+        width : ${p => p.filltext ? '100% !important' : p.halfFill ? '50% !important' : ''};
+        // width : ${p => p.halfFill ? '50% !important' : ''}; 
     }
+    @keyframes OTPAnimation
+    {
+        from { width : 0 }
+        to { width : 50% }
+    } 
     @keyframes LoginTitleAnim 
     {
         25% { transform : scale(1.5)  }

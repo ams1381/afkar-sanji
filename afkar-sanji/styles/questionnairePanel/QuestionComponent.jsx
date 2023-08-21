@@ -51,19 +51,21 @@ export const OptionalAnswerBlockContainer = styled.div`
 
     &  > div
     {
-        display: flex;
-        justify-content: flex-end;
-        background: #FFFFFF;
-        border: 1px dotted #D9D9D9;
-        color: var(--Neutral-Gray9);
-        padding: 0.4rem;
-        margin: 0.4rem 0;
-        border-radius: 2px;
-        align-items: center;
+            display: flex;
+            justify-content: flex-start;
+            flex-direction: row-reverse;
+            background: #FFFFFF;
+            border: 1px dotted #D9D9D9;
+            color: var(--Neutral-Gray9);
+            padding: 0.4rem;
+            margin: 0.4rem 0;
+            border-radius: 2px;
+            align-items: center;
     }
     & > div p 
     {
-        margin-left : 0.5rem;
+        margin-right : 0.5rem;
+        direction: rtl
     }
 `
 export const QuestionWithAnswerContainer = styled.div`
@@ -101,6 +103,10 @@ export const DropDownContainer = styled.div`
     & .ant-select-selection-placeholder
     {
         font-size : 13px;
+    }
+    & .ant-select-selection-item
+    {
+        font-family : IRANSans;
     }
 `
 export const EmailInputContainer = styled.div`

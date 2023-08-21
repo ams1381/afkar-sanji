@@ -18,6 +18,7 @@ const OTPSms = () => {
     FormBodyMessage : 'لطفا کد ارسال شده را وارد کن',
     ButtonText : 'ثبت کد تایید',
     FormType : 'OTP_SMS'
+    
   }
 
   Auth.Login_Function = async () => {
@@ -26,7 +27,10 @@ const OTPSms = () => {
     {
       LoginMessage.success({
         content : 'ورود با موفقیت انجام شد' ,
-        duration : 4
+        duration : 4,
+        style : {
+          fontFamily : 'IRANSans'
+        }
       })
       setItem('phoneNumber',Auth.PhoneNumber);
       setItem('cookie',otp_res.data.access);

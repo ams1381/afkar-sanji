@@ -49,6 +49,7 @@ export const DescriptionTextField = styled.input`
     padding: 5px 12px 5px 12px;
     font-family: 'IRANSANS';
     transition : 0.3s;
+    direction: rtl;
     &:focus 
     {
         border : 1px solid var(--primary-color);

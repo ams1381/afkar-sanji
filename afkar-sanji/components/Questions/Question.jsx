@@ -15,8 +15,6 @@ const QuestionComponentBodyProvider = (QuestionType,QuestionInfo) => {
     {
         case 'optional':
             return <OptionalComponent QuestionInfo={QuestionInfo} />
-        case 'drop_down':
-            return <></>
         case 'integer_selective':
             return <RateQuestion QuestionInfo={QuestionInfo} />
         case 'integer_range':
@@ -27,7 +25,7 @@ const QuestionComponentBodyProvider = (QuestionType,QuestionInfo) => {
             return <InputAnswer QuestionInfo={QuestionInfo}/>
         case 'email_field':
             return <Email QuestionInfo={QuestionInfo}/>
-        case 'dropdown':
+        case 'drop_down':
             return <DropDown QuestionInfo={QuestionInfo}/>
         case 'file':
             return <></>

@@ -104,6 +104,7 @@ export const QuestionItemRow = styled.div`
     {
         width : 50%;
     }
+   
     @media screen and (max-width : 768px)
     {
         & .question_design_item
@@ -127,6 +128,8 @@ export const QuestionItemSurface = styled.div`
         display: flex;
         flex-direction: row-reverse;
         text-align : right;
+        word-break: break-word;
+        cursor : pointer;
     }
 `
 export const DropDownQuestionButton = styled.button`
@@ -182,6 +185,12 @@ export const QuestionItemActionSelector = styled.div`
         }
     }
 `
+export const PreviewMobileSizeComponent = styled.div`
+    @media screen and (min-width : 768px)
+    {
+        display : none;
+    }
+`
 export const QuestionItemActionButton = styled.button`
     width: 50%;
     display: flex;
@@ -225,6 +234,7 @@ export const QuestionItemTitleInput = styled.input`
     text-align: right;
     font-family: 'IRANSANS';
     padding: 0.7rem;
+    direction: rtl;
 `
 export const QuestionItemFooter = styled.div`
     display : flex;
@@ -251,6 +261,7 @@ export const OptionalInputItem = styled.input`
     text-align: right;
     outline: none;
     font-family: 'IRANSANS';
+    direction: rtl;
 
     &::placeholder 
     {
@@ -262,6 +273,7 @@ export const InputOptionsContainer = styled.div`
     flex-direction: row-reverse;
     justify-content: space-between;
     align-items: center;
+    margin-top: 0.5rem;
 
     & button 
     {
@@ -299,4 +311,26 @@ export const AddOptionButton = styled.button`
     color: #D9D9D9;
     background: none;
     cursor : pointer;
+`
+
+export const RangeLabelContainer = styled.div`
+    text-align: right;
+    font-family: 'IRANSANS';
+
+    & .label_container 
+    {
+        display: flex;
+        justify-content: space-between;
+        margin: 0.7rem 0;
+    }
+    & .ant-input
+    {
+        width: 80%;
+        border: 1px solid #D9D9D9;
+        font-family: 'IRANSANS';
+        text-align: right;
+        padding: 5px 12px 5px 12px;
+        border-radius: 2px;
+        outline : none;
+    }
 `

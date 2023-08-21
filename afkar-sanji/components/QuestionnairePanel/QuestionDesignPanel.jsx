@@ -1,5 +1,5 @@
 import { Select, Skeleton } from 'antd';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { ClearSearchInputButton, QuestionDesignTitle, QuestionDesignBox,
    QuestionnairePanelBodyContainer  , QuestionSearchContainer , QuestionSearchInput
 } from '@/styles/questionnairePanel/QuestionDesignPanel';
@@ -9,24 +9,38 @@ import { QuestionItem } from './QuestionItem';
 import QuestionComponent from '../Questions/Question';
 import WelcomeComponent from '../Questions/Welcome';
 import { axiosInstance } from '@/utilities/axios';
-import QuestionStore from '@/utilities/QuestionStore';
+import QuestionStore, { NonQuestionSetter, QuestionSorter } from '@/utilities/QuestionStore';
 import { useDrag } from 'react-dnd'
 import { Draggable } from 'react-beautiful-dnd';
 import DebounceSelect from './Preview Components/QuestionSearchBar';
 import { useDispatch } from 'react-redux';
-import { initialStateSetter } from '@/utilities/QuestionStore';
+import { initialQuestionsSetter } from '@/utilities/QuestionStore';
 import { useSelector } from 'react-redux';
+import DraggableList from 'react-draggable-list';
 
 const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
   const QuestionDataDispatcher = useDispatch();
   const [ SearchQuestionText , SetSearchQuestion ] = useState([]);
   const [ ClearSearchBoxState , SetClearSearchBoxState ] = useState(false);
   const [ QuestionToPreview , SetQuestionToPreview ] = useState(null);
+  const [ QuestionsReload , SetQuestionsReloaded ] = useState(false);
+  const QuestionBoxContainer = useRef(null);
+  const  AllQuestion = useSelector(s => s.reducer.data)
   
   useEffect(() => {
-    Questionnaire ? QuestionDataDispatcher(initialStateSetter(Questionnaire)) : ''
+    if(AllQuestion.length)
+      QuestionDataDispatcher(initialQuestionsSetter(AllQuestion))
+    else if(Questionnaire)
+    {
+      QuestionDataDispatcher(NonQuestionSetter([{ question : Questionnaire.welcome_page }, 
+        { question : Questionnaire.thanks_page}]))
+
+      QuestionDataDispatcher(initialQuestionsSetter(Questionnaire.questions))
+      QuestionDataDispatcher(QuestionSorter());
+    }
+    
       // StoreInitialValueSetter(Questionnaire.questions)
-  },[Questionnaire])
+  },[Questionnaire , AllQuestion])
   // const SearchQuestionHandler = async (e) => {
   //   // if(!e.target.value)
   //   //   SetClearSearchBoxState(false)
@@ -49,19 +63,7 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
       <div>
         <QuestionSearchContainer>   
                 { Questionnaire ?  <>
-                  {/* <DebounceSelect 
-                  mode="multiple"
-                  value={SearchQuestionText}
-                  placeholder="جستجو کنید"
-                  fetchOptions={SearchQuestionHandler}
-                  onChange={(newValue) => {
-                    SetSearchQuestion(newValue);
-                  }}
-                  style={{
-                    width: '100%',
-                  }}
-                  /> */}
-                  <QuestionSearchInput placeholder='جستجو کنید' value={SearchQuestionText ? SearchQuestionText : ''}   /> 
+                  <QuestionSearchInput placeholder='جستجو کنید' defaultValue={SearchQuestionText ? SearchQuestionText : ''}   /> 
                   {ClearSearchBoxState ? <ClearSearchInputButton onClick={() => SetSearchQuestion(null)}>
                     <Icon name='ClearInput' style={{ width : 13 }} />
                   </ClearSearchInputButton> : ''}
@@ -72,16 +74,25 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
       <QuestionDesignTitle>
          <p>سوالی را ایجاد یا ویرایش کنید</p> 
       </QuestionDesignTitle>
-      <QuestionDesignBox>
+      <QuestionDesignBox ref={QuestionBoxContainer}>
         { (Questionnaire) ? <div className='QuestionDesignRightContainer'>
                 {Questionnaire.welcome_page ? 
-                <QuestionItem UUID={Questionnaire.uuid} 
-                QuestionnaireReloader={QuestionnaireReloader} 
-                question={Questionnaire.welcome_page}/> : ''}
-                {Questionnaire.questions.map((item,index) => 
-                <QuestionItem questionIndex={index} UUID={Questionnaire.uuid}                 QuestionnaireReloader={QuestionnaireReloader}  key={item.question.id} question={item.question}/>)} 
-                {Questionnaire.thank_page ? <QuestionItem UUID={Questionnaire.uuid} 
-                QuestionnaireReloader={QuestionnaireReloader} question={Questionnaire.thank_page} /> : ''}
+                <QuestionItem IsQuestion={false} UUID={Questionnaire.uuid} question={Questionnaire.welcome_page}/> : ''}
+                
+                  {/* <DraggableList list={AllQuestion.map(item => item.question)} itemKey="id" template={<QuestionItem className="disable-select dragHandle" IsQuestion={true}  UUID={Questionnaire.uuid}/>}
+                   container={() => QuestionBoxContainer.current} /> */}
+                  
+                     {
+                     AllQuestion.map((item,index) => 
+                    //  <Draggable key={item.id} draggableId={item.id} index={index}>
+                    //   {(provided, snapshot) => 
+                      <QuestionItem className="disable-select dragHandle" IsQuestion={true} 
+                       UUID={Questionnaire.uuid} key={item.question.id} question={item.question}/>
+                      // </Draggable> 
+                     )}
+                    
+                {Questionnaire.thanks_page ? <QuestionItem  IsQuestion={false} UUID={Questionnaire.uuid} 
+                 question={Questionnaire.thanks_page} /> : ''}
                   </div> : <Skeleton active /> }
           {/* <div className='QuestionDesignLeftContainer'>
           

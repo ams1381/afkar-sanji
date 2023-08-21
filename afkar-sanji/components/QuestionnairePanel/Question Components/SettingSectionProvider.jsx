@@ -5,30 +5,31 @@ import { SettingPrioritize } from './Prioritize/SettingPrioritze'
 import { RateQuestionSetting } from './Rating/RateQuestionSetting'
 import { SettingDropDownAnswer } from './Drop Down/SettingDropDownAnswer'
 import { SettingNumberAnswer } from './Number Answer/SettingNumberAnswer'
+import { CommonSetting } from './Common/CommonSetting'
 
 export const SettingSectionProvider = (Type , QuestionInfo) => {
     switch(Type)
     {
         case 'optional':
-            return <SettingMultipleAnswer />
+            return <SettingMultipleAnswer QuestionInfo={QuestionInfo}/>
         case 'drop_down':
-            return <SettingDropDownAnswer/>
+            return <SettingDropDownAnswer QuestionInfo={QuestionInfo}/>
         case 'integer_selective':
-            return <RateQuestionSetting />
+            return <RateQuestionSetting QuestionInfo={QuestionInfo} />
         case 'integer_range':
-            return <></>
+            return <CommonSetting QuestionInfo={QuestionInfo}/>
         case 'sort':
-            return <SettingPrioritize />
+            return <SettingPrioritize QuestionInfo={QuestionInfo}/>
         case 'link':
-            return <></>
+            return <CommonSetting QuestionInfo={QuestionInfo}/>
         case 'email_field':
-            return <></>
+            return <CommonSetting QuestionInfo={QuestionInfo}/>
         case 'file':
             return <></>
         case 'numberanswer':
-            return <SettingNumberAnswer />
+            return <SettingNumberAnswer QuestionInfo={QuestionInfo}/>
         case 'textanswer':
-            return <SettingQWanswer />
+            return <SettingQWanswer QuestionInfo={QuestionInfo}/>
         case 'welcome':
             return <></>
         case 'thank':

@@ -9,7 +9,7 @@ export const QuestionTypeContainer = styled.div`
   align-items: center;
   color: var(--primary-color);
 `
-const QuestionTypeComponent = (Type  , TypeText) => 
+export const QuestionTypeComponent = (Type  , TypeText) => 
   <QuestionTypeContainer>
     <p>{TypeText}</p>
     <Icon name={Type}/>
@@ -18,54 +18,48 @@ const QuestionTypeComponent = (Type  , TypeText) =>
 
 export const Question_types = [
     {
-      value: 'خوش آمد گویی',
+      value: 'welcome_page',
       label: QuestionTypeComponent('welcome','خوش آمد گویی'),
-      type : 'Welcome'
     },
     {
-      value: 'طیفی',
+      value: 'integer_range',
       label: QuestionTypeComponent('range','طیفی'),
-      type : 'Integer_range'
+    },
+    {
+      value: 'number',
+      label: QuestionTypeComponent('Number','عدد'),
     },
     {
         value: 'چند گزینه ای',
         label: QuestionTypeComponent('optional','چند گزینه ای'),
-        type : 'Optional'
       },
       {
-        value: 'متنی با پاسخ',
+        value: 'textanswer',
         label: QuestionTypeComponent('QWAnswer','متنی با پاسخ'),
-        type : 'Free'
       },
       {
-        value: 'درجه بندی',
-        label: QuestionTypeComponent('Link',' درجه بندی'),
-        type : 'Degree'
+        value: 'link',
+        label: QuestionTypeComponent('Link','لینک'),
       },
       {
-        value: 'ایمیل',
+        value: 'email_field',
         label: QuestionTypeComponent('Email','ایمیل'),
-        type : 'multiple-option'
       },
       {
-        value: 'متنی بدون پاسخ',
+        // value: 'متنی بدون پاسخ',
         label: QuestionTypeComponent('QWOutAnswer','متنی بدون پاسخ'),
-        type : 'question-without-answer'
       },
       {
-        value: 'ایمیل',
-        label: QuestionTypeComponent('Email','ایمیل'),
-        type : 'multiple-option'
+        // value: 'ایمیل',
+        label: QuestionTypeComponent('Email','ایمیل'), 
       },
       {
-        value: 'اولویت بندی',
+        value: 'sort',
         label: QuestionTypeComponent('Prioritize','اولویت دهی'),
-        type : 'prioritize'
       },
       {
-        value: 'صفحه ی تشکر',
+        value: 'thanks_page',
         label: QuestionTypeComponent('Thanks','صفحه ی تشکر'),
-        type : 'Thanks'
       },
 
-  ]
+]
