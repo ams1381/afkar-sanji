@@ -16,7 +16,8 @@ const Prioritize = ({ QuestionInfo }) => {
   // )
   return (
     <OptionalAnswerBlockContainer >
-        {QuestionInfo.options.map(item => <div className='OptionalAnswerItemContainer' key={item.id} style={{ cursor : 'pointer' }}>
+        {QuestionInfo.options.map(item => <div 
+         className='OptionalAnswerItemContainer Prioritize' key={item.id} style={{ cursor : 'pointer' }}>
         <Icon name='DND' />
         <p style={{ marginRight : 15 }}>{item.text}</p>
       </div>)}

@@ -1,12 +1,20 @@
 import React, { useState } from 'react'
 import { AlphabetNumberContainer, ToggleContainer } from '@/styles/questionnairePanel/QuestionSetting';
 import ToggleCheckBoxItem from '../Common/Toggle';
-import { ChangeToggleHandler , ChangeMinOrMaxAnswerHandler } from '@/utilities/QuestionStore';
+import { ChangeToggleHandler , ChangeMinOrMaxAnswerHandler, OptionAdder, OptionRemoverByText } from '@/utilities/QuestionStore';
 import { Checkbox, Input, InputNumber, Switch } from 'antd';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 
 const SettingMultipleAnswer = ({QuestionInfo}) => {
+    const RandomIdGenerator = () => {
+        let ID = Date.now();
+        QuestionInfo.options.forEach(item => {
+         if(item.id == ID)
+           return RandomIdGenerator();
+        })
+        return ID;
+       }
     const [ AdditionalOptionState , SetAdditionalOptionState ] = useState(QuestionInfo.additional_options);
     const [ MultipleAnswerState , SetMultipleAnswerState ] = useState(QuestionInfo.multiple_choice);
     const OptionalDispatcher = useDispatch();
@@ -29,10 +37,19 @@ const SettingMultipleAnswer = ({QuestionInfo}) => {
         {
             OptionalDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : 'nothing_selected' , ToggleValue : false}))
             OptionalDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : 'all_options' , ToggleValue : false}))
+            OptionalDispatcher(OptionRemoverByText({ QuestionID : QuestionInfo.id , OptionText : '<span>هیچ کدام</span>' }))
+            OptionalDispatcher(OptionRemoverByText({ QuestionID : QuestionInfo.id , OptionText : '<span>همه گزینه ها</span>' }))
         }
     }
     const RegularToggleHandler = (Event , TName) => {
         OptionalDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : TName , ToggleValue : Event}))
+
+        if(TName == 'all_options')
+            Event ? OptionalDispatcher(OptionAdder({ QuestionID : QuestionInfo.id , OptionText : '<span>همه گزینه ها</span>' , NewOptionID : RandomIdGenerator()}))
+            : OptionalDispatcher(OptionRemoverByText({ QuestionID : QuestionInfo.id , OptionText : '<span>همه گزینه ها</span>' }))
+        if(TName == 'nothing_selected')
+        Event ? OptionalDispatcher(OptionAdder({ QuestionID : QuestionInfo.id , OptionText : '<span>هیچ کدام</span>' , NewOptionID : RandomIdGenerator()}))
+        : OptionalDispatcher(OptionRemoverByText({ QuestionID : QuestionInfo.id , OptionText : '<span>هیچ کدام</span>' }))
     }
   return (
     <ToggleContainer>
@@ -65,8 +82,8 @@ const SettingMultipleAnswer = ({QuestionInfo}) => {
                     <Switch checked={QuestionInfo.nothing_selected} />
                     <p>هیچ کدام</p>
                 </div>
-                <div className='additional_checkbox'>
-                    <Switch />
+                <div className='additional_checkbox' onClick={e => RegularToggleHandler(!QuestionInfo.nothing_selected,'other_options')}>
+                    <Switch checked={QuestionInfo.other_options} />
                     <p>سایر</p>
                 </div>
             </div> : ''}
@@ -80,7 +97,7 @@ const SettingMultipleAnswer = ({QuestionInfo}) => {
             <Switch checked={QuestionInfo.show_number}/>
         </div>
         <div className='checkbox_container' onClick={e => RegularToggleHandler(!QuestionInfo.is_random_options,'is_random_options')}>
-            <p>ترتیب گزینه ها عمودی باشد</p>
+            <p>تصادفی سازی نمایش گزینه ها</p>
             <Switch checked={QuestionInfo.is_random_options}/>
         </div>
         <div className='checkbox_container' onClick={e => RegularToggleHandler(!QuestionInfo.is_vertical,'is_vertical')}>

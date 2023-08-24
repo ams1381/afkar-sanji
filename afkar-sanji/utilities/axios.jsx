@@ -1,7 +1,9 @@
 import axios from "axios";
 import { AuthContext } from "./AuthContext";
+import { useLocalStorage } from "./useLocalStorage";
 axios.defaults.baseURL = 'https://mostafarm7.pythonanywhere.com';
 
+const { getItem , setItem } = useLocalStorage();
 
 export const axiosInstance = axios.create({
     headers: {
@@ -17,11 +19,7 @@ axiosInstance.interceptors.request.use(function (config) {
     return Promise.reject(error);
 });
 
-// Add a response interceptor
 axiosInstance.interceptors.response.use(function (response) {
-    // Any status code that lie within the range of 2xx cause this function to trigger
-    // Do something with response data
-    
     return response;
 }, async function  (error) {
     if(!error.response)
@@ -31,12 +29,15 @@ axiosInstance.interceptors.response.use(function (response) {
         case 401:
             try
             {
-                let { refresh }  = await axiosInstance.post('/user-api/auth/refresh-token/');
-                axiosInstance.defaults.headers['Authorization'] = refresh;
-                axiosInstance.request(error.config)
+                let { data }  = await axiosInstance.post('/user-api/auth/refresh-token/', { refresh : getItem('refresh')} );
+                setItem('cookie',data.access);
+                setItem('refresh',data.refresh)
+                axiosInstance.defaults.headers['Authorization'] = data.access;
+                // axiosInstance.request(error.config)
             }
             catch(err)
             {
+                console.log(err)
                 window.location.pathname = '/auth'
             }
             break;
@@ -46,7 +47,5 @@ axiosInstance.interceptors.response.use(function (response) {
             console.log('50000000000000')
             break;
     }
-    // Any status codes that falls outside the range of 2xx cause this function to trigger
-    // Do something with response error
     return Promise.reject(error);
 });

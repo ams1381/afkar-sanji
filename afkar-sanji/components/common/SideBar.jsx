@@ -30,7 +30,8 @@ const SideBar = ({ IsOpen , SetSideBar , folders , SelectedFolder , ChangeFolder
         }
         catch(err)
         {
-            typeof err == Error ? SetErrorMessage(err.data.name[0]) : ''
+            if(err.response )
+                SetErrorMessage(err.response.data.name[0]) 
         }
     }
   return (

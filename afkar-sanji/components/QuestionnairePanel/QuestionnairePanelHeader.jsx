@@ -9,8 +9,10 @@ import { Popover, Skeleton } from 'antd';
 import { QuestionnairePopover } from './QuestionnairePopover';
 import { axiosInstance } from '@/utilities/axios';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 const QuestionnairePanelHeader = ({ FolderName , Questionnaire , SideState , ChangeSide }) => {
+  const router = useRouter();
   const [ QuestionnaireName , SetQuestionnaireName ]= useState(Questionnaire.name);
   const [ RenameState , SetRenameState ] = useState(false);
   const [ QuestionnairePopoverState , SetQuestionnairePopoverState ] = useState(false);
@@ -75,7 +77,11 @@ const QuestionnairePanelHeader = ({ FolderName , Questionnaire , SideState , Cha
             </QuestionnaireEditItemsInnerContainer>
             <QuestionnaireEditButtonContainer>
               <button>
-                <Icon name='Eye' />
+                <Link href={`/questionnaire/${Questionnaire.uuid}/ViewQuestions/`} target='_blank'>
+                     <Icon name='Eye' />
+                 
+                </Link>
+                
               </button>
               <button>
                 <Icon name='Share' />

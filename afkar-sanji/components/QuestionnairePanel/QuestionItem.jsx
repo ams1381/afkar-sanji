@@ -5,10 +5,10 @@ import { QuestionDesignItem , QuestionItemSurface ,DropDownQuestionButton , Ques
   QuestionItemActionButton, PreviewMobileSizeComponent ,
   QuestionItemRow} from '@/styles/questionnairePanel/QuestionDesignPanel'
 import Dropdown from 'react-dropdown';
-import { Question_types } from '@/utilities/QuestionTypes';
+import { QuestionTypeComponentGenerator, Question_types } from '@/utilities/QuestionTypes';
 import 'react-dropdown/style.css';
 import RemovePopup from '../common/RemovePopup';
-import React, { useEffect, useReducer, useState } from 'react'
+import React, { useEffect, useReducer, useRef, useState } from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import { Button, Select, Skeleton, Upload, message } from 'antd';
 import PN from "persian-number";
@@ -16,13 +16,14 @@ import QuestionDescription from './Question Components/Common/Description';
 import QuestionComponent from '../Questions/Question';
 import FileUpload from './Question Components/Common/FileUpload';
 import { axiosInstance } from '@/utilities/axios';
-import { ChangeNameHandler, DeleteQuestionHandler, DuplicateQuestionHandler, QuestionSorter } from '@/utilities/QuestionStore';
+import { AddQuestion, ChangeNameHandler, DeleteNonQuestionHandler, DeleteQuestionHandler, DuplicateQuestionHandler, QuestionSorter, RemoveFileHandler, finalizer } from '@/utilities/QuestionStore';
 import { SettingSectionProvider } from './Question Components/SettingSectionProvider';
 import { WritingSectionProvider } from './Question Components/WritingSectionProvider';
 import { ChangeQuestionType } from '@/utilities/QuestionStore';
 import { form_data_convertor } from '@/utilities/FormData';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
-export const QuestionItem = ({ IsQuestion , question , UUID , QuestionnaireReloader}) => {
+export const QuestionItem = ({ IsQuestion , question , UUID , parentPlacement , GroupID }) => {
   const [ QuestionRootOpenState , SetQuestionRootOpenState ] = useState(false);
   const [ QuestionActionState , SetQuestionActionState ] = useState('edit');
   const [ DeleteQuestionState , SetDeleteQuestionState ] = useState(false);
@@ -32,14 +33,10 @@ export const QuestionItem = ({ IsQuestion , question , UUID , QuestionnaireReloa
   const [ SavedMessage , contextHolder] = message.useMessage();
   const QuestionDispatcher = useDispatch();
   const QuestionsArray = useSelector(s => s.reducer.data)
-
+  const regex = /(<([^>]+)>)/gi;
+  // const QuestionDragItem = useRef(null)
   const QuestionDataDispatcher = useDispatch();
   let questionsData;
-  IsQuestion ?
-   questionsData = useSelector(s => s.reducer.data.find(item => item.question.id == question.id))
-  :
-   questionsData = useSelector(s => s.reducer.nonQuestionData.find(item => item.question.id == question.id))
-
   useEffect(() => {
     questionsData ? ChangeQuestionTypeState(questionsData.question.question_type) : ''
     window.addEventListener('resize',() => {
@@ -47,11 +44,28 @@ export const QuestionItem = ({ IsQuestion , question , UUID , QuestionnaireReloa
         SetQuestionActionState('edit')
     })
   },[questionsData , QuestionsReload])
-
-  const regex = /(<([^>]+)>)/gi;
+  if(GroupID && question.group)
+  {
+    
+    questionsData = useSelector(s => s.reducer.data.find(question_item => (question_item.question) && question_item.question.id == GroupID))
+    .question.child_questions.find(item => item.question.id == question.id)
+    // return
+  }
+  else
+  {
+    IsQuestion ?
+    questionsData = useSelector(s => s.reducer.data.find(question_item => (question_item.question && question_item.question.id == question.id)))
+   :
+    questionsData = useSelector(s => s.reducer.nonQuestionData.find(nonquestion_item => (nonquestion_item.question && nonquestion_item.question.id == question.id)))
+    // return
+  } 
+  
+  
   const DeleteQuestion = async () => {
-
-    QuestionDispatcher(DeleteQuestionHandler({ QuestionID : questionsData.question.id , isQuestion : IsQuestion }))
+    (questionsData.question.question_type == 'welcome_page' ||
+     questionsData.question.question_type == 'thanks_page') ?
+     QuestionDispatcher(DeleteNonQuestionHandler({ NonQuestionType : questionsData.question.question_type }))
+      : QuestionDispatcher((DeleteQuestionHandler({ QuestionID : questionsData.question.id , isQuestion : IsQuestion })))
     
     if(!questionsData.question.newFace)
     {
@@ -69,7 +83,7 @@ export const QuestionItem = ({ IsQuestion , question , UUID , QuestionnaireReloa
   const RandomIdGenerator = () => {
     let ID = Date.now();
     QuestionsArray.forEach(item => {
-     if(item.question.id == ID)
+     if(item.question && item.question.id == ID)
         return RandomIdGenerator()
     })
     return ID;
@@ -84,13 +98,31 @@ export const QuestionItem = ({ IsQuestion , question , UUID , QuestionnaireReloa
     // QuestionnaireReloader(true);
   }
   const ChangeQuestionTypeHandler = (_,ChangedType) => {
-    ChangedType ? QuestionDataDispatcher(ChangeQuestionType({ newType : ChangedType.value , QuestionID : questionsData.question.id})) : ''
+    ChangedType ? QuestionDataDispatcher(ChangeQuestionType({ newType : ChangedType.value ,
+       QuestionID : questionsData.question.id , Prefix_url : ChangedType.url_prefix })) : ''
+    ChangeQuestionTypeState(ChangedType.value)
+  }
+  const AddQuestionHandler = () => {
+    questionsData.question.group ?
+    QuestionDispatcher(AddQuestion({ TopQuestionID : questionsData.question.id , ParentQuestion : questionsData.question.group , AddedQuestionID : RandomIdGenerator()}))
+    :
+    QuestionDispatcher(AddQuestion({ TopQuestionID : questionsData.question.id , AddedQuestionID : RandomIdGenerator()}))
 
+    QuestionDispatcher(QuestionSorter())
   }
   const QuestionPatcher = async () => {
+    if(questionsData.question.media && typeof questionsData.question.media == 'string')
+    {
+      (questionsData.question.question_type == 'welcome_page' ||
+      questionsData.question.question_type == 'thanks_page') ?
+        QuestionDispatcher(RemoveFileHandler({ QuestionID : questionsData.question.id , IsQuestion : false}))
+        : QuestionDispatcher(RemoveFileHandler({ QuestionID : questionsData.question.id , IsQuestion : true}))
+    }
+     
     try
-    { 
+    {  
       SetSaveButtonLoadingState(true);
+      console.log(questionsData.question)
       if(questionsData.question.url_prefix)
           await axiosInstance.patch(`/question-api/questionnaires/${UUID}/${questionsData.question.url_prefix}/${questionsData.question.id}/`,form_data_convertor(questionsData.question))
       else
@@ -99,13 +131,17 @@ export const QuestionItem = ({ IsQuestion , question , UUID , QuestionnaireReloa
     }
     catch(err)
     {
-      SavedMessage.error({
-        content : err.response.data,
-        duration : 4,
-        style : {
-          fontFamily : 'IRANSans'
-        }
-      })  
+      if(err.response)
+        SavedMessage.error({
+          content : Object.values(err.response.data)[0],
+          duration : 4,
+          style : {
+            fontFamily : 'IRANSans',
+            display : 'flex',
+            alignItems : 'center',
+            justifyContent : 'center'
+          }
+        })  
     }
    SetSaveButtonLoadingState(false);
   }
@@ -113,29 +149,48 @@ export const QuestionItem = ({ IsQuestion , question , UUID , QuestionnaireReloa
     try
     {
       SetSaveButtonLoadingState(true);
-      await axiosInstance.post(`/question-api/questionnaires/${UUID}/${questionsData.question.url_prefix}/`,form_data_convertor(questionsData.question))
-      delete questionsData.question.newFace;
+      if(questionsData.question.url_prefix)
+      {
+        await axiosInstance.post(`/question-api/questionnaires/${UUID}/${questionsData.question.url_prefix}/`,form_data_convertor(questionsData.question));
+        QuestionDataDispatcher(finalizer({ isQuestion :  true , QuestionID : questionsData.question.id }))
+      }
+      else
+      {
+          questionsData.question.question_type == 'welcome_page' ? axiosInstance.post(`/question-api/questionnaires/${UUID}/welcome-pages/`,form_data_convertor(questionsData.question)) 
+        : axiosInstance.post(`/question-api/questionnaires/${UUID}/thanks-pages/`,form_data_convertor(questionsData.question))
+        
+        QuestionDataDispatcher(finalizer({ isQuestion :  false , QuestionID : questionsData.question.id }))
+      }
     }
     catch(err)
     {
-
+      console.log(err)
+      SavedMessage.error({
+        content :  Object.values(err.response.data)[0],
+        duration : 5
+      })
     }
    SetSaveButtonLoadingState(false);
   }
   return (
-    questionsData ? <QuestionItemRow >
+    questionsData ? <QuestionItemRow className={`QuestionItem${questionsData.question.id}`}>
       {contextHolder}
-    <QuestionDesignItem className='question_design_item'>     
+      <div style={{ width : !questionsData.question.group ? '50%' : '100%' }}> 
+    <QuestionDesignItem className='question_design_item' isOpen={QuestionRootOpenState ? 'true' : null}
+    childq={questionsData.question.group ? 'true' : null}>     
           <QuestionItemSurface>
               <div className="question_item_info" onClick={QuestionOpenHandler}>
                   <DropDownQuestionButton dropped={QuestionRootOpenState ? 'true' : null} >
-                      <Icon name='ArrowDown' />                                         
+                     { questionsData.question.question_type == 'group' ? <Icon name='GroupIcon' />
+                     : <Icon name='ArrowDown' />  }                                     
                   </DropDownQuestionButton>
-                  <span> . {PN.convertEnToPe(questionsData.question.placement)}</span>
-                  <p> {questionsData.question.title.replace(regex,"")} </p>
+                  { questionsData.question.placement ?  <div style={{ fontWeight : 600 , whiteSpace : 'pre'}}> 
+                   {<> {PN.convertEnToPe(questionsData.question.placement)}</>}
+                { parentPlacement ?  <> {PN.convertEnToPe(parentPlacement)}</>  : '' }</div> : ''}
+                  <p> { questionsData.question.title.replace(regex,"")} </p>
               </div>
               <QuestionItemButtonContainer>
-                  <button>
+                  <button onClick={() => AddQuestionHandler()}>
                       <Icon name='GrayAdd' />
                   </button>
                   <RemovePopup onOkay={DeleteQuestion} setDeleteState={SetDeleteQuestionState}
@@ -145,9 +200,10 @@ export const QuestionItem = ({ IsQuestion , question , UUID , QuestionnaireReloa
                   <button onClick={() => SetDeleteQuestionState(true)}>
                       <Icon name='RedTrash' />
                   </button>
-                  <button onClick={Duplicate_question}>
+                 {(questionsData.question.question_type != 'welcome_page' && questionsData.question.question_type != 'thanks_page') 
+                 ? <button onClick={Duplicate_question}>
                     <Icon name='duplicate' />   
-                  </button>
+                  </button> : ''}
               </QuestionItemButtonContainer>
 
           </QuestionItemSurface>
@@ -186,8 +242,10 @@ export const QuestionItem = ({ IsQuestion , question , UUID , QuestionnaireReloa
                         bordered={false}
                         maxTagTextLength={6}
                         labelInValue
-                        defaultValue={{ value: <h3>{QuestionTypeState}</h3> ,
-                         label: <p>{QuestionTypeState}</p> }}
+                        disabled={(!questionsData.question.newFace || questionsData.question.nonquestion) ? true : false}
+                        defaultValue={{
+                         label : QuestionTypeComponentGenerator(questionsData.question.question_type)
+                        }}
                         style={{ width: 120 , border : 'none'}}
                         dropdownStyle={{ width : '350px !important' }}
                         options={Question_types}
@@ -213,13 +271,31 @@ export const QuestionItem = ({ IsQuestion , question , UUID , QuestionnaireReloa
               <Button danger onClick={QuestionOpenHandler}>
                 <p>انصراف</p>
               </Button>
-            </QuestionItemFooter> : <Skeleton active /> }
+            </QuestionItemFooter> : ''}
             
           </div> : '' }
+          
         </QuestionDesignItem>
-        <div className='question_preview'>
-              {QuestionRootOpenState ? <QuestionComponent QuestionInfo={questionsData.question} /> : ''}
-        </div>
+        {questionsData.question.question_type == 'group' ? 
+          <DragDropContext >
+              <Droppable droppableId='groupDroppable'>
+                {(provided, snapshot) => <div ref={provided.innerRef} {...provided.draggableProps}
+                     {...provided.dragHandleProps}>
+                  {
+                   questionsData.question.child_questions ? questionsData.question.child_questions.map(item => <QuestionItem 
+                    GroupID={questionsData.question.id} parentPlacement={questionsData.question.placement}
+                       className="disable-select dragHandle" IsQuestion={true} 
+                      UUID={UUID} key={item.question.id} question={item.question}/>
+                     )
+                     : ''}
+                  </div>}
+              </Droppable>
+          </DragDropContext> : ''}
+          </div>
+       { !GroupID ?  <div className='question_preview'>
+              {QuestionRootOpenState ? <QuestionComponent QuestionInfo={questionsData.question} 
+              ChildQuestion={questionsData.question.group ? 'true' : null} /> : ''}
+        </div> : ''}
     </QuestionItemRow> : ''
    
     

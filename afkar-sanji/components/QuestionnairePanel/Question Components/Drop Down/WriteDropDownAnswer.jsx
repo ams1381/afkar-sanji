@@ -21,7 +21,7 @@ export const WriteDropDownAnswer = ({ QuestionInfo }) => {
   return (
     <OptionWritingContainer>
       <p>گزینه ها</p>
-      {QuestionInfo.options.map(item => <InputOptionsContainer>
+      {QuestionInfo.options.map(item => <InputOptionsContainer key={item.id}>
         <OptionalInputItem type='text' key={item.id} placeholder='چیزی بنویسید' defaultValue={item.text}
          onChange={e => Dispatcher(OptionModifier({ QuestionID : QuestionInfo.id , OptionID : item.id , OptionText : e.target.value }))}/>
         <div className='option_button_container'>

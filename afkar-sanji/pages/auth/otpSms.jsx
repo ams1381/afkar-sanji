@@ -21,8 +21,8 @@ const OTPSms = () => {
     
   }
 
-  Auth.Login_Function = async () => {
-    const otp_res = await axiosInstance.post('/user-api/auth/verify-otp/' , { 'token' : Auth.SMSCode , 'phone_number' : Auth.PhoneNumber });
+  Auth.Login_Function = async (value) => {
+    const otp_res = await axiosInstance.post('/user-api/auth/verify-otp/' , { 'token' : value , 'phone_number' : Auth.PhoneNumber });
     if(otp_res.status == 201) 
     {
       LoginMessage.success({
@@ -34,6 +34,7 @@ const OTPSms = () => {
       })
       setItem('phoneNumber',Auth.PhoneNumber);
       setItem('cookie',otp_res.data.access);
+      setItem('refresh',otp_res.data.refresh)
       axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + otp_res.data.access;
       setTimeout(() => {
         typeof window !== 'undefined' ? router.push("../") : ''

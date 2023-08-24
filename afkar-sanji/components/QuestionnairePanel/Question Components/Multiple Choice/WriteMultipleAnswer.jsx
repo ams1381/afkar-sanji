@@ -22,7 +22,7 @@ const MultipleAnswer = ({ QuestionInfo }) => {
   return (
     <OptionWritingContainer>
       <p>گزینه ها</p>
-      {QuestionInfo.options.map(item => <InputOptionsContainer>
+      {QuestionInfo.options.map(item => !item.text?.includes('<span>','</span>') ? <InputOptionsContainer>
         <OptionalInputItem key={item.id} type='text' onChange={e => Dispatcher(OptionModifier({ QuestionID : QuestionInfo.id , OptionID : item.id , OptionText : e.target.value }))}
         defaultValue={item.text} placeholder='چیزی بنویسید'/>
         <div className='option_button_container'>
@@ -33,7 +33,7 @@ const MultipleAnswer = ({ QuestionInfo }) => {
             <Icon name='CircleMinus' />
           </button>
         </div>
-      </InputOptionsContainer>)}
+      </InputOptionsContainer> : '')}
       <AddOptionButton onClick={() => Dispatcher(OptionAdder({ QuestionID : QuestionInfo.id , NewOptionID : RandomIdGenerator() , OptionText : null }))}>
         برای افزودن گزینه ضربه بزنید
       </AddOptionButton>

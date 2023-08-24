@@ -1,5 +1,5 @@
 import { AlphabetNumberContainer, ToggleContainer } from '@/styles/questionnairePanel/QuestionSetting';
-import { ChangeToggleHandler , ChangeMinMaxHandler } from '@/utilities/QuestionStore';
+import { ChangeToggleHandler , ChangeMinMaxHandler, OptionsAlphaBeticalSorter, ChangeMinOrMaxAnswerHandler } from '@/utilities/QuestionStore';
 import { Checkbox, InputNumber, Switch } from 'antd';
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
@@ -10,9 +10,9 @@ export const SettingDropDownAnswer = ({ QuestionInfo }) => {
     const DropDownDispatcher = useDispatch();
 
 
-    const MultipleAnswerToggleHandler = () => {
-        SetMultipleAnswerState(!MultipleAnswerState)
-        DropDownDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : 'multiple_choice' , ToggleValue : MultipleAnswerState}));
+    const MultipleAnswerToggleHandler = (Value) => {
+        // SetMultipleAnswerState(!MultipleAnswerState)
+        DropDownDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : 'multiple_choice' , ToggleValue : Value}));
     }
     const ChangeMinMaxHandler = (event,InputName) => {
         DropDownDispatcher(ChangeMinOrMaxAnswerHandler({
@@ -21,22 +21,31 @@ export const SettingDropDownAnswer = ({ QuestionInfo }) => {
     }
     const RegularToggleHandler = (Event , TName) => {
         DropDownDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : TName , ToggleValue : Event}))
+
+        if(TName == 'is_random_options')
+            DropDownDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : 'is_alphabetic_order' , ToggleValue : false}))
+        if(TName == 'is_alphabetic_order')
+        {
+             DropDownDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : 'is_random_options' , ToggleValue : false}))
+             DropDownDispatcher(OptionsAlphaBeticalSorter({ QuestionID : QuestionInfo.id }))
+        }
+       
     }
     
   return (
     <ToggleContainer>
-        <div className='checkbox_container' onClick={MultipleAnswerToggleHandler}>
+        <div className='checkbox_container' onClick={() => MultipleAnswerToggleHandler(!QuestionInfo.multiple_choice)}>
             <p>سوال چند انتخابی باشد</p>
-            <Switch checked={MultipleAnswerState} />
+            <Switch checked={QuestionInfo.multiple_choice} />
         </div>
-       { MultipleAnswerState ? <AlphabetNumberContainer>
+       { QuestionInfo.multiple_choice ? <AlphabetNumberContainer>
           <p>تعداد گزینه های قابل انتخاب</p>
           <label>
-              <InputNumber min={0} onChange={(e) => ChangeMinMaxHandler(e,'min')} />
+              <InputNumber min={0} onChange={(e) => ChangeMinMaxHandler(e,'min_selected_options')} />
               <p>حداقل</p>
           </label>
           <label>
-              <InputNumber min={0} onChange={(e) => ChangeMinMaxHandler(e,'max')}/>
+              <InputNumber min={0} onChange={(e) => ChangeMinMaxHandler(e,'max_selected_options')}/>
               <p>حداکثر</p>
           </label>
         </AlphabetNumberContainer> : ''}
@@ -69,7 +78,7 @@ export const SettingDropDownAnswer = ({ QuestionInfo }) => {
             <Switch checked={QuestionInfo.is_required}/>
         </div>
         <div className='checkbox_container' onClick={e => RegularToggleHandler(!QuestionInfo.is_random_options,'is_random_options')}>
-            <p>پاسخ به سوال اجباری باشد</p>
+            <p>تصادفی سازی گزینه ها</p>
             <Switch checked={QuestionInfo.is_random_options}/>
         </div>
         <div className='checkbox_container' onClick={e => RegularToggleHandler(!QuestionInfo.is_alphabetic_order,'is_alphabetic_order')}>

@@ -3,7 +3,7 @@ import { styled } from "styled-components"
 export const QuestionFileUploadContainer = styled.div`
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     font-size: 14px;
     color: var(--Neutral-Gray6);
     margin : 0.7rem auto;
@@ -77,7 +77,7 @@ export const ToggleContainer = styled.div`
     }
     & .checkbox_container
     {
-        margin-top : 0.8rem;
+        margin-top : 1.2rem;
     }
     & .additional_option_toggle , & .additional_option_checkboxes_container
     {
@@ -111,6 +111,7 @@ export const AlphabetNumberContainer = styled.div`
     flex-direction: column;
     color: #A3A3A3;
     margin-top: 1rem;
+    text-align: right;
 
     & label 
     {
@@ -164,4 +165,15 @@ export const ShapeSelectorContainer = styled.div`
     {
         fill : white;
     }
+`
+export const DatePickerInput = styled.input`
+    cursor: not-allowed;
+    border: 1px solid ${p => p.errorOccur ? 'var(--login-err-message-color) !important' :  '#d9d9d9'};
+    padding: 0.4rem;
+    outline: none;
+    transition : 0.3s;
+    border-radius: 2px;
+    font-family : IRANSans;
+    cursor : pointer !important;
+    user-select : none;
 `

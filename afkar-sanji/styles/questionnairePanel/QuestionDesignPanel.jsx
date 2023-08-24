@@ -6,7 +6,6 @@ export const QuestionnairePanelBodyContainer = styled.div`
     font-size: 14px;
 `
 export const QuestionSearchContainer = styled.div`
-    border: 1px solid #D9D9D9;
     position: relative;
     height: 40px;
     font-family: 'IRANSANS';
@@ -23,6 +22,19 @@ export const QuestionSearchContainer = styled.div`
         border-right: 1px solid #D9D9D9;
         padding: 0.6rem 0.9rem 0.6rem 0.9rem;
         cursor : pointer;
+    }
+    & .ant-select-selection-search-input
+    {
+        font-family : IRANSans;
+        border : none !important;
+    }
+    .ant-select-selection-placeholder
+    {
+        font-family : IRANSans;
+    }
+    .ant-select-arrow , .ant-select-clear
+    {
+        top : 16px;
     }
 `
 export const QuestionSearchInput = styled.input`
@@ -65,6 +77,11 @@ export const QuestionDesignBox = styled.div`
         flex-direction: column;
         align-items: flex-end;
     }
+    
+    .QuestionDesignRightContainer > div:first-child
+    {
+        width : 100%;
+    }
     @media screen and (max-width : 768px) {
         // & div:first-child
         // {
@@ -78,11 +95,12 @@ export const QuestionDesignBox = styled.div`
 `
 export const QuestionDesignItem = styled.div`
     padding: 1rem;
-    border: 2px solid #D9D9D9;
+    border: 2px solid ${p => p.isOpen ? p.childq ? '#7C86FA' : '#3E4ACB' : '#D9D9D9'};
     border-radius: 2px;
     margin: 0.6rem 0;
-    width: 50%;
-
+    width: ${p => p.childq ? '95%' : '100%'};
+    margin-top : ${p => p.childq ? '1rem' : '0'};
+    transition : border 0.3s;
     .question_bold_info 
     {
         display : flex;
@@ -92,13 +110,18 @@ export const QuestionDesignItem = styled.div`
         background: #F5F5F5;
         display: flex;
         align-items: center;
-}
+    }
+    .question_type_selector > div {
+        width : auto !important;
+    }
+
 `
 export const QuestionItemRow = styled.div`
     width: 100%;
     display: flex;
     justify-content: space-between;
     flex-direction: row-reverse;
+    align-items: flex-start;
 
     & .question_preview
     {
@@ -131,6 +154,10 @@ export const QuestionItemSurface = styled.div`
         word-break: break-word;
         cursor : pointer;
     }
+    .question_item_info
+    {
+        width : 100%;
+    }
 `
 export const DropDownQuestionButton = styled.button`
     background: none;
@@ -147,7 +174,7 @@ export const DropDownQuestionButton = styled.button`
     
 `
 export const QuestionItemButtonContainer = styled.div`
-    width: 20%;
+    width: fit-content;
     display: flex;
     justify-content: space-between;
 
@@ -159,11 +186,14 @@ export const QuestionItemButtonContainer = styled.div`
         display: flex;
         align-items: center;
         cursor: pointer;
-        
+        margin-right: 1.5rem;
     }
     @media screen and (max-width : 480px)
     {
-        width: 35%;
+        & button 
+        {
+            margin-right: 1rem;
+        }
     }
    
 `
@@ -332,5 +362,41 @@ export const RangeLabelContainer = styled.div`
         padding: 5px 12px 5px 12px;
         border-radius: 2px;
         outline : none;
+        direction : rtl;
+    }
+`
+export const AddNonQuestionItem = styled.div`
+    width: 50% !important;
+    text-align: center;
+    border: 1px solid ${p => p.addquestion ? 'var(--primary-color)' : '#D9D9D9' };
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color);
+    margin: 0.6rem 0;
+    cursor: pointer;
+    transition : 0.3s;
+    border-radius : 2px;
+
+    & svg
+    {
+        margin-left : 0.5rem;
+        fill : #5360ED;
+        transition : 0.3s;
+    }
+    &:hover 
+    {
+        background : ${p => p.addquestion ? 'var(--primary-color)' : 'auto' };
+        color : ${p => p.addquestion ? 'white' : 'auto' };
+        border : 1px solid ${p => !p.addquestion ? 'var(--primary-color)' : 'auto' }
+    }
+    &:hover svg 
+    {
+        fill : ${p => p.addquestion ? 'white' : 'auto' }
+    }
+    @media screen and (max-width: 768px)
+    {
+        width : 100% !important;
     }
 `

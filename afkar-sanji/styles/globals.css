@@ -11,6 +11,10 @@
   padding: 0;
   margin: 0;
 }
+html
+{
+  scroll-behavior: smooth;
+}
 :root
 { 
   --primary-color : #5360ED;
@@ -41,4 +45,18 @@ html::-webkit-scrollbar-thumb
   background: rgba(0, 0, 0, 0.5);
   border-radius: 9px;
   width: 10px;
+}
+.ant-select-dropdown
+{
+  width: 400px !important;
+  height: 175px;
+}
+.rc-virtual-list-holder-inner
+{
+  display: grid !important;
+  grid-template-columns: auto auto !important;
+}
+.rc-virtual-list-holder > div
+{
+  height: 160px !important;
 }

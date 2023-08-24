@@ -89,9 +89,9 @@ export const LoginHeaderText = styled.h2`
         transition: .3s;
         text-overflow: clip;
         text-align: left;
-        animation : ${p => p.halfFill ? 'OTPAnimation 1s ease' : 'none'};
-        width : ${p => p.filltext ? '100% !important' : p.halfFill ? '50% !important' : ''};
-        // width : ${p => p.halfFill ? '50% !important' : ''}; 
+        animation : ${p => p.halffill ? 'OTPAnimation 1s ease' : 'none'};
+        width : ${p => p.filltext ? '100% !important' : p.halffill ? '50% !important' : ''};
+        // width : ${p => p.halffill ? '50% !important' : ''}; 
     }
     @keyframes OTPAnimation
     {

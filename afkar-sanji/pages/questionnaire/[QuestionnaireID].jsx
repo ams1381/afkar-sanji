@@ -12,22 +12,34 @@ import QuestionDesignPanel from '@/components/QuestionnairePanel/QuestionDesignP
 import ProgressBarLoading from '@/styles/ProgressBarLoading';
 import { Provider } from 'react-redux';
 import QuestionStore from '@/utilities/QuestionStore';
+import { message } from 'antd';
 
 const QuestionnairePanel = () => {
     const router = useRouter();
+    const [ messageApi , messageContext ] = message.useMessage()
     const [ SideBarOpen , setOpen ] = useState(false);
     const [ QuestionnaireInfo , SetQuestionnaireInfo ] = useState(null);
     const [ SideState , SetSideState ] = useState('question_design');
     const [ QuestionnaireReloader , SetQuestionnaireReloader ] = useState(false);
   
     useEffect(() => {
+      try 
+      {
         const QuestionnaireRetriever = async () => {
-           let  { data } =  await axiosInstance.get(`/question-api/questionnaires/${router.query.QuestionnaireID}/`);
-           SetQuestionnaireInfo(data);
-           SetQuestionnaireReloader(false);
-        }
-        if(router.query.QuestionnaireID)
-          QuestionnaireRetriever();
+          let  { data } =  await axiosInstance.get(`/question-api/questionnaires/${router.query.QuestionnaireID}/`);
+          SetQuestionnaireInfo(data);
+          SetQuestionnaireReloader(false);
+       }
+       if(router.query.QuestionnaireID)
+         QuestionnaireRetriever();
+      }
+      catch(err)
+      {
+        messageApi.error({
+          content : err.response.data,
+          duration : 6
+        })
+      }
     },[router.query , QuestionnaireReloader])
   return (
     <>
@@ -36,6 +48,7 @@ const QuestionnairePanel = () => {
     </Head>
     <Provider store={QuestionStore}>
     <ProgressBarLoading />
+    {messageContext}
     <Header SetSideBar={() => setOpen(!SideBarOpen)} goToFolders={true}/>
       <QuestionnairePanelContainer>
         <PanelInnerContainer> 

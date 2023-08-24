@@ -8,9 +8,10 @@ import { useContext, useEffect, useState } from 'react'
 
 export default function App({ Component, pageProps }) {
   const router = useRouter();
+  const [ readyToRender , setReadyToRender ] = useState(false);
 
   const { getItem , setItem } = useLocalStorage();
-
+  console.log(getItem('cookie'))
     const authentication = async () => {
     if(getItem('cookie'))
     {
@@ -19,25 +20,26 @@ export default function App({ Component, pageProps }) {
       {
         let { data } = await axiosInstance.get('/user-api/users/me/');
         setItem('phoneNumber',data.phone_number)
-        return
+        setReadyToRender(true)
+        // return
       }
       catch(err)
       {
-         typeof window !== 'undefined' ? router.push('/auth') : ''
+         router.push('/auth');
           return
       }
       
     }
     else
-    typeof window !== 'undefined' ? router.push('/auth') : ''
+      router.push('/auth');
   }
 
     useEffect(() => {
       if(router.pathname !== '/auth' && router.pathname !== '/auth/otpSms')
           authentication();
-    },[])
+    })
 
   return <AuthContextProvider>
-      <Component {...pageProps} />
+      { readyToRender && <Component {...pageProps} /> }
   </AuthContextProvider> 
 }

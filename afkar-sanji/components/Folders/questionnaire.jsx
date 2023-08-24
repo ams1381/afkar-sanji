@@ -73,7 +73,7 @@ const QuestionnaireBox = ({Questionnaire , FolderReload}) => {
              <div className="questionnaire_stats">
                 { Questionnaire ?
                 <> <QuestionnaireBodyStat>
-                     <p>{PN.convertEnToPe(convertToJalaliDate(Questionnaire.pub_date))}</p>
+                     <p>{Questionnaire.pub_date ? PN.convertEnToPe(convertToJalaliDate(Questionnaire.pub_date)) : ''}</p>
                      <p>درست شده در</p>
                  </QuestionnaireBodyStat>
                  <QuestionnaireBodyStat>

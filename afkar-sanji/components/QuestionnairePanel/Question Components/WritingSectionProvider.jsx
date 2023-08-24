@@ -27,7 +27,7 @@ export const WritingSectionProvider = (Type , QuestionInfo) => {
             return <></>
         case 'numberanswer':
             return <></>
-        case 'textanswer':
+        case 'text_answer':
             return <QWanswerWrite QuestionInfo={QuestionInfo}/>
   }
 }

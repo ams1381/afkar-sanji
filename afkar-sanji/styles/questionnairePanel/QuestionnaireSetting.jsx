@@ -5,20 +5,62 @@ export const QuestionnaireDatePickerContainer  = styled.div`
     color: var(--Neutral-Gray9);
     display: flex;
     justify-content: space-between;
-    flex-direction: row-reverse;
+    flex-direction: column;
     margin: 0.7rem 0;
     padding-bottom: 1rem;
     border-bottom: 1px solid #CCCCCC;
 
-    & .ant-picker .ant-picker-input >input:placeholder-shown
+    & .ant-picker .ant-picker-input > input:placeholder-shown , .ant-picker-date-panel
     {
-        font-family : IRANSans;
+        font-family : IRANSans !important;
+    }
+    & .ant-picker-month-btn
+    {
+        font-family : IRANSans !important; 
+    }
+    & .ant-picker-input > input 
+    {
+        font-family : IRANSans !important; 
     }
 `
 export const QuestionnaireSettingContainer = styled.div`
     display : flex;
     flex-direction : column;
     font : 14px IRANSans;
+
+    .questionnaire_setting_footer
+    {
+        display: flex;
+        justify-content: flex-start;
+    }
+    .questionnaire_setting_footer button 
+    {
+        font-family: 'IRANSans';
+        display: flex;
+        align-items: center;
+        margin: 1rem 0.4rem 0 0.4rem;
+    }
+    .questionnaire_setting_footer button  p 
+    {
+        margin-right : 0.5rem;
+    }
+    .picker_header
+    {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: row-reverse;
+    }
+    .picker_container
+    {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 1.5rem;
+        text-align: right;
+    }
+    .picker_container p 
+    {
+        margin-left : 1rem;
+    }
 `
 export const QuestionnaireCheckBoxContainer= styled.div`
     color : var(--Neutral-Gray9);

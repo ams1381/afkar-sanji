@@ -57,16 +57,19 @@ export const LoginFormOTPInput = ({ErrorHandler , authentication}) => {
         }
     }
     const input_change_handler = async (e) => {
-
         if(e.target.value.length > 5)
             return
-        
         LoginContext.ChangeOTP(e.target.value);
         ErrorHandler.SetNull(null);
         if(!e.target.value)
             SetClearState(false);
         else
             SetClearState(true)
+
+
+        if(e.target.value.length == 5)
+            authentication(e.target.value)
+
     }
   return (
     <>

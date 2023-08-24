@@ -5,7 +5,7 @@ import { CornerAddButton } from '@/styles/folders/cornerAdd';
 import AddPopoverContent from '@/components/Folders/AddPopoverContent';
 import { ContentBox, QuestionnaireNameInput } from '@/styles/folders/Questionnaire';
 import QuestionnaireBox from '@/components/Folders/questionnaire';
-import { Popover, Progress } from 'antd';
+import { Popover, Progress, message } from 'antd';
 import { Icon } from '@/styles/icons';
 import { Skeleton, Switch } from 'antd';
 import Head from 'next/head';
@@ -24,6 +24,7 @@ import { useLocalStorage } from '@/utilities/useLocalStorage';
 export default function Home() {
   const router = useRouter();
   const { getItem , removeItem } = useLocalStorage();
+  const [ MessageApi , MessageContext ] = message.useMessage();
   const [ folders , setFolder ] = useState(null);
   const [ SelectedFolder , SelectFolder ] = useState(getItem('SelectedFolder') || 0);
   const [ FolderReload , SetFolderReload ] = useState(false);
@@ -38,20 +39,21 @@ export default function Home() {
 
   useEffect(() => {
     let scroll_position = 0;
+    const { getItem , setItem } = useLocalStorage();
     let scroll_direction;
     const getData = async () => {
+      // if(getItem('cookie'))
+      // {
         let { data } = await axiosInstance.get('/user-api/folders/');
         setFolder(data);
         SetFolderReload(false);
         if(data[SelectedFolder])
           SetFolderName(data[SelectedFolder].name) 
-        else
-        {
+        else {
           SelectFolder(0);
           removeItem('SelectedFolder')
-        }
-          
-        
+        }   
+      // } 
     }
     window.addEventListener('scroll', function(e){
         scroll_direction = (document.body.getBoundingClientRect()).top > scroll_position ? 'up' : 'down';
@@ -65,13 +67,24 @@ export default function Home() {
     getData();
   },[FolderReload])
 
-  FolderNameInput.current ? FolderNameInput.current.style.width = ((FolderNameInput.current.value.length * 7) + 26) + 'px' : '';
+  FolderNameInput.current ? FolderNameInput.current.style.width = ((FolderNameInput.current.value.length * 7) + 15) + 'px' : '';
   const folderNameChangeHandler = (e) => {
     SetFolderName(e.target.value);
     FolderNameInput.current ? FolderNameInput.current.style.width = ((FolderNameInput.current.value.length * 7)+ 8) + 'px' : ''
   }
   const folderRenameConfirm = async () => {
-   await axiosInstance.patch(`/user-api/folders/${folders[SelectedFolder].id}/`, { 'name' : FolderName });
+    try 
+    {
+      await axiosInstance.patch(`/user-api/folders/${folders[SelectedFolder].id}/`, { 'name' : FolderName });
+      
+    }
+    catch(err)
+    {
+      MessageApi.error({
+        content : Object.values(err.response.data)[0],
+        duration : 5
+      })
+    }
     SetChangeFolderNameState(false);
   }
   return (
@@ -83,11 +96,13 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <>
+      {MessageContext}
       <ProgressBarLoading />
       <Header SetSideBar={() => setOpen(!SideBarOpen)} />
-      <SideBar folders={folders} SelectedFolder={SelectedFolder} IsOpen={SideBarOpen} FolderReload={() => SetFolderReload(true)}  ChangeFolder={SelectFolder}
-      SetSideBar={() => setOpen(!SideBarOpen)} ChangeFolderName={SetFolderName}/>
-      <ScreenMask shown={SideBarOpen ? 'true' : null} onClick={() => setOpen(false)}/>
+      <SideBar folders={folders} SelectedFolder={SelectedFolder} IsOpen={SideBarOpen}
+        FolderReload={() => SetFolderReload(true)}  ChangeFolder={SelectFolder}
+        SetSideBar={() => setOpen(!SideBarOpen)} ChangeFolderName={SetFolderName}/>
+      <ScreenMask shown={SideBarOpen} onClick={() => setOpen(false)}/>
       <Popover
             content={<AddPopoverContent SelectedFolderNumber={SelectedFolder} 
             folders={folders} FolderReload={() => SetFolderReload(true)} 
@@ -126,7 +141,6 @@ export default function Home() {
                disabled={!ChangeFolderName} /> 
           </FolderEditContainer>
       <QuestionnaireContainer>        
-        <>
         {
           folders[SelectedFolder].questionnaires.length ? folders[SelectedFolder].questionnaires.map((item) => 
           <QuestionnaireBox FolderReload={() => SetFolderReload(true)}  Questionnaire={item} key={item.id} />)
@@ -144,7 +158,6 @@ export default function Home() {
              </button>
           </EmptyFolderContainer> 
         }
-      </>
       </QuestionnaireContainer>
         </MainContainer> 
         : folders ?  <EmptyFolderContainer>
@@ -153,7 +166,15 @@ export default function Home() {
                 <p>پوشه ها</p>
                 <Icon name='folder' />
                </button>
-        </EmptyFolderContainer> :  <Skeleton block style={{ width : '90%' , height : 200 , margin : '2rem auto'}} loading={true} active />
+         </EmptyFolderContainer> : <MainContainer>
+         <QuestionnaireContainer>
+             <Skeleton block style={{ width : '90%' , height : 200 , margin : '2rem auto'}} loading={true} active />
+
+             <Skeleton block style={{ width : '90%' , height : 200 , margin : '2rem auto'}} loading={true} active />
+
+             <Skeleton block style={{ width : '90%' , height : 200 , margin : '2rem auto'}} loading={true} active />
+         </QuestionnaireContainer>
+        </MainContainer> 
       } 
     </ContentBox>
     </>

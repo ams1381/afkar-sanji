@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import LoginFormHeader from './LoginFormHeader';
 import LoginFormBody from './LoginFormBody';
 import LoginFormInput from './LoginFormInput';
@@ -15,6 +15,7 @@ export const Login_form = ({ setLoggedIn }) => {
   const [ errMessage , setErMessage ] = useState(null);
   const [messageApi, contextHolder] = message.useMessage()
   const LoginContext =  useContext(AuthContext);
+  const InputRef = useRef(null)
   
   useEffect(() => {
       window.addEventListener('keypress',(e) => {
@@ -22,15 +23,15 @@ export const Login_form = ({ setLoggedIn }) => {
           e.preventDefault();
       })
   },[])
-  const authentication = async (e) => {
+  const authentication = async (value) => {
     setLoading(true)
     try 
     {
-      let form_input = LoginContext.Login_Context_value.FormType == 'PhoneNumber' ? LoginContext.PhoneNumber : LoginContext.SMSCode;
+      let form_input = LoginContext.Login_Context_value.FormType == 'PhoneNumber' ? LoginContext.PhoneNumber : value;
       if(AuthValidator(form_input,LoginContext.Login_Context_value.FormType))
         throw AuthValidator(form_input,LoginContext.Login_Context_value.FormType)
       
-      await LoginContext.Login_Function(e);
+      await LoginContext.Login_Function(value);
       if(LoginContext.Login_Context_value.FormType == 'OTP_SMS')
         setLoggedIn();
     }
@@ -57,7 +58,7 @@ export const Login_form = ({ setLoggedIn }) => {
             <LoginFormOTPInput  ErrorHandler={{message : errMessage , SetNull : setErMessage}} authentication={authentication}  /> 
           }
           <ConfigProvider theme={themeContext}>
-              <Button onClick={authentication} className={StyleModules['confirm_button']} type="primary" loading={loadingState}>
+              <Button typeof='submit' onClick={authentication} className={StyleModules['confirm_button']} type="primary" loading={loadingState}>
                     {LoginContext.Login_Context_value.ButtonText}
                 </Button>
           </ConfigProvider>

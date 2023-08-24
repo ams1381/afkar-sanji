@@ -6,6 +6,7 @@ import { RateQuestionSetting } from './Rating/RateQuestionSetting'
 import { SettingDropDownAnswer } from './Drop Down/SettingDropDownAnswer'
 import { SettingNumberAnswer } from './Number Answer/SettingNumberAnswer'
 import { CommonSetting } from './Common/CommonSetting'
+import { FileQuestionSetting } from './file/FileQuestionSetting'
 
 export const SettingSectionProvider = (Type , QuestionInfo) => {
     switch(Type)
@@ -25,10 +26,10 @@ export const SettingSectionProvider = (Type , QuestionInfo) => {
         case 'email_field':
             return <CommonSetting QuestionInfo={QuestionInfo}/>
         case 'file':
-            return <></>
-        case 'numberanswer':
+            return <FileQuestionSetting QuestionInfo={QuestionInfo}/>
+        case 'number_answer':
             return <SettingNumberAnswer QuestionInfo={QuestionInfo}/>
-        case 'textanswer':
+        case 'text_answer':
             return <SettingQWanswer QuestionInfo={QuestionInfo}/>
         case 'welcome':
             return <></>

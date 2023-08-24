@@ -12,7 +12,6 @@ const DropDownOption = styled.div`
   }
 `
 const DropDown = ({ QuestionInfo }) => {
-    console.log(DropDownOptionsGenerator(QuestionInfo.options))
   return (
     <DropDownContainer>
         <Select

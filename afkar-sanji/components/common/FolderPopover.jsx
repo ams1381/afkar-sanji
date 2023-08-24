@@ -2,18 +2,33 @@ import { Icon } from '@/styles/icons';
 import React, { useState } from 'react'
 import { FolderPopoverContainer , FolderPopoverItem } from '@/styles/folders/Popovers';
 import { axiosInstance } from '@/utilities/axios';
-import { Button, ConfigProvider, Modal } from 'antd'
+import { Button, ConfigProvider, Modal, message } from 'antd'
 import RemoveFolderPopUpContent from '../Folders/RemoveFolderPopUp';
 import RemovePopup from './RemovePopup';
 
 const FolderPopoverContent = ({ FolderReload , RenameInput , RenameFolderState , SelectedFolderNumber , closeEditPopover, Folders , SelectFolder }) => {
   const [ deleteFolderState , setDeleteFolderState ] = useState(false);
+  const [ MessageApi , MessageContext ] = message.useMessage();
   const deleteFolder = async () => {
-    await axiosInstance.delete(`/user-api/folders/${Folders[SelectedFolderNumber].id}/`);
-    SelectFolder(0);
-    FolderReload();
-    closeEditPopover(); 
-    setDeleteFolderState(false);
+    try
+    {
+      await axiosInstance.delete(`/user-api/folders/${Folders[SelectedFolderNumber].id}/`);
+      SelectFolder(0);
+      FolderReload();
+      closeEditPopover(); 
+      setDeleteFolderState(false);
+    }
+    catch(err)
+    {
+      MessageApi.error({
+        content : Object.values(err.response.data)[0],
+        duration : 4,
+        style : {
+          fontFamily : 'IRANSans'
+        }
+      })
+    }
+   
   }
   const RemoveFolderStateHandler = () => {
     setDeleteFolderState(true)
@@ -21,6 +36,7 @@ const FolderPopoverContent = ({ FolderReload , RenameInput , RenameFolderState ,
   }
   return (
     <FolderPopoverContainer>
+      {MessageContext}
         <FolderPopoverItem>
           <button onClick={() => {
             RenameFolderState(true);

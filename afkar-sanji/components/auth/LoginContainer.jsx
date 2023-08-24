@@ -16,7 +16,7 @@ const Login_container = () => {
             <div className="login_content">
                 <div className={Classes ["login__header"]}>
                     <LoginHeaderText filltext={isLoggedIn ? 'true' : null} ref={HeaderText}
-                    halfFill={LoginContext.Login_Context_value.FormType == 'OTP_SMS' ? 'active' : null}
+                    halffill={LoginContext.Login_Context_value.FormType == 'OTP_SMS' ? 'active' : null}
                      data_text="AfkarSanji" >
                         AfkarSanji
                       </LoginHeaderText>

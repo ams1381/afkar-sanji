@@ -10,9 +10,10 @@ import PN from 'persian-number';
 const AvatarComponent = () => {
     const Auth = useContext(AuthContext);
     const router = useRouter();
-
+    console.log('test')
     const LogoutHandler = () => {
-        typeof window !== 'undefined' ?  router.push('./auth') : ''
+        
+        typeof window !== 'undefined' ?  router.push('/auth') : ''
     }
   return (
     <LogoutPopOverLayout>
@@ -26,7 +27,7 @@ const AvatarComponent = () => {
     </LogoutPopOverInfo>
     <ConfigProvider theme={themeContext}>
         <Button type='primary' style={{ fontFamily : 'IRANSans' , fontSize : 13 }}
-         onClick={LogoutHandler}> خروج از حساب </Button>
+         onClick={() => LogoutHandler()}> خروج از حساب </Button>
     </ConfigProvider>
     </LogoutPopOverLayout>
   )
