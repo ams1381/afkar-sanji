@@ -11,7 +11,7 @@ export default function App({ Component, pageProps }) {
   const [ readyToRender , setReadyToRender ] = useState(false);
 
   const { getItem , setItem } = useLocalStorage();
-  console.log(getItem('cookie'))
+
     const authentication = async () => {
     if(getItem('cookie'))
     {
@@ -37,6 +37,8 @@ export default function App({ Component, pageProps }) {
     useEffect(() => {
       if(router.pathname !== '/auth' && router.pathname !== '/auth/otpSms')
           authentication();
+      else
+        setReadyToRender(true)
     })
 
   return <AuthContextProvider>
