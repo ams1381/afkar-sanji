@@ -114,7 +114,7 @@ export default function Home() {
             style={{marginRight : 15}}
             >
                 <CornerAddButton ref={CornerButton} clicked={addPopOver ? 'true' : null} onClick={() => setAddPopover(!addPopOver)}>
-                  <Icon name='add' />
+                  <Icon name='Add' />
                 </CornerAddButton>
         </Popover>
     </>
@@ -154,7 +154,7 @@ export default function Home() {
           />
           <button onClick={() => setAddQuestionnaireState(true)}>
               <p>ایجاد نظر سنجی</p>
-              <Icon name='folder' style={{ width : 14 }} />
+              <Icon name='Folder' style={{ width : 14 }} />
              </button>
           </EmptyFolderContainer> 
         }
