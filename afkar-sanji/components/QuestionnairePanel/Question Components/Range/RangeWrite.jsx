@@ -20,6 +20,7 @@ export const RangeWrite = ({ QuestionInfo }) => {
         <Slider
           min={4}
           max={12}
+          tooltip={{formatter : (value) => <span>{PN.convertEnToPe(value)}</span>}}
           step={1}
           marks={SlideMarkGenerator()}
           trackStyle={{ background : 'var(--primary-color)' }}

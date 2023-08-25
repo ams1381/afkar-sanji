@@ -7,8 +7,13 @@ import { ChangeAnswerPattern, ChangeMinOrMaxAnswerHandler } from '@/utilities/Qu
 const SettingQWanswer = ({ QuestionInfo }) => {
   const dispatcher = useDispatch();
   const ChangeAnswerPatternHandler = (e) => {
-      dispatcher(ChangeAnswerPattern({ QuestionID : QuestionInfo.id , NewPattern : e.value }))
+      dispatcher(ChangeAnswerPattern(
+        { QuestionID : QuestionInfo.id , NewPattern : e , answer_template : PatternGenerator(e).answer_template}
+        ))
+      
+        console.log(e)
   }
+ 
   const ChangeMinMaxHandler = (event,InputName) => {
     console.log(event,InputName)
     dispatcher(ChangeMinOrMaxAnswerHandler({
@@ -18,7 +23,8 @@ const SettingQWanswer = ({ QuestionInfo }) => {
 }
   return (
     <TextAnswerSettingContainer>
-        <Select placeholder='الگوی پاسخ' 
+      <div className='pattern_selector_container'>
+      <Select placeholder='الگوی پاسخ' 
         options={[
           { label : 'تاریخ میلادی' , value  : 'gregorian_date' } , 
           { label : 'تاریخ شمسی' , value  : 'jalali_date' } ,
@@ -33,6 +39,9 @@ const SettingQWanswer = ({ QuestionInfo }) => {
         onChange={ChangeAnswerPatternHandler}
         style={{ fontFamily : 'IRANSans' , width: 130 }} dropdownStyle={{ fontFamily : 'IRANSans' , fontSize : 12}}>
         </Select>
+        <p>الگوی پاسخ</p>
+      </div>
+        
         { (QuestionInfo.pattern == 'free' || QuestionInfo.pattern == 'persian_letters' || QuestionInfo.pattern == 'english_letters' )
         ? <AlphabetNumberContainer>
           <p>تعداد حروف</p>
@@ -52,21 +61,22 @@ const PatternGenerator = (Type) => {
   switch(Type)
   {
     case 'gregorian_date':
-        return { "label" : 'تاریخ میلادی' , "value"  : 'gregorian_date' }
+        return { "label" : 'تاریخ میلادی' , "value"  : 'gregorian_date' , answer_template : 'تاریخ میلادی' }
     case 'jalali_date':
-        return { "label" : 'تاریخ شمسی' , "value"  : 'jalali_date' }
+        return { "label" : 'تاریخ شمسی' , "value"  : 'jalali_date' , answer_template : 'تاریخ شمسی' }
     case 'free':
-        return { "label" : 'متن آزاد' , "value"  : 'free' }
+        return { "label" : 'متن آزاد' , "value"  : 'free'  , answer_template : 'متن آزاد'}
     case 'phone_number':
-        return { "label" : 'شماره تلفن' , "value" : 'phone_number' }
+        return { "label" : 'شماره تلفن' , "value" : 'phone_number' , answer_template : 'شماره تلفن '}
     case 'mobile_number':
-        return { "label" : 'شماره موبایل ' , "value" : 'mobile_number' }
+        return { "label" : 'شماره موبایل ' , "value" : 'mobile_number' , answer_template : 'شماره موبایل' }
     case 'number_character':
-          return { "label" : ' کارکتر عددی' , "value" : 'number_character' }
+          return { "label" : ' کارکتر عددی' , "value" : 'number_character' , answer_template : 'کاراکتر عددی'}
     case 'persian_letters':
-          return { "label" : 'حروف فارسی' , "value" : 'persian_letters' }
+          return { "label" : 'حروف فارسی' , "value" : 'persian_letters' , answer_template : 'حروف فارسی' }
     case 'english_letters' :
-          return { "label" : 'حروف انگلیسی' , "value" : 'english_letters'}
+          return { "label" : 'حروف انگلیسی' , "value" : 'english_letters' , answer_template : 'حروف انگلیسی'}
   }
 }
+
 export default SettingQWanswer;

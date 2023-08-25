@@ -104,7 +104,7 @@ const SettingPanel = ({ Questionnaire }) => {
           defaultValue={QuestionnaireData.pub_date ? moment(convertToJalaliDate(QuestionnaireData.pub_date)) 
             : moment(convertToJalaliDate(new Date().toJSON().slice(0, 10)))}
           input={<DatePickerInput readOnly={true}
-            errorOccur={ErrorType == 'date_error' ? 'true' : null} placeholder="تاریخ شروع" />}
+          erroroccur={ErrorType == 'date_error' ? 'true' : null} placeholder="تاریخ شروع" />}
           placeholder='زمان شروع' />
           <p>: زمان شروع   </p>
        </div>
@@ -124,7 +124,7 @@ const SettingPanel = ({ Questionnaire }) => {
        </div>
       </QuestionnaireDatePickerContainer>
       <QuestionnaireDatePickerContainer>
-        <div className='picker_header'>
+        <div className='picker_header time_picker'>
                 <p>: تنظیم مهلت پاسخ دهی </p>
                 <Switch checked={TimerActive} onChange={TimerToggleHandler}/>
           </div>
@@ -137,7 +137,7 @@ const SettingPanel = ({ Questionnaire }) => {
                   showNow={false}
                   defaultValue={QuestionnaireData.timer ? dayjs(QuestionnaireData.timer, 'HH:mm:ss') : null}
                 />
-        <p>: زمان مشخص شده</p>
+
         </div>
         
       </QuestionnaireDatePickerContainer>

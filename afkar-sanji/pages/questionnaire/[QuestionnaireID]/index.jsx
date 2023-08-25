@@ -38,7 +38,10 @@ const QuestionnairePanel = () => {
         messageApi.error({
           content : err.response.data,
           duration : 6,
-          
+          style : {
+            fontFamily : 'IRANSans',
+            direction : 'rtl'
+          }
         })
       }
     },[router.query , QuestionnaireReloader])

@@ -10,6 +10,7 @@
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  -webkit-tap-highlight-color : transparent;
 }
 html
 {
@@ -46,12 +47,12 @@ html::-webkit-scrollbar-thumb
   border-radius: 9px;
   width: 10px;
 }
-.question_design_item .ant-select-dropdown
+.type_selector .ant-select-dropdown
 {
   width: 400px !important;
   height: 175px;
 }
-.question_design_item .rc-virtual-list-holder-inner
+.type_selector .rc-virtual-list-holder-inner
 {
   display: grid !important;
   grid-template-columns: auto auto !important;
@@ -63,4 +64,8 @@ html::-webkit-scrollbar-thumb
 .ant-message-custom-content.ant-message-error
 {
   display: flex;
+}
+.ant-btn
+{
+  font-family: IRANSans;
 }

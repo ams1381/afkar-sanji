@@ -39,6 +39,10 @@ export default class MyDocument extends Component {
       <Html lang="en">
       <Head>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+        <link
+        rel="stylesheet"
+        href="https://video-react.github.io/assets/video-react.css"
+      />
       </Head>
       <body>
           <Main />

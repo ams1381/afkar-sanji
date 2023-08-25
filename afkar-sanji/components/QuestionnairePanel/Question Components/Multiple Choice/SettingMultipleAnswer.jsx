@@ -32,7 +32,7 @@ const SettingMultipleAnswer = ({QuestionInfo}) => {
     const AdditionalOptionsHandler = (ToggleValue) => {
 
         OptionalDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : 'additional_options' , ToggleValue : ToggleValue}))
-        if(!QuestionInfo.additional_options)
+        if(!ToggleValue)
         {
             OptionalDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : 'nothing_selected' , ToggleValue : false}))
             OptionalDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : 'all_options' , ToggleValue : false}))
@@ -63,26 +63,26 @@ const SettingMultipleAnswer = ({QuestionInfo}) => {
               <p>حداقل</p>
           </label>
           <label>
-              <InputNumber value={QuestionInfo.max_selected_options} min={0} onChange={(e) => ChangeMinMaxHandler(e,'max_selected_options')}/>
+              <InputNumber  value={QuestionInfo.max_selected_options} min={0} onChange={(e) => ChangeMinMaxHandler(e,'max_selected_options')}/>
               <p>حداکثر</p>
           </label>
         </AlphabetNumberContainer> : ''}
          <div className='additional_options_container'>
-            <div className='additional_option_toggle' onClick={(e => AdditionalOptionsHandler(!QuestionInfo.additional_options))}>
+            <div className='checkbox_container additional_option_toggle' onClick={(e => AdditionalOptionsHandler(!QuestionInfo.additional_options))}>
                 <Switch checked={QuestionInfo.additional_options} />
                 <p>گزینه های اضافی</p>
             </div>
             {QuestionInfo.additional_options ? <div className='additional_option_checkboxes_container'>
                 <div className='additional_checkbox' onClick={e => RegularToggleHandler(!QuestionInfo.all_options,'all_options')}>
-                    <Switch checked={QuestionInfo.all_options} />
+                    <Checkbox checked={QuestionInfo.all_options} />
                     <p>همه گزینه ها</p>
                 </div>
                 <div className='additional_checkbox' onClick={e => RegularToggleHandler(!QuestionInfo.nothing_selected,'nothing_selected')}>
-                    <Switch checked={QuestionInfo.nothing_selected} />
+                    <Checkbox checked={QuestionInfo.nothing_selected} />
                     <p>هیچ کدام</p>
                 </div>
-                <div className='additional_checkbox' onClick={e => RegularToggleHandler(!QuestionInfo.nothing_selected,'other_options')}>
-                    <Switch checked={QuestionInfo.other_options} />
+                <div className='additional_checkbox' onClick={e => RegularToggleHandler(!QuestionInfo.other_options,'other_options')}>
+                    <Checkbox checked={QuestionInfo.other_options} />
                     <p>سایر</p>
                 </div>
             </div> : ''}

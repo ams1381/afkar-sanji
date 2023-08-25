@@ -3,9 +3,10 @@ import { AddFolderButtons, SideBarCancelButton, SideBarConfirmButton, SideBarCon
      SideBarInput, SideBarInputBox, SideBarHeader , SideBarTitle,
       SideBarToggleButton } from '@/styles/common';
 import { Icon } from '@/styles/icons';
+import { LoadingOutlined } from '@ant-design/icons';
 import { axiosInstance } from '@/utilities/axios';
 import { useLocalStorage } from '@/utilities/useLocalStorage';
-import { Skeleton } from 'antd';
+import { Skeleton, Spin } from 'antd';
 import PN from "persian-number";
 import React, { useEffect, useState } from 'react'
 
@@ -15,6 +16,7 @@ const SideBar = ({ IsOpen , SetSideBar , folders , SelectedFolder , ChangeFolder
     const [ newFolderName , setNewFolderName ] = useState(null);
     const [ ErrorMessage , SetErrorMessage ] = useState(null);
     const [ FolderAdded , setFolderAddedState ] = useState(false);
+    const [ AddFolderLoading , setAddFolderLoading ] = useState(false)
     useEffect(() => {   
         if(folders && folders[folders.length - 1] && FolderAdded)
         {
@@ -28,6 +30,8 @@ const SideBar = ({ IsOpen , SetSideBar , folders , SelectedFolder , ChangeFolder
         //     ChangeFolder(folders[folders.length])
     },[folders])
     const AddFolder = async () => {
+        axiosInstance.defaults.headers['Content-Type'] = 'application/json';
+        setAddFolderLoading(true)
         setFolderAddedState(!FolderAdded)
         if(!newFolderName)
         {
@@ -40,13 +44,15 @@ const SideBar = ({ IsOpen , SetSideBar , folders , SelectedFolder , ChangeFolder
             setNewFolderName(null);
             SetAddFolderState(false)
             FolderReload();
-            // console.log(folders.length)
-            //  ChangeFolder(folders.length - 1)
         }
         catch(err)
         {
-            if(err.response )
+            if(err.response)
                 SetErrorMessage(err.response.data.name[0]) 
+        }
+        finally
+        {
+            setAddFolderLoading(false);
         }
     }
   return (
@@ -76,7 +82,9 @@ const SideBar = ({ IsOpen , SetSideBar , folders , SelectedFolder , ChangeFolder
             {ErrorMessage ? <LoginErrorMessage>{ErrorMessage}</LoginErrorMessage> : ''}
             <AddFolderButtons>
                 <SideBarConfirmButton onClick={AddFolder}>
-                    <Icon name='Check' style={{ width : 15}} /> 
+                   { AddFolderLoading ? <Spin 
+                   indicator={<LoadingOutlined style={{ fontSize: 17 , color : 'white' }} spin />} size='12' />
+                   :  <Icon name='Check' style={{ width : 15}} /> }
                 </SideBarConfirmButton>
                 <SideBarCancelButton onClick={() => SetAddFolderState(false)}>
                     <Icon name='Close' style={{ width : 12 }} />

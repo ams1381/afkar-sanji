@@ -8,7 +8,7 @@ const OptionalComponent = ({QuestionInfo}) => {
     <OptionalAnswerBlockContainer vertical={QuestionInfo.is_vertical ? 'active' : null}>
       {QuestionInfo.options.map(item => <div className='OptionalAnswerItemContainer' key={item.id}>
         <Checkbox />
-        <p>{item.text?.replace(regex,"")}</p>
+        <p>{(item.text != 'null') ? item.text?.replace(regex,"") : ''}</p>
       </div>)}
     </OptionalAnswerBlockContainer>
   )

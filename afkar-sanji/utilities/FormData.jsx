@@ -12,6 +12,19 @@ export const form_data_convertor = (obj, formData, namespace) => {
             }
         }
     }
-
     return form_Data;
+}
+export const detectFileFormat = (fileName) => {
+    if(!fileName)
+     return
+     fileName = fileName.toLowerCase();
+    let pictureFormats = ['jpg', 'jpeg', 'png', 'gif'];
+    let videoFormats = ['mp4', 'avi', 'mkv', 'mov', 'flv', 'wmv'];
+    let zip_formats  = ['zip','rar','7z'];
+    let audio_formats = ['mp3','wav','ogg','mpeg-1']
+    let fileFormat = fileName.split(".")[fileName.split(".").length - 1];
+
+    return pictureFormats.includes(fileFormat) ? 'Picture' :
+           videoFormats.includes(fileFormat) ? 'Video' : zip_formats.includes(fileFormat) ?
+            'Zip' : audio_formats.includes(fileFormat) ? 'Audio' : 'UNKNOWN';
 }

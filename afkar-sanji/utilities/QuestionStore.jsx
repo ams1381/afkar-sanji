@@ -56,7 +56,7 @@ const QuestionSlice =  createSlice({
             }
             else
             {
-                state.nonQuestionData.find(item => item.question.id == QuestionID).newFace = null;
+                state.nonQuestionData.find(item => (item.question && item.question.id == QuestionID)).newFace = null;
             }
             
         } ,
@@ -133,7 +133,7 @@ const QuestionSlice =  createSlice({
             item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
             .question.title = NewTitle : '')
             : 
-            state.nonQuestionData.find(item => item.question.id == QuestionID).question.title = NewTitle
+            state.nonQuestionData.find(item => (item.question && item.question.id == QuestionID)).question.title = NewTitle
         },
         ChangeDescriptionHandler : (state , action) => {
             const { QuestionID , NewDesc , QuestionChanged} = action.payload;
@@ -145,7 +145,7 @@ const QuestionSlice =  createSlice({
                 item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
                 .question.description = NewDesc : '')
             :
-            state.nonQuestionData.find(item => item.question.id == QuestionID).question.description = NewDesc
+            state.nonQuestionData.find(item => (item.question && item.question.id == QuestionID)).question.description = NewDesc
         },
         ChangeToggleHandler : (state, action) => {
             const  { QuestionID , ToggleName , ToggleValue } = action.payload;
@@ -209,7 +209,7 @@ const QuestionSlice =  createSlice({
                 {
                 let DuplicatedOption = JSON.parse(JSON.stringify(state.data)).find(item => item.question.id == QuestionID).question.options.find(OptionItem => OptionItem.id == OptionID)
                 let DuplicatedIndex = JSON.parse(JSON.stringify(state.data)).find(item => item.question.id == QuestionID).question.options.findIndex(OptionItem => OptionItem.id == OptionID)
-            
+
                 state.data.find(questionItem => questionItem.question.id == QuestionID).question.options.splice(DuplicatedIndex + 1, 0, DuplicatedOption);
                 state.data.find(questionItem => questionItem.question.id == QuestionID).question.options[DuplicatedIndex + 1].text = OptionText;
                 state.data.find(questionItem => questionItem.question.id == QuestionID).question.options[DuplicatedIndex + 1].id = NewOptionID;
@@ -261,6 +261,8 @@ const QuestionSlice =  createSlice({
             if(state.data.find(questionItem => questionItem.question.id == QuestionID))
             {
                 let Option_index = JSON.parse(JSON.stringify(state.data)).find(questionItem => questionItem.question.id == QuestionID).question.options.findIndex(item => item.text == OptionText);
+                if(Option_index == -1)
+                    return
                 state.data.find(questionItem => questionItem.question.id == QuestionID).question.options.splice(Option_index,1);
             }
             else
@@ -302,18 +304,19 @@ const QuestionSlice =  createSlice({
                 .question[Label] = LabelValue  : '')
             },
         AddQuestion : (state, action) => {
-            const { TopQuestionID , AddedQuestionID , ParentQuestion} = action.payload;
+            
+            const { TopQuestionID , AddedQuestionID , unshiftQuestion , ParentQuestion} = action.payload;
             let initialQuestionData =  { question : {
                 title : 'سوال جدید',
                 description : null,
                 options : [
-                    { id : Date.now , text : null },
-                    { id : Date.now + 1 , text : null }
+                    { id : Date.now() , text : null },
+                    { id : Date.now() + 1 , text : null }
                 ],
                 show_number : false,
                 id : AddedQuestionID,
                 is_required : null,
-                max : 0,
+                max : 4,
                 additional_options : false,
                 url_prefix: "optional-questions",
                 media: null,
@@ -322,13 +325,15 @@ const QuestionSlice =  createSlice({
                 multiple_choice: false,
                 all_options: false,
                 newFace : true,
+                pattern : 'free',
+                answer_template : 'متن آزاد',
                 nothing_selected: false,
                 other_options: false,
                 is_alphabetic_order : false,
                 is_random_options : false,
                 max_selected_options : null,
                 min_selected_options : null,
-                shape : false,
+                shape : 'S',
             }}
             if(TopQuestionID && state.data.length)
             {
@@ -352,42 +357,58 @@ const QuestionSlice =  createSlice({
             else
             {
                 initialQuestionData.placement = 1;
-                state.data.push(initialQuestionData);
+                unshiftQuestion ? state.data.unshift(initialQuestionData)
+                : state.data.push(initialQuestionData);
             }
         },
         ChangeAnswerPattern : (state, action) => {
-            const { QuestionID , NewPattern } = action.payload;
-            state.data.find(questionItem => questionItem.question.id == QuestionID) ? 
-            state.data.find(questionItem => questionItem.question.id == QuestionID).question.pattern = NewPattern
-            : 
-            state.data.forEach(item => item.question.child_questions ?
-                item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                .question.pattern = NewPattern  : '')
-        },
-        UploadFileHandler : (state, action) => {
-            const { QuestionID , FileObject } = action.payload;
-            state.data.find(questionItem => questionItem.question.id == QuestionID).question.media = FileObject;
-        },
-        RemoveFileHandler : (state, action) => {
-            const { QuestionID , IsQuestion } = action.payload;
-
-            if(IsQuestion)
+            const { QuestionID , NewPattern , answer_template} = action.payload;
+            if(state.data.find(questionItem => questionItem.question.id == QuestionID))
             {
-            
-              if(state.data.find(questionItem => questionItem.question.id == QuestionID)) 
-              {
-                delete state.data.find(questionItem => questionItem.question.id == QuestionID).question.media;
-           
-              }
-            
-            else
-                delete state.data.forEach(item => item.question.child_questions ?
-                    item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                    .question.media : '')  
+                state.data.find(questionItem => questionItem.question.id == QuestionID).question.pattern = NewPattern
+                state.data.find(questionItem => questionItem.question.id == QuestionID).question.answer_template = answer_template;
             }
             else
             {
-              delete state.nonQuestionData.find(questionItem => questionItem.question.id == QuestionID).question.media;
+                state.data.forEach(item => item.question.child_questions ?
+                item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
+                .question.pattern = NewPattern  : '')
+                state.data.forEach(item => item.question.child_questions ?
+                    item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
+                    .question.answer_template = answer_template  : '')
+            }
+            
+        },
+        UploadFileHandler : (state, action) => {
+            const { QuestionID , FileObject , IsQuestion } = action.payload;
+            delete FileObject.uid;
+            if(IsQuestion)
+            {
+               state.data.find(questionItem => questionItem.question.id == QuestionID).question.media = FileObject; 
+            }
+            else
+                state.nonQuestionData.find(questionItem => questionItem.question && questionItem.question.id == QuestionID)
+            .question.media = FileObject;
+            if(FileObject.status && FileObject.status == 'removed')
+            {
+                IsQuestion ? state.data.find(questionItem => questionItem.question.id == QuestionID).question.media = ''
+                : state.nonQuestionData.find(questionItem => questionItem.question && questionItem.question.id == QuestionID ).question.media = ''
+            }
+        },
+        RemoveFileHandler : (state, action) => {
+            const { QuestionID , IsQuestion } = action.payload;
+            if(IsQuestion)
+            {
+              if(state.data.find(questionItem => questionItem.question.id == QuestionID)) 
+                 state.data.find(questionItem => questionItem.question.id == QuestionID).question.media = '';
+            else
+                 state.data.forEach(item => item.question.child_questions ?
+                    item.question.child_questions.find(child_item => child_item.question.id == QuestionID).question.media = '' : '')  
+            }
+            else
+            {
+               state.nonQuestionData.find(questionItem => questionItem.question && questionItem.question.id == QuestionID)
+               .question.media = '';
             }
         }
     }

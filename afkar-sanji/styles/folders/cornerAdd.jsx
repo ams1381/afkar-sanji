@@ -10,14 +10,19 @@ export const CornerAddButton = styled.button`
     cursor: pointer;
     border: 2px solid var(--primary-color);
     position: fixed;
+    right: 6vw;
     bottom: 1rem;
-    right: 1rem;
     z-index: 1;
     transition : 0.3s;
     display: flex;
     justify-content: center;
     align-items: center;
     transform : rotate(${p => p.clicked ? '45deg' : '0'});
+
+    @media screen and (max-width : 768px)
+    {
+        right: 1rem;
+    }
 `
 export const PopoverContainer = styled.div`
     display : flex;

@@ -23,10 +23,12 @@ const MultipleAnswer = ({ QuestionInfo }) => {
     <OptionWritingContainer>
       <p>گزینه ها</p>
       {QuestionInfo.options.map(item => !item.text?.includes('<span>','</span>') ? <InputOptionsContainer>
-        <OptionalInputItem key={item.id} type='text' onChange={e => Dispatcher(OptionModifier({ QuestionID : QuestionInfo.id , OptionID : item.id , OptionText : e.target.value }))}
-        defaultValue={item.text} placeholder='چیزی بنویسید'/>
+        <OptionalInputItem key={item.id} type='text' 
+        onChange={e => Dispatcher(OptionModifier({ QuestionID : QuestionInfo.id , OptionID : item.id , OptionText : e.target.value }))}
+        value={(item.text != 'null') ? item.text : ''} placeholder='چیزی بنویسید'/>
         <div className='option_button_container'>
-          <button onClick={() => Dispatcher(OptionAdder({ QuestionID : QuestionInfo.id , NewOptionID : RandomIdGenerator() , OptionID : item.id , OptionText : null }))}>
+          <button onClick={() => Dispatcher(OptionAdder({ QuestionID : QuestionInfo.id , NewOptionID : RandomIdGenerator() , OptionID : item.id 
+            , OptionText : null }))}>
             <Icon name='CirclePlus'/>
           </button>
           <button onClick={() => OptionItem(item)}>

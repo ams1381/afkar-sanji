@@ -4,15 +4,24 @@ import { styled } from "styled-components";
 export const QuestionComponentContainer = styled.div`
     width: 90%;
     margin: 0.55rem auto;
+    word-break: break-word;
     text-align: right;
-    box-shadow: ${p => p.childq ? 'none' : '2px 2px 6px #00000030'};
+    box-shadow: ${p => p.childq ? 'none' : '0px 2px 8px 0px rgba(0, 0, 0, 0.15)'};
     padding: 1rem;
     border-radius: 2px;
+    background: white;
+
+    .uploaded_file_preview .video-react-button.video-react-big-play-button
+    {
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%,-30%);
+    }
 `
 export const QuestionTitle = styled.div`
     display: flex;
     justify-content: flex-end;
-    color: #666666;
+    color: #1D1D1D;
     margin: 0.6rem auto;
     font-size: 16px;
     font-weight: 600;
@@ -22,9 +31,14 @@ export const QuestionTitle = styled.div`
     {
         font-weight : 600;
     }
+    .question_number
+    {
+        margin-left : 0.5rem;
+    }
 `
 export const QuestionDescription = styled.div`
     color : #666666;
+    margin-bottom : 0.4rem;
 `
 export const WelcomeComponentContainer = styled.div`
     text-align : center;
@@ -52,23 +66,19 @@ export const WelcomeComponentContainer = styled.div`
         font-family : IRANSans;
         margin-top : 0.4rem;
         border-radius : 2px;
+        background: var(--primary-color);
     }
 `
 export const OptionalAnswerBlockContainer = styled.div`
     display: grid;
     grid-template-columns : ${p => p.vertical ? 'auto' : 'auto auto'};
-
-    &.OptionalAnswerItemContainer.Prioritize
-    {
-        grid-template-columns : auto !important;
-    }
-    
-
+    direction: rtl;
+   
     &  > div
     {
             display: flex;
             justify-content: flex-start;
-            flex-direction: row-reverse;
+            flex-direction: row;
             background: #FFFFFF;
             border: 1px dotted #D9D9D9;
             color: var(--Neutral-Gray9);
@@ -84,6 +94,10 @@ export const OptionalAnswerBlockContainer = styled.div`
         width : 70%;
         margin-right : 0.5rem;
         direction: rtl
+    }
+     & .Prioritize
+    {
+        grid-template-columns : auto !important;
     }
 `
 export const QuestionWithAnswerContainer = styled.div`
@@ -104,6 +118,7 @@ export const TextAnswerInputBox = styled.input`
     text-align: right;
     padding: 8px 12px 8px 12px;
     border-radius: 2px;
+    font-family: 'IRANSans';
 
     &:focus
     {
@@ -219,4 +234,83 @@ export const QuestionRangeLabel = styled.div`
     text-align: center;
     word-break: break-word;
     padding-top: 1.5rem;
+`
+export const FileSizeContainer = styled.div`
+    text-align: right;
+    color: #8F8F8F;
+
+    .file_size_selector 
+    {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 0.8rem;
+    }
+    .ant-input-number
+    {
+        border-radius : 2px;
+    }
+`
+export const FileSizeTypeSelector = styled.div`
+    display: flex;
+    background: #E9EAEF;
+    width: 98px;
+    height: 28px;
+    align-items: center;
+    border-radius: 2px;
+    padding: 0 2px 0 2px;
+
+    .ant-input-number
+    {
+        border-radius: 2px;
+    }
+    label
+    {
+        cursor : pointer;
+        justify-content: center;
+        display: flex;
+        align-items: center;
+        width: 95%;
+        border-radius: 2px;
+        transition : 0.3s;
+    }
+    input:checked + label 
+    {
+        background: var(--primary-color);
+        color : white;
+    }
+    input 
+    {
+        display : none;
+    }
+`
+export const RateContainer = styled.div`
+    display: flex;
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.15);
+    align-items: center;
+    justify-content: center;
+    padding: 0.95rem 0.5rem 0.95rem 0.4rem;
+    gap: 20px;
+
+
+    .rate_selector {
+        display: flex;
+        align-items: center;
+    }
+    .rate_number_indicator {
+        width: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #A3A3A3;
+        border: 2px solid #A3A3A3;
+        border-radius: 2px;
+        height: 28px;
+    }
+    .ant-rate
+    {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    
 `

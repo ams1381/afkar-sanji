@@ -33,15 +33,15 @@ export const SettingNumberAnswer = ({ QuestionInfo }) => {
             <p>عدم نمایش شماره سوال</p>
             <Switch checked={QuestionInfo.show_number}/>
         </div>
-        <div className='checkbox_container' onClick={e => RegularToggleHandler(!QuestionInfo.show_number,'accept_negative')}>
+        <div className='checkbox_container' onClick={e => RegularToggleHandler(!QuestionInfo.accept_negative,'accept_negative')}>
             <p>عدد منفی مجاز باشد</p>
             <Switch checked={QuestionInfo.accept_negative}/>
         </div>
-        <div className='checkbox_container' onClick={e => RegularToggleHandler(!QuestionInfo.show_number,'accept_float')}>
+        <div className='checkbox_container' onClick={e => RegularToggleHandler(!QuestionInfo.accept_float,'accept_float')}>
             <p>عدد اعشاری مجاز باشد</p>
             <Switch checked={QuestionInfo.accept_float}/>
         </div>
-        <div className='checkbox_container' onClick={e => RegularToggleHandler(!QuestionInfo.show_number,'is_required')}>
+        <div className='checkbox_container' onClick={e => RegularToggleHandler(!QuestionInfo.is_required,'is_required')}>
             <p>پاسخ به سوال اجباری باشد</p>
             <Switch checked={QuestionInfo.is_required}/>
         </div>

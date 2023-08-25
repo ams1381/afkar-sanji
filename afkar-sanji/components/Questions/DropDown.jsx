@@ -12,11 +12,12 @@ const DropDownOption = styled.div`
   }
 `
 const DropDown = ({ QuestionInfo }) => {
+
   return (
     <DropDownContainer>
         <Select
         showSearch
-        optionFilterProp="children"
+        // optionFilterProp="children"
         placeholder="پاسخ خود را انتخاب یا جستجو کنید"
         style={{ width : '100%' , fontFamily : 'IRANSans' , direction : 'rtl'}}
         dropdownStyle={{ fontFamily : 'IRANSans' }}
@@ -24,15 +25,20 @@ const DropDown = ({ QuestionInfo }) => {
         // filterOption={(input, option) =>
         // (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
         // }
+        optionLabelProp='label'
         />
     </DropDownContainer>
   )
 }
 const DropDownOptionsGenerator = (Options) => {
-  const OptionsArray = Options.map(item => ({
-    label : item.text,
-    value : item.text
-}))
- return OptionsArray;
+  const OptionsArray = []
+   Options.forEach(item => {
+    if(item.text != 'null')
+    OptionsArray.push({
+        label : item.text,
+        value : item.text
+    })
+  })
+  return OptionsArray
 }
 export default DropDown;

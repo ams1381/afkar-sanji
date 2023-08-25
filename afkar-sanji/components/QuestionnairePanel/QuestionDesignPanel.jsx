@@ -79,8 +79,9 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
     QuestionDataDispatcher(QuestionSorter())
     let reOrderedArray =  reorderedItems.map((item,index) => { 
       if(item.question)
-        return { question_id : item.question.id , new_placement : index }
+        return { question_id : item.question.id , new_placement : index + 1}
      })
+     axiosInstance.defaults.headers['Content-Type'] = 'application/json';
      reOrderedArray.forEach((item,index) => !item ? reOrderedArray.splice(index,1) : '')
      try
      {
@@ -97,7 +98,8 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
           fontFamily : 'IRANSans',
           display : 'flex',
           alignItems : 'center',
-          justifyContent : 'center'
+          justifyContent : 'center',
+          direction : 'rtl'
         }
       }) 
     }
@@ -118,24 +120,24 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
       {contextHolder}
       <div>
         <QuestionSearchContainer>   
-                { Questionnaire ?  <>
-                  <Select
-                  showSearch
-                  defaultActiveFirstOption={false}
-                  suffixIcon={<div>
-                    <Icon name='WhiteSearch' />
-                    </div>}
-                  allowClear
-                  placeholder="جستجو کنید"
-                  optionFilterProp="children"
-                  options={SearchResult}
-                  onSelect={SearchSelectHandler}
-                  onChange={(e) => SearchQuestionHandler(e)}
-                  style={{ width : '100%' , height : '100%' , direction : 'rtl' , fontFamily : 'IRANSans' }}
-                  onSearch={SearchQuestionHandler}
-                  notFoundContent={null}
-                  filterOption={(_, option) => option ? option.label : ''}/>
-                  </> : ''}
+              { Questionnaire ?  <>
+                <Select
+                showSearch
+                defaultActiveFirstOption={false}
+                suffixIcon={<div>
+                  <Icon name='WhiteSearch' />
+                  </div>}
+                allowClear
+                placeholder="براساس عنوان سوال جست‌وجو کنید"
+                optionFilterProp="children"
+                options={SearchResult}
+                onSelect={SearchSelectHandler}
+                onChange={(e) => SearchQuestionHandler(e)}
+                style={{ width : '100%' , height : '100%' , direction : 'rtl' , fontFamily : 'IRANSans' }}
+                onSearch={SearchQuestionHandler}
+                notFoundContent={null}
+                filterOption={(_, option) => option ? option.label : ''}/>
+                </> : ''}
               </QuestionSearchContainer>
       </div>
       <QuestionDesignTitle>

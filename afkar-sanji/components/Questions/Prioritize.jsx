@@ -4,18 +4,8 @@ import React from 'react'
 import { useDrag } from 'react-dnd'
 
 const Prioritize = ({ QuestionInfo }) => {
-  // const [{ opacity }, dragRef] = useDrag(
-  //   () => ({
-  //     type: ItemTypes.CARD,
-  //     item: { text },
-  //     collect: (monitor) => ({
-  //       opacity: monitor.isDragging() ? 0.5 : 1
-  //     })
-  //   }),
-  //   []
-  // )
   return (
-    <OptionalAnswerBlockContainer >
+    <OptionalAnswerBlockContainer vertical='true'>
         {QuestionInfo.options.map(item => <div 
          className='OptionalAnswerItemContainer Prioritize' key={item.id} style={{ cursor : 'pointer' }}>
         <Icon name='DND' />

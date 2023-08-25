@@ -36,7 +36,7 @@ const QuestionnairePanelHeader = ({ FolderName , Questionnaire , SideState , Cha
     <PanelHeader>
           <QuestionnaireDirectoryContainer>
             <QuestionnaireDirectoryPath>
-              <QuestionnaireNameInput style={{ marginRight : 10 }} ref={QuestionnaireNameInputRef}
+              <QuestionnaireNameInput style={{ marginRight : 10 , fontSize : 14}} ref={QuestionnaireNameInputRef}
                value={QuestionnaireName} onChange={QuestionnaireNameChangeHandler} disabled={!RenameState} /> /
               <Link href={{
                 pathname : '/'

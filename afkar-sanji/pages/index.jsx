@@ -162,7 +162,7 @@ export default function Home() {
       </QuestionnaireContainer>
         </MainContainer> 
         : folders ?  <EmptyFolderContainer>
-            <p>برای مدیریت کردن پرسشنامه پوشه درست کنید</p>
+            <p>برای مدیریت بهتر نظر سنجی ها یک پوشه درست کن</p>
             <button onClick={() => setOpen(true)}>
                 <p>پوشه ها</p>
                 <Icon name='Folder' />

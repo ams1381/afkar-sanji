@@ -2,7 +2,7 @@ import { Icon } from '@/styles/icons'
 import { Button, Upload } from 'antd'
 import React from 'react'
 
-export const FileQuestionComponent = () => {
+export const FileQuestionComponent = ({ QuestionInfo }) => {
   return (
     <div>
         <Upload
@@ -10,6 +10,7 @@ export const FileQuestionComponent = () => {
           listType="picture"
           previewFile={QuestionInfo.media ? QuestionInfo.media : ''}
           className="upload-list-inline"
+          style={{ fontFamily : 'IRANSans' }}
         >
             <Button  icon={<Icon name='upload' style={{ width : 12 }} />}>آپلود کنید</Button>
         </Upload>

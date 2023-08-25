@@ -37,6 +37,7 @@ export const LoginFormOTPInput = ({ErrorHandler , authentication}) => {
     },1000);
     
     const resend_sms = async () => {
+        axiosInstance.defaults.headers['Content-Type'] = 'application/json';
         try 
         {
             SetResendLoading(true)

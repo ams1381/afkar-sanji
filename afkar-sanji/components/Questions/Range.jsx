@@ -1,6 +1,7 @@
 import { QuestionnaireBodyStat } from '@/styles/folders/Questionnaire'
 import { RangeLabelText, RangeQuestionAnswerItem, QuestionRangeLabel,
   RangeQuestionContainer, RangeQuestionLabelContainer } from '@/styles/questionnairePanel/QuestionComponent'
+import PN from 'persian-number'
 import React from 'react'
 
 export const RangeQuestionComponent = ({ QuestionInfo }) => {
@@ -12,7 +13,7 @@ export const RangeQuestionComponent = ({ QuestionInfo }) => {
         <RangeQuestionAnswerItem key={index}>
             <input type='checkbox' id={'range_answer_option' + index}/>
             <label htmlFor={'range_answer_option' + index}>
-              {index + 1}
+              {PN.convertEnToPe(index + 1)}
             </label>
 
           </RangeQuestionAnswerItem>

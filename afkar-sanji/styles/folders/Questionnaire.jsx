@@ -15,6 +15,7 @@ export const QuestionnaireContainer = styled.div`
     @media screen and (max-width : 480px)
     {
         grid-template-columns: auto;
+        
     }
 `
 export const QuestionnaireDiv = styled.div`
@@ -37,7 +38,7 @@ export const QuestionnaireDiv = styled.div`
     {
         &
         {
-            width : 95%;
+            width: 100%;
         }
     }
 ` 
@@ -138,6 +139,11 @@ export const MainContainer = styled.div`
     width: 85%;
     margin: 0 auto;
     padding: 1rem 0 0 0;
+
+    @media screen and (max-width : 480px)
+    {
+        width: 90%;
+    }
 `
 export const FolderEditContainer = styled.div`
     width: 100%;

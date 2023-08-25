@@ -12,9 +12,11 @@ import ThankComponent from './Thanks';
 import { FileQuestionComponent } from './File';
 import { RangeQuestionComponent } from './Range';
 import { Number } from './Number';
+import { Player } from 'video-react';
 import { Link } from './Link';
 import Skeleton from 'react-loading-skeleton';
 import { Image } from 'antd';
+import { detectFileFormat } from '@/utilities/FormData';
 
 const QuestionComponentBodyProvider = (QuestionType,QuestionInfo) => {
   switch(QuestionType)
@@ -38,26 +40,11 @@ const QuestionComponentBodyProvider = (QuestionType,QuestionInfo) => {
         case 'number_answer':
             return <Number QuestionInfo={QuestionInfo}/>
         case 'text_answer':
-            return <InputAnswer InputPlaceholder='sample@sample.com' QuestionInfo={QuestionInfo}/>
+            return <InputAnswer InputPlaceholder={QuestionInfo.answer_template} QuestionInfo={QuestionInfo}/>
   }
-}
-const detectFileFormat = (fileName) => {
-    if(!fileName)
-     return
-     fileName = fileName.toLowerCase();
-    let pictureFormats = ['jpg', 'jpeg', 'png', 'gif'];
-    let videoFormats = ['mp4', 'avi', 'mkv', 'mov', 'flv', 'wmv'];
-    let zip_formats  = ['zip','rar','7z'];
-    let audio_formats = ['mp3','wav','ogg','mpeg-1']
-    let fileFormat = fileName.split(".")[fileName.split(".").length - 1];
-
-    return pictureFormats.includes(fileFormat) ? 'Picture' :
-           videoFormats.includes(fileFormat) ? 'Video' : zip_formats.includes(fileFormat) ?
-            'Zip' : audio_formats.includes(fileFormat) ? 'Audio' : 'UNKNOWN';
 }
 const QuestionComponent = ({ QuestionInfo , ChildQuestion }) => {
   const QuestionBodyComponent = QuestionComponentBodyProvider(QuestionInfo.question_type,QuestionInfo);
-
   const regex = /(<([^>]+)>)/gi;
 
   return (
@@ -66,17 +53,29 @@ const QuestionComponent = ({ QuestionInfo , ChildQuestion }) => {
     childq={ChildQuestion ? 'true' : null}>
         <div className='question_header'>
         <QuestionTitle>
-            { QuestionInfo.show_number ? <span className='question_number'>
-                
+            <p>{<>{(QuestionInfo.is_required && ' * ')} {QuestionInfo.title?.replace(regex,"")} </>}</p>
+            { !QuestionInfo.show_number ? <span className='question_number'>
+            { QuestionInfo.placement }
             </span> : '' }
-            <p>{QuestionInfo.title?.replace(regex,"")}</p>
         </QuestionTitle>
        
-          { QuestionInfo.media ? 
-            <div style={{ margin : '1.5rem 0' }}>
+          { QuestionInfo.media ?
+            (typeof QuestionInfo.media == 'object') ?
+            <div className='uploaded_file_preview' style={{ margin : '1.5rem 0' }}>
+                { detectFileFormat(QuestionInfo.media.name) == 'Picture' ? 
+                <Image width='100%' src={URL.createObjectURL(QuestionInfo.media)}
+                 placeholder={true} /> : <Player >
+                 <source src={URL.createObjectURL(QuestionInfo.media)} />
+               </Player>}
+            </div> 
+            : <div className='uploaded_file_preview' style={{ margin : '1.5rem 0' }}>
                 { detectFileFormat(QuestionInfo.media) == 'Picture' ? 
-                <Image width='100%' src={QuestionInfo.media} placeholder={true} /> : <Video></Video>}
-            </div> : ''}
+                <Image width='100%' src={QuestionInfo.media}
+                placeholder={true} /> : <Player>
+                <source src={QuestionInfo.media} />
+              </Player>}
+            </div>  : ''
+            }
      
         <QuestionDescription>
             <p>{QuestionInfo.description ? QuestionInfo.description.replace(regex,"") :
@@ -88,7 +87,7 @@ const QuestionComponent = ({ QuestionInfo , ChildQuestion }) => {
             <QuestionComponent QuestionInfo={item.question}/>)
         : QuestionBodyComponent}
     </QuestionComponentContainer> 
-      : <ThankComponent QuestionInfo={QuestionInfo}/>
+      : <ThankComponent ThanksInfo={QuestionInfo}/>
   )
 }
 export default QuestionComponent;

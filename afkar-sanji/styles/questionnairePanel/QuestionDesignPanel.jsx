@@ -33,6 +33,7 @@ export const QuestionSearchContainer = styled.div`
         height : 100% !important;
         display : flex !important;
         align-items : center;
+        border-radius : 2px;
     }
     .ant-select-selection-placeholder
     {
@@ -52,12 +53,17 @@ export const QuestionSearchContainer = styled.div`
         height: 100%;
         width: 50px;
         left: 0;
-        border-radius: 5px;
+        border-radius: 0px 2px 2px 0px;
         background: var(--primary-color);
         display: flex;
         align-items: center;
         justify-content: center;
         top: 6px;
+    }
+    .ant-select-selection-item
+    {
+        display : flex;
+        align-items : center;
     }
     .ant-select-clear
     {
@@ -313,6 +319,10 @@ export const QuestionItemFooter = styled.div`
         text-align : center;
         font-family : IRANSans;
     }
+    button:first-child
+    {
+        background: var(--primary-color);
+    }
 `
 export const DescriptionTextField = styled.input`
     
@@ -376,6 +386,8 @@ export const AddOptionButton = styled.button`
     color: #D9D9D9;
     background: none;
     cursor : pointer;
+    height: 40px;
+    outline: none;
 `
 
 export const RangeLabelContainer = styled.div`

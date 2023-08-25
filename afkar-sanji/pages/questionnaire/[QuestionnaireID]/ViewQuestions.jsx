@@ -78,7 +78,7 @@ const ViewQuestions = () => {
       : <QuestionComponent QuestionInfo={QuestionsData[CurrentIndex].question} /> : ''}   
 
       { (QuestionnaireInfo.thanks_page && CurrentIndex == 'Thanks') 
-      ? <ThankComponent QuestionInfo={QuestionnaireInfo.thanks_page} /> : ''}
+      ? <ThankComponent ThanksInfo={QuestionnaireInfo.thanks_page} /> : ''}
 
      { ((CurrentIndex !='Welcome' && CurrentIndex !='Thanks') &&
       QuestionnaireInfo.show_question_in_pages) ?  <ControlButtonsContainer>

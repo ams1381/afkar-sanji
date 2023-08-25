@@ -103,31 +103,33 @@ export const QuestionItem = ({ IsQuestion , question , UUID , parentPlacement , 
     ChangeQuestionTypeState(ChangedType.value)
   }
   const AddQuestionHandler = () => {
+
     questionsData.question.group ?
     QuestionDispatcher(AddQuestion({ TopQuestionID : questionsData.question.id , ParentQuestion : questionsData.question.group , AddedQuestionID : RandomIdGenerator()}))
+    : questionsData.question.question_type == 'welcome_page' ?
+    QuestionDispatcher(AddQuestion({ unshiftQuestion : true , AddedQuestionID : RandomIdGenerator()}))
     :
     QuestionDispatcher(AddQuestion({ TopQuestionID : questionsData.question.id , AddedQuestionID : RandomIdGenerator()}))
 
     QuestionDispatcher(QuestionSorter())
   }
   const QuestionPatcher = async () => {
-    if(questionsData.question.media && typeof questionsData.question.media == 'string')
+    let QDataInstance = JSON.parse(JSON.stringify(questionsData))
+    QDataInstance.question.media = questionsData.question.media;
+    if(questionsData.question.media != null && typeof questionsData.question.media == 'string')
     {
-      (questionsData.question.question_type == 'welcome_page' ||
-      questionsData.question.question_type == 'thanks_page') ?
-        QuestionDispatcher(RemoveFileHandler({ QuestionID : questionsData.question.id , IsQuestion : false}))
-        : QuestionDispatcher(RemoveFileHandler({ QuestionID : questionsData.question.id , IsQuestion : true}))
+      delete QDataInstance.question['media'];
     }
-     
+     axiosInstance.defaults.headers['content-type'] = 'multipart/form-data';
     try
-    {  
+    { 
       SetSaveButtonLoadingState(true);
-      console.log(questionsData.question)
+      console.log([...form_data_convertor(questionsData.question)])
       if(questionsData.question.url_prefix)
-          await axiosInstance.patch(`/question-api/questionnaires/${UUID}/${questionsData.question.url_prefix}/${questionsData.question.id}/`,form_data_convertor(questionsData.question))
+          await axiosInstance.patch(`/question-api/questionnaires/${UUID}/${questionsData.question.url_prefix}/${questionsData.question.id}/`,form_data_convertor(QDataInstance.question))
       else
-        questionsData.question.question_type == 'welcome_page' ? axiosInstance.patch(`/question-api/questionnaires/${UUID}/welcome-pages/${questionsData.question.id}/`,form_data_convertor(questionsData.question)) 
-        : axiosInstance.patch(`/question-api/questionnaires/${UUID}/thanks-pages/${questionsData.question.id}/`,form_data_convertor(questionsData.question)) 
+        questionsData.question.question_type == 'welcome_page' ? axiosInstance.patch(`/question-api/questionnaires/${UUID}/welcome-pages/${questionsData.question.id}/`,form_data_convertor(QDataInstance.question)) 
+        : axiosInstance.patch(`/question-api/questionnaires/${UUID}/thanks-pages/${questionsData.question.id}/`,form_data_convertor(QDataInstance.question)) 
     }
     catch(err)
     {
@@ -139,15 +141,18 @@ export const QuestionItem = ({ IsQuestion , question , UUID , parentPlacement , 
             fontFamily : 'IRANSans',
             display : 'flex',
             alignItems : 'center',
-            justifyContent : 'center'
+            justifyContent : 'center',
+            direction : 'rtl'
           }
         })  
     }
    SetSaveButtonLoadingState(false);
   }
   const QuestionCreator = async () => {
+    axiosInstance.defaults.headers['Content-Type'] = 'multipart/form-data'
     try
     {
+      
       SetSaveButtonLoadingState(true);
       if(questionsData.question.url_prefix)
       {
@@ -172,7 +177,9 @@ export const QuestionItem = ({ IsQuestion , question , UUID , parentPlacement , 
           fontFamily : 'IRANSans',
           display : 'flex',
           alignItems : 'center',
-          justifyContent : 'center'
+          justifyContent : 'center',
+          direction : 'rtl'
+          
         }
       })
     }
@@ -193,23 +200,25 @@ export const QuestionItem = ({ IsQuestion , question , UUID , parentPlacement , 
                   { questionsData.question.placement ?  <div style={{ fontWeight : 600 , whiteSpace : 'pre'}}> 
                    {<> {PN.convertEnToPe(questionsData.question.placement)}</>}
                 { parentPlacement ?  <> {PN.convertEnToPe(parentPlacement)}</>  : '' }</div> : ''}
-                  <p> { questionsData.question.title.replace(regex,"")} </p>
+                  <p> { questionsData.question.title?.replace(regex,"")} </p>
               </div>
               <QuestionItemButtonContainer>
+                  { (questionsData.question.question_type !== 'thanks_page') && 
                   <button onClick={() => AddQuestionHandler()}>
                       <Icon name='GrayAdd' />
-                  </button>
+                  </button>}
                   <RemovePopup onOkay={DeleteQuestion} setDeleteState={SetDeleteQuestionState}
                   title='تمام نتایج حاصل از این سوال هم حذف خواهد شد'
                   DeleteState={DeleteQuestionState}>
                   </RemovePopup>
-                  <button onClick={() => SetDeleteQuestionState(true)}>
-                      <Icon name='RedTrash' />
-                  </button>
+                  
                  {(questionsData.question.question_type != 'welcome_page' && questionsData.question.question_type != 'thanks_page') 
                  ? <button onClick={Duplicate_question}>
                     <Icon name='duplicate' />   
                   </button> : ''}
+                  <button onClick={() => SetDeleteQuestionState(true)}>
+                      <Icon name='RedTrash' />
+                  </button>
               </QuestionItemButtonContainer>
 
           </QuestionItemSurface>
@@ -247,6 +256,7 @@ export const QuestionItem = ({ IsQuestion , question , UUID , parentPlacement , 
                     <Select
                         bordered={false}
                         maxTagTextLength={6}
+                        className='type_selector'
                         labelInValue
                         disabled={(!questionsData.question.newFace || questionsData.question.nonquestion) ? true : false}
                         defaultValue={{

@@ -74,11 +74,14 @@ export const ToggleContainer = styled.div`
         flex-direction: row-reverse;
         cursor : pointer;
         width : 100%;
+        border-bottom: 1px solid #D9D9D9;
+        height: 50px;
+        align-items: center;
     }
-    & .checkbox_container
-    {
-        margin-top : 1.2rem;
-    }
+    // & .checkbox_container
+    // {
+    //     margin-top : 1.2rem;
+    // }
     & .additional_option_toggle , & .additional_option_checkboxes_container
     {
         display: flex;
@@ -90,6 +93,7 @@ export const ToggleContainer = styled.div`
     .additional_option_toggle
     {
         margin : 0.8rem 0;
+        flex-direction: row;
     }
     & .additional_checkbox
     {
@@ -101,9 +105,17 @@ export const ToggleContainer = styled.div`
     }
 `
 export const TextAnswerSettingContainer = styled.div`
-     & .ant-select-selection-item
+     & .ant-select-selection-item , .ant-select-selection-placeholder
     {
         font : 13px IRANSans;
+    }
+    .pattern_selector_container
+    {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        color: #8F8F8F;
+        align-items: center;
     }
 `
 export const AlphabetNumberContainer = styled.div`
@@ -168,7 +180,7 @@ export const ShapeSelectorContainer = styled.div`
 `
 export const DatePickerInput = styled.input`
     cursor: not-allowed;
-    border: 1px solid ${p => p.errorOccur ? 'var(--login-err-message-color) !important' :  '#d9d9d9'};
+    border: 1px solid ${p => p.erroroccur ? 'var(--login-err-message-color) !important' :  '#d9d9d9'};
     padding: 0.4rem;
     outline: none;
     transition : 0.3s;
