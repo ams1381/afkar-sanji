@@ -94,7 +94,7 @@ const SideBar = ({ IsOpen , SetSideBar , folders , SelectedFolder , ChangeFolder
                 ChangeFolderName(folders[index].name)
                 }} >
                 <p>{item.questionnaires ?  PN.convertEnToPe(item.questionnaires.length) : PN.convertEnToPe(index + 1)}</p>
-                <p>{item.name}</p>
+                <p className='folder_name'>{item.name}</p>
             </SideBarFolderItem>) : <Skeleton />
             }
         </div> 

@@ -42,9 +42,27 @@ export const QuestionSearchContainer = styled.div`
     {
         top : 16px;
     }
+    .ant-select-selection-search
+    {
+        display : flex;
+        align-items : center;
+    }
+    .ant-select-arrow
+    {
+        height: 100%;
+        width: 50px;
+        left: 0;
+        border-radius: 5px;
+        background: var(--primary-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: 6px;
+    }
     .ant-select-clear
     {
-        left : 50px;
+        left : 65px;
+        top : 20px;
     }
 `
 export const QuestionSearchInput = styled.input`

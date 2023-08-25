@@ -121,8 +121,9 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                 { Questionnaire ?  <>
                   <Select
                   showSearch
+                  defaultActiveFirstOption={false}
                   suffixIcon={<div>
-                    <Icon name='Search' />
+                    <Icon name='WhiteSearch' />
                     </div>}
                   allowClear
                   placeholder="جستجو کنید"
@@ -132,11 +133,7 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                   onChange={(e) => SearchQuestionHandler(e)}
                   style={{ width : '100%' , height : '100%' , direction : 'rtl' , fontFamily : 'IRANSans' }}
                   onSearch={SearchQuestionHandler}
-                  notFoundContent={
-                    <div style={{ textAlignLast : 'center' , fontFamily : 'IRANSans' , padding : '1rem' }}>
-                      <p>سوالی پیدا نشد</p>
-                    </div>
-                }
+                  notFoundContent={null}
                   filterOption={(_, option) => option ? option.label : ''}/>
                   </> : ''}
               </QuestionSearchContainer>

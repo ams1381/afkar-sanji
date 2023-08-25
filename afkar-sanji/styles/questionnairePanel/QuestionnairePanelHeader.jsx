@@ -25,6 +25,7 @@ export const SeeResultButton = styled.div`
     font-family: 'IRANSANS';
     flex-direction: row-reverse;
     align-items: center;
+    cursor: pointer;
 
     & p 
     {

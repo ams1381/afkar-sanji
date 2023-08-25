@@ -167,7 +167,13 @@ export const QuestionItem = ({ IsQuestion , question , UUID , parentPlacement , 
       console.log(err)
       SavedMessage.error({
         content :  Object.values(err.response.data)[0],
-        duration : 5
+        duration : 11,
+        style : {
+          fontFamily : 'IRANSans',
+          display : 'flex',
+          alignItems : 'center',
+          justifyContent : 'center'
+        }
       })
     }
    SetSaveButtonLoadingState(false);

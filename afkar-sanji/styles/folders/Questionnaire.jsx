@@ -85,6 +85,7 @@ export const QuestionnaireNameInput = styled.input`
     padding-left: 4px;
     box-sizing: content-box;
     text-align: right;
+    direction: rtl;
 
     &::selection 
     {

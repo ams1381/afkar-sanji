@@ -82,7 +82,10 @@ export default function Home() {
     {
       MessageApi.error({
         content : Object.values(err.response.data)[0],
-        duration : 5
+        duration : 5,
+        style : {
+          fontFamily : 'IRANSans'
+        }
       })
     }
     SetChangeFolderNameState(false);
@@ -95,7 +98,6 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <>
       {MessageContext}
       <ProgressBarLoading />
       <Header SetSideBar={() => setOpen(!SideBarOpen)} />
@@ -117,7 +119,6 @@ export default function Home() {
                   <Icon name='Add' />
                 </CornerAddButton>
         </Popover>
-    </>
     <ContentBox >
       { 
         folders && folders.length !== 0 ? <MainContainer>

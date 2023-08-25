@@ -65,8 +65,8 @@ const ViewQuestions = () => {
     {messageContext}
     { QuestionnaireInfo ? <PreviewPage>
     <PreviewPageHeader>
-        {QuestionnaireInfo.progress_bar ? 
-        <Progress percent={Math.floor(CurrentIndex + 1/ QuestionsData.length)}  steps={1} /> : <Skeleton active />}
+        {/* {QuestionnaireInfo.progress_bar ? 
+        <Progress percent={Math.floor(CurrentIndex + 1/ QuestionsData.length)}  steps={1} /> : <Skeleton active />} */}
     </PreviewPageHeader>
     <PreviewPageContainer>  
       <PreviewQuestionsContainer>

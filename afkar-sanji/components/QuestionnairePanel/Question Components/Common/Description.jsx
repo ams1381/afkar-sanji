@@ -1,6 +1,6 @@
 import { QuestionDescriptionContainer , DescriptionTextField} from '@/styles/questionnairePanel/QuestionSetting'
 import { ChangeDescriptionHandler } from '@/utilities/QuestionStore'
-import { Checkbox } from 'antd'
+import { Checkbox, Switch } from 'antd'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -30,7 +30,7 @@ const QuestionDescription = ({ QuestionInfo , QuestionDataDispatcher , IsQuestio
     <QuestionDescriptionContainer>
         <div className='Description_checkbox_container' onClick={DescriptionToggleHandler}>
             <p>توضیحات</p>
-            <Checkbox checked={openDescriptionField}/>
+            <Switch checked={openDescriptionField}/>
         </div>
         { openDescriptionField ? <div className='DescriptionInputContainer'>
             <DescriptionTextField value={QuestionInfo.description ? QuestionInfo.description.replace(regex,"") : ''} 

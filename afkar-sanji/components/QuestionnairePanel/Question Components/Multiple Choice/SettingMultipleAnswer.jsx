@@ -21,8 +21,7 @@ const SettingMultipleAnswer = ({QuestionInfo}) => {
 
     const MultipleAnswerToggleHandler = () => {
         SetMultipleAnswerState(!MultipleAnswerState)
-        OptionalDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : 'multiple_choice' , ToggleValue : MultipleAnswerState}));
-
+        OptionalDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : 'multiple_choice' , ToggleValue : !MultipleAnswerState}));
         
     }
     const ChangeMinMaxHandler = (event,InputName) => {

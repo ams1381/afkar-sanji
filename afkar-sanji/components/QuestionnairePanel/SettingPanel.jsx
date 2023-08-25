@@ -23,7 +23,6 @@ const SettingPanel = ({ Questionnaire }) => {
   const [ SettingChanged , SetSettingChanged ] = useState(false);
   const [ SettingLoading , SetSettingLoading ] = useState(false);
   const [ ErrorType , SetErrorType ] = useState(null);
-  const date = dayjs("1399-01-01", {jalali:true});
 
 
   const DateToggleHandler = (E) => {
@@ -61,7 +60,7 @@ const SettingPanel = ({ Questionnaire }) => {
  const CancelEditHandler = () => {
   Dispatcher({ ACTION : 'reset_questionnaire' , Resetvalue : Questionnaire })
   SetTimerActive(QuestionnaireData.timer ? true : false)
-  SetDateActive((QuestionnaireData.pub_date ? true : false))
+  SetDateActive(false)
   SetSettingChanged(false)
  }
  const SaveQuestionnaireChanges = async () => {
@@ -77,13 +76,11 @@ const SettingPanel = ({ Questionnaire }) => {
     await axiosInstance.patch(`/question-api/questionnaires/${Questionnaire.uuid}/`,QuestionnaireData) 
     SetSettingChanged(false)
   }
-
   catch(err)
   {
     if(err.response)
       Object.keys(err.response.data).includes('pub_date','end_date') ? SetErrorType('date_error') : ''
-    
-      }
+    }
   finally
   {
       SetSettingLoading(false);
@@ -226,6 +223,11 @@ const QuestionnaireReducerFunction = (State,ACTION) => {
       return {
         ...State,
         progress_bar : !ACTION.NewToggleValue
+      }
+    case 'previous_button':
+      return {
+        ...State,
+        previous_button : !ACTION.NewToggleValue
       }
     case 'reset_questionnaire':
       return ACTION.Resetvalue

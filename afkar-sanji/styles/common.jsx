@@ -87,6 +87,13 @@ export const SideBarFolderItem = styled.div`
     cursor: pointer;
     font-size : 14px;
     transition : 0.3s;
+    word-break: break-word;
+    text-align: right;
+
+    & .folder_name
+    {
+        width : 80%;
+    }
 `
 export const SideBarInputBox = styled.div`
     display: flex;

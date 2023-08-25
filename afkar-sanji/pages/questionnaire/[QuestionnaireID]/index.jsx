@@ -37,7 +37,8 @@ const QuestionnairePanel = () => {
       {
         messageApi.error({
           content : err.response.data,
-          duration : 6
+          duration : 6,
+          
         })
       }
     },[router.query , QuestionnaireReloader])
