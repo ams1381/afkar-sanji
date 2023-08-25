@@ -6,6 +6,12 @@ export const HeaderComponent = styled.div`
     display: flex;
     justify-content: space-between;
     padding: 1rem;
+    width: 90%;
+    margin: 0 auto;
+    @media screen and (max-width : 768px)
+    {
+        width : 100%;
+    }
 `
 export const SideBarToggleButton = styled.button`
     background: var(--primary-color);
@@ -72,7 +78,7 @@ export const SideBarHeader = styled.div`
 export const SideBarFolderItem = styled.div`
     display: flex;
     justify-content: space-between;
-    width: 90%;
+    width: 95%;
     margin: 0.4rem auto;
     color: ${p => p.selected ? 'var(--primary-color)' : '#7A7A7A'};
     border: 1px solid ${p => p.selected ? 'var(--primary-color)' : 'var(--login-input-default-border)'};
@@ -97,13 +103,15 @@ export const SideBarInputBox = styled.div`
     }
 `
 export const SideBarInput = styled.input`
-    width: 95%;
+    width: 100%;
     margin: 0.6rem auto;
     padding: 0.5rem;
     outline: none;
     border: 2px solid var(--login-input-default-border);
     transition : 0.3s;
     border-radius : 2px;
+    font-family: 'IRANSans';
+    height: 40px;
 
     &:focus
     {
@@ -129,6 +137,8 @@ export const SideBarCancelButton = styled.button`
 export const AddFolderButtons = styled.div`
     text-align: left;
     display: flex;
+    width: 100%;
+    margin: 0 auto;
 `
 export const SideBarConfirmButton = styled.button`
     background: var(--primary-color);
@@ -154,7 +164,7 @@ export const SideBarTitle = styled.div`
     {
         background: none;
         border: none;
-        margin-right : 0.5rem;
+        margin-left : 0.5rem;
         cursor : pointer;
     }
 `

@@ -11,7 +11,7 @@ const RemovePopoverContent = ({ questionnairesUUID , FolderReload}) => {
     try
     {
       await axiosInstance.delete(`/question-api/questionnaires/${questionnairesUUID}/`);
-    FolderReload();
+       FolderReload();
     }
     catch(err)
     {

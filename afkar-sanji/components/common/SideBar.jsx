@@ -7,15 +7,28 @@ import { axiosInstance } from '@/utilities/axios';
 import { useLocalStorage } from '@/utilities/useLocalStorage';
 import { Skeleton } from 'antd';
 import PN from "persian-number";
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const SideBar = ({ IsOpen , SetSideBar , folders , SelectedFolder , ChangeFolder , FolderReload , ChangeFolderName}) => {
     const { setItem } = useLocalStorage();
     const [ AddFolderState , SetAddFolderState ] = useState(false);
     const [ newFolderName , setNewFolderName ] = useState(null);
     const [ ErrorMessage , SetErrorMessage ] = useState(null);
-    
+    const [ FolderAdded , setFolderAddedState ] = useState(false);
+    useEffect(() => {   
+        if(folders && folders[folders.length - 1] && FolderAdded)
+        {
+            ChangeFolder([folders.length - 1])
+            setItem('SelectedFolder',folders.length - 1)
+            ChangeFolderName(folders[folders.length - 1].name)
+            SetAddFolderState(false)
+        }
+            
+        // if(folders[folders.length])
+        //     ChangeFolder(folders[folders.length])
+    },[folders])
     const AddFolder = async () => {
+        setFolderAddedState(!FolderAdded)
         if(!newFolderName)
         {
             SetErrorMessage('نام پوشه نمیتواند خالی باشد')
@@ -27,6 +40,8 @@ const SideBar = ({ IsOpen , SetSideBar , folders , SelectedFolder , ChangeFolder
             setNewFolderName(null);
             SetAddFolderState(false)
             FolderReload();
+            // console.log(folders.length)
+            //  ChangeFolder(folders.length - 1)
         }
         catch(err)
         {
@@ -44,10 +59,10 @@ const SideBar = ({ IsOpen , SetSideBar , folders , SelectedFolder , ChangeFolder
     </SideBarToggleButton>
             </div>
             <SideBarTitle>
-            <button className="close_sideBar" onClick={SetSideBar}>
+                <p>پوشه‌ها</p>
+                <button className="close_sideBar" onClick={SetSideBar}>
                 <Icon name='GrayClose' style={{ width : 13 }}/>
             </button>
-                <p>پوشه ها</p>
             </SideBarTitle>
         </SideBarHeader>
         {

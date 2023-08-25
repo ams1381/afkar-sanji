@@ -2,22 +2,46 @@ import React, { useState } from 'react'
 import { QuestionnaireFooter , QuestionnaireFooterItem , QuestionnaireFooterButton
 } from '@/styles/folders/Questionnaire'
 import { Icon } from '@/styles/icons'
-import { Popover } from 'antd';
+import { Popover, message } from 'antd';
 import { SharePopOverContent } from './SharePopover'
 import RemovePopoverContent from '../common/RemovePopover';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import RemovePopup from '../common/RemovePopup';
+import { axiosInstance } from '@/utilities/axios';
 
 
 const QuestionnaireFooterPart = ({ questionnaire , FolderReload }) => {
     const [ SharePopover , setSharePopOver] = useState(false);
     const [ DeletePopoverState , setDeletePopoverState ] = useState(false);
-    
+    const [ OperatingState, SetOperatingState ] = useState(false);
+    const [ SavedMessage , contextHolder] = message.useMessage();
     const router = useRouter();
 
-   
+    const RemoveQuestionnaireHandler = async () => {
+        // SetOperatingState(true)
+        try
+        {
+          await axiosInstance.delete(`/question-api/questionnaires/${questionnaire.uuid}/`);
+           FolderReload();
+        }
+        catch(err)
+        {
+            console.log(err)
+            SavedMessage.error({
+                content : 'در حذف کردن پرسشنامه مشکلی پیش آمد',
+                duration : 5
+            })
+        }
+        finally
+        {
+        //   SetOperatingState(false)
+        // setDeletePopoverState(false)
+        }
+      }
   return (
     <QuestionnaireFooter>
+        {contextHolder}
         <QuestionnaireFooterItem>
             <Popover
             content={SharePopOverContent}
@@ -30,23 +54,27 @@ const QuestionnaireFooterPart = ({ questionnaire , FolderReload }) => {
             </Popover>
             
         </QuestionnaireFooterItem>
-        <QuestionnaireFooterItem>
-            <Popover 
-            content={<RemovePopoverContent FolderReload={FolderReload} questionnairesUUID={questionnaire.uuid}/>}
+        <QuestionnaireFooterItem onClick={() => setDeletePopoverState(!DeletePopoverState)}>
+            <RemovePopup 
+            // content={<RemovePopoverContent FolderReload={FolderReload} questionnairesUUID={questionnaire.uuid}/>}
             trigger="click"
-            open={DeletePopoverState}
-            onOpenChange={() => setDeletePopoverState(false)}>
-            <QuestionnaireFooterButton onClick={() => setDeletePopoverState(!DeletePopoverState)}>
+            DeleteState={DeletePopoverState}
+            title='این پرسشنامه حذف شود؟'
+            onOkay={RemoveQuestionnaireHandler}
+            setDeleteState={setDeletePopoverState}
+            // onOpenChange={() => setDeletePopoverState(false)}
+            />
+            <QuestionnaireFooterButton >
                 <Icon name='trash' />
             </QuestionnaireFooterButton>
-            </Popover>
+            
         </QuestionnaireFooterItem>
         <QuestionnaireFooterItem>
+        <Link href={`questionnaire/${questionnaire.uuid}}/`}>
             <QuestionnaireFooterButton>
-                <Link href={`questionnaire/${questionnaire.uuid}}/`}>
                     <Icon name='GrayPen' />
-                </Link>
             </QuestionnaireFooterButton>
+            </Link>
         </QuestionnaireFooterItem>
         <QuestionnaireFooterItem>
             <QuestionnaireFooterButton>

@@ -67,7 +67,7 @@ export default function Home() {
     getData();
   },[FolderReload])
 
-  FolderNameInput.current ? FolderNameInput.current.style.width = ((FolderNameInput.current.value.length * 7) + 15) + 'px' : '';
+  FolderNameInput.current ? FolderNameInput.current.style.width = ((FolderNameInput.current.value.length * 8) + 20) + 'px' : '';
   const folderNameChangeHandler = (e) => {
     SetFolderName(e.target.value);
     FolderNameInput.current ? FolderNameInput.current.style.width = ((FolderNameInput.current.value.length * 7)+ 8) + 'px' : ''
@@ -164,7 +164,7 @@ export default function Home() {
             <p>برای مدیریت کردن پرسشنامه پوشه درست کنید</p>
             <button onClick={() => setOpen(true)}>
                 <p>پوشه ها</p>
-                <Icon name='folder' />
+                <Icon name='Folder' />
                </button>
          </EmptyFolderContainer> : <MainContainer>
          <QuestionnaireContainer>

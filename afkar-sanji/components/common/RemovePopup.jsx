@@ -11,6 +11,10 @@ const RemovePopup = ({ onOkay , DeleteState , setDeleteState , title}) => {
             <Button type='primary' onClick={() => {
                 SetLoading(true)
                 onOkay();
+                setTimeout(() => {
+                  SetLoading(false)
+                },1000)
+                
             }} danger loading={Loading}>
                 حذف
             </Button>

@@ -7,14 +7,13 @@ export const FolderPopoverContainer = styled.div`
     justify-content: space-around;
     flex-direction: column;
     font-family: 'IRANSANS';
-    padding: 0 1rem 0 1rem;
 `
 export const FolderPopoverItem =  styled.div`
     width: 105%;
     margin: 0.5rem auto;
     display: flex;
     justify-content: space-between;
-    padding: 0.4rem;
+    padding: 0.4rem 1rem 0.4rem 1rem;
     
     &:hover
     {

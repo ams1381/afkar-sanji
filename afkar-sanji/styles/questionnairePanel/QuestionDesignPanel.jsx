@@ -28,6 +28,12 @@ export const QuestionSearchContainer = styled.div`
         font-family : IRANSans;
         border : none !important;
     }
+    & .ant-select-selector 
+    {
+        height : 100% !important;
+        display : flex !important;
+        align-items : center;
+    }
     .ant-select-selection-placeholder
     {
         font-family : IRANSans;
@@ -35,6 +41,10 @@ export const QuestionSearchContainer = styled.div`
     .ant-select-arrow , .ant-select-clear
     {
         top : 16px;
+    }
+    .ant-select-clear
+    {
+        left : 50px;
     }
 `
 export const QuestionSearchInput = styled.input`
@@ -45,7 +55,6 @@ export const QuestionSearchInput = styled.input`
     text-align: right;
     font-family: 'IRANSANS';
     padding: 0.7rem;
-
 `
 export const ClearSearchInputButton = styled.button`
     display: flex;
@@ -98,6 +107,7 @@ export const QuestionDesignItem = styled.div`
     border: 2px solid ${p => p.isOpen ? p.childq ? '#7C86FA' : '#3E4ACB' : '#D9D9D9'};
     border-radius: 2px;
     margin: 0.6rem 0;
+    background: white;
     width: ${p => p.childq ? '95%' : '100%'};
     margin-top : ${p => p.childq ? '1rem' : '0'};
     transition : border 0.3s;
@@ -113,6 +123,13 @@ export const QuestionDesignItem = styled.div`
     }
     .question_type_selector > div {
         width : auto !important;
+    }
+    @media screen and (max-width : 768px)
+    {
+        & .design_container
+        {
+            width : 100%;
+        }
     }
 
 `
@@ -130,9 +147,9 @@ export const QuestionItemRow = styled.div`
    
     @media screen and (max-width : 768px)
     {
-        & .question_design_item
+        & .question_design_item , .design_container
         {
-            width : 100%;
+            width : 100% !important;
         }
         & .question_preview
         {

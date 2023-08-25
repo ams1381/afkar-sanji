@@ -175,7 +175,7 @@ export const QuestionItem = ({ IsQuestion , question , UUID , parentPlacement , 
   return (
     questionsData ? <QuestionItemRow className={`QuestionItem${questionsData.question.id}`}>
       {contextHolder}
-      <div style={{ width : !questionsData.question.group ? '50%' : '100%' }}> 
+      <div className='design_container' style={{ width : !questionsData.question.group ? '50%' : '100%' }}> 
     <QuestionDesignItem className='question_design_item' isOpen={QuestionRootOpenState ? 'true' : null}
     childq={questionsData.question.group ? 'true' : null}>     
           <QuestionItemSurface>

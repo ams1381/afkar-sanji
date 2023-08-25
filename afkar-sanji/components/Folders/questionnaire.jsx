@@ -74,11 +74,11 @@ const QuestionnaireBox = ({Questionnaire , FolderReload}) => {
                 { Questionnaire ?
                 <> <QuestionnaireBodyStat>
                      <p>{Questionnaire.pub_date ? PN.convertEnToPe(convertToJalaliDate(Questionnaire.pub_date)) : ''}</p>
-                     <p>درست شده در</p>
+                     <p>: ایجاد شده در</p>
                  </QuestionnaireBodyStat>
                  <QuestionnaireBodyStat>
                      <p>{PN.convertEnToPe(Questionnaire.answer_count)}</p>
-                     <p>تعداد پاسخ دهنده:</p>
+                     <p>: تعداد پاسخ دهنده</p>
                  </QuestionnaireBodyStat> </>: <Skeleton active />}
              </div>
              <div className="questionnaire_see_result">

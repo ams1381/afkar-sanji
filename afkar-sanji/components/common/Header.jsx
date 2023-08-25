@@ -39,7 +39,7 @@ export const Header = ({SetSideBar , goToFolders}) => {
         </ConfigProvider>
        <SideBarToggleButton onClick={FolderButtonHandler}>
         <p>پوشه ها</p>
-        <Icon name='folder' style={{ width : 15 }} />
+        <Icon name='Folder' style={{ width : 15 }} />
        </SideBarToggleButton>
     </HeaderComponent>
   )

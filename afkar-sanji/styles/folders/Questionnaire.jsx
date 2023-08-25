@@ -1,7 +1,7 @@
 import { styled } from "styled-components";
 
 export const QuestionnaireContainer = styled.div`
-    width: 95%;
+    width: 100%;
     margin: 0.6rem auto;
     padding-bottom: 1rem;
     display: grid;
@@ -10,6 +10,7 @@ export const QuestionnaireContainer = styled.div`
     justify-items: baseline;
     direction: rtl;
     grid-auto-flow: dense;
+    column-gap: 2rem;
 
     @media screen and (max-width : 480px)
     {
@@ -44,7 +45,7 @@ export const QuestionnaireHeader = styled.div`
     display: flex;
     flex-direction: row-reverse;
     align-items: center;
-    width: 95%;
+    width: 90%;
     margin: 0 auto;
     justify-content: space-between;
     padding: 0.7rem 0 0.5rem 0;
@@ -112,7 +113,7 @@ export const QuestionnaireSeeResultButton = styled.button`
     background: none;
     border: none;
     cursor: pointer;
-    color: #3E4ACB;
+    color: var(--primary-color);
     padding: 0.5rem;
     align-items: center;
     margin-left : 0.5rem;
@@ -133,7 +134,7 @@ export const ContentBox = styled.div`
 `
 export const MainContainer = styled.div`
     height: 97%;
-    width: 95%;
+    width: 85%;
     margin: 0 auto;
     padding: 1rem 0 0 0;
 `
@@ -163,11 +164,23 @@ export const QuestionnaireFooterItem = styled.div`
     justify-content: center;
     border: 1px solid #F0F0F0;
     height: 40px;
+    cursor : pointer;
+    & a 
+    {
+        width : 100%;
+        height : 100%;
+        display : flex;
+        justify-content : center;
+        align-items : center;
+    }
 `
 export const QuestionnaireFooterButton = styled.button`
     background: none;
     border: none;
     cursor: pointer;
+
+    
+    
 `
 export const EmptyFolderContainer = styled.div`
     position: absolute;

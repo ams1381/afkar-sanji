@@ -97,7 +97,7 @@ export const QuestionnaireEditItemsInnerContainer = styled.div`
 export const QuestionnaireEditItem = styled.div`
     padding: 7px 16px 7px 16px;
     color: ${p => p.selected ? 'var(--primary-color)' : 'var(--Neutral-Gray10)'};
-    background: ${p => p.selected ? '#FEFEFE' : '--questionnaire-edit-item-bg'};
+    background: ${p => p.selected ? '#FEFEFE' : 'var(--questionnaire-edit-item-bg)'};
     border: 1px solid ${p => p.selected ? 'var(--primary-color)' : '#D9D9D9'};
     width: 95%;
     text-align: center;

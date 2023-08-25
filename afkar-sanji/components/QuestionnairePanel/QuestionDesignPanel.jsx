@@ -121,6 +121,9 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                 { Questionnaire ?  <>
                   <Select
                   showSearch
+                  suffixIcon={<div>
+                    <Icon name='Search' />
+                    </div>}
                   allowClear
                   placeholder="جستجو کنید"
                   optionFilterProp="children"
