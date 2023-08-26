@@ -47,6 +47,7 @@ const FileUpload = ({ QuestionInfo }) => {
   };
   return (
     <QuestionFileUploadContainer>
+      <p> آپلود عکس یا فیلم </p>
         <Upload
           // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
           // previewFile={QuestionInfo.media ? QuestionInfo.media : ''}
@@ -66,7 +67,7 @@ const FileUpload = ({ QuestionInfo }) => {
         >
           <Button  icon={<Icon name='upload' style={{ width : 12 }} />}>آپلود کنید</Button>
         </Upload>
-        <p> آپلود عکس یا فیلم </p>
+        
           </QuestionFileUploadContainer>
   )
 }

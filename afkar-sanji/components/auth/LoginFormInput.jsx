@@ -16,11 +16,9 @@ const LoginFormInput = ({ErrorHandler}) => {
         focused={!InputFocusState ? 'true' : null}>
         <LoginInput type="number"
           name="phoneNumber"
-          value={LoginContext.PhoneNumber ? LoginContext.PhoneNumber : ''}
+          value={LoginContext.PhoneNumber ?  LoginContext.PhoneNumber : ''}
           onFocus={() => SetFocusState(true)}
-          inputProps={{
-            NumberFormat
-          }}
+          
           onBlur={() => {
           SetFocusState(false)
           }}

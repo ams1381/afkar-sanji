@@ -32,6 +32,7 @@ export const QuestionnairePopover = ({ Questionnaire , RenameInput  , RenameChan
             RenameChangeState(true);
             setTimeout(()=> {
               RenameInput.current.select();
+              RenameInput.current.focus();
             },100)
             }}>
               <Icon name='GrayPen'/>

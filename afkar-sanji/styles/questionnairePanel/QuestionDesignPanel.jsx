@@ -174,6 +174,7 @@ export const QuestionItemRow = styled.div`
         & .question_design_item , .design_container
         {
             width : 100% !important;
+            overflow : hidden;
         }
         & .question_preview
         {

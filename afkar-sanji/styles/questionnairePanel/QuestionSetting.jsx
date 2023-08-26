@@ -6,7 +6,9 @@ export const QuestionFileUploadContainer = styled.div`
     align-items: flex-start;
     font-size: 14px;
     color: var(--Neutral-Gray6);
-    margin : 0.7rem auto;
+    margin: 0.7rem auto;
+    flex-wrap: wrap;
+    flex-direction: row-reverse;
 
     & button 
     {
@@ -19,6 +21,10 @@ export const QuestionFileUploadContainer = styled.div`
     & button:hover 
     {
         color : black !important;
+    }
+    .ant-upload-wrapper
+    {
+        width: -webkit-fill-available;
     }
 `
 export const QuestionDescriptionContainer = styled.div`
