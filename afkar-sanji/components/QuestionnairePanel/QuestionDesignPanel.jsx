@@ -141,7 +141,7 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
               </QuestionSearchContainer>
       </div>
       <QuestionDesignTitle>
-         <p>سوالی را ایجاد یا ویرایش کنید</p> 
+        { Questionnaire &&  <p>سوالی را ایجاد یا ویرایش کنید</p> }
       </QuestionDesignTitle>
       <QuestionDesignBox id='characters' className=''>
         { (AllQuestion && NonQuestions) ? <div className='QuestionDesignRightContainer' >

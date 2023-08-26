@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react'
 import OtpClasses from '@/styles/auth/LoginStyles.module.css'
 import { LoginInput , InputBox, LoginErrorMessage , ClearLoginInputButton} from '@/styles/auth/Login';
 import { AuthContext } from '@/utilities/AuthContext';
+import { NumberFormat } from "react-hichestan-numberinput";
 import PN from 'persian-number';
 
 const LoginFormInput = ({ErrorHandler}) => {
@@ -17,6 +18,9 @@ const LoginFormInput = ({ErrorHandler}) => {
           name="phoneNumber"
           value={LoginContext.PhoneNumber ? LoginContext.PhoneNumber : ''}
           onFocus={() => SetFocusState(true)}
+          inputProps={{
+            NumberFormat
+          }}
           onBlur={() => {
           SetFocusState(false)
           }}
@@ -25,7 +29,7 @@ const LoginFormInput = ({ErrorHandler}) => {
             LoginContext.changePhone(e.target.value);
             ErrorHandler.SetNull(null);
           }}
-          placeholder="09** *** ***" /> 
+          placeholder={`${PN.convertEnToPe('09')} ** *** ***`} /> 
           {
           showClearState ? <ClearLoginInputButton onClick={() => LoginContext.changePhone(null)}>
           <i></i>

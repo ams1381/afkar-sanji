@@ -12,7 +12,8 @@ import jalaali from 'jalaali-js'
 import PN from 'persian-number';
 import { DatePickerInput } from '@/styles/questionnairePanel/QuestionSetting';
 import 'moment/locale/fa';
-import moment from "moment"; 
+// import moment from "moment"
+import moment from 'moment-jalaali';
 const SettingPanel = ({ Questionnaire }) => {
   const [ DateValue , SetDateValue ]= useState(null);
   const [ QuestionnaireData , Dispatcher ] = useReducer(QuestionnaireReducerFunction,Questionnaire);
@@ -24,7 +25,7 @@ const SettingPanel = ({ Questionnaire }) => {
   const [ SettingLoading , SetSettingLoading ] = useState(false);
   const [ ErrorType , SetErrorType ] = useState(null);
 
-
+  console.log(QuestionnaireData)
   const DateToggleHandler = (E) => {
     SetDateActive(E);
     if(!E)
@@ -80,6 +81,14 @@ const SettingPanel = ({ Questionnaire }) => {
   {
     if(err.response)
       Object.keys(err.response.data).includes('pub_date','end_date') ? SetErrorType('date_error') : ''
+      messageApi.error({
+        content : Object.values(err.response.data)[0],
+        duration : 5,
+        style : {
+          fontFamily : 'IRANSans',
+          direction : 'rtl'
+        }
+      })
     }
   finally
   {
@@ -101,7 +110,7 @@ const SettingPanel = ({ Questionnaire }) => {
           disabled={!DateActive}
           onChange={DateChangeHandler}
           readonly="readonly"
-          defaultValue={QuestionnaireData.pub_date ? moment(convertToJalaliDate(QuestionnaireData.pub_date)) 
+          defaultValue={QuestionnaireData.pub_date ? moment(convertToJalaliDate(QuestionnaireData.pub_date))
             : moment(convertToJalaliDate(new Date().toJSON().slice(0, 10)))}
           input={<DatePickerInput readOnly={true}
           erroroccur={ErrorType == 'date_error' ? 'true' : null} placeholder="تاریخ شروع" />}
@@ -113,7 +122,7 @@ const SettingPanel = ({ Questionnaire }) => {
           disabled={!DateActive}
           input={<DatePickerInput placeholder="تاریخ پایان " />}
           onChange={EndDateChangeHandler}
-          defaultValue={moment(convertToJalaliDate(QuestionnaireData.end_date))}
+          defaultValue={QuestionnaireData.end_date && moment(convertToJalaliDate(QuestionnaireData.end_date))}
           placeholder='زمان پایان' /> : <Datepicker 
           disabled={!DateActive}
           input={<DatePickerInput readOnly={true} placeholder="تاریخ پایان " />}

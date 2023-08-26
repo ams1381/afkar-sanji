@@ -8,8 +8,7 @@ import { useDispatch } from 'react-redux'
 const FileUpload = ({ QuestionInfo }) => {
   const dispatcher = useDispatch();
   const [ FileUploadedState , SetFileUploadedState ] = useState(QuestionInfo.media ? true : false);
-  // useEffect(() => {
-  // },[])
+
   const [fileList, setFileList] = useState(QuestionInfo.media && (typeof (QuestionInfo.media) == 'string') ? [
     {
       uid: '-1',
