@@ -9,12 +9,11 @@ const FileUpload = ({ QuestionInfo }) => {
   const dispatcher = useDispatch();
   const [ FileUploadedState , SetFileUploadedState ] = useState(QuestionInfo.media ? true : false);
   // useEffect(() => {
-
   // },[])
   const [fileList, setFileList] = useState(QuestionInfo.media && (typeof (QuestionInfo.media) == 'string') ? [
     {
       uid: '-1',
-      name: QuestionInfo.media.split('https://mostafarm7.pythonanywhere.com/media/question_media/')[1].split('/')[3],
+      name: QuestionInfo.media.split('/')[8],
       status: 'done',
       url: QuestionInfo.media,
     },

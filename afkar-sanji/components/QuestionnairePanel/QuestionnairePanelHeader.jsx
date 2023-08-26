@@ -52,7 +52,7 @@ const QuestionnairePanelHeader = ({ FolderName , Questionnaire , SideState , Cha
                 <FolderPopoverToggle
                 onClick={RenameState ? QuestionnaireRenameConfirmHandler : 
                   () => SetQuestionnairePopoverState(!QuestionnairePopoverState)}>
-                  {RenameState ? <Icon name='GrayCheck' /> : <Icon name='menu' />}
+                  {RenameState ? <Icon name='GrayCheck' /> : <Icon name='Menu' />}
                 </FolderPopoverToggle>
                 </Popover>
               </div>
