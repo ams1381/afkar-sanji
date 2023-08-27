@@ -47,13 +47,14 @@ const FileUpload = ({ QuestionInfo }) => {
   };
   return (
     <QuestionFileUploadContainer>
-      <p> آپلود عکس یا فیلم </p>
-        <Upload
+      <p className='file_upload_title'> آپلود عکس یا فیلم </p>
+      <div>
+      <Upload
           // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
           // previewFile={QuestionInfo.media ? QuestionInfo.media : ''}
           defaultFileList={fileList}
           className="upload-list-inline"
-          
+
           multiple={false}
           method={null}
           maxCount={1}
@@ -67,6 +68,8 @@ const FileUpload = ({ QuestionInfo }) => {
         >
           <Button  icon={<Icon name='upload' style={{ width : 12 }} />}>آپلود کنید</Button>
         </Upload>
+      </div>
+        
         
           </QuestionFileUploadContainer>
   )

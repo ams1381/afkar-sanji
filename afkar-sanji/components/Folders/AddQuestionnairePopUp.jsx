@@ -11,6 +11,7 @@ const AddQuestionnairePopUp = ({ AddQuestionnaireModal , FolderReload , folders 
   const [ NewQuestionnaireName , setNewQuestionnaireName ] = useState(null);
   const [ OperatingState , SetOperatingState ] = useState(false);
 
+
     const AddQuestionnaireHandler = async () => {
         SetOperatingState(true);
         if(!NewQuestionnaireName)
@@ -34,6 +35,7 @@ const AddQuestionnairePopUp = ({ AddQuestionnaireModal , FolderReload , folders 
             preserve={false}
             destroyOnClose={true}
             onCancel={CancelPopup}
+            
             centered={true}
             closeIcon={false}
             style={{ padding : 10 , borderRadius : 2}}
@@ -48,7 +50,11 @@ const AddQuestionnairePopUp = ({ AddQuestionnaireModal , FolderReload , folders 
                 </ModalButtonsContainer>}>
             <ModalContentContainer>
                 <p>عنوان نظر سنجی را وارد کنید</p>
-                <AddQuestionnaireModalInput onChange={(e) => setNewQuestionnaireName(e.target.value)} />
+                <AddQuestionnaireModalInput placeholder='نظرسنجی 1'
+                onChange={(e) => {
+                    setNewQuestionnaireName(e.target.value)
+                    SetErrMessage(null);
+                }} />
                 { ErrMessage ? <LoginErrorMessage>{ErrMessage}</LoginErrorMessage> : ''}
             </ModalContentContainer> 
         </Modal>

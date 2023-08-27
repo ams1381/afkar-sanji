@@ -37,7 +37,7 @@ const SettingQWanswer = ({ QuestionInfo }) => {
         ]}
         defaultValue={PatternGenerator(QuestionInfo.pattern)}
         onChange={ChangeAnswerPatternHandler}
-        style={{ fontFamily : 'IRANSans' , width: 130 }} dropdownStyle={{ fontFamily : 'IRANSans' , fontSize : 12}}>
+        style={{ fontFamily : 'IRANSans'}} dropdownStyle={{ fontFamily : 'IRANSans' , fontSize : 12}}>
         </Select>
         <p>الگوی پاسخ</p>
       </div>

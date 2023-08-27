@@ -19,7 +19,6 @@ export const WritePrioritize = ({ QuestionInfo }) => {
     if(QuestionInfo.options.length > 2)
       Dispatcher(OptionRemover({ QuestionID : QuestionInfo.id , OptionID : OptionItem.id}))
   }
-  console.log(QuestionInfo.options)
   return (
     <OptionWritingContainer>
       <p>گزینه ها</p>

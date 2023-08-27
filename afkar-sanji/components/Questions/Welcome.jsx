@@ -4,13 +4,13 @@ import { Button, Image } from 'antd'
 import React from 'react'
 import { Player } from 'video-react';
 
-const WelcomeComponent = ({ WelcomeInfo , SetCurrentIndex}) => {
+const WelcomeComponent = ({ WelcomeInfo , SetCurrentIndex , mobilePreview}) => {
   const regex = /(<([^>]+)>)/gi;
   return (
-    <QuestionComponentContainer>
+    <QuestionComponentContainer mobilePreview={mobilePreview}>
       <WelcomeComponentContainer>
-          <p>{WelcomeInfo.title ? WelcomeInfo.title.replace(regex,"") : ''}</p>
-          <p>{WelcomeInfo.description ? WelcomeInfo.description.replace(regex,"") : ''}</p>
+          <p className='welcome_title'>{WelcomeInfo.title ? WelcomeInfo.title.replace(regex,"") : ''}</p>
+          <p className='welcome_description'>{WelcomeInfo.description ? WelcomeInfo.description.replace(regex,"") : ''}</p>
           { WelcomeInfo.media ?
             (typeof WelcomeInfo.media == 'object') ?
             <div className='uploaded_file_preview' style={{ margin : '1.5rem 0' }}>

@@ -7,7 +7,6 @@ export const QuestionFileUploadContainer = styled.div`
     font-size: 14px;
     color: var(--Neutral-Gray6);
     margin: 0.7rem auto;
-    flex-wrap: wrap;
     flex-direction: row-reverse;
 
     & button 
@@ -22,9 +21,25 @@ export const QuestionFileUploadContainer = styled.div`
     {
         color : black !important;
     }
-    .ant-upload-wrapper
+    .ant-upload-list-item-name
     {
-        width: -webkit-fill-available;
+        overflow : auto !important;
+        word-break: break-all !important;
+        white-space: initial !important;
+        text-overflow: clip !important;
+    }
+    .upload-list-inline .ant-upload-list-item {
+        float: left;
+        width: 200px;
+        margin-inline-end: 8px;
+      }
+    .ant-upload-list-item
+    {
+        height : auto !important;
+    }
+    .file_upload_title
+    {
+        white-space : nowrap;
     }
 `
 export const QuestionDescriptionContainer = styled.div`
@@ -81,7 +96,7 @@ export const ToggleContainer = styled.div`
         cursor : pointer;
         width : 100%;
         border-bottom: 1px solid #D9D9D9;
-        height: 50px;
+        padding: 1.5rem 0 1.5rem 0;
         align-items: center;
     }
     // & .checkbox_container
@@ -95,10 +110,12 @@ export const ToggleContainer = styled.div`
         align-items : center;
         cursor : pointer;
     }
-
+    & .additional_option_checkboxes_container
+    {
+        padding-top : 0;
+    }
     .additional_option_toggle
     {
-        margin : 0.8rem 0;
         flex-direction: row;
     }
     & .additional_checkbox
@@ -123,12 +140,24 @@ export const TextAnswerSettingContainer = styled.div`
         color: #8F8F8F;
         align-items: center;
     }
+    .ant-select-selector
+    {
+        border-radius : 2px;
+        direction: rtl;
+    }
+    .ant-select-arrow
+    {
+        left : 10px;
+    }
+    .ant-select
+    {
+        width : 106px;
+    }
 `
 export const AlphabetNumberContainer = styled.div`
     display: flex;
     flex-direction: column;
     color: #A3A3A3;
-    margin-top: 1rem;
     text-align: right;
 
     & label 

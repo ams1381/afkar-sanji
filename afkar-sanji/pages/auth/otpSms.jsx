@@ -29,7 +29,10 @@ const OTPSms = () => {
         content : 'ورود با موفقیت انجام شد' ,
         duration : 4,
         style : {
-          fontFamily : 'IRANSans'
+          fontFamily : 'IRANSans',
+          display : 'flex',
+          alignItems : 'center',
+          justifyContent : 'center'
         }
       })
       setItem('phoneNumber',Auth.PhoneNumber);

@@ -76,7 +76,7 @@ const QuestionnairePanelHeader = ({ FolderName , Questionnaire , SideState , Cha
                 </QuestionnaireEditItem>
             </QuestionnaireEditItemsInnerContainer>
             <QuestionnaireEditButtonContainer>
-              <button>
+              <button style={{ pointerEvents :(Questionnaire.questions &&  Questionnaire.questions.length) ? 'all' : 'none' }}>
                 <Link href={`/questionnaire/${Questionnaire.uuid}/ViewQuestions/`} target='_blank'>
                      <Icon name='BlackEye' />
                 </Link>

@@ -58,9 +58,30 @@ export const QuestionnaireSettingContainer = styled.div`
         margin-top: 1.5rem;
         text-align: right;
     }
+    .picker_container .ant-picker-content
+    {
+        font-family : IRANSans;
+    }
+   .ant-picker.ant-picker-range
+   {
+    direction : rtl;
+   }
+    .ant-picker-range-separator
+    {
+        transform : rotate(180deg);
+    }
     .picker_container p 
     {
         margin-left : 1rem;
+    }
+    .ant-picker-active-bar
+    {
+        display : none;
+    }
+    .ant-picker-input input 
+    {
+        direction : rtl;
+        text-align : right;
     }
 `
 export const QuestionnaireCheckBoxContainer= styled.div`

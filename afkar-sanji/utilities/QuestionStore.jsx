@@ -76,7 +76,7 @@ const QuestionSlice =  createSlice({
                 description : null,
                 question_type: "welcome_page",
                 media: null,
-                button_text: "یزربسیذیلد",
+                button_text: "شروع",
                 button_shape: "round",
                 is_solid_button: false,
                 questionnaire : QuestionnaireID,
@@ -302,7 +302,7 @@ const QuestionSlice =  createSlice({
             state.data.forEach(item => item.question.child_questions ?
                 item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
                 .question[Label] = LabelValue  : '')
-            },
+        },
         AddQuestion : (state, action) => {
             
             const { TopQuestionID , AddedQuestionID , unshiftQuestion , ParentQuestion} = action.payload;
@@ -315,6 +315,7 @@ const QuestionSlice =  createSlice({
                 ],
                 show_number : false,
                 id : AddedQuestionID,
+                placement : 1,
                 is_required : null,
                 max : 4,
                 additional_options : false,
@@ -323,6 +324,7 @@ const QuestionSlice =  createSlice({
                 is_vertical: false,
                 question_type : 'optional',
                 multiple_choice: false,
+                volume_unit : 'mb',
                 all_options: false,
                 newFace : true,
                 pattern : 'free',
@@ -410,6 +412,24 @@ const QuestionSlice =  createSlice({
                state.nonQuestionData.find(questionItem => questionItem.question && questionItem.question.id == QuestionID)
                .question.media = '';
             }
+        },
+        ChangeUploadSizeHandler : (state, action) => {
+            const { QuestionID , uploadSize } = action.payload; 
+
+            state.data.find(questionItem => questionItem.question.id == QuestionID) ?
+            state.data.find(questionItem => questionItem.question.id == QuestionID).question.max_volume = uploadSize
+            :
+            state.data.forEach(item => item.question.child_questions ?
+                item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
+                .question.max_volume = uploadSize  : '')
+        },
+        ReorderOptions : (state, action) => {
+            const { QuestionID , NewOptionsPlacement } = action.payload;
+            state.data.find(questionItem => questionItem.question.id == QuestionID) ?
+            state.data.find(questionItem => questionItem.question.id == QuestionID).question.options = NewOptionsPlacement
+            :
+            state.data.forEach(item => item.question.child_questions ?
+                item.question.child_questions.find(child_item => child_item.question.id == QuestionID).question.options = NewOptionsPlacement : '')
         }
     }
 })
@@ -422,9 +442,12 @@ const QuestionStore = configureStore({
         }),
 })
 export const { initialQuestionsSetter , ChangeDescriptionHandler ,
-    DuplicateQuestionHandler,   ChangeQuestionType , DeleteQuestionHandler , AddQuestion , DeleteNonQuestionHandler ,
-    ChangeToggleHandler,  ChangeNameHandler , ChangeMinOrMaxAnswerHandler, ChangeLabelHandler , OptionsAlphaBeticalSorter ,
-    OptionModifier , OptionAdder , OptionRemover , ChangeDegreeShapeHandler , OptionRemoverByText , finalizer ,
+    DuplicateQuestionHandler,   ChangeQuestionType , DeleteQuestionHandler ,
+     AddQuestion , DeleteNonQuestionHandler ,
+    ChangeToggleHandler,  ChangeNameHandler , ChangeMinOrMaxAnswerHandler,
+     ChangeLabelHandler , OptionsAlphaBeticalSorter , ReorderOptions ,
+    OptionModifier , OptionAdder , OptionRemover , ChangeUploadSizeHandler
+    , ChangeDegreeShapeHandler , OptionRemoverByText , finalizer ,
     ChangeAnswerPattern , QuestionReorder , UploadFileHandler , RemoveFileHandler , AddWelcome , AddThanks ,
     QuestionSorter , ChangeDegreeHandler , NonQuestionSetter} = QuestionSlice.actions;
 

@@ -30,8 +30,9 @@ export default function Home() {
   const [ FolderReload , SetFolderReload ] = useState(false);
   const [ AddQuestionnaireState , setAddQuestionnaireState ] = useState(false);
   const [ SideBarOpen , setOpen ] = useState(false);
-  const [ addPopOver , setAddPopover ]= useState(false);
-  const [ FolderPopover , setFolderPopover ]= useState(false)
+  const [ addPopOver , setAddPopover ] = useState(false);
+  const [ FolderPopover , setFolderPopover ] = useState(false);
+  const [ readyToCreate , setReadyToCreate ] = useState(false);
   const CornerButton = useRef(null);
   const FolderNameInput = useRef(null);
   const [ ChangeFolderName , SetChangeFolderNameState ] = useState(false);
@@ -44,24 +45,37 @@ export default function Home() {
     const getData = async () => {
       // if(getItem('cookie'))
       // {
-        let { data } = await axiosInstance.get('/user-api/folders/');
+        try
+        {
+          let { data } = await axiosInstance.get('/user-api/folders/');
         setFolder(data);
         SetFolderReload(false);
         if(data[SelectedFolder])
           SetFolderName(data[SelectedFolder].name) 
-        else {
-          SelectFolder(0);
-          removeItem('SelectedFolder')
-        }   
+          else {
+            SelectFolder(0);
+            removeItem('SelectedFolder')
+          }  
+        }
+         catch(err)
+         {
+          MessageApi.error({
+            content : 'در لود کردن فولدر ها مشکلی پیش آمد',
+            style : {
+              fontFamily : 'IRANSans',
+              direction : 'rtl'
+            }
+          })
+         }
       // } 
     }
     window.addEventListener('scroll', function(e){
         scroll_direction = (document.body.getBoundingClientRect()).top > scroll_position ? 'up' : 'down';
         scroll_position = (document.body.getBoundingClientRect()).top;
-        if(this.window.innerWidth  < 480 && CornerButton.current)
+        if(CornerButton.current)
         {
           scroll_direction == 'down' ? CornerButton.current.setAttribute('style',' right : -30%;') :
-           CornerButton.current.setAttribute('style','right : 1rem;');
+           CornerButton.current.removeAttribute('style');
         }
     });
     getData();
@@ -84,7 +98,8 @@ export default function Home() {
         content : Object.values(err.response.data)[0],
         duration : 5,
         style : {
-          fontFamily : 'IRANSans'
+          fontFamily : 'IRANSans',
+          direction : 'rtl'
         }
       })
     }
@@ -101,17 +116,18 @@ export default function Home() {
       {MessageContext}
       <ProgressBarLoading />
       <Header SetSideBar={() => setOpen(!SideBarOpen)} />
-      <SideBar folders={folders} SelectedFolder={SelectedFolder} IsOpen={SideBarOpen}
-        FolderReload={() => SetFolderReload(true)}  ChangeFolder={SelectFolder}
+      <SideBar folders={folders} SelectedFolder={SelectedFolder} isopen={SideBarOpen} ReadyToCreate={readyToCreate}
+       setReadyToCreate={setReadyToCreate} FolderReload={() => SetFolderReload(true)}  ChangeFolder={SelectFolder}
         SetSideBar={() => setOpen(!SideBarOpen)} ChangeFolderName={SetFolderName}/>
       <ScreenMask shown={SideBarOpen} onClick={() => setOpen(false)}/>
       <Popover
             content={<AddPopoverContent SelectedFolderNumber={SelectedFolder} 
             folders={folders} FolderReload={() => SetFolderReload(true)} 
-            SetSideBar={() => setOpen(!SideBarOpen)} setAddPopover={() => setAddPopover(!addPopOver)}/>}
+            SetSideBar={() => setOpen(!SideBarOpen)} setReadyToCreate={setReadyToCreate}
+            setAddPopover={() => setAddPopover(!addPopOver)}/>}
             trigger="click"
             open={addPopOver}
-            overlayInnerStyle={{ boxShadow : 'none' , marginRight : 15}}
+            overlayInnerStyle={{ boxShadow : 'none' , marginRight : '5.5vw'}}
             onOpenChange={() => setAddPopover(false)}
             style={{marginRight : 15}}
             >

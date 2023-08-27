@@ -5,7 +5,7 @@ export const QuestionnaireContainer = styled.div`
     margin: 0.6rem auto;
     padding-bottom: 1rem;
     display: grid;
-    row-gap: 2rem;
+    row-gap: 1.3rem;
     grid-template-columns: repeat(auto-fill,minmax(406px,1fr));
     justify-items: baseline;
     direction: rtl;
@@ -20,7 +20,7 @@ export const QuestionnaireContainer = styled.div`
 `
 export const QuestionnaireDiv = styled.div`
     height: fit-content;
-    border: 1px dotted #CCCCCC;
+    border: 1px solid #CCCCCC;
     border-radius: 2px;
     font-family: 'IRANSans';
     width: 420px;
@@ -41,18 +41,28 @@ export const QuestionnaireDiv = styled.div`
             width: 100%;
         }
     }
+    .ant-ribbon-text
+    {
+        display: flex;
+        align-items: center;
+    }
 ` 
 export const QuestionnaireHeader = styled.div`
     display: flex;
     flex-direction: row-reverse;
     align-items: center;
-    width: 90%;
+    width: 100%;
     margin: 0 auto;
     justify-content: space-between;
     padding: 0.7rem 0 0.5rem 0;
     color: var(--Neutral-Gray9);
     border-bottom: 1px solid #F0F0F0;
     word-break: break-word;
+
+    .questionnaire_preview
+    {
+        margin-left : 1.5rem;
+    }
 `
 export const QuestionnaireBodyStat = styled.div`
     display: flex;
@@ -101,13 +111,15 @@ export const QuestionnaireNameContainer = styled.div`
     display: flex;
     align-items: center;
     flex-direction: row-reverse;
+    margin-right : 1.5rem;
 `
 export const QuestionnairePreviewButton = styled.button`
-    color: var(--primary-color);
+    color: ${p => p.disabled ? 'Gray' : 'var(--primary-color)'};
     background: none;
     border: none;
     font-family: 'IRANSANS';
     cursor : pointer;
+    pointer-events : ${p => p.disabled ? 'none' : 'all'};
 `
 export const QuestionnaireSeeResultButton = styled.button`
     display: flex;
@@ -127,6 +139,7 @@ export const QuestionnaireSeeResultButton = styled.button`
     & p 
     {
         margin-left: 0.5rem;
+        margin-bottom: 10px;
     }
 `
 export const ContentBox = styled.div`
@@ -169,7 +182,8 @@ export const QuestionnaireFooterItem = styled.div`
     width: 100%;
     display: flex;
     justify-content: center;
-    border: 1px solid #F0F0F0;
+    border-top: 1px solid #F0F0F0;
+    border-right: 1px solid #F0F0F0;
     height: 40px;
     cursor : pointer;
     & a 

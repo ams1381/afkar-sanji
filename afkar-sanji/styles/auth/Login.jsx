@@ -40,7 +40,6 @@ export const LoginContainer = styled.div`
     {
         right: 0;
         bottom: 0;
-
     }
     @keyframes LoginContainerBeforeAnim
     {

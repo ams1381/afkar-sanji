@@ -8,15 +8,18 @@ import { axiosInstance } from '@/utilities/axios';
 import { useLocalStorage } from '@/utilities/useLocalStorage';
 import { Skeleton, Spin } from 'antd';
 import PN from "persian-number";
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
-const SideBar = ({ IsOpen , SetSideBar , folders , SelectedFolder , ChangeFolder , FolderReload , ChangeFolderName}) => {
+const SideBar = ({ isopen , SetSideBar , folders , SelectedFolder  , ReadyToCreate , setReadyToCreate
+    , ChangeFolder , FolderReload , ChangeFolderName}) => {
     const { setItem } = useLocalStorage();
     const [ AddFolderState , SetAddFolderState ] = useState(false);
     const [ newFolderName , setNewFolderName ] = useState(null);
     const [ ErrorMessage , SetErrorMessage ] = useState(null);
     const [ FolderAdded , setFolderAddedState ] = useState(false);
     const [ AddFolderLoading , setAddFolderLoading ] = useState(false)
+    const  FolderInput  = useRef(null)
+    
     useEffect(() => {   
         if(folders && folders[folders.length - 1] && FolderAdded)
         {
@@ -25,9 +28,9 @@ const SideBar = ({ IsOpen , SetSideBar , folders , SelectedFolder , ChangeFolder
             ChangeFolderName(folders[folders.length - 1].name)
             SetAddFolderState(false)
         }
-            
-        // if(folders[folders.length])
-        //     ChangeFolder(folders[folders.length])
+        (ReadyToCreate && FolderInput.current) ? FolderInput.current.focus() : ''
+        // console.log(FolderInput.current)
+        // FolderInput.current ? console.log(FolderInput.current) : ''
     },[folders])
     const AddFolder = async () => {
         axiosInstance.defaults.headers['Content-Type'] = 'application/json';
@@ -35,7 +38,8 @@ const SideBar = ({ IsOpen , SetSideBar , folders , SelectedFolder , ChangeFolder
         setFolderAddedState(!FolderAdded)
         if(!newFolderName)
         {
-            SetErrorMessage('نام پوشه نمیتواند خالی باشد')
+            SetErrorMessage('نام پوشه نمیتواند خالی باشد');
+            setAddFolderLoading(false)
             return
         }
         try 
@@ -53,40 +57,49 @@ const SideBar = ({ IsOpen , SetSideBar , folders , SelectedFolder , ChangeFolder
         finally
         {
             setAddFolderLoading(false);
+            setReadyToCreate(false)
         }
     }
   return (
-    <SideBarContainer open={IsOpen}>
+    <SideBarContainer open={isopen}>
         <SideBarHeader>
             <div className="sideBar_add_folder">
-    <SideBarToggleButton onClick={() => SetAddFolderState(!AddFolderState)}>
-        <p>پوشه جدید</p>
-        <Icon name='NewFolder' style={{ width : 15 }}/>
-    </SideBarToggleButton>
-            </div>
-            <SideBarTitle>
-                <p>پوشه‌ها</p>
-                <button className="close_sideBar" onClick={SetSideBar}>
-                <Icon name='GrayClose' style={{ width : 13 }}/>
-            </button>
-            </SideBarTitle>
+        <SideBarToggleButton onClick={() => SetAddFolderState(!AddFolderState)}>
+            <p>پوشه جدید</p>
+            <Icon name='NewFolder' style={{ width : 15 }}/>
+        </SideBarToggleButton>
+                </div>
+                <SideBarTitle>
+                    <p>پوشه‌ها</p>
+                    <button className="close_sideBar" onClick={SetSideBar}>
+                    <Icon name='GrayClose' style={{ width : 13 }}/>
+                </button>
+                </SideBarTitle>
         </SideBarHeader>
         {
-            AddFolderState ? <SideBarInputBox>
+            (ReadyToCreate || AddFolderState) ? <SideBarInputBox>
             <p>نام پوشه را وارد کنید</p>
-            <SideBarInput type="text" id="side_folder_name" 
+            <SideBarInput type="text" id="side_folder_name"  ref={FolderInput}
             value={newFolderName ? newFolderName : ''} onChange={(e) => {
                 SetErrorMessage(null);
                 setNewFolderName(e.target.value)
                 }}/>
             {ErrorMessage ? <LoginErrorMessage>{ErrorMessage}</LoginErrorMessage> : ''}
             <AddFolderButtons>
-                <SideBarConfirmButton onClick={AddFolder}>
+                <SideBarConfirmButton disabled={!newFolderName} onClick={AddFolder}>
                    { AddFolderLoading ? <Spin 
                    indicator={<LoadingOutlined style={{ fontSize: 17 , color : 'white' }} spin />} size='12' />
-                   :  <Icon name='Check' style={{ width : 15}} /> }
+                   : 
+                   newFolderName ? <Icon name='Check' style={{ width : 15}} />  
+                   : <Icon name='DisableCheck' style={{ width : 15}}/>
+                   
+                }
                 </SideBarConfirmButton>
-                <SideBarCancelButton onClick={() => SetAddFolderState(false)}>
+                <SideBarCancelButton onClick={() => {
+                    SetAddFolderState(false)
+                    SetErrorMessage(null);
+                    setReadyToCreate(false)
+                    }}>
                     <Icon name='Close' style={{ width : 12 }} />
                 </SideBarCancelButton>
             </AddFolderButtons>      

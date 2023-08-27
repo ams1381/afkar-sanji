@@ -52,19 +52,24 @@ const QuestionnaireBox = ({Questionnaire , FolderReload}) => {
   return (
      <QuestionnaireDiv>
         <Badge.Ribbon className={BadgeStyle['QuestionnaireBadge']} color={Questionnaire.is_active ? "green" : "red"} text={Questionnaire.is_active ? 'فعال' : 'غیر فعال'}  
-     style={{marginTop : 30 , fontFamily : 'IRANSans' , fontSize : 13 , color : '#00000040'}}>
+            style={{
+                marginTop : 30 , fontFamily : 'IRANSans' , fontSize : 13 , color : '#00000040' , height : 24 , display : 'flex'
+                }}>
          <QuestionnaireHeader>
              {Questionnaire ? <QuestionnaireNameContainer>
                  <QuestionnaireNameInput ref={nameRef} type="text" onChange={nameInputChangeHandler}
                   value={QuestionnaireName} disabled={!ChangeNameActive}/>
                  <RenameSpan clickable={(ChangeNameActive && !QuestionnaireName) ? null : 'true'} 
                   onClick={RenameStateHandler}>
-             
-                    {!ChangeNameActive ? <Icon name='RenameQuestionnaire' /> : <Icon name='RenameQuestionnaireCheck' />}
+                    {!ChangeNameActive ? <Icon name='RenameQuestionnaire' /> : 
+                    <div> 
+                        <Icon name='RenameQuestionnaireCheck' />
+                        <Icon name='GrayClose' />
+                     </div>}
                  </RenameSpan>
              </QuestionnaireNameContainer> : <Skeleton active /> }
              <div className="questionnaire_preview">
-                 <QuestionnairePreviewButton>
+                 <QuestionnairePreviewButton disabled={Questionnaire.question_count == 0}>
                      پیش نمایش
                  </QuestionnairePreviewButton>
              </div>

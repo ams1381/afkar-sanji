@@ -54,7 +54,7 @@ export const QuestionSearchContainer = styled.div`
         width: 50px;
         left: 0;
         border-radius: 0px 2px 2px 0px;
-        background: var(--primary-color);
+        border-right: 1px solid #D9D9D9;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -128,25 +128,31 @@ export const QuestionDesignBox = styled.div`
 `
 export const QuestionDesignItem = styled.div`
     padding: 1rem;
-    border: 2px solid ${p => p.isOpen ? p.childq ? '#7C86FA' : '#3E4ACB' : '#D9D9D9'};
+    border: 1px solid ${p => p.isopen ? p.childq ? '#7C86FA' : '#7C86FA' : '#D9D9D9'};
     border-radius: 2px;
     margin: 0.6rem 0;
-    background: white;
+    background: var(--surface);
     width: ${p => p.childq ? '95%' : '100%'};
     margin-top : ${p => p.childq ? '1rem' : '0'};
     transition : border 0.3s;
     .question_bold_info 
     {
         display : flex;
+        border: 1px solid var(--primary-color);
+        border-radius: 2px;
     }
     .question_bold_info  .question_type_selector {
-        border: 1px solid var(--primary-color);
+        border-left: 1px solid var(--primary-color);
         background: #F5F5F5;
         display: flex;
         align-items: center;
     }
     .question_type_selector > div {
         width : auto !important;
+    }
+    .question_type_selector .ant-select-arrow
+    {
+        display : none;
     }
     @media screen and (max-width : 768px)
     {
@@ -269,15 +275,15 @@ export const QuestionItemActionButton = styled.button`
     justify-content: center;
     background: none;
     border: none;
-    border-bottom : ${p => p.selected ? '1px solid var(--primary-color)' : 'none'};
-    color : ${p => p.selected ? 'var(--primary-color)' : '--Neutral-Gray9'};
+    border-bottom : ${p => p.selected ? '2px solid var(--primary-color)' : 'none'};
+    color : ${p => p.selected ? 'var(--primary-color)' : 'var(--Neutral-Gray9)'};
     flex-direction: row-reverse;
     font: 12px IRANSans;
     height: 40px;
     align-items: center;
     cursor: pointer;
     margin-top: 0.4rem;
-    transition : 0.3s;
+    box-sizing: content-box;
     & p 
     {
         margin-left: 0.5rem
@@ -294,7 +300,6 @@ export const QuestionItemSettingContainer = styled.div`
 `
 export const QuestionItemTitleContainer = styled.div`
     height: 40px;
-    border: 1px solid var(--primary-color);
     border-radius: 2px;
     width: 100%;
 `
@@ -307,6 +312,7 @@ export const QuestionItemTitleInput = styled.input`
     font-family: 'IRANSANS';
     padding: 0.7rem;
     direction: rtl;
+    border-radius: 2px;
 `
 export const QuestionItemFooter = styled.div`
     display : flex;
@@ -428,10 +434,13 @@ export const AddNonQuestionItem = styled.div`
     border-radius : 2px;
 
     & svg
-    {
-        margin-left : 0.5rem;
+    { 
         fill : #5360ED;
         transition : 0.3s;
+    }
+    & p
+    {
+        margin-left : 0.5rem;
     }
     &:hover 
     {

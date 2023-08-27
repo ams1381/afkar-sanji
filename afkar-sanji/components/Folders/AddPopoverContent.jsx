@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Icon } from '@/styles/icons';
 import AddQuestionnairePopUp from './AddQuestionnairePopUp';
 
-const AddPopoverContent = ({folders , SetSideBar , SelectedFolderNumber , setAddPopover , FolderReload}) => {
+const AddPopoverContent = ({folders , setReadyToCreate , SetSideBar , SelectedFolderNumber , setAddPopover , FolderReload}) => {
     const [ AddQuestionnaireModal , setQuestionnaireModalState ] = useState(false);
     const [ NewQuestionnaireName , setNewQuestionnaireName ] = useState(null);
     const [ ErrMessage , SetErrMessage ] = useState(null);
@@ -20,6 +20,7 @@ const AddPopoverContent = ({folders , SetSideBar , SelectedFolderNumber , setAdd
     const AddFolderHandler = () => {
         SetSideBar(true);
         setAddPopover();
+        setReadyToCreate(true)
     }
   return (
     <PopoverContainer>

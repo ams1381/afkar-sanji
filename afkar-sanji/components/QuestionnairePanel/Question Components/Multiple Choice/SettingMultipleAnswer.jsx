@@ -47,16 +47,20 @@ const SettingMultipleAnswer = ({QuestionInfo}) => {
             Event ? OptionalDispatcher(OptionAdder({ QuestionID : QuestionInfo.id , OptionText : '<span>همه گزینه ها</span>' , NewOptionID : RandomIdGenerator()}))
             : OptionalDispatcher(OptionRemoverByText({ QuestionID : QuestionInfo.id , OptionText : '<span>همه گزینه ها</span>' }))
         if(TName == 'nothing_selected')
-        Event ? OptionalDispatcher(OptionAdder({ QuestionID : QuestionInfo.id , OptionText : '<span>هیچ کدام</span>' , NewOptionID : RandomIdGenerator()}))
-        : OptionalDispatcher(OptionRemoverByText({ QuestionID : QuestionInfo.id , OptionText : '<span>هیچ کدام</span>' }))
+            Event ? OptionalDispatcher(OptionAdder({ QuestionID : QuestionInfo.id , OptionText : '<span>هیچ کدام</span>' , NewOptionID : RandomIdGenerator()}))
+            : OptionalDispatcher(OptionRemoverByText({ QuestionID : QuestionInfo.id , OptionText : '<span>هیچ کدام</span>' }))
+        if(TName == 'other_options')
+            Event ? OptionalDispatcher(OptionAdder({ QuestionID : QuestionInfo.id , OptionText : '<span>سایر</span>' , NewOptionID : RandomIdGenerator()}))
+            : OptionalDispatcher(OptionRemoverByText({ QuestionID : QuestionInfo.id , OptionText : '<span>سایر</span>' }))
     }
+    console.log(QuestionInfo.additional_options)
   return (
     <ToggleContainer>
-        <div className='checkbox_container' onClick={MultipleAnswerToggleHandler}>
+        <div className='checkbox_container' onClick={MultipleAnswerToggleHandler} style={{ borderBottom : QuestionInfo.multiple_choice ? 'none' : '1px solid #D9D9D9' }}>
             <p>سوال چند انتخابی باشد</p>
             <Switch checked={QuestionInfo.multiple_choice} />
         </div>
-       { MultipleAnswerState ? <AlphabetNumberContainer>
+       { MultipleAnswerState ? <AlphabetNumberContainer >
           <p>تعداد گزینه های قابل انتخاب</p>
           <label>
               <InputNumber value={QuestionInfo.min_selected_options} min={0} onChange={(e) => ChangeMinMaxHandler(e,'min_selected_options')}/>
@@ -68,11 +72,12 @@ const SettingMultipleAnswer = ({QuestionInfo}) => {
           </label>
         </AlphabetNumberContainer> : ''}
          <div className='additional_options_container'>
-            <div className='checkbox_container additional_option_toggle' onClick={(e => AdditionalOptionsHandler(!QuestionInfo.additional_options))}>
+            <div className='checkbox_container additional_option_toggle' style={{ borderBottom : QuestionInfo.additional_options ? 'none' : '1px solid #D9D9D9' }}
+             onClick={(e => AdditionalOptionsHandler(!QuestionInfo.additional_options))}>
                 <Switch checked={QuestionInfo.additional_options} />
                 <p>گزینه های اضافی</p>
             </div>
-            {QuestionInfo.additional_options ? <div className='additional_option_checkboxes_container'>
+            {QuestionInfo.additional_options ? <div className='additional_option_checkboxes_container checkbox_container'>
                 <div className='additional_checkbox' onClick={e => RegularToggleHandler(!QuestionInfo.all_options,'all_options')}>
                     <Checkbox checked={QuestionInfo.all_options} />
                     <p>همه گزینه ها</p>

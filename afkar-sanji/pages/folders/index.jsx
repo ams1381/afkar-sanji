@@ -20,7 +20,7 @@ const Folders = (props) => {
         <title>Afkar Sanji</title>
     </Head>
       <Header SetSideBar={() => setOpen(!SideBarOpen)} />
-      <SideBar IsOpen={SideBarOpen} SetSideBar={() => setOpen(!SideBarOpen)}/>
+      <SideBar isopen={SideBarOpen} SetSideBar={() => setOpen(!SideBarOpen)}/>
       <ScreenMask shown={SideBarOpen ? 'true' : null} onClick={() => setOpen(false)}/>
       <Popover
             content={AddPopoverContent}

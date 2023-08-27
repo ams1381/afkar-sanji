@@ -11,7 +11,7 @@ export const RangeQuestionComponent = ({ QuestionInfo }) => {
   <RangeQuestionContainer>
         {Array.from({ length : QuestionInfo.max }).map((_,index) => 
         <RangeQuestionAnswerItem key={index}>
-            <input type='checkbox' id={'range_answer_option' + index}/>
+            <input name='range_item' type='radio' id={'range_answer_option' + index}/>
             <label htmlFor={'range_answer_option' + index}>
               {PN.convertEnToPe(index + 1)}
             </label>

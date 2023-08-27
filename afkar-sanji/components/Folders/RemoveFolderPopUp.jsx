@@ -13,11 +13,8 @@ const RemoveFolderPopUpContent = ({title}) => {
             <RemoveModalTextContent>
                 <p>{title}</p>
                 <p>در صورت حذف امکان بازیابی آن وجود ندارد</p>
-            </RemoveModalTextContent>
-            
-            
+            </RemoveModalTextContent>            
         </RemoveFolderModalHeader>
-       
     </RemoveFolderModalContainer>
   )
 }

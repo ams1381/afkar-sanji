@@ -23,7 +23,7 @@ import { ChangeQuestionType } from '@/utilities/QuestionStore';
 import { form_data_convertor } from '@/utilities/FormData';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
-export const QuestionItem = ({ IsQuestion , question , UUID , parentPlacement , GroupID }) => {
+export const QuestionItem = ({ provided , IsQuestion , question , UUID , parentPlacement , GroupID }) => {
   const [ QuestionRootOpenState , SetQuestionRootOpenState ] = useState(false);
   const [ QuestionActionState , SetQuestionActionState ] = useState('edit');
   const [ DeleteQuestionState , SetDeleteQuestionState ] = useState(false);
@@ -189,9 +189,9 @@ export const QuestionItem = ({ IsQuestion , question , UUID , parentPlacement , 
     questionsData ? <QuestionItemRow className={`QuestionItem${questionsData.question.id}`}>
       {contextHolder}
       <div className='design_container' style={{ width : !questionsData.question.group ? '50%' : '100%' }}> 
-    <QuestionDesignItem className='question_design_item' isOpen={QuestionRootOpenState ? 'true' : null}
+    <QuestionDesignItem className='question_design_item' isopen={QuestionRootOpenState ? 'true' : null}
     childq={questionsData.question.group ? 'true' : null}>     
-          <QuestionItemSurface>
+          <QuestionItemSurface >
               <div className="question_item_info" onClick={QuestionOpenHandler}>
                   <DropDownQuestionButton dropped={QuestionRootOpenState ? 'true' : null} >
                      { questionsData.question.question_type == 'group' ? <Icon name='GroupIcon' />
@@ -222,7 +222,7 @@ export const QuestionItem = ({ IsQuestion , question , UUID , parentPlacement , 
               </QuestionItemButtonContainer>
 
           </QuestionItemSurface>
-          { QuestionRootOpenState ? <div className="question_item__root">
+          { QuestionRootOpenState ? <div className="question_item__root" draggable={false} >
             <QuestionItemActionSelector>
             <QuestionItemActionButton selected={QuestionActionState == 'view' ? 'selected' : null} className='view_question' onClick={() => SetQuestionActionState('view')}>
                   <p>نمایش سوال</p>
@@ -241,9 +241,7 @@ export const QuestionItem = ({ IsQuestion , question , UUID , parentPlacement , 
                     <svg width="21" height="21" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
                     <path d="M14.5577 1.04825C15.9551 -0.349357 18.221 -0.349424 19.6185 1.0481C21.0159 2.4455 21.016 4.71112 19.6187 6.10861L18.7268 7.00057L13.6661 1.93991L14.5577 1.04825ZM12.6055 3.00064L2.60767 12.9997C2.20135 13.4061 1.91574 13.9172 1.78264 14.4762L0.687052 19.0777C0.626727 19.3311 0.702163 19.5976 0.886326 19.7817C1.07049 19.9659 1.33701 20.0413 1.59037 19.981L6.19162 18.8855C6.75082 18.7523 7.2621 18.4666 7.66855 18.0601L17.6662 8.06129L12.6055 3.00064Z"/>
                     </svg>
-                </QuestionItemActionButton>   
-              
-                
+                </QuestionItemActionButton>         
             </QuestionItemActionSelector>
             { QuestionActionState == 'edit' ? <QuestionItemSettingContainer>
                 <div className="question_bold_info">
@@ -277,7 +275,7 @@ export const QuestionItem = ({ IsQuestion , question , UUID , parentPlacement , 
               { SettingSectionProvider(QuestionTypeState,questionsData.question) }
             </>
             : <PreviewMobileSizeComponent>
-              <QuestionComponent QuestionInfo={questionsData.question} />
+              <QuestionComponent mobilePreview={true} QuestionInfo={questionsData.question} />
               </PreviewMobileSizeComponent>}
             { QuestionRootOpenState ? <QuestionItemFooter>
               <Button type='primary' loading={SaveButtonLoadingState}

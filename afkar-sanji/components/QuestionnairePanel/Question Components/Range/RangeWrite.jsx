@@ -28,6 +28,7 @@ export const RangeWrite = ({ QuestionInfo }) => {
           dots={true}
           onChange={DegreeChangeHandler}
           value={QuestionInfo.max}
+          
         />
     </div>
     <RangeLabelContainer>

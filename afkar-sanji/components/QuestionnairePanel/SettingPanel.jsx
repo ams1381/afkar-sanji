@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer, useRef, useState } from 'react'
 import { ConfigProvider,  Space, message } from 'antd';
 import { Button, TimePicker } from 'antd';
-import { Datepicker } from '@ijavad805/react-datepicker';
+import { DatePicker as DatePickerJalali, Calendar, JalaliLocaleListener } from "antd-jalali";
 import dayjs from 'dayjs';
 import { Switch , Checkbox} from 'antd';
 import fa_IR from "antd/lib/locale/fa_IR";
@@ -9,11 +9,16 @@ import { QuestionnaireDatePickerContainer , QuestionnaireSettingContainer} from 
 import { Icon } from '@/styles/icons';
 import { axiosInstance } from '@/utilities/axios';
 import jalaali from 'jalaali-js'
+import jalaliday from 'jalaliday'
 import PN from 'persian-number';
 import { DatePickerInput } from '@/styles/questionnairePanel/QuestionSetting';
 import 'moment/locale/fa';
 // import moment from "moment"
 import moment from 'moment-jalaali';
+import locale from 'antd/lib/date-picker/locale/fa_IR';
+
+
+
 const SettingPanel = ({ Questionnaire }) => {
   const [ DateValue , SetDateValue ]= useState(null);
   const [ QuestionnaireData , Dispatcher ] = useReducer(QuestionnaireReducerFunction,Questionnaire);
@@ -24,8 +29,13 @@ const SettingPanel = ({ Questionnaire }) => {
   const [ SettingChanged , SetSettingChanged ] = useState(false);
   const [ SettingLoading , SetSettingLoading ] = useState(false);
   const [ ErrorType , SetErrorType ] = useState(null);
-
-  console.log(QuestionnaireData)
+  dayjs.calendar('jalali') 
+  let defaultDatePickerValue = [
+    dayjs(convertDate(QuestionnaireData.pub_date,'jalali'), { jalali: true }),
+  ]
+  QuestionnaireData.end_date ? defaultDatePickerValue.push(
+    dayjs(convertDate(QuestionnaireData.end_date,'jalali'))
+  ) : ''
   const DateToggleHandler = (E) => {
     SetDateActive(E);
     if(!E)
@@ -38,10 +48,14 @@ const SettingPanel = ({ Questionnaire }) => {
       Dispatcher({ ACTION : 'Timer Cleared' });
    SetSettingChanged(true)
   }
-  const DateChangeHandler = (NewPubDate) => {
+  const DateChangeHandler = (_,NewDate) => {
     SetErrorType(null)
-    Dispatcher({ ACTION : 'Pub Date Changed' , NewDate : NewPubDate._i.replace('---','') });
-
+    if(!NewDate[0] && !NewDate[1])
+      Dispatcher({ ACTION : 'Timer Cleared' });
+    else
+    //   Dispatcher({ ACTION : 'Pub Date Changed' , NewDate : NewPubDate._i.replace('---','') });
+    // // console.log(NewDate.split(' '))
+    
     SetSettingChanged(true)
   }
   const EndDateChangeHandler = (NewEndDate) => {
@@ -105,31 +119,13 @@ const SettingPanel = ({ Questionnaire }) => {
             <p>: فعال سازی دستی </p>
               <Switch checked={DateActive} onChange={DateToggleHandler}/>
           </div>
-        <div className='picker_container' >
-          <Datepicker 
-          disabled={!DateActive}
-          onChange={DateChangeHandler}
-          readonly="readonly"
-          defaultValue={QuestionnaireData.pub_date ? moment(convertToJalaliDate(QuestionnaireData.pub_date))
-            : moment(convertToJalaliDate(new Date().toJSON().slice(0, 10)))}
-          input={<DatePickerInput readOnly={true}
-          erroroccur={ErrorType == 'date_error' ? 'true' : null} placeholder="تاریخ شروع" />}
-          placeholder='زمان شروع' />
-          <p>: زمان شروع   </p>
-       </div>
        <div className='picker_container'>
-          { QuestionnaireData.end_date ?  <Datepicker 
-          disabled={!DateActive}
-          input={<DatePickerInput placeholder="تاریخ پایان " />}
-          onChange={EndDateChangeHandler}
-          defaultValue={QuestionnaireData.end_date && moment(convertToJalaliDate(QuestionnaireData.end_date))}
-          placeholder='زمان پایان' /> : <Datepicker 
-          disabled={!DateActive}
-          input={<DatePickerInput readOnly={true} placeholder="تاریخ پایان " />}
-          onChange={EndDateChangeHandler}
-          placeholder='زمان پایان' />}
-          
-          <p>: زمان  پایان </p>
+
+          <DatePickerJalali.RangePicker showTime status={ErrorType == 'date_error' ? 'error' : null} 
+          locale={fa_IR.DatePicker}
+          defaultValue={defaultDatePickerValue}
+           onChange={DateChangeHandler} />
+           <JalaliLocaleListener  />
        </div>
       </QuestionnaireDatePickerContainer>
       <QuestionnaireDatePickerContainer>
@@ -144,9 +140,10 @@ const SettingPanel = ({ Questionnaire }) => {
                   onChange={TimerChangeHandler}
                   disabled={!TimerActive}
                   showNow={false}
-                  defaultValue={QuestionnaireData.timer ? dayjs(QuestionnaireData.timer, 'HH:mm:ss') : null}
+                  defaultValue={QuestionnaireData.timer ?
+                  dayjs(QuestionnaireData.timer, 'HH:mm:ss') : null}
                 />
-
+    
         </div>
         
       </QuestionnaireDatePickerContainer>
@@ -188,11 +185,13 @@ const SettingPanel = ({ Questionnaire }) => {
   )
 }
 export default SettingPanel;
-const convertToJalaliDate = (inputDate) => {
+const convertDate = (inputDate,dateType) => {
   const [year, month, day] = inputDate.split('-');
-  const jDate = jalaali.toJalaali(parseInt(year), parseInt(month), parseInt(day));
+  const jDate = dateType == 'jalali' ? jalaali.toJalaali(parseInt(year), parseInt(month), parseInt(day))
+  : jalaali.toGregorian(parseInt(year), parseInt(month), parseInt(day));
   return `${(jDate.jy)}/${(jDate.jm)}/${(jDate.jd)}`;
 }
+// const convertToGregorian 
 const QuestionnaireReducerFunction = (State,ACTION) => {
   switch(ACTION.ACTION)
   {

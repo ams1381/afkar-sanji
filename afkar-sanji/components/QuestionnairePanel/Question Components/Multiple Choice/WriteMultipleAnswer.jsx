@@ -22,10 +22,10 @@ const MultipleAnswer = ({ QuestionInfo }) => {
   return (
     <OptionWritingContainer>
       <p>گزینه ها</p>
-      {QuestionInfo.options.map(item => !item.text?.includes('<span>','</span>') ? <InputOptionsContainer>
-        <OptionalInputItem key={item.id} type='text' 
+      {QuestionInfo.options.map(item => !item.text?.includes('<span>','</span>') ? <InputOptionsContainer  key={item.id}>
+        <OptionalInputItem type='text' 
         onChange={e => Dispatcher(OptionModifier({ QuestionID : QuestionInfo.id , OptionID : item.id , OptionText : e.target.value }))}
-        value={(item.text != 'null') ? item.text : ''} placeholder='چیزی بنویسید'/>
+        defaultValue={(item.text != 'null') ? item.text : ''} placeholder='چیزی بنویسید'/>
         <div className='option_button_container'>
           <button onClick={() => Dispatcher(OptionAdder({ QuestionID : QuestionInfo.id , NewOptionID : RandomIdGenerator() , OptionID : item.id 
             , OptionText : null }))}>

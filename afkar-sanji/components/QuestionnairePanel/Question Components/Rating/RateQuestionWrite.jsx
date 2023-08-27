@@ -12,7 +12,7 @@ export const RateQuestionWrite = ({ QuestionInfo }) => {
     };
     
   return (
-    <div>
+    <div draggable={false}>
         <Slider
           min={4}
           max={12}
@@ -23,6 +23,7 @@ export const RateQuestionWrite = ({ QuestionInfo }) => {
           dots={true}
           onChange={DegreeChangeHandler}
           value={QuestionInfo.max}
+          onDrag={(e) => console.log(e)}
         />
     </div>
   )

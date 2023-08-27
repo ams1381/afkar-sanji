@@ -1,3 +1,4 @@
+import { Button } from "antd";
 import { styled } from "styled-components";
 
 //Header
@@ -24,10 +25,18 @@ export const SideBarToggleButton = styled.button`
     display: flex;
     align-items: center;
     font-family: IRANSans;
+    transition : 0.3s;
 
     & p 
     {
         margin-right: 0.5rem;
+    }
+
+    &:hover 
+    {
+        background : #848CFA;
+        border : none;
+        border: 2px solid #848CFA;
     }
 `
 export const UserAvatarLogout = styled.button`
@@ -56,7 +65,7 @@ export const LogoutPopOverLayout = styled.div`
 
 //Side Bar 
 export const SideBarContainer = styled.div`
-    position: absolute;
+    position: fixed;
     left: ${p => p.open ? '0' : '-600%'};
     top: 0;
     height: 100%;
@@ -74,6 +83,7 @@ export const SideBarHeader = styled.div`
     margin: 0.5rem auto;
     align-items: center;
     border-bottom: 2px solid var(--SideBar-header-border);
+    padding-bottom: 0.6rem;
 `
 export const SideBarFolderItem = styled.div`
     display: flex;
@@ -106,7 +116,6 @@ export const SideBarInputBox = styled.div`
     & p 
     {
         font-size: 13px;
-        margin-right: 0.7rem;
     }
 `
 export const SideBarInput = styled.input`
@@ -119,6 +128,8 @@ export const SideBarInput = styled.input`
     border-radius : 2px;
     font-family: 'IRANSans';
     height: 40px;
+    text-align: right;
+    direction: rtl;
 
     &:focus
     {
@@ -147,7 +158,7 @@ export const AddFolderButtons = styled.div`
     width: 100%;
     margin: 0 auto;
 `
-export const SideBarConfirmButton = styled.button`
+export const SideBarConfirmButton = styled(Button)`
     background: var(--primary-color);
     padding: 0.5rem;
     border-radius: 50%;
@@ -177,7 +188,7 @@ export const SideBarTitle = styled.div`
 `
 // screen mask
 export const ScreenMask = styled.div`
-    position : absolute;
+    position : fixed;
     left : 0;
     top : 0;
     width : 100%;

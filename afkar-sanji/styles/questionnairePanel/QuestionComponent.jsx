@@ -2,14 +2,14 @@ import { styled } from "styled-components";
 
 
 export const QuestionComponentContainer = styled.div`
-    width: 90%;
+    width: ${p => p.mobilePreview ? '100%' : '90%'};
     margin: 0.55rem auto;
     word-break: break-word;
     text-align: right;
-    box-shadow: ${p => p.childq ? 'none' : '0px 2px 8px 0px rgba(0, 0, 0, 0.15)'};
+    box-shadow: ${p => (p.childq || p.mobilePreview) ? 'none' : '0px 2px 8px 0px rgba(0, 0, 0, 0.15)'};
     padding: 1rem;
     border-radius: 2px;
-    background: white;
+    background: var(--surface);
 
     .uploaded_file_preview .video-react-button.video-react-big-play-button
     {
@@ -34,6 +34,7 @@ export const QuestionTitle = styled.div`
     .question_number
     {
         margin-left : 0.5rem;
+        white-space: nowrap;
     }
 `
 export const QuestionDescription = styled.div`
@@ -50,7 +51,6 @@ export const WelcomeComponentContainer = styled.div`
     margin: 0 auto;
     & p 
     {
-        
         margin : 0.2rem auto;
     }
     & p::first-child 
@@ -68,19 +68,23 @@ export const WelcomeComponentContainer = styled.div`
         border-radius : 2px;
         background: var(--primary-color);
     }
+    .welcome_title
+    {
+        font-weight : 700;
+    }
 `
 export const OptionalAnswerBlockContainer = styled.div`
     display: grid;
     grid-template-columns : ${p => p.vertical ? 'auto' : 'auto auto'};
     direction: rtl;
    
-    &  > div
+    &  .OptionalAnswerItemContainer
     {
             display: flex;
             justify-content: flex-start;
             flex-direction: row;
             background: #FFFFFF;
-            border: 1px dotted #D9D9D9;
+            border: 2px dotted rgb(217, 217, 217);
             color: var(--Neutral-Gray9);
             padding: 0.4rem;
             margin: 0.4rem 0.4rem;
@@ -88,16 +92,24 @@ export const OptionalAnswerBlockContainer = styled.div`
             align-items: center;
             cursor : pointer;
             word-break: break-word;
+            min-height: 40px;
     }
-    & > div p 
+    & > .OptionalAnswerItemContainer p 
     {
-        width : 70%;
+        white-space : nowrap;
         margin-right : 0.5rem;
         direction: rtl
     }
      & .Prioritize
     {
         grid-template-columns : auto !important;
+    }
+    & .ant-input
+    {
+        border-radius: 2px;
+        width: 90%;
+        margin-right: 0.8rem;
+        font-family: 'IRANSANS';
     }
 `
 export const QuestionWithAnswerContainer = styled.div`
@@ -119,6 +131,7 @@ export const TextAnswerInputBox = styled.input`
     padding: 8px 12px 8px 12px;
     border-radius: 2px;
     font-family: 'IRANSans';
+    direction: rtl;
 
     &:focus
     {
@@ -313,4 +326,14 @@ export const RateContainer = styled.div`
         flex-wrap: wrap;
     }
     
+`
+export const FileQuestionContainer = styled.div`
+    text-align : left;
+    & .ant-btn
+    {
+        border-radius: 2px;
+        direction: rtl;
+        display: flex;
+        align-items: center;
+    }
 `

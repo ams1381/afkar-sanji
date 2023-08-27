@@ -81,7 +81,7 @@ const QuestionnaireFooterPart = ({ questionnaire , FolderReload }) => {
             <Icon name='statics' />
             </QuestionnaireFooterButton>
         </QuestionnaireFooterItem>
-        <QuestionnaireFooterItem>
+        <QuestionnaireFooterItem style={{ borderRight : 0 }}>
             <QuestionnaireFooterButton>
             <Icon name='pdf' />
             </QuestionnaireFooterButton>

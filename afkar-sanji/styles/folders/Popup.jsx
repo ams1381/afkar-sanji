@@ -8,6 +8,8 @@ export const AddQuestionnaireModalInput = styled.input`
     border: 1px solid var(--Neutral-Gray10);
     transition : border 0.3s;
     font-family: 'IRANSans';
+    text-align: right;
+    direction: rtl;
 
     &:focus
     {
@@ -30,6 +32,7 @@ export const ModalButtonsContainer = styled.div`
 `
 export const RemoveModalButtonsContainer = styled.div`
     display : flex;
+    margin-top: 24px;
     & button 
     {
         font-family : IRANSans;

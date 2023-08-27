@@ -1,3 +1,4 @@
+import { DefaultThanks } from '@/components/Questions/DefaultThanks';
 import QuestionComponent from '@/components/Questions/Question';
 import ThankComponent from '@/components/Questions/Thanks';
 import WelcomeComponent from '@/components/Questions/Welcome';
@@ -28,6 +29,10 @@ const ViewQuestions = () => {
          QuestionsArray.forEach((item,index) => !item ? QuestionsArray.splice(index,1) : '')
          SetQuestionsData(QuestionsArray)
          SetQuestionnaireInfo(data)
+         if(data.welcome_page)
+            SetCurrentIndex('welcome_page');
+        else
+            SetCurrentIndex(0);
      }
      if(router.query.QuestionnaireID)
      QuestionnaireRetriever();
@@ -53,10 +58,11 @@ const ViewQuestions = () => {
   }
   const PrevQuestionHandler = () => {
     if(CurrentIndex == 0)
-      SetCurrentIndex('Welcome')
+      SetCurrentIndex('welcome_page')
     else
       SetCurrentIndex(CurrentIndex - 1)
   }
+  console.log(CurrentIndex)
   return (
     <>
     <Head>
@@ -64,39 +70,87 @@ const ViewQuestions = () => {
     </Head>
     {messageContext}
     { QuestionnaireInfo ? <PreviewPage>
-    <PreviewPageHeader>
-        {/* {QuestionnaireInfo.progress_bar ? 
-        <Progress percent={Math.floor(CurrentIndex + 1/ QuestionsData.length)}  steps={1} /> : <Skeleton active />} */}
-    </PreviewPageHeader>
+   
     <PreviewPageContainer>  
+      <PreviewPageHeader>
+          {QuestionnaireInfo.progress_bar ? 
+          <Progress percent={CurrentIndex == 'Thanks' ? 100
+          : (CurrentIndex/ QuestionsData.length) * 100}  steps={QuestionsData.length} /> : ''}
+      </PreviewPageHeader>
       <PreviewQuestionsContainer>
-      { (QuestionnaireInfo.welcome_page && CurrentIndex =='Welcome') 
-      ? <WelcomeComponent WelcomeInfo={QuestionnaireInfo.welcome_page} SetCurrentIndex={SetCurrentIndex} /> : ''}
+      { (QuestionnaireInfo.welcome_page && CurrentIndex =='welcome_page') 
+      && <WelcomeComponent mobilePreview={true}
+       WelcomeInfo={QuestionnaireInfo.welcome_page} SetCurrentIndex={SetCurrentIndex} />}
 
-      { (CurrentIndex !='Welcome' && CurrentIndex !='Thanks')? !QuestionnaireInfo.show_question_in_pages ?
-       QuestionsData.map((item) => <QuestionComponent key={item.question.id} QuestionInfo={item.question} />)
-      : <QuestionComponent QuestionInfo={QuestionsData[CurrentIndex].question} /> : ''}   
+      { (CurrentIndex !='welcome_page' && CurrentIndex !='Thanks') ? !QuestionnaireInfo.show_question_in_pages ?
+       QuestionsData.map((item) => <QuestionComponent
+        key={item.question.id} QuestionInfo={item.question} />)
+      : (QuestionsData[CurrentIndex] && <QuestionComponent QuestionInfo={QuestionsData[CurrentIndex].question} /> ): ''}   
 
-      { (QuestionnaireInfo.thanks_page && CurrentIndex == 'Thanks') 
-      ? <ThankComponent ThanksInfo={QuestionnaireInfo.thanks_page} /> : ''}
+      { CurrentIndex == 'Thanks'
+      ? QuestionnaireInfo.thanks_page ? <ThankComponent ThanksInfo={QuestionnaireInfo.thanks_page} /> : 
+      <DefaultThanks /> : '' }
 
-     { ((CurrentIndex !='Welcome' && CurrentIndex !='Thanks') &&
-      QuestionnaireInfo.show_question_in_pages) ?  <ControlButtonsContainer>
-      <Button type='primary' onClick={NextQuestionHandler}
-      icon={<Icon name='WhiteArrow' style={{ transform : 'rotate(-90deg)' }}/>}>
-         { CurrentIndex == QuestionsData.length - 1 ? 'ارسال' : 'بعدی' }
-      </Button>
-      <Button type='primary' onClick={PrevQuestionHandler}
-       icon={<Icon name='WhiteArrow' style={{ transform : 'rotate(90deg)' }} />}>
-        قبلی
-      </Button>
-      </ControlButtonsContainer> : ''}
+    
       </PreviewQuestionsContainer>
+      {
+        <>
+        {
+        (QuestionnaireInfo.show_question_in_pages  &&  CurrentIndex !='Thanks') && <ControlButtonsContainer>
+          {
+            ((CurrentIndex !='welcome_page')) &&
+            <>
+            <Button type='primary'
+             icon={<Icon name='WhiteArrow' style={{ transform : 'rotate(-90deg)' }}/>}
+              onClick={NextQuestionHandler}>
+               { CurrentIndex == QuestionsData.length - 1 ? 'ارسال' : 'بعدی' }
+            </Button> 
+           { (CurrentIndex == 0 && !QuestionnaireInfo.welcome_page || !QuestionnaireInfo.previous_button ) ? '' 
+           : <Button type='primary' onClick={PrevQuestionHandler} 
+            icon={<Icon name='WhiteArrow' style={{ transform : 'rotate(90deg)' }} />}>
+              قبلی
+            </Button> }
+            </>
+          }
+        </ControlButtonsContainer>}
+
+        {
+        (CurrentIndex) == 'Thanks' && <ControlButtonsContainer style={{ justifyContent : 'center' }}>
+        <>
+            <Button type='primary'>
+            ساحته شده با ماح
+          </Button>
+            </>
+        </ControlButtonsContainer> 
+        }
+        
+        </>
+    //   QuestionnaireInfo.show_question_in_pages) ?  <ControlButtonsContainer>
+    //   ((CurrentIndex !='welcome_page' && CurrentIndex !='Thanks'))   <>
+    //         <Button type='primary' onClick={NextQuestionHandler}
+    //       icon={<Icon name='WhiteArrow' style={{ transform : 'rotate(-90deg)' }}/>}>
+    //         { CurrentIndex == QuestionsData.length - 1 ? 'ارسال' : 'بعدی' }
+    //       </Button>
+    //       { (CurrentIndex == 0 && !QuestionnaireInfo.welcome_page) ? '' : QuestionnaireInfo.previous_button ?
+    //       <Button type='primary' onClick={PrevQuestionHandler}
+    //       icon={<Icon name='WhiteArrow' style={{ transform : 'rotate(90deg)' }} />}>
+    //         قبلی
+    //       </Button> : ''}
+    //         </>
+    //   </ControlButtonsContainer> : CurrentIndex == 'Thanks' ?
+    //   <ControlButtonsContainer style={{ justifyContent : 'center' }}>
+    //   <>
+    //       <Button type='primary' >
+    //       ساحته شده با ماح
+    //     </Button>
+    //       </>
+    // </ControlButtonsContainer>
+    //   : ''
+      }
     </PreviewPageContainer>
     </PreviewPage> : <>Loading</>}
    
     </>
-    
   )
 }
 export default ViewQuestions;

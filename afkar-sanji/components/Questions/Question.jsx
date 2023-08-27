@@ -17,6 +17,7 @@ import { Link } from './Link';
 import Skeleton from 'react-loading-skeleton';
 import { Image } from 'antd';
 import { detectFileFormat } from '@/utilities/FormData';
+import persianNumberMin from 'persian-number';
 
 const QuestionComponentBodyProvider = (QuestionType,QuestionInfo) => {
   switch(QuestionType)
@@ -43,23 +44,28 @@ const QuestionComponentBodyProvider = (QuestionType,QuestionInfo) => {
             return <InputAnswer InputPlaceholder={QuestionInfo.answer_template} QuestionInfo={QuestionInfo}/>
   }
 }
-const QuestionComponent = ({ QuestionInfo , ChildQuestion }) => {
+const QuestionComponent = ({ QuestionInfo , ChildQuestion , mobilePreview }) => {
   const QuestionBodyComponent = QuestionComponentBodyProvider(QuestionInfo.question_type,QuestionInfo);
   const regex = /(<([^>]+)>)/gi;
 
   return (
     QuestionInfo.question_type == 'welcome_page' ? <WelcomeComponent WelcomeInfo={QuestionInfo} /> 
-    : QuestionInfo.question_type != 'thanks_page' ? <QuestionComponentContainer
-    childq={ChildQuestion ? 'true' : null}>
-        <div className='question_header'>
+    : QuestionInfo.question_type != 'thanks_page' ? <QuestionComponentContainer className='question_component'
+    childq={ChildQuestion ? 'true' : null} mobilePreview={mobilePreview}>
+        <div className='question_header' >
         <QuestionTitle>
             <p>{<>{(QuestionInfo.is_required && ' * ')} {QuestionInfo.title?.replace(regex,"")} </>}</p>
             { !QuestionInfo.show_number ? <span className='question_number'>
-            { QuestionInfo.placement }
+            { '-' + (persianNumberMin.convertEnToPe(QuestionInfo.placement)) }
             </span> : '' }
         </QuestionTitle>
-       
-          { QuestionInfo.media ?
+     
+        <QuestionDescription>
+            <p>{QuestionInfo.description ? QuestionInfo.description.replace(regex,"") :
+             QuestionInfo.question_text ? QuestionInfo.question_text.replace(regex,"") : ''}</p>
+        </QuestionDescription>
+
+        { QuestionInfo.media ?
             (typeof QuestionInfo.media == 'object') ?
             <div className='uploaded_file_preview' style={{ margin : '1.5rem 0' }}>
                 { detectFileFormat(QuestionInfo.media.name) == 'Picture' ? 
@@ -76,11 +82,6 @@ const QuestionComponent = ({ QuestionInfo , ChildQuestion }) => {
               </Player>}
             </div>  : ''
             }
-     
-        <QuestionDescription>
-            <p>{QuestionInfo.description ? QuestionInfo.description.replace(regex,"") :
-             QuestionInfo.question_text ? QuestionInfo.question_text.replace(regex,"") : ''}</p>
-        </QuestionDescription>
         </div>
         {(QuestionInfo.question_type == 'group' && QuestionInfo.child_questions)? 
          QuestionInfo.child_questions.map(item => 

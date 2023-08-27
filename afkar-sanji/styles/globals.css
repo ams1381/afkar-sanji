@@ -11,10 +11,15 @@
   padding: 0;
   margin: 0;
   -webkit-tap-highlight-color : transparent;
+  font-family: IRANSans;
 }
 html
 {
   scroll-behavior: smooth;
+}
+body 
+{
+  background: var(--page-bg);
 }
 :root
 { 
@@ -26,11 +31,12 @@ html
   --Neutral-Gray10 : #3D3D3D;
   --SideBar-header-border : #0000000F;
   --Error-color : #FF4D4F;
-
-  
+  --page-bg : #FCFCFC;
+  --surface : #FEFEFE;
   --popover-hover-bg : #FAFAFA;
   --questionnaire-edit-item-bg : #F5F5F5;
 
+  
     /* Login Page */
   --login-input-text-color : #656565;
   --login-input-border-color : #7ACCFF;
@@ -68,4 +74,20 @@ html::-webkit-scrollbar-thumb
 .ant-btn
 {
   font-family: IRANSans;
+}
+@media screen and (max-width : 500px)
+{
+    .ant-picker-datetime-panel { 
+        flex-direction: column !important;
+    } 
+    .ant-picker-range-wrapper.ant-picker-date-range-wrapper
+    {
+        max-width : none !important;
+    }
+    .ant-picker-time-panel .ant-picker-time-panel-column 
+    {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 }
