@@ -30,6 +30,7 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
   const [ SearchResult , SetSearchResult ] = useState([]);
   const [ QuestionToPreview , SetQuestionToPreview ] = useState(null);
   const [ QuestionsReload , SetQuestionsReloaded ] = useState(false);
+  const [ActiveQuestionId, setActiveQuestionId] = useState(null);
   const [ SavedMessage , contextHolder] = message.useMessage();
   // const [ QuestionsToPreview ]
   const regex = /(<([^>]+)>)/gi;
@@ -62,6 +63,7 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
      }
   }
   const SearchSelectHandler = (QuestionID) => {
+    setActiveQuestionId(QuestionID);
     document.querySelector(`.QuestionItem${QuestionID}`)?.scrollIntoView();
   }
   const onDragEnd = async (result) =>  {
@@ -146,7 +148,12 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
       <QuestionDesignBox id='characters' className=''>
         { (AllQuestion && NonQuestions) ? <div className='QuestionDesignRightContainer' >
                 {(Questionnaire && NonQuestions.length) ? (NonQuestions[0] && NonQuestions[0].question) ?
-                <QuestionItem IsQuestion={false} UUID={Questionnaire.uuid} question={NonQuestions[0].question}/> :
+                <QuestionItem 
+                IsQuestion={false}
+                UUID={Questionnaire.uuid}
+                activeQuestionId={ActiveQuestionId}
+                setActiveQuestion={setActiveQuestionId}
+                question={NonQuestions[0].question}/> :
                  <AddNonQuestionItem onClick={AddWelcomeHandler}>
                   <p>افزودن خوش آمد گویی</p>
                   </AddNonQuestionItem> : 
@@ -162,8 +169,15 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                     ( item.question)? <Draggable  key={item.question.id} draggableId={item.question.id.toString()} index={index}> 
                      {(provided, snapshot) => <div ref={provided.innerRef} {...provided.draggableProps}
                      {...provided.dragHandleProps} >
-                      <QuestionItem  IsQuestion={true} provided={provided} 
-                       UUID={Questionnaire.uuid} key={item.question.id} question={item.question}/>
+                      <QuestionItem  
+                        IsQuestion={true}
+                        provided={provided} 
+                        UUID={Questionnaire.uuid}
+                        key={item.question.id} 
+                        question={item.question}
+                        activeQuestionId={ActiveQuestionId}
+                        setActiveQuestion={setActiveQuestionId}
+                        />
                       </div>}
                        </Draggable> : '')}
                   </div>  } 
@@ -178,8 +192,13 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
 
                 </AddNonQuestionItem> : ''}
                 {(Questionnaire && NonQuestions.length ) ?
-                 (NonQuestions[1] && NonQuestions[1].question) ? <QuestionItem  IsQuestion={false} UUID={Questionnaire.uuid} 
-                 question={NonQuestions[1].question} /> : <AddNonQuestionItem onClick={AddThanksHandler}>
+                 (NonQuestions[1] && NonQuestions[1].question) ? 
+                 <QuestionItem 
+                  activeQuestionId={ActiveQuestionId}
+                  setActiveQuestion={setActiveQuestionId}
+                  IsQuestion={false} 
+                  UUID={Questionnaire.uuid} 
+                  question={NonQuestions[1].question} /> : <AddNonQuestionItem onClick={AddThanksHandler}>
                   <p>افزودن صفحه تشکر</p>
                  </AddNonQuestionItem>
                  :  <AddNonQuestionItem style={{ border : 'none' , marginTop : 70 }}>

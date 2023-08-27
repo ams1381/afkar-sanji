@@ -154,6 +154,12 @@ export const InputBox = styled.div`
     justify-content: space-between;
     border: 2px solid ${p => p.focused ? 'var(--login-input-default-border)' : '#7ACCFF'} ;
     transition: 0.3s border;
+
+    .resend_button_container .ant-btn-loading
+    {
+        box-shadow : none !important;
+        border: none !important;
+    }
 `
 export const FormChildDiv = styled.div`
     color: var(--form-body-header-color);

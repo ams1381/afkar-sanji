@@ -9,6 +9,7 @@ import { AuthContext } from '@/utilities/AuthContext';
 import { Button , ConfigProvider , message } from 'antd';
 import { themeContext } from '@/utilities/ThemeContext';
 import { AuthValidator } from '@/utilities/AuthValidators';
+import persianNumberMin from 'persian-number';
 
 export const Login_form = ({ setLoggedIn }) => {
   const [ loadingState , setLoading ] = useState(false);
@@ -27,7 +28,8 @@ export const Login_form = ({ setLoggedIn }) => {
     setLoading(true)
     try 
     {
-      let form_input = LoginContext.Login_Context_value.FormType == 'PhoneNumber' ? LoginContext.PhoneNumber : value;
+      let form_input = LoginContext.Login_Context_value.FormType == 'PhoneNumber' ? 
+      persianNumberMin.convertPeToEn(LoginContext.PhoneNumber) : persianNumberMin.convertPeToEn(value);
       if(AuthValidator(form_input,LoginContext.Login_Context_value.FormType))
         throw AuthValidator(form_input,LoginContext.Login_Context_value.FormType)
       

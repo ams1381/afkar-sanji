@@ -23,7 +23,7 @@ import { ChangeQuestionType } from '@/utilities/QuestionStore';
 import { form_data_convertor } from '@/utilities/FormData';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
-export const QuestionItem = ({ provided , IsQuestion , question , UUID , parentPlacement , GroupID }) => {
+export const QuestionItem = ({ activeQuestionId, setActiveQuestion , IsQuestion , question , UUID , parentPlacement , GroupID }) => {
   const [ QuestionRootOpenState , SetQuestionRootOpenState ] = useState(false);
   const [ QuestionActionState , SetQuestionActionState ] = useState('edit');
   const [ DeleteQuestionState , SetDeleteQuestionState ] = useState(false);
@@ -34,8 +34,9 @@ export const QuestionItem = ({ provided , IsQuestion , question , UUID , parentP
   const QuestionDispatcher = useDispatch();
   const QuestionsArray = useSelector(s => s.reducer.data)
   const regex = /(<([^>]+)>)/gi;
-  // const QuestionDragItem = useRef(null)
+
   const QuestionDataDispatcher = useDispatch();
+  
   let questionsData;
   useEffect(() => {
     questionsData ? ChangeQuestionTypeState(questionsData.question.question_type) : ''
@@ -44,6 +45,12 @@ export const QuestionItem = ({ provided , IsQuestion , question , UUID , parentP
         SetQuestionActionState('edit')
     })
   },[questionsData , QuestionsReload])
+  useEffect(() => {
+    if(activeQuestionId == question.id)
+      SetQuestionRootOpenState(true)
+    else
+      SetQuestionRootOpenState(false)
+  },[activeQuestionId])
   if(GroupID && question.group)
   {
     
@@ -94,6 +101,7 @@ export const QuestionItem = ({ provided , IsQuestion , question , UUID , parentP
     QuestionDispatcher(QuestionSorter());
   }
   const QuestionOpenHandler = () => {
+    setActiveQuestion(question.id)
     SetQuestionRootOpenState(!QuestionRootOpenState);
     // QuestionnaireReloader(true);
   }
@@ -124,7 +132,6 @@ export const QuestionItem = ({ provided , IsQuestion , question , UUID , parentP
     try
     { 
       SetSaveButtonLoadingState(true);
-      console.log([...form_data_convertor(questionsData.question)])
       if(questionsData.question.url_prefix)
           await axiosInstance.patch(`/question-api/questionnaires/${UUID}/${questionsData.question.url_prefix}/${questionsData.question.id}/`,form_data_convertor(QDataInstance.question))
       else
@@ -311,7 +318,5 @@ export const QuestionItem = ({ provided , IsQuestion , question , UUID , parentP
               ChildQuestion={questionsData.question.group ? 'true' : null} /> : ''}
         </div> : ''}
     </QuestionItemRow> : ''
-   
-    
   )
 }

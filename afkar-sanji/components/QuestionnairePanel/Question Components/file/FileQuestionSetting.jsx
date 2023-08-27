@@ -8,7 +8,6 @@ import { ChangeUploadSizeHandler } from '@/utilities/QuestionStore'
 export const FileQuestionSetting = ({ QuestionInfo }) => {
   const dispatcher = useDispatch();
   const ChangeFileSizeHandler = (e) => {
-    console.log(e)
     dispatcher(ChangeUploadSizeHandler({ QuestionID : QuestionInfo.id , uploadSize : e }))
   }
   return (
@@ -17,7 +16,7 @@ export const FileQuestionSetting = ({ QuestionInfo }) => {
         <p>حجم فایل</p>
       <div className='file_size_selector'>
           <div className='file_size_input'>
-              <InputNumber min={0} onChange={ChangeFileSizeHandler}/>
+              <InputNumber min={0} onChange={ChangeFileSizeHandler} value={QuestionInfo.max_volume}/>
           </div>
           <FileSizeTypeSelector>
             <input type='radio' name='sizeType' id='KBSize' defaultChecked={QuestionInfo.volume_unit == 'kb'} />
@@ -31,7 +30,6 @@ export const FileQuestionSetting = ({ QuestionInfo }) => {
            </FileSizeTypeSelector>
         </div>
       </FileSizeContainer>
-        
         <CommonSetting QuestionInfo={QuestionInfo}/>
         
     </>

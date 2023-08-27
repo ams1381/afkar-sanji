@@ -23,7 +23,6 @@ export const QuestionFileUploadContainer = styled.div`
     }
     .ant-upload-list-item-name
     {
-        overflow : auto !important;
         word-break: break-all !important;
         white-space: initial !important;
         text-overflow: clip !important;
@@ -40,6 +39,10 @@ export const QuestionFileUploadContainer = styled.div`
     .file_upload_title
     {
         white-space : nowrap;
+    }
+    .ant-upload.ant-upload-select
+    {
+        display : ${p => p.fileuploaded ? 'none' : 'block'}
     }
 `
 export const QuestionDescriptionContainer = styled.div`

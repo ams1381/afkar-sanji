@@ -7,6 +7,7 @@ import { message } from 'antd';
 import Head from 'next/head';
 import { useLocalStorage } from '@/utilities/useLocalStorage';
 import ProgressBarLoading from '@/styles/ProgressBarLoading';
+import persianNumberMin from 'persian-number';
 
 export const LoginPageContext = React.createContext();
 
@@ -23,7 +24,9 @@ const AuthMainPage = () => {
     FormType : 'PhoneNumber'
   }
   Auth.Login_Function = async () => {
-    const number_phone_res = await axiosInstance.post('/user-api/auth/gateway/' , { phone_number : Auth.PhoneNumber });
+    const number_phone_res = await axiosInstance.post('/user-api/auth/gateway/' , {
+       phone_number : persianNumberMin.convertPeToEn(Auth.PhoneNumber)
+       });
     if(number_phone_res.status == 201)
     {
       setItem('phoneNumber',Auth.PhoneNumber)

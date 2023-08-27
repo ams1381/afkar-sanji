@@ -6,11 +6,13 @@ import { useLocalStorage } from '@/utilities/useLocalStorage';
 import { message } from 'antd';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import persianNumberMin from 'persian-number';
 import React, { useContext } from 'react'
 
 
 const OTPSms = () => {
   const [LoginMessage, contextHolder] = message.useMessage();
+
   const { setItem } = useLocalStorage();
   const router = useRouter();
   const Auth = useContext(AuthContext);
@@ -22,7 +24,10 @@ const OTPSms = () => {
   }
 
   Auth.Login_Function = async (value) => {
-    const otp_res = await axiosInstance.post('/user-api/auth/verify-otp/' , { 'token' : value , 'phone_number' : Auth.PhoneNumber });
+    const otp_res = await axiosInstance.post('/user-api/auth/verify-otp/' , {
+       'token' : persianNumberMin.convertPeToEn(value) ,
+       'phone_number' : persianNumberMin.convertPeToEn(Auth.PhoneNumber) }
+       );
     if(otp_res.status == 201) 
     {
       LoginMessage.success({

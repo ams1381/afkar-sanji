@@ -124,7 +124,7 @@ const QuestionSlice =  createSlice({
         },
         ChangeNameHandler : (state, action) => {
             const { QuestionID , NewTitle , QuestionChanged} = action.payload;
-            console.log(state.data.find(item => item.question.id == QuestionID))
+
             QuestionChanged ? 
             state.data.find(item => item.question.id == QuestionID) ? 
             state.data.find(item => item.question.id == QuestionID).question.title = NewTitle

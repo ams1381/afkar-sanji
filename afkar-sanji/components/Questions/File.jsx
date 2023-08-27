@@ -7,9 +7,9 @@ export const FileQuestionComponent = ({ QuestionInfo }) => {
   return (
     <FileQuestionContainer>
         <Upload
-          action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
           listType="picture"
-          previewFile={QuestionInfo.media ? QuestionInfo.media : ''}
+          multiple={false}
+          maxCount={1}
           className="upload-list-inline"
           style={{ fontFamily : 'IRANSans' }}>
             <Button  icon={<Icon name='upload' style={{ width : 12 }} />}>کلیک برای آپلود</Button>
