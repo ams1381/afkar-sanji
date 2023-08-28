@@ -8,6 +8,7 @@ export const QuestionFileUploadContainer = styled.div`
     color: var(--Neutral-Gray6);
     margin: 0.7rem auto;
     flex-direction: row-reverse;
+    flex-wrap: wrap;
 
     & button 
     {

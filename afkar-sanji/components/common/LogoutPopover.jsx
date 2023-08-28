@@ -12,7 +12,6 @@ const AvatarComponent = () => {
     const router = useRouter();
     console.log('test')
     const LogoutHandler = () => {
-        
         typeof window !== 'undefined' ?  router.push('/auth') : ''
     }
   return (

@@ -20,6 +20,7 @@ import { QuestionnaireContainer , MainContainer ,
 import AddQuestionnairePopUp from '@/components/Folders/AddQuestionnairePopUp';
 import ProgressBarLoading from '@/styles/ProgressBarLoading';
 import { useLocalStorage } from '@/utilities/useLocalStorage';
+import { handleInputWidth } from '@/utilities/RenameFunctions';
 
 export default function Home() {
   const router = useRouter();
@@ -43,8 +44,6 @@ export default function Home() {
     const { getItem , setItem } = useLocalStorage();
     let scroll_direction;
     const getData = async () => {
-      // if(getItem('cookie'))
-      // {
         try
         {
           let { data } = await axiosInstance.get('/user-api/folders/');
@@ -67,7 +66,6 @@ export default function Home() {
             }
           })
          }
-      // } 
     }
     window.addEventListener('scroll', function(e){
         scroll_direction = (document.body.getBoundingClientRect()).top > scroll_position ? 'up' : 'down';
@@ -80,17 +78,19 @@ export default function Home() {
     });
     getData();
   },[FolderReload])
+  useEffect(() => {
+    handleInputWidth(FolderNameInput,FolderName);
+  },[FolderNameInput.current , SelectedFolder])
 
-  FolderNameInput.current ? FolderNameInput.current.style.width = ((FolderNameInput.current.value.length * 8) + 20) + 'px' : '';
   const folderNameChangeHandler = (e) => {
+    handleInputWidth(FolderNameInput,FolderName);
     SetFolderName(e.target.value);
-    FolderNameInput.current ? FolderNameInput.current.style.width = ((FolderNameInput.current.value.length * 7)+ 8) + 'px' : ''
   }
   const folderRenameConfirm = async () => {
     try 
     {
       await axiosInstance.patch(`/user-api/folders/${folders[SelectedFolder].id}/`, { 'name' : FolderName });
-      
+      handleInputWidth(nameRef,QuestionnaireName);
     }
     catch(err)
     {
@@ -119,7 +119,7 @@ export default function Home() {
       <SideBar folders={folders} SelectedFolder={SelectedFolder} isopen={SideBarOpen} ReadyToCreate={readyToCreate}
        setReadyToCreate={setReadyToCreate} FolderReload={() => SetFolderReload(true)}  ChangeFolder={SelectFolder}
         SetSideBar={() => setOpen(!SideBarOpen)} ChangeFolderName={SetFolderName}/>
-      <ScreenMask shown={SideBarOpen} onClick={() => setOpen(false)}/>
+      {/* <ScreenMask shown={SideBarOpen} onClick={() => setOpen(false)}/> */}
       <Popover
             content={<AddPopoverContent SelectedFolderNumber={SelectedFolder} 
             folders={folders} FolderReload={() => SetFolderReload(true)} 
@@ -154,7 +154,8 @@ export default function Home() {
                     {ChangeFolderName ? <Icon name='GrayCheck' /> : <Icon name='Menu' /> }
                   </FolderPopoverToggle>
             </Popover>
-              <QuestionnaireNameInput type='text' ref={FolderNameInput} value={FolderName} onChange={folderNameChangeHandler}
+              <QuestionnaireNameInput type='text' 
+              ref={FolderNameInput} value={FolderName} onChange={folderNameChangeHandler}
                disabled={!ChangeFolderName} /> 
           </FolderEditContainer>
       <QuestionnaireContainer>        

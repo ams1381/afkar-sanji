@@ -132,8 +132,8 @@ export const QuestionDesignItem = styled.div`
     border-radius: 2px;
     margin: 0.6rem 0;
     background: var(--surface);
-    width: ${p => p.childq ? '95%' : '100%'};
-    margin-top : ${p => p.childq ? '1rem' : '0'};
+    width: ${p => p.childq ? '95%' : '100%'} !important;
+    // margin-top : ${p => p.childq ? '1rem' : '0'};
     transition : border 0.3s;
     .question_bold_info 
     {
@@ -158,7 +158,7 @@ export const QuestionDesignItem = styled.div`
     {
         & .design_container
         {
-            width : 100%;
+            width: ${p => p.childq ? '95%' : '100%'} !important;
         }
     }
 
@@ -166,7 +166,7 @@ export const QuestionDesignItem = styled.div`
 export const QuestionItemRow = styled.div`
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     flex-direction: row-reverse;
     align-items: flex-start;
 
@@ -177,7 +177,7 @@ export const QuestionItemRow = styled.div`
    
     @media screen and (max-width : 768px)
     {
-        & .question_design_item , .design_container
+        & .question_design_item 
         {
             width : 100% !important;
             overflow : hidden;
@@ -185,6 +185,10 @@ export const QuestionItemRow = styled.div`
         & .question_preview
         {
             display : none;
+        }
+        & .design_container
+        {
+            width: ${p => p.childq ? '95%' : '100%'} !important;
         }
     }
 `
@@ -206,6 +210,10 @@ export const QuestionItemSurface = styled.div`
     {
         width : 100%;
     }
+    .question_item_info p 
+    {
+        color : #B8B8B8;
+    }
 `
 export const DropDownQuestionButton = styled.button`
     background: none;
@@ -225,6 +233,7 @@ export const QuestionItemButtonContainer = styled.div`
     width: fit-content;
     display: flex;
     justify-content: space-between;
+    gap: 15px;
 
     & button 
     {
@@ -234,7 +243,9 @@ export const QuestionItemButtonContainer = styled.div`
         display: flex;
         align-items: center;
         cursor: pointer;
-        margin-right: 1.5rem;
+        width: 34px;
+        height: 34px;
+        justify-content: center;
     }
     @media screen and (max-width : 480px)
     {
@@ -276,7 +287,7 @@ export const QuestionItemActionButton = styled.button`
     background: none;
     border: none;
     border-bottom : ${p => p.selected ? '2px solid var(--primary-color)' : 'none'};
-    color : ${p => p.selected ? 'var(--primary-color)' : 'var(--Neutral-Gray9)'};
+    color : ${p => p.selected ? 'var(--primary-color)' : '#8F8F8F'};
     flex-direction: row-reverse;
     font: 12px IRANSans;
     height: 40px;
@@ -428,7 +439,7 @@ export const AddNonQuestionItem = styled.div`
     align-items: center;
     justify-content: center;
     color: var(--primary-color);
-    margin: 0.6rem 0;
+    // margin: 0.6rem 0;
     cursor: pointer;
     transition : 0.3s;
     border-radius : 2px;

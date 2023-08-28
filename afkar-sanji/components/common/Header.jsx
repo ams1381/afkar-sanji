@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { HeaderComponent, UserAvatarLogout , 
+import { HeaderComponent, UserAvatarLogout , HeaderContainer ,
     SideBarToggleButton , LogoutPopOverInfo, LogoutPopOverLayout} from '@/styles/common';
 import { Button, ConfigProvider, Popover } from 'antd';
 import { AuthContext } from '@/utilities/AuthContext';
@@ -22,11 +22,13 @@ export const Header = ({SetSideBar , goToFolders}) => {
         goToFolders ? router.back() : SetSideBar();
     }
   return (
+    <HeaderContainer>
     <HeaderComponent>
         <ConfigProvider theme={themeContext}>
             <Popover
             content={AvatarComponent}
             trigger="click"
+            className='LogoutPopover'
             open={logoutPopOver}
             overlayInnerStyle={{ marginLeft : 15}}
             onOpenChange={() => switchPopover(false)}
@@ -42,5 +44,6 @@ export const Header = ({SetSideBar , goToFolders}) => {
         <Icon name='Folder' style={{ width : 15 }} />
        </SideBarToggleButton>
     </HeaderComponent>
+    </HeaderContainer>
   )
 }

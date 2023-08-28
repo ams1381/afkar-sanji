@@ -21,6 +21,10 @@ body
 {
   background: var(--page-bg);
 }
+body::-webkit-scrollbar
+{
+  width: 0;
+}
 :root
 { 
   --primary-color : #5360ED;
@@ -31,7 +35,7 @@ body
   --Neutral-Gray10 : #3D3D3D;
   --SideBar-header-border : #0000000F;
   --Error-color : #FF4D4F;
-  --page-bg : #FCFCFC;
+  --page-bg : #F5F5F5;
   --surface : #FEFEFE;
   --popover-hover-bg : #FAFAFA;
   --questionnaire-edit-item-bg : #F5F5F5;
@@ -52,6 +56,10 @@ html::-webkit-scrollbar-thumb
   background: rgba(0, 0, 0, 0.5);
   border-radius: 9px;
   width: 10px;
+}
+.ant-drawer-header , .ant-drawer-body
+{
+  padding: 0 !important;
 }
 .type_selector .ant-select-dropdown
 {

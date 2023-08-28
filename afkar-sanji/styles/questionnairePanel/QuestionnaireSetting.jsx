@@ -19,9 +19,13 @@ export const QuestionnaireDatePickerContainer  = styled.div`
  
 `
 export const QuestionnaireSettingContainer = styled.div`
-    display : flex;
-    flex-direction : column;
-    font : 14px IRANSans;
+    display: flex;
+    flex-direction: column;
+    background: #FEFEFE;
+    font: 14px IRANSans;
+    padding: 18px;
+    border-radius: 2px;
+    border: 1px solid #B8B8B8;
 
     .questionnaire_setting_footer
     {

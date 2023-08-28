@@ -96,7 +96,6 @@ export const OptionalAnswerBlockContainer = styled.div`
     }
     & > .OptionalAnswerItemContainer p 
     {
-        white-space : nowrap;
         margin-right : 0.5rem;
         direction: rtl
     }

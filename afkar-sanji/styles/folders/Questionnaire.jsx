@@ -25,6 +25,7 @@ export const QuestionnaireDiv = styled.div`
     font-family: 'IRANSans';
     width: 420px;
     direction: ltr;
+    background: var(--surface);
 
     @media screen and (max-width : 680px)
     {
@@ -79,23 +80,19 @@ export const QuestionnaireFooter = styled.div`
     justify-content: space-around;
 `
 export const QuestionnaireNameInput = styled.input`
-    text-align: right;
     font-family: 'IRANSANS';
     background: none;
     border: none;
     color: var(--Neutral-Gray9);
     font-weight: 600;
     font-size: 1rem;
-    transition : 0.3s;
-    // margin-left: 0.4rem;
     outline: none;
-    // max-width: 264px;
     min-width:50px!important;
-    max-width: 280px;
+    max-width: 259px;
     transition: width 0.25s;
-    padding-left: 4px;
-    box-sizing: content-box;
+    box-sizing: border-box;
     text-align: right;
+    margin-left: 0.8rem;
     direction: rtl;
 
     &::selection 

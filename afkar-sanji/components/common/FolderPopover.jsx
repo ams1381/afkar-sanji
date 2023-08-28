@@ -5,6 +5,7 @@ import { axiosInstance } from '@/utilities/axios';
 import { Button, ConfigProvider, Modal, message } from 'antd'
 import RemoveFolderPopUpContent from '../Folders/RemoveFolderPopUp';
 import RemovePopup from './RemovePopup';
+import { handleInputWidth } from '@/utilities/RenameFunctions';
 
 const FolderPopoverContent = ({ FolderReload , RenameInput , RenameFolderState , SelectedFolderNumber , closeEditPopover, Folders , SelectFolder }) => {
   const [ deleteFolderState , setDeleteFolderState ] = useState(false);
@@ -16,10 +17,12 @@ const FolderPopoverContent = ({ FolderReload , RenameInput , RenameFolderState ,
       SelectFolder(0);
       FolderReload();
       closeEditPopover(); 
+      handleInputWidth();
       setDeleteFolderState(false);
     }
     catch(err)
     {
+      handleInputWidth();
       MessageApi.error({
         content : Object.values(err.response.data)[0],
         duration : 4,
@@ -42,6 +45,7 @@ const FolderPopoverContent = ({ FolderReload , RenameInput , RenameFolderState ,
             RenameFolderState(true);
             setTimeout(()=> {
               RenameInput.current.select();
+              RenameInput.current.focus();
             },100)
             closeEditPopover()
             }}>

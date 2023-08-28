@@ -6,7 +6,7 @@ import { Icon } from '@/styles/icons';
 import { LoadingOutlined } from '@ant-design/icons';
 import { axiosInstance } from '@/utilities/axios';
 import { useLocalStorage } from '@/utilities/useLocalStorage';
-import { Skeleton, Spin } from 'antd';
+import { Drawer, Skeleton, Spin } from 'antd';
 import PN from "persian-number";
 import React, { useEffect, useRef, useState } from 'react'
 
@@ -61,21 +61,28 @@ const SideBar = ({ isopen , SetSideBar , folders , SelectedFolder  , ReadyToCrea
         }
     }
   return (
-    <SideBarContainer open={isopen}>
-        <SideBarHeader>
-            <div className="sideBar_add_folder">
-        <SideBarToggleButton onClick={() => SetAddFolderState(!AddFolderState)}>
-            <p>پوشه جدید</p>
-            <Icon name='NewFolder' style={{ width : 15 }}/>
-        </SideBarToggleButton>
-                </div>
-                <SideBarTitle>
-                    <p>پوشه‌ها</p>
-                    <button className="close_sideBar" onClick={SetSideBar}>
-                    <Icon name='GrayClose' style={{ width : 13 }}/>
-                </button>
-                </SideBarTitle>
-        </SideBarHeader>
+    <div className='ams'>
+    <Drawer
+     open={isopen} 
+     closeIcon={null}
+     placement='left'
+      closable={false}
+      title={<SideBarHeader>
+        <div className="sideBar_add_folder">
+    <SideBarToggleButton onClick={() => SetAddFolderState(!AddFolderState)}>
+        <p>پوشه جدید</p>
+        <Icon name='NewFolder' style={{ width : 15 }}/>
+    </SideBarToggleButton>
+            </div>
+            <SideBarTitle>
+                <p>پوشه‌ها</p>
+                <button className="close_sideBar" onClick={SetSideBar}>
+                <Icon name='GrayClose' style={{ width : 13 }}/>
+            </button>
+            </SideBarTitle>
+    </SideBarHeader>}
+       onClose={SetSideBar}>
+        
         {
             (ReadyToCreate || AddFolderState) ? <SideBarInputBox>
             <p>نام پوشه را وارد کنید</p>
@@ -119,7 +126,8 @@ const SideBar = ({ isopen , SetSideBar , folders , SelectedFolder  , ReadyToCrea
             </SideBarFolderItem>) : <Skeleton />
             }
         </div> 
-    </SideBarContainer>
+    </Drawer>
+    </div>
   )
 }
 export default SideBar;

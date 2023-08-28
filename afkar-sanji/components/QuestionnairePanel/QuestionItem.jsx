@@ -16,16 +16,17 @@ import QuestionDescription from './Question Components/Common/Description';
 import QuestionComponent from '../Questions/Question';
 import FileUpload from './Question Components/Common/FileUpload';
 import { axiosInstance } from '@/utilities/axios';
-import { AddQuestion, ChangeNameHandler, DeleteNonQuestionHandler, DeleteQuestionHandler, DuplicateQuestionHandler, QuestionSorter, RemoveFileHandler, finalizer } from '@/utilities/QuestionStore';
+import { AddQuestion, ChangeNameHandler, ChildQuestionReorder, DeleteNonQuestionHandler, DeleteQuestionHandler, DuplicateQuestionHandler, QuestionSorter, RemoveFileHandler, finalizer } from '@/utilities/QuestionStore';
 import { SettingSectionProvider } from './Question Components/SettingSectionProvider';
 import { WritingSectionProvider } from './Question Components/WritingSectionProvider';
 import { ChangeQuestionType } from '@/utilities/QuestionStore';
 import { form_data_convertor } from '@/utilities/FormData';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable ,  Draggable } from '@hello-pangea/dnd';
 
 export const QuestionItem = ({ activeQuestionId, setActiveQuestion , IsQuestion , question , UUID , parentPlacement , GroupID }) => {
   const [ QuestionRootOpenState , SetQuestionRootOpenState ] = useState(false);
   const [ QuestionActionState , SetQuestionActionState ] = useState('edit');
+  const [nestedQuestions, setNestedQuestions] = useState(question.child_questions);
   const [ DeleteQuestionState , SetDeleteQuestionState ] = useState(false);
   const [ QuestionTypeState , ChangeQuestionTypeState ] = useState(question.question_type);
   const [ SaveButtonLoadingState , SetSaveButtonLoadingState ] = useState(false);
@@ -64,7 +65,6 @@ export const QuestionItem = ({ activeQuestionId, setActiveQuestion , IsQuestion 
     questionsData = useSelector(s => s.reducer.data.find(question_item => (question_item.question && question_item.question.id == question.id)))
    :
     questionsData = useSelector(s => s.reducer.nonQuestionData.find(nonquestion_item => (nonquestion_item.question && nonquestion_item.question.id == question.id)))
-    // return
   } 
   
   
@@ -163,20 +163,21 @@ export const QuestionItem = ({ activeQuestionId, setActiveQuestion , IsQuestion 
       SetSaveButtonLoadingState(true);
       if(questionsData.question.url_prefix)
       {
-        await axiosInstance.post(`/question-api/questionnaires/${UUID}/${questionsData.question.url_prefix}/`,form_data_convertor(questionsData.question));
-        QuestionDataDispatcher(finalizer({ isQuestion :  true , QuestionID : questionsData.question.id }))
+       let { data }  = await axiosInstance.post(`/question-api/questionnaires/${UUID}/${questionsData.question.url_prefix}/`,form_data_convertor(questionsData.question));
+        QuestionDataDispatcher(finalizer({ isQuestion :  true , QuestionID : questionsData.question.id , ResponseID : data.id  }))
       }
       else
       {
-          questionsData.question.question_type == 'welcome_page' ? axiosInstance.post(`/question-api/questionnaires/${UUID}/welcome-pages/`,form_data_convertor(questionsData.question)) 
+        let { data } = questionsData.question.question_type == 'welcome_page' ? axiosInstance.post(`/question-api/questionnaires/${UUID}/welcome-pages/`,form_data_convertor(questionsData.question)) 
         : axiosInstance.post(`/question-api/questionnaires/${UUID}/thanks-pages/`,form_data_convertor(questionsData.question))
         
-        QuestionDataDispatcher(finalizer({ isQuestion :  false , QuestionID : questionsData.question.id }))
+        QuestionDataDispatcher(finalizer({ isQuestion :  false , QuestionID : questionsData.question.id , ResponseID : data.id }))
       }
     }
     catch(err)
     {
       console.log(err)
+      if(err.response)
       SavedMessage.error({
         content :  Object.values(err.response.data)[0],
         duration : 11,
@@ -192,8 +193,19 @@ export const QuestionItem = ({ activeQuestionId, setActiveQuestion , IsQuestion 
     }
    SetSaveButtonLoadingState(false);
   }
+  const handleDragEnd = (result) => {
+    if (!result.destination) return;
+    
+    const updatedNestedQuestions = Array.from(nestedQuestions);
+    const [removed] = updatedNestedQuestions.splice(result.source.index, 1);
+    updatedNestedQuestions.splice(result.destination.index, 0, removed);
+    console.log(GroupID,updatedNestedQuestions)
+    QuestionDispatcher(ChildQuestionReorder({ ParentQuestionID : GroupID , NewChildQuestion : updatedNestedQuestions }))
+    setNestedQuestions(updatedNestedQuestions);
+  };
   return (
-    questionsData ? <QuestionItemRow className={`QuestionItem${questionsData.question.id}`}>
+    questionsData ? <QuestionItemRow  childq={questionsData.question.group ? 'true' : null}
+    className={`QuestionItem${questionsData.question.id}`}>
       {contextHolder}
       <div className='design_container' style={{ width : !questionsData.question.group ? '50%' : '100%' }}> 
     <QuestionDesignItem className='question_design_item' isopen={QuestionRootOpenState ? 'true' : null}
@@ -210,10 +222,10 @@ export const QuestionItem = ({ activeQuestionId, setActiveQuestion , IsQuestion 
                   <p> { questionsData.question.title?.replace(regex,"")} </p>
               </div>
               <QuestionItemButtonContainer>
-                  { (questionsData.question.question_type !== 'thanks_page') && 
-                  <button onClick={() => AddQuestionHandler()}>
-                      <Icon name='GrayAdd' />
-                  </button>}
+                 <button onClick={() => SetDeleteQuestionState(true)}>
+                      <Icon name='RedTrash' />
+                  </button>
+                  
                   <RemovePopup onOkay={DeleteQuestion} setDeleteState={SetDeleteQuestionState}
                   title='تمام نتایج حاصل از این سوال هم حذف خواهد شد'
                   DeleteState={DeleteQuestionState}>
@@ -223,9 +235,11 @@ export const QuestionItem = ({ activeQuestionId, setActiveQuestion , IsQuestion 
                  ? <button onClick={Duplicate_question}>
                     <Icon name='duplicate' />   
                   </button> : ''}
-                  <button onClick={() => SetDeleteQuestionState(true)}>
-                      <Icon name='RedTrash' />
-                  </button>
+                  
+                  { (questionsData.question.question_type !== 'thanks_page') && 
+                  <button onClick={() => AddQuestionHandler()}>
+                      <Icon name='GrayAdd' />
+                  </button>}
               </QuestionItemButtonContainer>
 
           </QuestionItemSurface>
@@ -297,21 +311,44 @@ export const QuestionItem = ({ activeQuestionId, setActiveQuestion , IsQuestion 
           </div> : '' }
           
         </QuestionDesignItem>
-        {questionsData.question.question_type == 'group' ? 
-          <DragDropContext >
-              <Droppable droppableId='groupDroppable'>
-                {(provided, snapshot) => <div ref={provided.innerRef} {...provided.draggableProps}
-                     {...provided.dragHandleProps}>
-                  {
-                   questionsData.question.child_questions ? questionsData.question.child_questions.map(item => <QuestionItem 
-                    GroupID={questionsData.question.id} parentPlacement={questionsData.question.placement}
-                       className="disable-select dragHandle" IsQuestion={true} 
-                      UUID={UUID} key={item.question.id} question={item.question}/>
-                     )
-                     : ''}
-                  </div>}
-              </Droppable>
-          </DragDropContext> : ''}
+        {questionsData.question.question_type === 'group' && (
+        <DragDropContext onDragEnd={handleDragEnd}>
+        <Droppable droppableId={"dropboard"} type="NESTED_QUESTION">
+          {(provided) => (
+            <div ref={provided.innerRef} {...provided.droppableProps}>
+              {questionsData.question.child_questions.map((nestedQuestion, index) => (
+                <Draggable
+                  key={nestedQuestion.question.id}
+                  draggableId={nestedQuestion.question.id.toString()}
+                  index={index}
+                >
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      
+                      className="nested-question"
+                    >
+                      {/* Render the nested QuestionItem */}
+                      <QuestionItem 
+                      activeQuestionId={activeQuestionId}
+                       setActiveQuestion={setActiveQuestion}
+                       IsQuestion={IsQuestion}
+                       UUID
+                      parentPlacement={questionsData.question.placement}
+                      GroupID={questionsData.question.id}
+                      question={nestedQuestion.question} />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+          )}
           </div>
        { !GroupID ?  <div className='question_preview'>
               {QuestionRootOpenState ? <QuestionComponent QuestionInfo={questionsData.question} 

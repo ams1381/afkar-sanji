@@ -76,7 +76,7 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
       result.source.index,
       result.destination.index
     );
-      console.log(reorderedItems)
+
     QuestionDataDispatcher(QuestionReorder({ newPlacementArray : reorderedItems }))
     QuestionDataDispatcher(QuestionSorter())
     let reOrderedArray =  reorderedItems.map((item,index) => { 

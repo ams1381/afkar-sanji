@@ -9,7 +9,7 @@ const OptionalComponent = ({ QuestionInfo }) => {
   const regex = /(<([^>]+)>)/gi;
   const cleanText = (text) => {
     
-    return text.replace(regex, '');
+    return text?.replace(regex, '');
   };
 
   const handleCheckboxChange = (value) => {
@@ -51,7 +51,7 @@ const OptionalComponent = ({ QuestionInfo }) => {
   return (
     <OptionalAnswerBlockContainer vertical={QuestionInfo.is_vertical ? 'active' : null}>
       {QuestionInfo.options.map(item => (
-        <label className='OptionalAnswerItemContainer' key={item.id}>
+        <div className='OptionalAnswerItemContainer' key={item.id}>
           <Checkbox
             value={item.text}
             onChange={() => handleCheckboxChange(item.text)}
@@ -64,7 +64,7 @@ const OptionalComponent = ({ QuestionInfo }) => {
               : <p>{cleanText(item.text)}</p>
              }</>}
     
-        </label>
+        </div>
       ))}
     </OptionalAnswerBlockContainer>
   );

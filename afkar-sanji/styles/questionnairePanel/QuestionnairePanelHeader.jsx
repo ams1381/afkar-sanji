@@ -7,7 +7,7 @@ export const QuestionnairePanelContainer = styled.div`
 `
 export const PanelInnerContainer = styled.div`
     width: 90%;
-    margin: 0.5rem auto;
+    margin: 1.2rem auto;
     height: 95%;
 `
 export const PanelHeader = styled.div`
@@ -98,7 +98,7 @@ export const QuestionnaireEditItemsInnerContainer = styled.div`
 export const QuestionnaireEditItem = styled.div`
     padding: 7px 16px 7px 16px;
     color: ${p => p.selected ? 'var(--primary-color)' : 'var(--Neutral-Gray10)'};
-    background: ${p => p.selected ? '#FEFEFE' : 'var(--questionnaire-edit-item-bg)'};
+    background: ${p => p.selected ? '#FEFEFE' : '#FEFEFE'};
     border: 1px solid ${p => p.selected ? 'var(--primary-color)' : '#D9D9D9'};
     width: 95%;
     text-align: center;
@@ -115,7 +115,7 @@ export const QuestionnaireEditButtonContainer = styled.div`
     gap: 10px;
     & button 
     {
-        background: none;
+        background: #FEFEFE;
         border: 1px solid #D9D9D9;
         width: 40px;
         padding: 0.8rem 0 0.8rem 0;

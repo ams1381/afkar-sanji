@@ -9,6 +9,7 @@ import PN from "persian-number";
 import QuestionnaireFooterPart from './questionnaireFooter';
 import { axiosInstance } from '@/utilities/axios';
 import { Icon } from '@/styles/icons';
+import { handleInputWidth } from '@/utilities/RenameFunctions';
 
 const convertToJalaliDate = (inputDate) => {
     const [year, month, day] = inputDate.split('-');
@@ -22,8 +23,8 @@ const QuestionnaireBox = ({Questionnaire , FolderReload}) => {
     const nameRef = useRef(null);
     
     useEffect(() => {
-        nameRef.current ? nameRef.current.style.width = ((nameRef.current.value.length * 7) + 14) + 'px' : ''
-    },[])
+        handleInputWidth(nameRef,QuestionnaireName);
+    },[nameRef])
     const RenameStateHandler = () => {
         setChangeNameState(!ChangeNameActive)
         setTimeout(()=> {
@@ -37,16 +38,18 @@ const QuestionnaireBox = ({Questionnaire , FolderReload}) => {
             return
         try
         {
-            await axiosInstance.patch(`/question-api/questionnaires/${Questionnaire.uuid}/`,{ name : QuestionnaireName })
+            await axiosInstance.patch(`/question-api/questionnaires/${Questionnaire.uuid}/`,{ name : QuestionnaireName });
+            handleInputWidth(nameRef,QuestionnaireName);
         }
        catch(err)
        {
+        handleInputWidth(nameRef,QuestionnaireName);
         console.log(err)
        }
     }
     const nameInputChangeHandler = (e) => {
+        handleInputWidth(nameRef,QuestionnaireName);
         setQuestionnaireName(e.target.value)
-        nameRef.current ? nameRef.current.style.width = ((nameRef.current.value.length * 7)+ 5) + 'px' : ''
     }
     
   return (
@@ -64,7 +67,7 @@ const QuestionnaireBox = ({Questionnaire , FolderReload}) => {
                     {!ChangeNameActive ? <Icon name='RenameQuestionnaire' /> : 
                     <div> 
                         <Icon name='RenameQuestionnaireCheck' />
-                        <Icon name='GrayClose' />
+                        {/* <Icon name='GrayClose' /> */}
                      </div>}
                  </RenameSpan>
              </QuestionnaireNameContainer> : <Skeleton active /> }

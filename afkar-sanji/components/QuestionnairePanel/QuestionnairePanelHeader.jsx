@@ -10,6 +10,7 @@ import { QuestionnairePopover } from './QuestionnairePopover';
 import { axiosInstance } from '@/utilities/axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { handleInputWidth } from '@/utilities/RenameFunctions';
 
 const QuestionnairePanelHeader = ({ FolderName , Questionnaire , SideState , ChangeSide }) => {
   const router = useRouter();
@@ -19,12 +20,12 @@ const QuestionnairePanelHeader = ({ FolderName , Questionnaire , SideState , Cha
   const QuestionnaireNameInputRef = useRef(null);
 
   useEffect(() => {
-    QuestionnaireNameInputRef.current ? QuestionnaireNameInputRef.current.style.width = ((QuestionnaireNameInputRef.current.value.length * 8)+ 18) + 'px' : ''
-  },[])
+    handleInputWidth(QuestionnaireNameInputRef,QuestionnaireName);
+  },[QuestionnaireNameInputRef.current])
 
   const QuestionnaireNameChangeHandler = (e) => {
     SetQuestionnaireName(e.target.value);
-    QuestionnaireNameInputRef.current ? QuestionnaireNameInputRef.current.style.width = ((QuestionnaireNameInputRef.current.value.length * 7)+ 7) + 'px' : ''
+    handleInputWidth(QuestionnaireNameInputRef,QuestionnaireName);
   }
   const QuestionnaireRenameConfirmHandler = async () => {
    await axiosInstance.patch(`/question-api/questionnaires/${Questionnaire.uuid}/`,{ name : QuestionnaireName });

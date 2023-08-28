@@ -2,16 +2,20 @@ import { Button } from "antd";
 import { styled } from "styled-components";
 
 //Header
-
+export const HeaderContainer = styled.div`
+    background: var(--surface);
+    height: 57px;
+    display: flex;
+    align-items: center;
+`
 export const HeaderComponent = styled.div`
     display: flex;
     justify-content: space-between;
-    padding: 1rem;
     width: 90%;
     margin: 0 auto;
     @media screen and (max-width : 768px)
     {
-        width : 100%;
+        width : 95%;
     }
 `
 export const SideBarToggleButton = styled.button`
@@ -58,9 +62,14 @@ export const LogoutPopOverInfo = styled.div`
     font-family: 'IRANSans';
 `
 export const LogoutPopOverLayout = styled.div`
-    width: 150px;
+    width: 235px;
     display: flex;
     flex-direction: column;
+
+    button 
+    {
+        border-radius : 2px;
+    }
 `
 
 //Side Bar 
@@ -81,9 +90,7 @@ export const SideBarHeader = styled.div`
     justify-content: space-between;
     width: 95%;
     margin: 0.5rem auto;
-    align-items: center;
-    border-bottom: 2px solid var(--SideBar-header-border);
-    padding-bottom: 0.6rem;
+    align-items: center;    
 `
 export const SideBarFolderItem = styled.div`
     display: flex;
@@ -182,7 +189,7 @@ export const SideBarTitle = styled.div`
     {
         background: none;
         border: none;
-        margin-left : 0.5rem;
+        margin-left: 0.7rem;
         cursor : pointer;
     }
 `

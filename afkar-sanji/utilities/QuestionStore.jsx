@@ -42,21 +42,26 @@ const QuestionSlice =  createSlice({
 
         },
         finalizer : (state , action) => {
-            const { isQuestion , QuestionID } = action.payload;
+            const { isQuestion , QuestionID , ResponseID } = action.payload;
 
             if(isQuestion)
             {
-                state.data.find(item => item.question ? item.question.id == QuestionID : '')
-                ?
-                state.data.find(item => item.question ? item.question.id == QuestionID : '').question.newFace = null
-                :
+                if(state.data.find(item => item.question ? item.question.id == QuestionID : '')){
+                    state.data.find(item => item.question ? item.question.id == QuestionID : '').question.newFace = null;
+                    state.data.find(item => item.question ? item.question.id == QuestionID : '').question.id = ResponseID
+                }
+                else
                 state.data.forEach(item => item.question.child_questions ?
                     item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
                     .question.newFace = null : '')
+                state.data.forEach(item => item.question.child_questions ?
+                    item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
+                    .question.id = ResponseID : '')
             }
             else
             {
-                state.nonQuestionData.find(item => (item.question && item.question.id == QuestionID)).newFace = null;
+                state.nonQuestionData.find(item => (item.question && item.question.id == QuestionID)).question.newFace = null;
+                state.nonQuestionData.find(item => (item.question && item.question.id == QuestionID)).question.id = ResponseID;
             }
             
         } ,
@@ -324,6 +329,7 @@ const QuestionSlice =  createSlice({
                 is_vertical: false,
                 question_type : 'optional',
                 multiple_choice: false,
+                button_text : 'test',
                 volume_unit : 'mb',
                 all_options: false,
                 newFace : true,
@@ -351,6 +357,8 @@ const QuestionSlice =  createSlice({
                     let TopQuestionIndex = JSON.parse(JSON.stringify(state.data)).
                     forEach(item => item.question.child_questions ?
                         item.question.child_questions.findIndex(child_item => child_item.question.id == TopQuestionID) : '');
+                    console.log(TopQuestionIndex)
+
                     initialQuestionData.placement = TopQuestionIndex + 1;
                     state.data.find(item => item.question.id == ParentQuestion)
                     .child_questions.splice(TopQuestionIndex + 1 ,0,initialQuestionData)
@@ -430,6 +438,11 @@ const QuestionSlice =  createSlice({
             :
             state.data.forEach(item => item.question.child_questions ?
                 item.question.child_questions.find(child_item => child_item.question.id == QuestionID).question.options = NewOptionsPlacement : '')
+        },
+        ChildQuestionReorder : (state, action) => {
+            const { ParentQuestionID , NewChildQuestion } = action.payload;
+            console.log(ParentQuestionID , NewChildQuestion)
+            // state.data.find(item => item.question && item.question.id == ParentQuestionID).question.child_questions = NewChildQuestion;
         }
     }
 })
@@ -443,7 +456,7 @@ const QuestionStore = configureStore({
 })
 export const { initialQuestionsSetter , ChangeDescriptionHandler ,
     DuplicateQuestionHandler,   ChangeQuestionType , DeleteQuestionHandler ,
-     AddQuestion , DeleteNonQuestionHandler ,
+     AddQuestion , DeleteNonQuestionHandler , ChildQuestionReorder ,
     ChangeToggleHandler,  ChangeNameHandler , ChangeMinOrMaxAnswerHandler,
      ChangeLabelHandler , OptionsAlphaBeticalSorter , ReorderOptions ,
     OptionModifier , OptionAdder , OptionRemover , ChangeUploadSizeHandler

@@ -16,11 +16,16 @@ const LoginFormInput = ({ ErrorHandler }) => {
   const [showClearState, SetClearState] = useState(false);
 
   const handleInputChange = (e) => {
+    if(!e.target.value)
+      SetClearState(false)
+    else
+      SetClearState(true)
     const inputValue = e.target.value;
     const persianValue = PN.convertEnToPe(inputValue);
     
     LoginContext.changePhone(persianValue); // Set Persian value in the state
     ErrorHandler.SetNull(null);
+    
   };
 
   const handleKeyPress = (e) => {
