@@ -123,7 +123,7 @@ const SideBar = ({ isopen , SetSideBar , folders , SelectedFolder  , ReadyToCrea
                 }} >
                 <p>{item.questionnaires ?  PN.convertEnToPe(item.questionnaires.length) : PN.convertEnToPe(index + 1)}</p>
                 <p className='folder_name'>{item.name}</p>
-            </SideBarFolderItem>) : <Skeleton />
+            </SideBarFolderItem>) : <Skeleton style={{ width : '90%' , margin : '0 auto' }}/>
             }
         </div> 
     </Drawer>

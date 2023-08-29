@@ -30,7 +30,7 @@ export const PopoverContainer = styled.div`
     width : 100%;  
 `
 export const PopoverButtonHolder = styled.div`
-    color: #000000D9;
+    color: var(--primary-color);
     width: 100%;
     display: flex;
     justify-content: flex-end;
@@ -43,6 +43,7 @@ export const PopoverButtonHolder = styled.div`
     & p 
     {
         margin-right : 0.6rem;
+        background: #EEF0FF;
     }
 `
 export const PopOverButton = styled.button`

@@ -51,7 +51,7 @@ const OptionalComponent = ({ QuestionInfo }) => {
   return (
     <OptionalAnswerBlockContainer vertical={QuestionInfo.is_vertical ? 'active' : null}>
       {QuestionInfo.options.map(item => (
-        <div className='OptionalAnswerItemContainer' key={item.id}>
+        <label className='OptionalAnswerItemContainer' key={item.id}>
           <Checkbox
             value={item.text}
             onChange={() => handleCheckboxChange(item.text)}
@@ -64,7 +64,7 @@ const OptionalComponent = ({ QuestionInfo }) => {
               : <p>{cleanText(item.text)}</p>
              }</>}
     
-        </div>
+        </label>
       ))}
     </OptionalAnswerBlockContainer>
   );

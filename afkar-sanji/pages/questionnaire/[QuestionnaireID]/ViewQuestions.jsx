@@ -9,6 +9,10 @@ import { Button, Progress, Skeleton, message } from 'antd';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
+import { Swiper, SwiperSlide } from 'swiper/react';
+import SwiperCore, { Navigation } from 'swiper/core';
+
+// SwiperCore.use([Navigation]);
 
 const ViewQuestions = () => {
   const router = useRouter();
@@ -56,6 +60,7 @@ const ViewQuestions = () => {
     else
       SetCurrentIndex(CurrentIndex + 1)
   }
+
   const PrevQuestionHandler = () => {
     if(CurrentIndex == 0)
       SetCurrentIndex('welcome_page')
@@ -71,25 +76,42 @@ const ViewQuestions = () => {
     {messageContext}
     { QuestionnaireInfo ? <PreviewPage>
    
-    <PreviewPageContainer>  
+    <PreviewPageContainer >  
       <PreviewPageHeader>
           {QuestionnaireInfo.progress_bar ? 
           <Progress percent={CurrentIndex == 'Thanks' ? 100
           : (CurrentIndex/ QuestionsData.length) * 100}  steps={QuestionsData.length} /> : ''}
       </PreviewPageHeader>
-      <PreviewQuestionsContainer>
+      <PreviewQuestionsContainer slidemode={!QuestionnaireInfo.show_question_in_pages ? 'active' : null}>
       { (QuestionnaireInfo.welcome_page && CurrentIndex =='welcome_page') 
       && <WelcomeComponent mobilePreview={true}
        WelcomeInfo={QuestionnaireInfo.welcome_page} SetCurrentIndex={SetCurrentIndex} />}
 
       { (CurrentIndex !='welcome_page' && CurrentIndex !='Thanks') ? !QuestionnaireInfo.show_question_in_pages ?
-       QuestionsData.map((item) => <QuestionComponent
-        key={item.question.id} QuestionInfo={item.question} />)
+            <div className="custom-swiper-container">
+            <Swiper
+              direction="vertical"
+              slidesPerView={1}
+              navigation={[Navigation]}
+              onSlideChange={(E) => SetCurrentIndex(E.activeIndex)}
+            >
+              {QuestionsData.map((item, index) => (
+                item && <SwiperSlide key={item.question.id}>
+                    <QuestionComponent mobilePreview={true} QuestionInfo={item.question} />
+                    { index == QuestionsData.length - 1 &&   <ControlButtonsContainer>
+                      <Button type='primary'>ارسال</Button>
+                      </ControlButtonsContainer>}
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
       : (QuestionsData[CurrentIndex] && <QuestionComponent QuestionInfo={QuestionsData[CurrentIndex].question} /> ): ''}   
 
       { CurrentIndex == 'Thanks'
       ? QuestionnaireInfo.thanks_page ? <ThankComponent ThanksInfo={QuestionnaireInfo.thanks_page} /> : 
-      <DefaultThanks /> : '' }
+      <DefaultThanks /> : 
+         ''
+       }
 
     
       </PreviewQuestionsContainer>
@@ -113,7 +135,7 @@ const ViewQuestions = () => {
             </>
           }
         </ControlButtonsContainer>}
-
+        
         {
         (CurrentIndex) == 'Thanks' && <ControlButtonsContainer style={{ justifyContent : 'center' }}>
         <>
@@ -123,29 +145,11 @@ const ViewQuestions = () => {
             </>
         </ControlButtonsContainer> 
         }
-        
+        {
+          (!QuestionnaireInfo.show_question_in_pages) && <ControlButtonsContainer>
+        </ControlButtonsContainer>
+        }
         </>
-    //   QuestionnaireInfo.show_question_in_pages) ?  <ControlButtonsContainer>
-    //   ((CurrentIndex !='welcome_page' && CurrentIndex !='Thanks'))   <>
-    //         <Button type='primary' onClick={NextQuestionHandler}
-    //       icon={<Icon name='WhiteArrow' style={{ transform : 'rotate(-90deg)' }}/>}>
-    //         { CurrentIndex == QuestionsData.length - 1 ? 'ارسال' : 'بعدی' }
-    //       </Button>
-    //       { (CurrentIndex == 0 && !QuestionnaireInfo.welcome_page) ? '' : QuestionnaireInfo.previous_button ?
-    //       <Button type='primary' onClick={PrevQuestionHandler}
-    //       icon={<Icon name='WhiteArrow' style={{ transform : 'rotate(90deg)' }} />}>
-    //         قبلی
-    //       </Button> : ''}
-    //         </>
-    //   </ControlButtonsContainer> : CurrentIndex == 'Thanks' ?
-    //   <ControlButtonsContainer style={{ justifyContent : 'center' }}>
-    //   <>
-    //       <Button type='primary' >
-    //       ساحته شده با ماح
-    //     </Button>
-    //       </>
-    // </ControlButtonsContainer>
-    //   : ''
       }
     </PreviewPageContainer>
     </PreviewPage> : <>Loading</>}

@@ -119,7 +119,6 @@ export default function Home() {
       <SideBar folders={folders} SelectedFolder={SelectedFolder} isopen={SideBarOpen} ReadyToCreate={readyToCreate}
        setReadyToCreate={setReadyToCreate} FolderReload={() => SetFolderReload(true)}  ChangeFolder={SelectFolder}
         SetSideBar={() => setOpen(!SideBarOpen)} ChangeFolderName={SetFolderName}/>
-      {/* <ScreenMask shown={SideBarOpen} onClick={() => setOpen(false)}/> */}
       <Popover
             content={<AddPopoverContent SelectedFolderNumber={SelectedFolder} 
             folders={folders} FolderReload={() => SetFolderReload(true)} 
@@ -127,10 +126,9 @@ export default function Home() {
             setAddPopover={() => setAddPopover(!addPopOver)}/>}
             trigger="click"
             open={addPopOver}
-            overlayInnerStyle={{ boxShadow : 'none' , marginRight : '5.5vw'}}
+            overlayInnerStyle={{ boxShadow : 'none' , marginRight : '5.5vw' , background : 'transparent'}}
             onOpenChange={() => setAddPopover(false)}
-            style={{marginRight : 15}}
-            >
+            style={{marginRight : 15}}>
                 <CornerAddButton ref={CornerButton} clicked={addPopOver ? 'true' : null} onClick={() => setAddPopover(!addPopOver)}>
                   <Icon name='Add' />
                 </CornerAddButton>
@@ -186,11 +184,11 @@ export default function Home() {
                </button>
          </EmptyFolderContainer> : <MainContainer>
          <QuestionnaireContainer>
-             <Skeleton block style={{ width : '90%' , height : 200 , margin : '2rem auto'}} loading={true} active />
+             <Skeleton block style={{ margin : '2rem auto'}} loading active />
 
-             <Skeleton block style={{ width : '90%' , height : 200 , margin : '2rem auto'}} loading={true} active />
+             <Skeleton block style={{ margin : '2rem auto'}} loading active />
 
-             <Skeleton block style={{ width : '90%' , height : 200 , margin : '2rem auto'}} loading={true} active />
+             <Skeleton block style={{ margin : '2rem auto'}} loading active />
          </QuestionnaireContainer>
         </MainContainer> 
       } 

@@ -32,6 +32,7 @@ const MultipleAnswer = ({ QuestionInfo }) => {
       result.source.index,
       result.destination.index
     );  
+    console.log(reorderedItems)
   }
   const OptionItem = (OptionItem) => {
     if(QuestionInfo.options.length > 2)
@@ -45,8 +46,8 @@ const MultipleAnswer = ({ QuestionInfo }) => {
           {(provided, snapshot) => <div provided={provided} {...provided.droppableProps} 
         ref={provided.innerRef}>
             {
-          QuestionInfo.options.map(item => !item.text?.includes('<span>','</span>') ?
-           <Draggable key={item.id}>
+          QuestionInfo.options.map((item,index) => !item.text?.includes('<span>','</span>') ?
+           <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
             {(provided, snapshot) => <div><InputOptionsContainer ref={provided.innerRef} 
             {...provided.draggableProps}
             {...provided.dragHandleProps} key={item.id}>
@@ -63,8 +64,12 @@ const MultipleAnswer = ({ QuestionInfo }) => {
               </button>
             </div>
           </InputOptionsContainer></div>}
-          </Draggable> : '')}</div>
+          
+          </Draggable> : '')}
+          {provided.placeholder}
+          </div>
           }
+          
         </Droppable>
       </DragDropContext>
       <AddOptionButton onClick={() => Dispatcher(OptionAdder({ QuestionID : QuestionInfo.id , NewOptionID : RandomIdGenerator() , OptionText : null }))}>

@@ -27,13 +27,13 @@ const AddPopoverContent = ({folders , setReadyToCreate , SetSideBar , SelectedFo
         <PopoverButtonHolder onClick={AddFolderHandler}>
             <p>اضافه کردن پوشه</p>
             <PopOverButton>
-                <Icon name='AddFile'/>
+                <Icon name='AddFolder' style={{ width : 14 }}/>
             </PopOverButton>
         </PopoverButtonHolder>
         <PopoverButtonHolder onClick={AddQuestionnaireModalHandler}>
             <p>اضافه کردن نظر سنجی</p>
             <PopOverButton>
-                <Icon name='AddFile'/>
+                <Icon name='AddFile' style={{ width : 14 }}/>
             </PopOverButton>
         </PopoverButtonHolder>
         <AddQuestionnairePopUp AddQuestionnaireModal={AddQuestionnaireModal}

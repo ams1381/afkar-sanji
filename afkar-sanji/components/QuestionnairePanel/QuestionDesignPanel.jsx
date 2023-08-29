@@ -46,7 +46,6 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
       QuestionDataDispatcher(QuestionSorter());
     }
   },[Questionnaire])
- 
   const SearchQuestionHandler = async (e) => {
      let SearchRes = await axiosInstance.get(`/question-api/questionnaires/${Questionnaire.uuid}/search-questions/?search=${e}`);
      if(SearchRes)
@@ -163,23 +162,35 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                 { Questionnaire ? AllQuestion.length ?
                 <DragDropContext onDragEnd={onDragEnd}>
                   <Droppable droppableId='dropboard'>
-                  {(provided, snapshot) => <div  provided={provided} {...provided.droppableProps}
+                  {(provided, snapshot) => <div  
                     ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
                     {AllQuestion.map((item,index) => 
-                    ( item.question)? <Draggable  key={item.question.id} draggableId={item.question.id.toString()} index={index}> 
-                     {(provided, snapshot) => <div ref={provided.innerRef} {...provided.draggableProps}
-                     {...provided.dragHandleProps} >
-                      <QuestionItem  
-                        IsQuestion={true}
-                        provided={provided} 
-                        UUID={Questionnaire.uuid}
-                        key={item.question.id} 
-                        question={item.question}
-                        activeQuestionId={ActiveQuestionId}
-                        setActiveQuestion={setActiveQuestionId}
-                        />
-                      </div>}
-                       </Draggable> : '')}
+                    ( item.question)? 
+                    <Draggable
+                    key={item.question.id}
+                    draggableId={item.question.id.toString()}
+                    index={index}
+                  >
+                    {(provided, snapshot) => (
+                      <div ref={provided.innerRef} {...provided.draggableProps}>
+                        <QuestionItem
+                          IsQuestion={true}
+                          UUID={Questionnaire.uuid}
+                          key={item.question.id}
+                          question={item.question}
+                          provided={provided}
+                          activeQuestionId={ActiveQuestionId}
+                          setActiveQuestion={setActiveQuestionId}
+                          dropboardprovide={provided}
+                        >
+                          ams
+                        </QuestionItem>
+
+                      
+                      </div>
+                    )}
+                  </Draggable> : null)}
+                  {provided.placeholder}
                   </div>  } 
                   </Droppable>
                 </DragDropContext>
@@ -204,9 +215,13 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                  :  <AddNonQuestionItem style={{ border : 'none' , marginTop : 70 }}>
                       <Skeleton loading />
                  </AddNonQuestionItem>}
-                  </div> : <div className='QuestionDesignRightContainer' >
-                    ''
-                  </div> }
+                  </div> : <></>}
+                  { !ActiveQuestionId && Questionnaire && <div className='QuestionDesignLeftContainer' >
+                       <p>جهت ویرایش یک از سوالات را از قسمت سمت‌راست انتخاب کنید</p>
+                   </div> }
+                 
+
+        
       </QuestionDesignBox>
     </QuestionnairePanelBodyContainer>
   )

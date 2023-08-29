@@ -45,6 +45,7 @@
     "react-use-scroll-direction": "^0.1.0",
     "redux": "^4.2.1",
     "styled-components": "^6.0.7",
+    "swiper": "^10.2.0",
     "swr": "^2.2.1",
     "video-react": "^0.16.0",
     "zaman": "^2.0.7"

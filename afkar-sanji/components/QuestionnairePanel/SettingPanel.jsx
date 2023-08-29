@@ -9,15 +9,28 @@ import { QuestionnaireDatePickerContainer , QuestionnaireSettingContainer} from 
 import { Icon } from '@/styles/icons';
 import { axiosInstance } from '@/utilities/axios';
 import jalaali from 'jalaali-js'
-import jalaliday from 'jalaliday'
+// import jalaliday from 'jalaliday'
 import PN from 'persian-number';
 import { DatePickerInput } from '@/styles/questionnairePanel/QuestionSetting';
-import 'moment/locale/fa';
+// import 'moment/locale/fa';
 // import moment from "moment"
 import moment from 'moment-jalaali';
 import locale from 'antd/lib/date-picker/locale/fa_IR';
 
+const convertStringToDate = str => {
+  const [datePart, timezonePart] = str.split(/[T+]/);
+  const [timezoneHours, timezoneMinutes] = timezonePart.split(":").map(Number);
 
+  const date = new Date(datePart);
+  date.setUTCHours(date.getUTCHours() - timezoneHours, date.getUTCMinutes() - timezoneMinutes);
+
+  const formattedDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+  const formattedTime = `${date.getUTCHours()}:${date.getUTCMinutes()}:${date.getUTCSeconds()}`;
+
+  return [formattedDate, formattedTime];
+};
+const convertToISOString = (datePart, timePart) =>
+  new Date(`${datePart}T${timePart}`).toISOString().replace('Z', `+${(new Date().getTimezoneOffset() / -60).toFixed(0).padStart(2, '0')}:${(Math.abs(new Date().getTimezoneOffset()) % 60).toString().padStart(2, '0')}`);
 
 const SettingPanel = ({ Questionnaire }) => {
   const [ DateValue , SetDateValue ]= useState(null);
@@ -29,13 +42,15 @@ const SettingPanel = ({ Questionnaire }) => {
   const [ SettingChanged , SetSettingChanged ] = useState(false);
   const [ SettingLoading , SetSettingLoading ] = useState(false);
   const [ ErrorType , SetErrorType ] = useState(null);
-  dayjs.calendar('jalali') 
-  let defaultDatePickerValue = [
-    dayjs(convertDate(QuestionnaireData.pub_date,'jalali'), { jalali: true }),
-  ]
-  QuestionnaireData.end_date ? defaultDatePickerValue.push(
-    dayjs(convertDate(QuestionnaireData.end_date,'jalali'))
-  ) : ''
+  let defaultDatePickerValue  = [dayjs(convertDate(convertStringToDate(Questionnaire.pub_date)[0],'jalali') + ' ' + convertStringToDate(Questionnaire.pub_date)[1])]
+
+
+    QuestionnaireData.end_date ? 
+      defaultDatePickerValue.push(dayjs(convertDate(convertStringToDate(QuestionnaireData.end_date)[0],'jalali') + ' ' + 
+      convertStringToDate(QuestionnaireData.end_date)[1]))
+      : ''
+
+
   const DateToggleHandler = (E) => {
     SetDateActive(E);
     if(!E)
@@ -53,17 +68,15 @@ const SettingPanel = ({ Questionnaire }) => {
     if(!NewDate[0] && !NewDate[1])
       Dispatcher({ ACTION : 'Timer Cleared' });
     else
-    //   Dispatcher({ ACTION : 'Pub Date Changed' , NewDate : NewPubDate._i.replace('---','') });
-    // // console.log(NewDate.split(' '))
-    
+    {
+      if(NewDate[0])
+         Dispatcher({ ACTION : 'Pub date set' , NewDate : convertToISOString(convertDate(NewDate[0].split(' ')[0],'gregorian'),NewDate[0].split(' ')[1] )});
+      if(NewDate[1])
+        Dispatcher({ ACTION : 'End date set' , NewDate : convertToISOString(convertDate(NewDate[1].split(' ')[0],'gregorian'),NewDate[1].split(' ')[1])});
+    }
     SetSettingChanged(true)
   }
-  const EndDateChangeHandler = (NewEndDate) => {
-    SetErrorType(null)
-    Dispatcher({ ACTION : 'End Date Changed' , NewDate : NewEndDate._i.replace('---','') });
 
-    SetSettingChanged(true)
-  }
  const TimerChangeHandler = (_, Timer) => {
     Dispatcher({ ACTION : 'Timer Change' , NewTimer : Timer });
     SetSettingChanged(true)
@@ -78,6 +91,7 @@ const SettingPanel = ({ Questionnaire }) => {
   SetDateActive(false)
   SetSettingChanged(false)
  }
+ console.log(convertStringToDate(Questionnaire.pub_date))
  const SaveQuestionnaireChanges = async () => {
   if(!SettingChanged)
     return
@@ -120,9 +134,9 @@ const SettingPanel = ({ Questionnaire }) => {
               <Switch checked={DateActive} onChange={DateToggleHandler}/>
           </div>
        <div className='picker_container'>
-
           <DatePickerJalali.RangePicker showTime status={ErrorType == 'date_error' ? 'error' : null} 
           locale={fa_IR.DatePicker}
+          disabled={!DateActive}
           defaultValue={defaultDatePickerValue}
            onChange={DateChangeHandler} />
            <JalaliLocaleListener  />
@@ -134,16 +148,20 @@ const SettingPanel = ({ Questionnaire }) => {
                 <Switch checked={TimerActive} onChange={TimerToggleHandler}/>
           </div>
           <div className='picker_container'>
+    <ConfigProvider locale={fa_IR} direction="rtl">
       <TimePicker
                   open={TimerOpen}
                   onOpenChange={setTimerOpen}
                   onChange={TimerChangeHandler}
                   disabled={!TimerActive}
                   showNow={false}
-                  defaultValue={QuestionnaireData.timer ?
-                  dayjs(QuestionnaireData.timer, 'HH:mm:ss') : null}
+                  defaultValue={
+                    QuestionnaireData.timer
+                      ? moment(QuestionnaireData.timer, 'HH:mm:ss').locale('fa') // Set Jalali locale for moment
+                      : null
+                  }
                 />
-    
+    </ConfigProvider>        
         </div>
         
       </QuestionnaireDatePickerContainer>
@@ -185,12 +203,19 @@ const SettingPanel = ({ Questionnaire }) => {
   )
 }
 export default SettingPanel;
-const convertDate = (inputDate,dateType) => {
+const convertDate = (inputDate, dateType) => {
   const [year, month, day] = inputDate.split('-');
-  const jDate = dateType == 'jalali' ? jalaali.toJalaali(parseInt(year), parseInt(month), parseInt(day))
-  : jalaali.toGregorian(parseInt(year), parseInt(month), parseInt(day));
-  return `${(jDate.jy)}/${(jDate.jm)}/${(jDate.jd)}`;
-}
+
+  if (dateType === 'jalali') {
+    const jDate = jalaali.toJalaali(parseInt(year), parseInt(month), parseInt(day));
+    return `${jDate.jy}/${jDate.jm}/${jDate.jd}`;
+  } else if (dateType === 'gregorian') {
+    const gDate = jalaali.toGregorian(parseInt(year), parseInt(month), parseInt(day));
+    return `${gDate.gy}-${String(gDate.gm).padStart(2, '0')}-${String(gDate.gd).padStart(2, '0')}`;
+  }
+
+  return inputDate; // Return input date if no conversion needed
+};
 // const convertToGregorian 
 const QuestionnaireReducerFunction = (State,ACTION) => {
   switch(ACTION.ACTION)
@@ -206,13 +231,13 @@ const QuestionnaireReducerFunction = (State,ACTION) => {
         ...State,
         timer : null
       }
-    case 'Pub Date Changed':
+    case 'Pub date set':
       return {
         ...State,
         pub_date : ACTION.NewDate,
         
       }
-    case 'End Date Changed':
+    case 'End date set':
       return {
         ...State,
         end_date : ACTION.NewDate,

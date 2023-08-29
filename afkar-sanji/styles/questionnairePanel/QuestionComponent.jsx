@@ -9,7 +9,7 @@ export const QuestionComponentContainer = styled.div`
     box-shadow: ${p => (p.childq || p.mobilePreview) ? 'none' : '0px 2px 8px 0px rgba(0, 0, 0, 0.15)'};
     padding: 1rem;
     border-radius: 2px;
-    background: var(--surface);
+    background: ${p => p.mobilePreview ? 'none' : 'var(--surface)'};
 
     .uploaded_file_preview .video-react-button.video-react-big-play-button
     {

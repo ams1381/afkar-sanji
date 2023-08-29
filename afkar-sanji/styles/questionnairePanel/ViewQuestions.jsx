@@ -11,6 +11,7 @@ export const ControlButtonsContainer = styled.div`
     gap: 10px;
     width: 30%;
     margin: 1rem auto;
+
     & button 
     {
         display : flex;
@@ -67,6 +68,36 @@ export const PreviewPageContainer = styled.div`
         right: 0;
         bottom: 0;
     }
+     .swiper-slide
+     {
+        height: 100vh!important;
+        display: flex;
+        align-items: center;
+        width: 70%;
+        margin: 0 auto;
+        flex-direction: column;
+        justify-content: center;
+     }
+     .swiper-wrapper
+     {
+        width: 100%;
+        height: 100vh;
+     }
+    @media screen and (max-width : 768px)
+    {
+        .swiper-slide
+        {
+            width : 80%;
+        }
+    }
+    @media screen and (max-width : 480px)
+    {
+        .swiper-slide
+        {
+            width : 85%;
+        }
+    }
+ 
 `
 export const PreviewPageHeader = styled.div`
     width : 100%;
@@ -75,7 +106,8 @@ export const PreviewPageHeader = styled.div`
     padding-top : 1rem;
 `
 export const PreviewQuestionsContainer = styled.div`
-    width : 30%;
+    width : ${p => p.slidemode ? '50%' : '30%'};
+    
     @media screen and (max-width : 980px)
     {
         width : 50%;

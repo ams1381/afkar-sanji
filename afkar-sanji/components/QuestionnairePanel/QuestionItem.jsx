@@ -23,8 +23,8 @@ import { ChangeQuestionType } from '@/utilities/QuestionStore';
 import { form_data_convertor } from '@/utilities/FormData';
 import { DragDropContext, Droppable ,  Draggable } from '@hello-pangea/dnd';
 
-export const QuestionItem = ({ activeQuestionId, setActiveQuestion , IsQuestion , question , UUID , parentPlacement , GroupID }) => {
-  const [ QuestionRootOpenState , SetQuestionRootOpenState ] = useState(false);
+export const QuestionItem = ({ dropboardprovide , activeQuestionId, provided ,setActiveQuestion , IsQuestion , question , UUID , parentPlacement , GroupID }) => {
+  const [ QuestionRootOpenState , SetQuestionRootOpenState ] = useState(question.newFace ? true : false);
   const [ QuestionActionState , SetQuestionActionState ] = useState('edit');
   const [nestedQuestions, setNestedQuestions] = useState(question.child_questions);
   const [ DeleteQuestionState , SetDeleteQuestionState ] = useState(false);
@@ -35,7 +35,6 @@ export const QuestionItem = ({ activeQuestionId, setActiveQuestion , IsQuestion 
   const QuestionDispatcher = useDispatch();
   const QuestionsArray = useSelector(s => s.reducer.data)
   const regex = /(<([^>]+)>)/gi;
-
   const QuestionDataDispatcher = useDispatch();
   
   let questionsData;
@@ -47,10 +46,24 @@ export const QuestionItem = ({ activeQuestionId, setActiveQuestion , IsQuestion 
     })
   },[questionsData , QuestionsReload])
   useEffect(() => {
-    if(activeQuestionId == question.id)
-      SetQuestionRootOpenState(true)
+    // if(questionsData.question.newFace)
+    // {
+    //   console.log(QuestionRootOpenState)
+    //   if(!QuestionRootOpenState)
+    //     setActiveQuestion(questionsData.question.id)
+    //   else
+    //     setActiveQuestion(null)
+    // //   SetQuestionRootOpenState(!QuestionRootOpenState);
+    // }
+  if((activeQuestionId == question.id))
+    {
+      SetQuestionRootOpenState(true);
+    }
     else
+    {
       SetQuestionRootOpenState(false)
+    }
+      
   },[activeQuestionId])
   if(GroupID && question.group)
   {
@@ -101,9 +114,12 @@ export const QuestionItem = ({ activeQuestionId, setActiveQuestion , IsQuestion 
     QuestionDispatcher(QuestionSorter());
   }
   const QuestionOpenHandler = () => {
-    setActiveQuestion(question.id)
     SetQuestionRootOpenState(!QuestionRootOpenState);
-    // QuestionnaireReloader(true);
+
+    if(!QuestionRootOpenState)
+      setActiveQuestion(question.id)
+    else
+      setActiveQuestion(null)
   }
   const ChangeQuestionTypeHandler = (_,ChangedType) => {
     ChangedType ? QuestionDataDispatcher(ChangeQuestionType({ newType : ChangedType.value ,
@@ -204,16 +220,20 @@ export const QuestionItem = ({ activeQuestionId, setActiveQuestion , IsQuestion 
     setNestedQuestions(updatedNestedQuestions);
   };
   return (
-    questionsData ? <QuestionItemRow  childq={questionsData.question.group ? 'true' : null}
+    (questionsData) ? <QuestionItemRow  childq={questionsData.question.group ? 'true' : null}
     className={`QuestionItem${questionsData.question.id}`}>
       {contextHolder}
       <div className='design_container' style={{ width : !questionsData.question.group ? '50%' : '100%' }}> 
     <QuestionDesignItem className='question_design_item' isopen={QuestionRootOpenState ? 'true' : null}
     childq={questionsData.question.group ? 'true' : null}>     
           <QuestionItemSurface >
-              <div className="question_item_info" onClick={QuestionOpenHandler}>
+              <div className="question_item_info" onClick={QuestionOpenHandler} 
+              {...provided?.dragHandleProps?? null}>
                   <DropDownQuestionButton dropped={QuestionRootOpenState ? 'true' : null} >
-                     { questionsData.question.question_type == 'group' ? <Icon name='GroupIcon' />
+                     { questionsData.question.question_type == 'group' ? <> 
+                     <Icon name='GroupIcon' />
+                     <Icon name='ArrowDown' />
+                     </>
                      : <Icon name='ArrowDown' />  }                                     
                   </DropDownQuestionButton>
                   { questionsData.question.placement ?  <div style={{ fontWeight : 600 , whiteSpace : 'pre'}}> 
@@ -237,7 +257,7 @@ export const QuestionItem = ({ activeQuestionId, setActiveQuestion , IsQuestion 
                   </button> : ''}
                   
                   { (questionsData.question.question_type !== 'thanks_page') && 
-                  <button onClick={() => AddQuestionHandler()}>
+                  <button className='add_btn' onClick={() => AddQuestionHandler()}>
                       <Icon name='GrayAdd' />
                   </button>}
               </QuestionItemButtonContainer>
@@ -326,16 +346,14 @@ export const QuestionItem = ({ activeQuestionId, setActiveQuestion , IsQuestion 
                     <div
                       ref={provided.innerRef}
                       {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      
                       className="nested-question"
                     >
-                      {/* Render the nested QuestionItem */}
                       <QuestionItem 
                       activeQuestionId={activeQuestionId}
                        setActiveQuestion={setActiveQuestion}
                        IsQuestion={IsQuestion}
                        UUID
+                       provided={provided}
                       parentPlacement={questionsData.question.placement}
                       GroupID={questionsData.question.id}
                       question={nestedQuestion.question} />
