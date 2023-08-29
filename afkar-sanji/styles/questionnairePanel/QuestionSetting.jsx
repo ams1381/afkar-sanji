@@ -8,7 +8,7 @@ export const QuestionFileUploadContainer = styled.div`
     color: var(--Neutral-Gray6);
     margin: 0.7rem auto;
     flex-direction: row-reverse;
-    flex-wrap: wrap;
+    // flex-wrap: wrap;
 
     & button 
     {
@@ -24,13 +24,13 @@ export const QuestionFileUploadContainer = styled.div`
     }
     .ant-upload-list-item-name
     {
-        word-break: break-all !important;
+        word-break: break-word !important;
         white-space: initial !important;
         text-overflow: clip !important;
     }
     .upload-list-inline .ant-upload-list-item {
         float: left;
-        width: 200px;
+        width: auto !important;
         margin-inline-end: 8px;
       }
     .ant-upload-list-item
@@ -44,6 +44,11 @@ export const QuestionFileUploadContainer = styled.div`
     .ant-upload.ant-upload-select
     {
         display : ${p => p.fileuploaded ? 'none' : 'block'}
+    }
+    .ant-upload-list-item .ant-btn
+    {
+        display : flex;
+        justify-content : center;
     }
 `
 export const QuestionDescriptionContainer = styled.div`

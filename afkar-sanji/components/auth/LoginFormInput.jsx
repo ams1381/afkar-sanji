@@ -8,7 +8,8 @@ import {
 } from '@/styles/auth/Login';
 import { AuthContext } from '@/utilities/AuthContext';
 import { NumberFormat } from 'react-hichestan-numberinput';
-import PN from 'persian-number';
+import * as persianTools from "@persian-tools/persian-tools";
+import { digitsEnToFa } from "@persian-tools/persian-tools";
 
 const LoginFormInput = ({ ErrorHandler }) => {
   const LoginContext = useContext(AuthContext);
@@ -21,7 +22,7 @@ const LoginFormInput = ({ ErrorHandler }) => {
     else
       SetClearState(true)
     const inputValue = e.target.value;
-    const persianValue = PN.convertEnToPe(inputValue);
+    const persianValue = digitsEnToFa(inputValue);
     
     LoginContext.changePhone(persianValue); // Set Persian value in the state
     ErrorHandler.SetNull(null);
@@ -51,7 +52,7 @@ const LoginFormInput = ({ ErrorHandler }) => {
           }}
           onChange={handleInputChange}
           onKeyPress={handleKeyPress} // Handle key press to prevent non-numeric characters
-          placeholder={`${PN.convertEnToPe('09')} ** *** ***`}
+          placeholder={`${digitsEnToFa('09')} ** *** ***`}
         />
         {showClearState ? (
           <ClearLoginInputButton onClick={() => LoginContext.changePhone(null)}>

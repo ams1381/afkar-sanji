@@ -146,12 +146,19 @@ export default function Home() {
             open={FolderPopover}
             placement="bottom"
             overlayInnerStyle={{ marginRight : 15}}
-            onOpenChange={() => setFolderPopover(false)}>
-                  <FolderPopoverToggle onClick={ChangeFolderName ? folderRenameConfirm : () => setFolderPopover(!FolderPopover)}
+            onOpenChange={() => setFolderPopover(false)} />
+            <FolderPopoverToggle onClick={ChangeFolderName ? folderRenameConfirm : () => setFolderPopover(!FolderPopover)}
                   style={FolderName ? { pointerEvents : 'all'} : { pointerEvents : 'none'}}>
-                    {ChangeFolderName ? <Icon name='GrayCheck' /> : <Icon name='Menu' /> }
+                    {ChangeFolderName ? <Icon name='GrayCheck' style={{ width : 20 }} /> : <Icon name='Menu' /> }
                   </FolderPopoverToggle>
-            </Popover>
+              {ChangeFolderName && <FolderPopoverToggle onClick={() => {
+                  SetChangeFolderNameState(false);
+                  SetFolderName(folders[SelectedFolder]?.name)
+                  handleInputWidth(FolderNameInput,folders[SelectFolder]?.name)
+                  // FolderNameInput.current.de
+              }}>
+                <Icon name='BlackClose' style={{ width : 15 , marginLeft : 10}} />
+              </FolderPopoverToggle>}
               <QuestionnaireNameInput type='text' 
               ref={FolderNameInput} value={FolderName} onChange={folderNameChangeHandler}
                disabled={!ChangeFolderName} /> 

@@ -1,6 +1,7 @@
 import { QuestionnaireBodyStat } from '@/styles/folders/Questionnaire'
 import { RangeLabelText, RangeQuestionAnswerItem, QuestionRangeLabel,
   RangeQuestionContainer, RangeQuestionLabelContainer } from '@/styles/questionnairePanel/QuestionComponent'
+import { digitsEnToFa } from '@persian-tools/persian-tools'
 import PN from 'persian-number'
 import React from 'react'
 
@@ -13,7 +14,7 @@ export const RangeQuestionComponent = ({ QuestionInfo }) => {
         <RangeQuestionAnswerItem key={index}>
             <input name='range_item' type='radio' id={'range_answer_option' + index}/>
             <label htmlFor={'range_answer_option' + index}>
-              {PN.convertEnToPe(index + 1)}
+              {digitsEnToFa(index + 1)}
             </label>
 
           </RangeQuestionAnswerItem>

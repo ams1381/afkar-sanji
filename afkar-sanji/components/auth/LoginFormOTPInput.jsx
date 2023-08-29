@@ -6,7 +6,8 @@ import {  Button, Statistic, message } from 'antd';
 import { useRouter } from 'next/router'
 import { axiosInstance } from '@/utilities/axios'
 import { useLocalStorage } from '@/utilities/useLocalStorage';
-import PN from 'persian-number';
+import { digitsEnToFa } from "@persian-tools/persian-tools";
+import * as persianTools from "@persian-tools/persian-tools";
 
 export const LoginFormOTPInput = ({ErrorHandler , authentication}) => {
     const Router = useRouter();
@@ -55,7 +56,7 @@ export const LoginFormOTPInput = ({ErrorHandler , authentication}) => {
         {
             SetResendLoading(true)
             await axiosInstance.post('/user-api/auth/gateway/', {
-                 phone_number : PN.convertPeToEn(LoginContext.PhoneNumber)
+                 phone_number : persianTools.digitsFaToEn(LoginContext.PhoneNumber)
             })
             ChangeTimeOutState(false);
             SetTimer(60)
@@ -74,7 +75,7 @@ export const LoginFormOTPInput = ({ErrorHandler , authentication}) => {
     }
     const input_change_handler = async (e) => {
         const inputValue = e.target.value;
-        const persianValue = PN.convertEnToPe(inputValue);
+        const persianValue = digitsEnToFa(inputValue);
       
         // Allow only Persian numeric characters
         const validValue = persianValue.replace(/[^۰-۹]/g, '');
@@ -97,7 +98,7 @@ export const LoginFormOTPInput = ({ErrorHandler , authentication}) => {
         }
       };
       const convertToPersianNumbers = (number) => {
-        return PN.convertEnToPe(number.toString());
+        return digitsEnToFa(number.toString());
       };
   return (
     <>
@@ -134,10 +135,10 @@ export const LoginFormOTPInput = ({ErrorHandler , authentication}) => {
             <span>
             {
                (timer == 60) ? 
-               <>{PN.convertEnToPe(0)}{PN.convertEnToPe(1)}:{PN.convertEnToPe(0)}{PN.convertEnToPe(0)}</> : (timer != 60) &&
-              Math.floor(timer / 60) < 1 ? PN.convertEnToPe(0) + '' + PN.convertEnToPe(Math.floor(timer / 60)) : ''
+               <>{digitsEnToFa(0)}{digitsEnToFa(1)}:{digitsEnToFa(0)}{digitsEnToFa(0)}</> : (timer != 60) &&
+              Math.floor(timer / 60) < 1 ? digitsEnToFa(0) + '' + digitsEnToFa(Math.floor(timer / 60)) : ''
               }{(timer != 60) && ':'}
-            {(timer != 60) && (timer % 60) >= 10 ? PN.convertEnToPe(timer % 60) : (timer != 60) ? PN.convertEnToPe(0) +  PN.convertEnToPe((timer % 60)) : ''}
+            {(timer != 60) && (timer % 60) >= 10 ? digitsEnToFa(timer % 60) : (timer != 60) ? digitsEnToFa(0) +  digitsEnToFa((timer % 60)) : ''}
             </span>
           ) : (
             ''

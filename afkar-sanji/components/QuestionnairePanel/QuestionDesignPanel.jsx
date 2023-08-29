@@ -137,6 +137,7 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                 style={{ width : '100%' , height : '100%' , direction : 'rtl' , fontFamily : 'IRANSans' }}
                 onSearch={SearchQuestionHandler}
                 notFoundContent={null}
+                
                 filterOption={(_, option) => option ? option.label : ''}/>
                 </> : ''}
               </QuestionSearchContainer>
@@ -153,7 +154,7 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                 activeQuestionId={ActiveQuestionId}
                 setActiveQuestion={setActiveQuestionId}
                 question={NonQuestions[0].question}/> :
-                 <AddNonQuestionItem onClick={AddWelcomeHandler}>
+                 <AddNonQuestionItem onClick={AddWelcomeHandler}  style={{  marginBottom : 10 }}>
                   <p>افزودن خوش آمد گویی</p>
                   </AddNonQuestionItem> : 
                   <AddNonQuestionItem style={{ border : 'none' }}>
@@ -209,7 +210,8 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                   setActiveQuestion={setActiveQuestionId}
                   IsQuestion={false} 
                   UUID={Questionnaire.uuid} 
-                  question={NonQuestions[1].question} /> : <AddNonQuestionItem onClick={AddThanksHandler}>
+                  question={NonQuestions[1].question} /> :
+                   <AddNonQuestionItem onClick={AddThanksHandler} style={{  marginTop : 10 }}>
                   <p>افزودن صفحه تشکر</p>
                  </AddNonQuestionItem>
                  :  <AddNonQuestionItem style={{ border : 'none' , marginTop : 70 }}>

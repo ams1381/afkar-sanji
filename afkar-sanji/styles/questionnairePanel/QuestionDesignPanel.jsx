@@ -142,10 +142,10 @@ export const QuestionDesignBox = styled.div`
     }
 `
 export const QuestionDesignItem = styled.div`
-    padding: 1rem;
-    border: 1px solid ${p => p.isopen ? p.childq ? '#7C86FA' : '#7C86FA' : '#D9D9D9'};
+    padding: 10px 12px;
+    border: 1px solid ${p => p.isopen ? p.childq ? '#7C86FA' : '#7C86FA' : 'none'};
     border-radius: 2px;
-    margin: 0.6rem 0;
+    margin-top : 10px;
     background: var(--surface);
     width: ${p => p.childq ? '95%' : '100%'} !important;
     // margin-top : ${p => p.childq ? '1rem' : '0'};
@@ -229,6 +229,7 @@ export const QuestionItemSurface = styled.div`
     .question_item_info p 
     {
         color : #B8B8B8;
+        margin-right : 0.4rem;
     }
 `
 export const DropDownQuestionButton = styled.button`
@@ -264,13 +265,17 @@ export const QuestionItemButtonContainer = styled.div`
         width: 34px;
         height: 34px;
         justify-content: center;
+        transition : 0.3s;
     }
     .add_btn 
     {
         border: 1px solid #D9D9D9;
         border-radius: 2px;
     }
-   
+    .add_btn:hover
+    {
+        border: 1px solid var(--primary-color);
+    }
 `
 export const QuestionItemActionSelector = styled.div`
     width: 100%;
@@ -382,7 +387,7 @@ export const InputOptionsContainer = styled.div`
     flex-direction: row-reverse;
     justify-content: space-between;
     align-items: center;
-    margin-top: 0.5rem;
+    margin-top: 20px;
 
     & button 
     {
@@ -393,13 +398,14 @@ export const InputOptionsContainer = styled.div`
     }
     & button i 
     {
-        width : 25px;
-        height : 25px;
+        width : 30px;
+        height : 30px;
     }
     .option_button_container
     {
-        display : flex;
-        gap : 10px;
+        display: flex;
+        gap: 20px;
+        margin-right: 20px;
     }
 `
 export const OptionWritingContainer = styled.div`

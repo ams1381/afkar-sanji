@@ -50,6 +50,7 @@ export const QuestionnaireSettingContainer = styled.div`
         display: flex;
         justify-content: space-between;
         flex-direction: row-reverse;
+        text-align: right;
     }
     .picker_header button 
     {

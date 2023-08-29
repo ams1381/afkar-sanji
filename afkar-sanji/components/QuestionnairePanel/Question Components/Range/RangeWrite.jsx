@@ -4,6 +4,7 @@ import React from 'react'
 import { useDispatch } from 'react-redux';
 import PN from 'persian-number';
 import { RangeLabelContainer, RangeLabelInput } from '@/styles/questionnairePanel/QuestionDesignPanel';
+import { digitsEnToFa } from '@persian-tools/persian-tools';
 
 export const RangeWrite = ({ QuestionInfo }) => {
     const dispatcher = useDispatch();
@@ -20,7 +21,6 @@ export const RangeWrite = ({ QuestionInfo }) => {
         <Slider
           min={4}
           max={12}
-          tooltip={{formatter : (value) => <span>{PN.convertEnToPe(value)}</span>}}
           step={1}
           marks={SlideMarkGenerator()}
           trackStyle={{ background : 'var(--primary-color)' }}
@@ -28,6 +28,9 @@ export const RangeWrite = ({ QuestionInfo }) => {
           dots={true}
           onChange={DegreeChangeHandler}
           value={QuestionInfo.max}
+          className="custom-slider"
+          tipFormatter={(value) => value.toString()} // Convert the value to string
+          tipProps={{ 'data-persian-value': digitsEnToFa(value) }} // Use your digitsEnToFa function
           
         />
     </div>
@@ -63,55 +66,55 @@ export const RangeWrite = ({ QuestionInfo }) => {
 const SlideMarkGenerator = () => {
     return  {
       4: {
-        label : PN.convertEnToPe(4),
+        label : digitsEnToFa(4),
         style : {
           fontFamily : 'IRANSans'
         }
       } ,
       5: {
-        label : PN.convertEnToPe(5),
+        label : digitsEnToFa(5),
         style : {
           fontFamily : 'IRANSans'
         }
       },
       6: {
-        label : PN.convertEnToPe(6),
+        label : digitsEnToFa(6),
         style : {
           fontFamily : 'IRANSans'
         }
       },
       7: {
-        label : PN.convertEnToPe(7),
+        label : digitsEnToFa(7),
         style : {
           fontFamily : 'IRANSans'
         }
       },
       8: {
-        label : PN.convertEnToPe(8),
+        label : digitsEnToFa(8),
         style : {
           fontFamily : 'IRANSans'
         }
       },
       9 : {
-        label : PN.convertEnToPe(9),
+        label : digitsEnToFa(9),
         style : {
           fontFamily : 'IRANSans'
         }
       } ,
       10 : {
-        label : PN.convertEnToPe(10),
+        label : digitsEnToFa(10),
         style : {
           fontFamily : 'IRANSans'
         } 
       } ,
       11 : {
-        label : PN.convertEnToPe(11),
+        label : digitsEnToFa(11),
         style : {
           fontFamily : 'IRANSans'
         }
       },
       12 : {
-        label : PN.convertEnToPe(12),
+        label : digitsEnToFa(12),
         style : {
           fontFamily : 'IRANSans'
         }

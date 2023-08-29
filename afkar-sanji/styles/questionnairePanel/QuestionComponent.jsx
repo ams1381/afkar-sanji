@@ -164,6 +164,8 @@ export const EmailInputContainer = styled.div`
     {
         border: none;
         text-align: right;
+        border-radius: 2px;
+        height: 100%;
     }
     & input:focus
     {
@@ -173,9 +175,12 @@ export const EmailInputContainer = styled.div`
     & span 
     {
         height: 100%;
-        align-items: center;
-        margin: 0 0.8rem 0 0.6rem;
         display: flex;
+        width: 12%;
+        justify-content: center;
+        align-items: center;
+        background: #F5F5F5;
+        border-left : 1px solid #D9D9D9;
     }
 `
 export const RangeQuestionContainer = styled.div`

@@ -10,6 +10,7 @@ import QuestionnaireFooterPart from './questionnaireFooter';
 import { axiosInstance } from '@/utilities/axios';
 import { Icon } from '@/styles/icons';
 import { handleInputWidth } from '@/utilities/RenameFunctions';
+import { digitsEnToFa } from '@persian-tools/persian-tools';
 
 const convertToJalaliDate = (inputDate) => {
     const [year, month, day] = inputDate.split('-');
@@ -67,9 +68,17 @@ const QuestionnaireBox = ({Questionnaire , FolderReload}) => {
                     {!ChangeNameActive ? <Icon name='RenameQuestionnaire' /> : 
                     <div> 
                         <Icon name='RenameQuestionnaireCheck' />
-                        {/* <Icon name='GrayClose' /> */}
+                       
                      </div>}
                  </RenameSpan>
+                 {ChangeNameActive && <RenameSpan clickable={true}
+                  onClick={() => {
+                    setQuestionnaireName(Questionnaire.name)
+                    setChangeNameState(false)
+                    handleInputWidth(nameRef,Questionnaire.name);
+                    }} style={{ marginRight : 10 }}>
+                     <Icon name='BlackClose' style={{ width : 14 }} />
+                 </RenameSpan>}
              </QuestionnaireNameContainer> : <Skeleton active /> }
              <div className="questionnaire_preview">
                  <QuestionnairePreviewButton disabled={Questionnaire.question_count == 0}>
@@ -81,11 +90,11 @@ const QuestionnaireBox = ({Questionnaire , FolderReload}) => {
              <div className="questionnaire_stats">
                 { Questionnaire ?
                 <> <QuestionnaireBodyStat>
-                     <p>{Questionnaire.pub_date ? PN.convertEnToPe(convertToJalaliDate(Questionnaire.pub_date)) : ''}</p>
+                     <p>{Questionnaire.pub_date ? digitsEnToFa(convertToJalaliDate(Questionnaire.pub_date)) : ''}</p>
                      <p>: ایجاد شده در</p>
                  </QuestionnaireBodyStat>
                  <QuestionnaireBodyStat>
-                     <p>{PN.convertEnToPe(Questionnaire.answer_count)}</p>
+                     <p>{digitsEnToFa(Questionnaire.answer_count)}</p>
                      <p>: تعداد پاسخ دهنده</p>
                  </QuestionnaireBodyStat> </>: <Skeleton active />}
              </div>

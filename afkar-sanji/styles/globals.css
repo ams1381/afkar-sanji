@@ -83,6 +83,20 @@ html::-webkit-scrollbar-thumb
 {
   font-family: IRANSans;
 }
+.ant-select-dropdown.css-dev-only-do-not-override-byeoj0
+{
+  width: 390px !important;
+}
+#select-type-container .rc-virtual-list-holder-inner
+{
+  display: grid !important;
+  grid-template-columns: auto auto;
+  transform: none !important;
+}
+#select-type-container .rc-virtual-list-holder > div 
+{
+  height: 163px !important;
+}
 @media screen and (max-width : 500px)
 {
     .ant-picker-datetime-panel { 
@@ -102,4 +116,11 @@ html::-webkit-scrollbar-thumb
     {
       width : 310px !important;
     }
+}
+@media screen and (max-width : 420px)
+{
+  .ant-select-dropdown.css-dev-only-do-not-override-byeoj0
+  {
+    right : 10px !important;
+  }
 }

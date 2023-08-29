@@ -30,7 +30,7 @@ export const ControlButtonsContainer = styled.div`
     }
     @media screen and (max-width : 480px)
     {
-        width : 80%;
+        width : 95%;
     }
 `
 export const PreviewPageContainer = styled.div`
@@ -94,7 +94,7 @@ export const PreviewPageContainer = styled.div`
     {
         .swiper-slide
         {
-            width : 85%;
+            width : 100%;
         }
     }
  
@@ -110,15 +110,15 @@ export const PreviewQuestionsContainer = styled.div`
     
     @media screen and (max-width : 980px)
     {
-        width : 50%;
+        width : 60%;
     }
     @media screen and (max-width : 768px)
     {
-        width : 70%;
+        width : 80%;
     }
     @media screen and (max-width : 480px)
     {
-        width : 80%;
+        width : 95%;
     }
 `
 export const PreviewQuestionComponent = styled(QuestionComponent)`

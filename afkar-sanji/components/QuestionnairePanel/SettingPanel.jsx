@@ -9,11 +9,8 @@ import { QuestionnaireDatePickerContainer , QuestionnaireSettingContainer} from 
 import { Icon } from '@/styles/icons';
 import { axiosInstance } from '@/utilities/axios';
 import jalaali from 'jalaali-js'
-// import jalaliday from 'jalaliday'
 import PN from 'persian-number';
 import { DatePickerInput } from '@/styles/questionnairePanel/QuestionSetting';
-// import 'moment/locale/fa';
-// import moment from "moment"
 import moment from 'moment-jalaali';
 import locale from 'antd/lib/date-picker/locale/fa_IR';
 
@@ -172,17 +169,17 @@ const SettingPanel = ({ Questionnaire }) => {
               checked={QuestionnaireData.show_question_in_pages} />
            </div>
           </QuestionnaireDatePickerContainer>
-          <QuestionnaireDatePickerContainer style={{ borderBottom : 'none' , paddingBottom : 0}}>
+          <QuestionnaireDatePickerContainer style={{ borderBottom : 'none' , paddingBottom : 0 , marginRight : '30px'}}>
           <div className='picker_header'>
             <p>حذف نوار پیشرفت</p>
-            <Checkbox onChange={e => ToggleCheckBoxHandler(QuestionnaireData.progress_bar,'progress_bar')}
+            <Switch onChange={e => ToggleCheckBoxHandler(QuestionnaireData.progress_bar,'progress_bar')}
             checked={!QuestionnaireData.progress_bar} />
              </div>
           </QuestionnaireDatePickerContainer>
-          <QuestionnaireDatePickerContainer style={{ borderBottom : 'none' , paddingBottom : 0}}>
+          <QuestionnaireDatePickerContainer style={{ borderBottom : 'none' , paddingBottom : 0 , marginRight : '30px'}}>
           <div className='picker_header'>
             <p>حذف دکمه قبلی</p>
-            <Checkbox onChange={e => ToggleCheckBoxHandler(QuestionnaireData.previous_button,'previous_button')}
+            <Switch onChange={e => ToggleCheckBoxHandler(QuestionnaireData.previous_button,'previous_button')}
              checked={!QuestionnaireData.previous_button} />
             </div>
           </QuestionnaireDatePickerContainer>

@@ -1,7 +1,7 @@
 import { Icon } from '@/styles/icons'
 import { InputOptionsContainer, OptionalInputItem ,
   AddOptionButton, OptionWritingContainer} from '@/styles/questionnairePanel/QuestionDesignPanel';
-import { OptionAdder, OptionModifier, OptionRemover } from '@/utilities/QuestionStore';
+import { OptionAdder, OptionModifier, OptionRemover, ReorderOptions } from '@/utilities/QuestionStore';
 import React from 'react'
 import { DragDropContext , Droppable , Draggable } from '@hello-pangea/dnd';
 import { useDispatch } from 'react-redux';
@@ -18,21 +18,21 @@ const MultipleAnswer = ({ QuestionInfo }) => {
   }
   const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex + 1, 0, removed);
+    const [removed] = result.splice(startIndex, 1); // Corrected the startIndex
+    result.splice(endIndex, 0, removed); // Use endIndex for insertion
     return result;
   };
   const onDragEnd = async (result) =>  {
     if (!result.destination) {
       return;
     }
-
+    
     const reorderedItems = reorder(
       QuestionInfo.options,
       result.source.index,
       result.destination.index
     );  
-    console.log(reorderedItems)
+    Dispatcher(ReorderOptions({ QuestionID : QuestionInfo.id , NewOptionsPlacement : reorderedItems  }))
   }
   const OptionItem = (OptionItem) => {
     if(QuestionInfo.options.length > 2)

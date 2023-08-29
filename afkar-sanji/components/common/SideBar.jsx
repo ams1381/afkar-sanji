@@ -9,6 +9,7 @@ import { useLocalStorage } from '@/utilities/useLocalStorage';
 import { Drawer, Skeleton, Spin } from 'antd';
 import PN from "persian-number";
 import React, { useEffect, useRef, useState } from 'react'
+import { digitsEnToFa } from '@persian-tools/persian-tools';
 
 const SideBar = ({ isopen , SetSideBar , folders , SelectedFolder  , ReadyToCreate , setReadyToCreate
     , ChangeFolder , FolderReload , ChangeFolderName}) => {
@@ -121,7 +122,7 @@ const SideBar = ({ isopen , SetSideBar , folders , SelectedFolder  , ReadyToCrea
                 setItem('SelectedFolder',index)
                 ChangeFolderName(folders[index].name)
                 }} >
-                <p>{item.questionnaires ?  PN.convertEnToPe(item.questionnaires.length) : PN.convertEnToPe(index + 1)}</p>
+                <p>{item.questionnaires ?  digitsEnToFa(item.questionnaires.length) : digitsEnToFa(index + 1)}</p>
                 <p className='folder_name'>{item.name}</p>
             </SideBarFolderItem>) : <Skeleton style={{ width : '90%' , margin : '0 auto' }}/>
             }

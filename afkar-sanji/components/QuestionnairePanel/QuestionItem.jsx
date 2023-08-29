@@ -22,6 +22,7 @@ import { WritingSectionProvider } from './Question Components/WritingSectionProv
 import { ChangeQuestionType } from '@/utilities/QuestionStore';
 import { form_data_convertor } from '@/utilities/FormData';
 import { DragDropContext, Droppable ,  Draggable } from '@hello-pangea/dnd';
+import { digitsEnToFa } from '@persian-tools/persian-tools';
 
 export const QuestionItem = ({ dropboardprovide , activeQuestionId, provided ,setActiveQuestion , IsQuestion , question , UUID , parentPlacement , GroupID }) => {
   const [ QuestionRootOpenState , SetQuestionRootOpenState ] = useState(question.newFace ? true : false);
@@ -78,9 +79,7 @@ export const QuestionItem = ({ dropboardprovide , activeQuestionId, provided ,se
     questionsData = useSelector(s => s.reducer.data.find(question_item => (question_item.question && question_item.question.id == question.id)))
    :
     questionsData = useSelector(s => s.reducer.nonQuestionData.find(nonquestion_item => (nonquestion_item.question && nonquestion_item.question.id == question.id)))
-  } 
-  
-  
+  }   
   const DeleteQuestion = async () => {
     (questionsData.question.question_type == 'welcome_page' ||
      questionsData.question.question_type == 'thanks_page') ?
@@ -127,15 +126,17 @@ export const QuestionItem = ({ dropboardprovide , activeQuestionId, provided ,se
     ChangeQuestionTypeState(ChangedType.value)
   }
   const AddQuestionHandler = () => {
-
+    let newQuestionId = RandomIdGenerator()
     questionsData.question.group ?
     QuestionDispatcher(AddQuestion({ TopQuestionID : questionsData.question.id , ParentQuestion : questionsData.question.group , AddedQuestionID : RandomIdGenerator()}))
     : questionsData.question.question_type == 'welcome_page' ?
-    QuestionDispatcher(AddQuestion({ unshiftQuestion : true , AddedQuestionID : RandomIdGenerator()}))
+    QuestionDispatcher(AddQuestion({ unshiftQuestion : true , AddedQuestionID : newQuestionId}))
     :
-    QuestionDispatcher(AddQuestion({ TopQuestionID : questionsData.question.id , AddedQuestionID : RandomIdGenerator()}))
+    QuestionDispatcher(AddQuestion({ TopQuestionID : questionsData.question.id , AddedQuestionID : newQuestionId}))
 
     QuestionDispatcher(QuestionSorter())
+    
+    setActiveQuestion(newQuestionId)
   }
   const QuestionPatcher = async () => {
     let QDataInstance = JSON.parse(JSON.stringify(questionsData))
@@ -215,7 +216,6 @@ export const QuestionItem = ({ dropboardprovide , activeQuestionId, provided ,se
     const updatedNestedQuestions = Array.from(nestedQuestions);
     const [removed] = updatedNestedQuestions.splice(result.source.index, 1);
     updatedNestedQuestions.splice(result.destination.index, 0, removed);
-    console.log(GroupID,updatedNestedQuestions)
     QuestionDispatcher(ChildQuestionReorder({ ParentQuestionID : GroupID , NewChildQuestion : updatedNestedQuestions }))
     setNestedQuestions(updatedNestedQuestions);
   };
@@ -236,14 +236,14 @@ export const QuestionItem = ({ dropboardprovide , activeQuestionId, provided ,se
                      </>
                      : <Icon name='ArrowDown' />  }                                     
                   </DropDownQuestionButton>
-                  { questionsData.question.placement ?  <div style={{ fontWeight : 600 , whiteSpace : 'pre'}}> 
-                   {<> {PN.convertEnToPe(questionsData.question.placement)}</>}
-                { parentPlacement ?  <> {PN.convertEnToPe(parentPlacement)}</>  : '' }</div> : ''}
-                  <p> { questionsData.question.title?.replace(regex,"")} </p>
+                  { questionsData.question.placement ?  <div style={{ fontWeight : 600 , whiteSpace : 'pre'}}>
+                    {<>.{digitsEnToFa(questionsData.question.placement)}</>} 
+                { parentPlacement &&  <span>-{digitsEnToFa(parentPlacement)}</span>  }</div> : ''}
+                  <p>{questionsData.question.title?.replace(regex,"")}</p>
               </div>
               <QuestionItemButtonContainer>
                  <button onClick={() => SetDeleteQuestionState(true)}>
-                      <Icon name='RedTrash' />
+                      <Icon name='RedTrash' style={{ width : '16px' }} />
                   </button>
                   
                   <RemovePopup onOkay={DeleteQuestion} setDeleteState={SetDeleteQuestionState}
@@ -253,12 +253,12 @@ export const QuestionItem = ({ dropboardprovide , activeQuestionId, provided ,se
                   
                  {(questionsData.question.question_type != 'welcome_page' && questionsData.question.question_type != 'thanks_page') 
                  ? <button onClick={Duplicate_question}>
-                    <Icon name='duplicate' />   
+                    <Icon name='duplicate' style={{ width : '12px' }} />   
                   </button> : ''}
                   
                   { (questionsData.question.question_type !== 'thanks_page') && 
                   <button className='add_btn' onClick={() => AddQuestionHandler()}>
-                      <Icon name='GrayAdd' />
+                      <Icon name='GrayAdd' style={{ width : '15.5px' }} />
                   </button>}
               </QuestionItemButtonContainer>
 
@@ -296,15 +296,18 @@ export const QuestionItem = ({ dropboardprovide , activeQuestionId, provided ,se
                         bordered={false}
                         maxTagTextLength={6}
                         className='type_selector'
+                        columns={2} 
                         labelInValue
                         disabled={(!questionsData.question.newFace || questionsData.question.nonquestion) ? true : false}
                         defaultValue={{
-                         label : QuestionTypeComponentGenerator(questionsData.question.question_type)
+                         label : QuestionTypeComponentGenerator(questionsData.question.question_type),
+                         value : questionsData.question.question_type
                         }}
                         style={{ width: 120 , border : 'none'}}
                         dropdownStyle={{ width : '350px !important' }}
                         options={Question_types}
                         onChange={ChangeQuestionTypeHandler}
+                        dropdownRender={(menu) => <div id='select-type-container'>{menu}</div>}
                       />
                     </div>
                 </div>

@@ -8,8 +8,8 @@ import { axiosInstance } from '@/utilities/axios';
 import { Button, Progress, Skeleton, message } from 'antd';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react'
-import { Swiper, SwiperSlide } from 'swiper/react';
+import React, { useEffect, useRef, useState } from 'react'
+import { Swiper, SwiperSlide, useSwiper } from 'swiper/react';
 import SwiperCore, { Navigation } from 'swiper/core';
 
 // SwiperCore.use([Navigation]);
@@ -20,6 +20,7 @@ const ViewQuestions = () => {
   const [ QuestionsData , SetQuestionsData ] = useState(null);
   const [ messageApi , messageContext ] = message.useMessage()
   const [ CurrentIndex , SetCurrentIndex ] = useState('Welcome');
+  const swiperRef = useRef(null);
 
   useEffect(() => {
     try 
@@ -89,17 +90,21 @@ const ViewQuestions = () => {
 
       { (CurrentIndex !='welcome_page' && CurrentIndex !='Thanks') ? !QuestionnaireInfo.show_question_in_pages ?
             <div className="custom-swiper-container">
-            <Swiper
+            <Swiper 
               direction="vertical"
+              _swiper={swiperRef}
               slidesPerView={1}
               navigation={[Navigation]}
+             
               onSlideChange={(E) => SetCurrentIndex(E.activeIndex)}
             >
               {QuestionsData.map((item, index) => (
                 item && <SwiperSlide key={item.question.id}>
                     <QuestionComponent mobilePreview={true} QuestionInfo={item.question} />
                     { index == QuestionsData.length - 1 &&   <ControlButtonsContainer>
-                      <Button type='primary'>ارسال</Button>
+                      <Button type='primary' onClick={() => {
+                        console.log(swiperRef.current)
+                      }}>ارسال</Button>
                       </ControlButtonsContainer>}
                 </SwiperSlide>
               ))}
