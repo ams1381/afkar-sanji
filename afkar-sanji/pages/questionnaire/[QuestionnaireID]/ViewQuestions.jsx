@@ -146,7 +146,7 @@ const ViewQuestions = ({ answerSetID }) => {
           <Progress percent={CurrentIndex == 'Thanks' ? 100
           : Math.floor((CurrentIndex / QuestionsData.length) * 100)}  steps={QuestionsData.length} /> : ''}
       </PreviewPageHeader>
-      <PreviewQuestionsContainer slidemode={!QuestionnaireInfo.show_question_in_pages ? 'active' : null}>
+      <PreviewQuestionsContainer slidemode={(!QuestionnaireInfo.show_question_in_pages && CurrentIndex != 'Thanks')? 'active' : null}>
       { (QuestionnaireInfo.show_question_in_pages && QuestionnaireInfo.welcome_page && CurrentIndex =='welcome_page') 
       && <WelcomeComponent mobilepreview={true}
        WelcomeInfo={QuestionnaireInfo.welcome_page} SetCurrentIndex={SetCurrentIndex} />}
