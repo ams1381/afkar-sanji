@@ -1,7 +1,8 @@
 import { Icon } from '@/styles/icons'
 import { QuestionFileUploadContainer } from '@/styles/questionnairePanel/QuestionSetting'
 import { RemoveFileHandler, UploadFileHandler } from '@/utilities/QuestionStore'
-import { Button, Upload } from 'antd'
+import { digitsEnToFa } from '@persian-tools/persian-tools'
+import { Button, Upload , message} from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -10,6 +11,8 @@ const FileUpload = ({ QuestionInfo }) => {
   const [ FileUploadedState , SetFileUploadedState ] = useState(QuestionInfo.media ? true : false);
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
+  const [messageApi, contextHolder] = message.useMessage();
+  const [ uploadError , setUploadError ] = useState(false);
   const [fileUploaded, setFileUploaded] = useState(null);
   const [fileList, setFileList] = useState(QuestionInfo.media && (typeof (QuestionInfo.media) == 'string') ? [
     {
@@ -27,13 +30,40 @@ const FileUpload = ({ QuestionInfo }) => {
       // url: URL.createObjectURL(QuestionInfo.media),
     },
   ]);
-
+ 
   const FileUploadHandler = (file, fileList , event) => {
+    if(file.file.percent == 0)
+    {
+      setFileUploaded(null)
+      setUploadError(false);
+      return
+    }
+      
+    if(file.file.size / 1024000 > 30)
+    {
+      messageApi.error({
+        content : `فایل آپلودی بیشتر از ${digitsEnToFa(30)} مگابایت است`,
+        style: {
+          fontFamily: 'IRANSans',
+          direction: 'rtl'
+        }
+      })
+      setFileList([{
+        name : file.file.name,
+        status: 'error',
+        url: URL.createObjectURL(file.file),
+        thumbUrl : URL.createObjectURL(file.file)
+      }]);
+      setFileUploaded(null)
+      setUploadError(true);
+      return
+    }
     file.fileList.length ? setFileUploaded(true) : setFileUploaded(null);
     dispatcher(UploadFileHandler(
       { QuestionID : QuestionInfo.id , FileObject : file.file ,
          IsQuestion : (QuestionInfo.question_type != 'welcome_page' && QuestionInfo.question_type != 'thanks_page') }
       ))
+      setUploadError(false);
   }
   const handlePreview = async (file) => {
     if (file.url) {
@@ -49,16 +79,17 @@ const FileUpload = ({ QuestionInfo }) => {
   };
   // ant-upload ant-upload-select
   return (
-    <QuestionFileUploadContainer fileuploaded={fileUploaded}>
+    <QuestionFileUploadContainer uploaderror={uploadError ? 'occur' : null}
+    fileuploaded={fileUploaded ? 'true' : null}>
+      {contextHolder}
       <p className='file_upload_title'> آپلود عکس یا فیلم </p>
       <div>
        <Upload
-          // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-          // previewFile={QuestionInfo.media ? QuestionInfo.media : ''}
           defaultFileList={fileList}
           className="upload-list-inline"
           listType="picture"
           multiple={false}
+          
           method={null}
           maxCount={1}
           onPreview={handlePreview}
@@ -69,7 +100,6 @@ const FileUpload = ({ QuestionInfo }) => {
             { QuestionID : QuestionInfo.id ,
                IsQuestion :(QuestionInfo.question_type != 'welcome_page' && QuestionInfo.question_type != 'thanks_page') }
             ))
-           
           }}
         >
           <Button  icon={<Icon name='upload' style={{ width : 12 }} />}>آپلود کنید</Button>

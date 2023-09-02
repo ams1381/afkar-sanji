@@ -28,33 +28,23 @@ export const LoginContainer = styled.div`
         filter: blur(142px);
         border-radius: 50%;
         z-index: -2;
-        animation-delay: 1s;
+        animation-delay : 1s;
     }
     &::before 
     {
         left: 0;
         top: 0;
-        animation : ${p => p.filltext ? 'LoginContainerBeforeAnim 2s ease' : 'none'};
+        transition : 0.3s;
+        animation : ${p => p.filltext ? 'LoginContainerBeforeAnim 1s ease' : 'none'};
     }
     &::after 
     {
         right: 0;
         bottom: 0;
+        transition : 0.3s;
+        animation : ${p => p.filltext ? 'LoginContainerAfterAnim 1s ease' : 'none'};
     }
-    @keyframes LoginContainerBeforeAnim
-    {
-        25% { bottom : 0 }
-        50% { top : 0  }
-        75% { bottom : 0 }
-        100% { top : 0 }
-    }
-    @keyframes LoginContainerAfterAnim
-    {
-        25% { top : 0  }
-        50% { bottom : 0  }
-        75% { top : 0  }
-        100% { bottom : 0 }
-    }
+   
 `
 export const LoginForm = styled.form`
   height: 100%;

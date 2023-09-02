@@ -15,6 +15,11 @@ export const PanelHeader = styled.div`
     justify-content: space-between;
     flex-direction: row-reverse;
     font: 14px IRANSans;
+
+    & a
+    {
+        text-decoration : none;
+    }
 `
 export const SeeResultButton = styled.div`
     background: none;
@@ -35,6 +40,9 @@ export const SeeResultButton = styled.div`
 export const QuestionnaireDirectoryContainer = styled.div`
     display: flex;
     flex-direction: row-reverse;
+    height : ${p => p.loading ? '30px' : 'auto'};
+    width : ${p => p.loading ? '100%' : 'auto'};
+    justify-content : ${p => p.loading ? 'space-between' : 'unset'};
 
     & button
     {
@@ -50,9 +58,13 @@ export const QuestionnaireDirectoryContainer = styled.div`
     {
         display : flex;
     }
+    .ant-skeleton-input
+    {
+        height : 20px !important;
+    }
 `
 export const QuestionnaireDirectoryPath = styled.div`
-    margin-left: 0.5rem;
+    // margin-left: 0.5rem;
     align-items: center;
     display : flex;
 
@@ -70,6 +82,34 @@ export const QuestionnaireDirectoryPath = styled.div`
         text-decoration: none;
         color: var(--Neutral-Gray9);
         margin-left: 0.5rem;
+        text-overflow: ellipsis;
+        white-space: nowrap; 
+        overflow: hidden;
+        max-width : 220px;
+        direction: rtl;
+    }
+    & input
+    {
+        margin-left : 0;
+    }
+    
+    @media screen and (max-width : 768px)
+    {
+        & a 
+        {
+            max-width: 141px;
+        } 
+    }
+    @media screen and (max-width : 480px)
+    {
+        & a 
+        {
+            max-width: 121px;
+        }
+        & input 
+        {
+            max-width: 119px;
+        }
     }
 `
 export const QuestionnaireEditItemsContainer = styled.div`
@@ -77,6 +117,8 @@ export const QuestionnaireEditItemsContainer = styled.div`
     justify-content: space-between;
     flex-direction: row-reverse;
     font: 13px IRANSans;
+    align-items : ${p => p.loading ? 'center' : 'auto'};
+    width : ${p => p.loading ? '100%' : 'auto'};
     margin: 1rem auto;
 
     @media screen and (max-width : 768px)
@@ -85,11 +127,22 @@ export const QuestionnaireEditItemsContainer = styled.div`
     }
 `
 export const QuestionnaireEditItemsInnerContainer = styled.div`
+    height : ${p => p.loading ? '40px' : 'auto'};
+    align-items : ${p => p.loading ? 'center' : 'auto'};
     display: flex;
     width: 50%;
     gap: 7px;
     flex-direction: row-reverse;
     font: 13px IRANSans;
+
+    & .ant-skeleton.ant-skeleton-element
+    {
+        width : 50%;
+    }
+    & .ant-skeleton.ant-skeleton-element .ant-skeleton-button
+    {
+        width : 100%;
+    }
     @media screen and (max-width : 768px)
     {
         width : 100%;
@@ -129,6 +182,10 @@ export const QuestionnaireEditButtonContainer = styled.div`
     & button:hover
     {
         border : 1px solid var(--primary-color);
+    }
+    .ant-skeleton-button
+    {
+        min-width : 40px !important;
     }
     @media screen and (max-width : 768px)
     {

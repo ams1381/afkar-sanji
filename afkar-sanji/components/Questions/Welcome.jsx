@@ -4,10 +4,10 @@ import { Button, Image } from 'antd'
 import React from 'react'
 import { Player } from 'video-react';
 
-const WelcomeComponent = ({ WelcomeInfo , SetCurrentIndex , mobilePreview}) => {
+const WelcomeComponent = ({ WelcomeInfo , SetCurrentIndex , mobilepreview , swiperMode}) => {
   const regex = /(<([^>]+)>)/gi;
   return (
-    <QuestionComponentContainer mobilePreview={mobilePreview}>
+    <QuestionComponentContainer mobilepreview={mobilepreview}>
       <WelcomeComponentContainer>
           <p className='welcome_title'>{WelcomeInfo.title ? WelcomeInfo.title.replace(regex,"") : ''}</p>
           <p className='welcome_description'>{WelcomeInfo.description ? WelcomeInfo.description.replace(regex,"") : ''}</p>
@@ -28,7 +28,7 @@ const WelcomeComponent = ({ WelcomeInfo , SetCurrentIndex , mobilePreview}) => {
               </Player>}
             </div>  : ''
             }
-          <Button type='primary' onClick={SetCurrentIndex ? () => SetCurrentIndex(0) : ''}>
+          <Button type='primary' onClick={SetCurrentIndex ? swiperMode ? SetCurrentIndex : () => SetCurrentIndex(0) : null}>
             {WelcomeInfo.button_text ? WelcomeInfo.button_text.replace(regex,"") : ''}
             </Button>
       </WelcomeComponentContainer>

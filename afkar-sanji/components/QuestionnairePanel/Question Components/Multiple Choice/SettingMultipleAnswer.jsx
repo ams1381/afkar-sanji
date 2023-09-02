@@ -21,7 +21,9 @@ const SettingMultipleAnswer = ({QuestionInfo}) => {
 
     const MultipleAnswerToggleHandler = () => {
         SetMultipleAnswerState(!MultipleAnswerState)
-        OptionalDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : 'multiple_choice' , ToggleValue : !MultipleAnswerState}));
+        OptionalDispatcher(ChangeToggleHandler({
+             QuestionID : QuestionInfo.id , ToggleName : 'multiple_choice' , ToggleValue : !MultipleAnswerState
+        }));
         
     }
     const ChangeMinMaxHandler = (event,InputName) => {
@@ -36,8 +38,10 @@ const SettingMultipleAnswer = ({QuestionInfo}) => {
         {
             OptionalDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : 'nothing_selected' , ToggleValue : false}))
             OptionalDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : 'all_options' , ToggleValue : false}))
+            OptionalDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : 'other_options' , ToggleValue : false }))
             OptionalDispatcher(OptionRemoverByText({ QuestionID : QuestionInfo.id , OptionText : '<span>هیچ کدام</span>' }))
             OptionalDispatcher(OptionRemoverByText({ QuestionID : QuestionInfo.id , OptionText : '<span>همه گزینه ها</span>' }))
+            OptionalDispatcher(OptionRemoverByText({ QuestionID : QuestionInfo.id , OptionText : '<span>سایر</span>' }))
         }
     }
     const RegularToggleHandler = (Event , TName) => {
@@ -53,7 +57,7 @@ const SettingMultipleAnswer = ({QuestionInfo}) => {
             Event ? OptionalDispatcher(OptionAdder({ QuestionID : QuestionInfo.id , OptionText : '<span>سایر</span>' , NewOptionID : RandomIdGenerator()}))
             : OptionalDispatcher(OptionRemoverByText({ QuestionID : QuestionInfo.id , OptionText : '<span>سایر</span>' }))
     }
-    console.log(QuestionInfo.additional_options)
+
   return (
     <ToggleContainer>
         <div className='checkbox_container' onClick={MultipleAnswerToggleHandler} style={{ borderBottom : QuestionInfo.multiple_choice ? 'none' : '1px solid #D9D9D9' }}>
@@ -63,16 +67,16 @@ const SettingMultipleAnswer = ({QuestionInfo}) => {
        { MultipleAnswerState ? <AlphabetNumberContainer >
           <p>تعداد گزینه های قابل انتخاب</p>
           <label>
-              <InputNumber value={QuestionInfo.min_selected_options} min={0} onChange={(e) => ChangeMinMaxHandler(e,'min_selected_options')}/>
+              <InputNumber value={QuestionInfo.min_selected_options} min={1} onChange={(e) => ChangeMinMaxHandler(e,'min_selected_options')}/>
               <p>حداقل</p>
           </label>
           <label>
-              <InputNumber  value={QuestionInfo.max_selected_options} min={0} onChange={(e) => ChangeMinMaxHandler(e,'max_selected_options')}/>
+              <InputNumber  value={QuestionInfo.max_selected_options} min={1} onChange={(e) => ChangeMinMaxHandler(e,'max_selected_options')}/>
               <p>حداکثر</p>
           </label>
         </AlphabetNumberContainer> : ''}
          <div className='additional_options_container'>
-            <div className='checkbox_container additional_option_toggle' style={{ borderBottom : QuestionInfo.additional_options ? 'none' : '1px solid #D9D9D9' }}
+            <div className='checkbox_container additional_option_toggle' style={{ borderBottom : QuestionInfo.additional_options ? 'none' : '1px solid rgb(217 217 217 / 20%)' }}
              onClick={(e => AdditionalOptionsHandler(!QuestionInfo.additional_options))}>
                 <Switch checked={QuestionInfo.additional_options} />
                 <p>گزینه های اضافی</p>
@@ -104,7 +108,8 @@ const SettingMultipleAnswer = ({QuestionInfo}) => {
             <p>تصادفی سازی نمایش گزینه ها</p>
             <Switch checked={QuestionInfo.is_random_options}/>
         </div>
-        <div className='checkbox_container' onClick={e => RegularToggleHandler(!QuestionInfo.is_vertical,'is_vertical')}>
+        <div className='checkbox_container' style={{ borderBottom : 'none' }}
+         onClick={e => RegularToggleHandler(!QuestionInfo.is_vertical,'is_vertical')}>
             <p>گزینه ها عمودی چیده شوند</p>
             <Switch checked={QuestionInfo.is_vertical}/>
         </div>

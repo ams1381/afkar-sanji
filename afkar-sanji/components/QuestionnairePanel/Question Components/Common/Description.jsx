@@ -28,7 +28,7 @@ const QuestionDescription = ({ QuestionInfo , QuestionDataDispatcher , IsQuestio
       else
       QuestionDataDispatcher(ChangeDescriptionHandler({ QuestionID : QuestionInfo.id, NewDesc : e.target.value , QuestionChanged : IsQuestion}))
     }
-    
+
   return (
     <QuestionDescriptionContainer>
         <div className='Description_checkbox_container' onClick={DescriptionToggleHandler}>

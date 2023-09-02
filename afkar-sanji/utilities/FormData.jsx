@@ -28,3 +28,41 @@ export const detectFileFormat = (fileName) => {
            videoFormats.includes(fileFormat) ? 'Video' : zip_formats.includes(fileFormat) ?
             'Zip' : audio_formats.includes(fileFormat) ? 'Audio' : 'UNKNOWN';
 }
+export const  AnswerSetFormDataConverter = (dataArray) => {
+    const formData = new FormData();
+    
+    dataArray.forEach((item, index) => {
+      const itemName = `[${index}]`;
+  
+      formData.append(`${itemName}question`, item.question);
+  
+      if (item.answer && typeof item.answer === 'object') {
+        Object.keys(item.answer).forEach(answerItems => {
+            if(answerItems == 'other_text')
+                formData.append(`${itemName}answer.other_text`,item['answer']['other_text']);
+            else
+            if(Array.isArray(item.answer[answerItems]))
+            {
+                item.answer[answerItems].forEach((answerChildItem,index) => {
+                    console.log(answerChildItem)
+                    formData.append(`${itemName}answer.${answerItems}[${index}]`,answerChildItem)
+                })
+            }
+            else 
+            {
+                item.answer[answerItems]
+                formData.append(`${itemName}answer.${answerItems}`,item.answer[answerItems])
+            }
+        })
+      } 
+      if (item.file !== null) {
+        formData.append(`${itemName}file`, item.file);
+      }
+    });
+  
+    return formData;
+  }
+
+
+//  0[question]:24
+// 0[answer][integer_selective]:3

@@ -29,6 +29,7 @@ export const QuestionnairePopover = ({ Questionnaire , RenameInput  , RenameChan
       </FolderPopoverItem>
         <FolderPopoverItem>
           <button onClick={() => {
+            SetQuestionnairePopoverState(false)
             RenameChangeState(true);
             setTimeout(()=> {
               RenameInput.current.select();

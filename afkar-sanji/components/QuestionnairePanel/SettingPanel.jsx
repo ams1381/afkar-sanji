@@ -1,17 +1,19 @@
-import React, { useEffect, useReducer, useRef, useState } from 'react'
-import { ConfigProvider,  Space, message } from 'antd';
+import React, { useEffect, useReducer, useRef, useState } from 'react';
+import { ConfigProvider, Space, message } from 'antd';
 import { Button, TimePicker } from 'antd';
 import { DatePicker as DatePickerJalali, Calendar, JalaliLocaleListener } from "antd-jalali";
 import dayjs from 'dayjs';
-import { Switch , Checkbox} from 'antd';
+import { Switch, Checkbox } from 'antd';
 import fa_IR from "antd/lib/locale/fa_IR";
-import { QuestionnaireDatePickerContainer , QuestionnaireSettingContainer} from '@/styles/questionnairePanel/QuestionnaireSetting';
+import { QuestionnaireDatePickerContainer, QuestionnaireSettingContainer } from '@/styles/questionnairePanel/QuestionnaireSetting';
 import { Icon } from '@/styles/icons';
 import { axiosInstance } from '@/utilities/axios';
-import jalaali from 'jalaali-js'
+import jalaali from 'jalaali-js';
 import PN from 'persian-number';
 import { DatePickerInput } from '@/styles/questionnairePanel/QuestionSetting';
 import moment from 'moment-jalaali';
+import { NumberFormat } from 'react-hichestan-numberinput';
+
 import locale from 'antd/lib/date-picker/locale/fa_IR';
 
 const convertStringToDate = str => {
@@ -26,179 +28,169 @@ const convertStringToDate = str => {
 
   return [formattedDate, formattedTime];
 };
+
 const convertToISOString = (datePart, timePart) =>
   new Date(`${datePart}T${timePart}`).toISOString().replace('Z', `+${(new Date().getTimezoneOffset() / -60).toFixed(0).padStart(2, '0')}:${(Math.abs(new Date().getTimezoneOffset()) % 60).toString().padStart(2, '0')}`);
 
 const SettingPanel = ({ Questionnaire }) => {
-  const [ DateValue , SetDateValue ]= useState(null);
-  const [ QuestionnaireData , Dispatcher ] = useReducer(QuestionnaireReducerFunction,Questionnaire);
+  const [DateValue, SetDateValue] = useState(null);
+  const [QuestionnaireData, Dispatcher] = useReducer(QuestionnaireReducerFunction, Questionnaire);
   const [messageApi, contextHolder] = message.useMessage()
-  const [ DateActive , SetDateActive ] = useState(false);
-  const [ TimerActive , SetTimerActive ] = useState(QuestionnaireData.timer ? true : false);
+  const [DateActive, SetDateActive] = useState(false);
+  const [TimerActive, SetTimerActive] = useState(QuestionnaireData.timer ? true : false);
   const [TimerOpen, setTimerOpen] = useState(false);
-  const [ SettingChanged , SetSettingChanged ] = useState(false);
-  const [ SettingLoading , SetSettingLoading ] = useState(false);
-  const [ ErrorType , SetErrorType ] = useState(null);
-  let defaultDatePickerValue  = [dayjs(convertDate(convertStringToDate(Questionnaire.pub_date)[0],'jalali') + ' ' + convertStringToDate(Questionnaire.pub_date)[1])]
-
-
-    QuestionnaireData.end_date ? 
-      defaultDatePickerValue.push(dayjs(convertDate(convertStringToDate(QuestionnaireData.end_date)[0],'jalali') + ' ' + 
+  const [SettingChanged, SetSettingChanged] = useState(false);
+  const [SettingLoading, SetSettingLoading] = useState(false);
+  const [ErrorType, SetErrorType] = useState(null);
+  const [TimerValue, setTimerValue] = useState(Questionnaire.timer);
+  let defaultDatePickerValue = [
+    dayjs(convertDate(convertStringToDate(Questionnaire.pub_date)[0], 'jalali') + ' ' + convertStringToDate(Questionnaire.pub_date)[1])
+  ]
+  QuestionnaireData.end_date ?
+    defaultDatePickerValue.push(dayjs(convertDate(convertStringToDate(QuestionnaireData.end_date)[0], 'jalali') + ' ' +
       convertStringToDate(QuestionnaireData.end_date)[1]))
-      : ''
-
-
+    : ''
   const DateToggleHandler = (E) => {
     SetDateActive(E);
-    if(!E)
-      Dispatcher({ ACTION : 'Date Cleared' });
+    if (!E)
+      Dispatcher({ ACTION: 'Date Cleared' });
     SetSettingChanged(true)
   }
   const TimerToggleHandler = (E) => {
     SetTimerActive(E);
-    if(!E)
-      Dispatcher({ ACTION : 'Timer Cleared' });
-   SetSettingChanged(true)
+    if (!E)
+      Dispatcher({ ACTION: 'Timer Cleared' });
+    SetSettingChanged(true)
   }
-  const DateChangeHandler = (_,NewDate) => {
+  const DateChangeHandler = (_, NewDate) => {
     SetErrorType(null)
-    if(!NewDate[0] && !NewDate[1])
-      Dispatcher({ ACTION : 'Timer Cleared' });
-    else
-    {
-      if(NewDate[0])
-         Dispatcher({ ACTION : 'Pub date set' , NewDate : convertToISOString(convertDate(NewDate[0].split(' ')[0],'gregorian'),NewDate[0].split(' ')[1] )});
-      if(NewDate[1])
-        Dispatcher({ ACTION : 'End date set' , NewDate : convertToISOString(convertDate(NewDate[1].split(' ')[0],'gregorian'),NewDate[1].split(' ')[1])});
+    if (!NewDate[0] && !NewDate[1])
+      Dispatcher({ ACTION: 'Timer Cleared' });
+    else {
+      if (NewDate[0])
+        Dispatcher({ ACTION: 'Pub date set', NewDate: convertToISOString(convertDate(NewDate[0].split(' ')[0], 'gregorian'), NewDate[0].split(' ')[1]) });
+      if (NewDate[1])
+        Dispatcher({ ACTION: 'End date set', NewDate: convertToISOString(convertDate(NewDate[1].split(' ')[0], 'gregorian'), NewDate[1].split(' ')[1]) });
     }
     SetSettingChanged(true)
   }
 
- const TimerChangeHandler = (_, Timer) => {
-    Dispatcher({ ACTION : 'Timer Change' , NewTimer : Timer });
+  const TimerChangeHandler = (_, Timer) => {
+    console.log(Timer)
+    setTimerValue(Timer)
+    Dispatcher({ ACTION: 'Timer Change', NewTimer: Timer });
     SetSettingChanged(true)
- }
- const ToggleCheckBoxHandler = (e,ToggleName) => {
-    Dispatcher({ ACTION : ToggleName , NewToggleValue : e});
+  }
+  const ToggleCheckBoxHandler = (e, ToggleName) => {
+    Dispatcher({ ACTION: ToggleName, NewToggleValue: e });
     SetSettingChanged(true)
- }
- const CancelEditHandler = () => {
-  Dispatcher({ ACTION : 'reset_questionnaire' , Resetvalue : Questionnaire })
-  SetTimerActive(QuestionnaireData.timer ? true : false)
-  SetDateActive(false)
-  SetSettingChanged(false)
- }
- console.log(convertStringToDate(Questionnaire.pub_date))
- const SaveQuestionnaireChanges = async () => {
-  if(!SettingChanged)
-    return
-  SetSettingLoading(true)
-  try
-  {
-    delete QuestionnaireData.folder
-    delete QuestionnaireData.welcome_page;
-    delete QuestionnaireData.questions;
-    delete QuestionnaireData.thanks_page;
-    await axiosInstance.patch(`/question-api/questionnaires/${Questionnaire.uuid}/`,QuestionnaireData) 
+  }
+  const CancelEditHandler = () => {
+    Dispatcher({ ACTION: 'reset_questionnaire', Resetvalue: Questionnaire })
+    SetTimerActive(QuestionnaireData.timer ? true : false)
+    SetDateActive(false)
     SetSettingChanged(false)
   }
-  catch(err)
-  {
-    if(err.response)
-      Object.keys(err.response.data).includes('pub_date','end_date') ? SetErrorType('date_error') : ''
+
+  const SaveQuestionnaireChanges = async () => {
+    if (!SettingChanged)
+      return
+    SetSettingLoading(true)
+    try {
+      delete QuestionnaireData.folder
+      delete QuestionnaireData.welcome_page;
+      delete QuestionnaireData.questions;
+      delete QuestionnaireData.thanks_page;
+     let { data } = await axiosInstance.patch(`/question-api/questionnaires/${Questionnaire.uuid}/`, QuestionnaireData);
+     if(data)
+      SetSettingChanged(false)
+    }
+    catch (err) {
+      SetSettingChanged(true)
+      if (err.response)
+        Object.keys(err.response.data).includes('pub_date', 'end_date') ? SetErrorType('date_error') : ''
       messageApi.error({
-        content : Object.values(err.response.data)[0],
-        duration : 5,
-        style : {
-          fontFamily : 'IRANSans',
-          direction : 'rtl'
+        content: Object.values(err.response.data)[0],
+        duration: 5,
+        style: {
+          fontFamily: 'IRANSans',
+          direction: 'rtl'
         }
       })
     }
-  finally
-  {
+    finally {
       SetSettingLoading(false);
-      SetSettingChanged(false);
+    }
   }
- } 
   return (
     <ConfigProvider locale={fa_IR} direction="rtl">
       {contextHolder}
       <QuestionnaireSettingContainer>
-      <QuestionnaireDatePickerContainer>
-      <div className='picker_header'>
+        <QuestionnaireDatePickerContainer>
+          <div className='picker_header' onClick={() => DateToggleHandler(!DateActive)}>
             <p>: فعال سازی دستی </p>
-              <Switch checked={DateActive} onChange={DateToggleHandler}/>
+            <Switch checked={DateActive} />
           </div>
-       <div className='picker_container'>
-          <DatePickerJalali.RangePicker showTime status={ErrorType == 'date_error' ? 'error' : null} 
-          locale={fa_IR.DatePicker}
-          disabled={!DateActive}
-          defaultValue={defaultDatePickerValue}
-           onChange={DateChangeHandler} />
-           <JalaliLocaleListener  />
-       </div>
-      </QuestionnaireDatePickerContainer>
-      <QuestionnaireDatePickerContainer>
-        <div className='picker_header time_picker'>
-                <p>: تنظیم مهلت پاسخ دهی </p>
-                <Switch checked={TimerActive} onChange={TimerToggleHandler}/>
+          <div className='picker_container date_picker'>
+            <DatePickerJalali.RangePicker showTime status={ErrorType == 'date_error' ? 'error' : null}
+              locale={fa_IR.DatePicker}
+              disabled={!DateActive}
+              defaultValue={defaultDatePickerValue}
+              onChange={DateChangeHandler} />
+            <JalaliLocaleListener />
           </div>
-          <div className='picker_container'>
-    <ConfigProvider locale={fa_IR} direction="rtl">
-      <TimePicker
-                  open={TimerOpen}
-                  onOpenChange={setTimerOpen}
-                  onChange={TimerChangeHandler}
-                  disabled={!TimerActive}
-                  showNow={false}
-                  defaultValue={
-                    QuestionnaireData.timer
-                      ? moment(QuestionnaireData.timer, 'HH:mm:ss').locale('fa') // Set Jalali locale for moment
-                      : null
-                  }
-                />
-    </ConfigProvider>        
-        </div>
-        
-      </QuestionnaireDatePickerContainer>
-          <QuestionnaireDatePickerContainer>
-          <div className='picker_header'>
-              <p>در هر صفحه یک سوال نمایش داده شود</p>
-              <Switch onChange={e => ToggleCheckBoxHandler(!QuestionnaireData.show_question_in_pages,'show_question_in_pages')}
-              checked={QuestionnaireData.show_question_in_pages} />
-           </div>
-          </QuestionnaireDatePickerContainer>
-          <QuestionnaireDatePickerContainer style={{ borderBottom : 'none' , paddingBottom : 0 , marginRight : '30px'}}>
-          <div className='picker_header'>
+        </QuestionnaireDatePickerContainer>
+        <QuestionnaireDatePickerContainer>
+          <div className='picker_header time_picker' onClick={() => TimerToggleHandler(!TimerActive)}>
+            <p>: تنظیم مهلت پاسخ دهی </p>
+            <Switch checked={TimerActive} />
+          </div>
+          <div className='picker_container time_picker'>
+            <TimePicker
+              open={TimerOpen}
+              onOpenChange={setTimerOpen}
+              onChange={TimerChangeHandler}
+              disabled={!TimerActive}
+              showNow={false}
+              defaultValue={
+                TimerValue
+                  ? moment(TimerValue, 'HH:mm:ss') // Set Jalali locale for moment
+                  : null
+              } />
+          </div>
+        </QuestionnaireDatePickerContainer>
+        <QuestionnaireDatePickerContainer>
+          <div className='picker_header' onClick={e => ToggleCheckBoxHandler(!QuestionnaireData.show_question_in_pages, 'show_question_in_pages')}>
+            <p>در هر صفحه یک سوال نمایش داده شود</p>
+            <Switch checked={QuestionnaireData.show_question_in_pages} />
+          </div>
+        </QuestionnaireDatePickerContainer>
+        <QuestionnaireDatePickerContainer style={{ borderBottom: 'none', paddingBottom: 0, marginRight: '30px' }}>
+          <div className='picker_header' onClick={e => ToggleCheckBoxHandler(QuestionnaireData.progress_bar, 'progress_bar')}>
             <p>حذف نوار پیشرفت</p>
-            <Switch onChange={e => ToggleCheckBoxHandler(QuestionnaireData.progress_bar,'progress_bar')}
-            checked={!QuestionnaireData.progress_bar} />
-             </div>
-          </QuestionnaireDatePickerContainer>
-          <QuestionnaireDatePickerContainer style={{ borderBottom : 'none' , paddingBottom : 0 , marginRight : '30px'}}>
-          <div className='picker_header'>
+            <Switch checked={!QuestionnaireData.progress_bar} />
+          </div>
+        </QuestionnaireDatePickerContainer>
+        <QuestionnaireDatePickerContainer style={{ borderBottom: 'none', paddingBottom: 0, marginRight: '30px' }}>
+          <div className='picker_header' onClick={e => ToggleCheckBoxHandler(QuestionnaireData.previous_button, 'previous_button')}>
             <p>حذف دکمه قبلی</p>
-            <Switch onChange={e => ToggleCheckBoxHandler(QuestionnaireData.previous_button,'previous_button')}
-             checked={!QuestionnaireData.previous_button} />
-            </div>
-          </QuestionnaireDatePickerContainer>
-        
+            <Switch checked={!QuestionnaireData.previous_button} />
+          </div>
+        </QuestionnaireDatePickerContainer>
         <div className='questionnaire_setting_footer'>
           <Button type='primary' icon={SettingChanged ? <Icon name='Check' /> : null} disabled={!SettingChanged}
-          onClick={SaveQuestionnaireChanges} loading={SettingLoading}>
-              <p>ذخیره ی تغییرات</p>
+            onClick={SaveQuestionnaireChanges} loading={SettingLoading}>
+            <p>ذخیره ی تغییرات</p>
           </Button>
           <Button danger onClick={CancelEditHandler} disabled={!SettingChanged}>
-              <p>انصراف</p>
+            <p>انصراف</p>
           </Button>
         </div>
-
-        
       </QuestionnaireSettingContainer>
-        </ConfigProvider>
+    </ConfigProvider>
   )
 }
+
 export default SettingPanel;
 const convertDate = (inputDate, dateType) => {
   const [year, month, day] = inputDate.split('-');

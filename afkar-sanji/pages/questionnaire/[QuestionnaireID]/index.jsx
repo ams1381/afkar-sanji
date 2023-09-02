@@ -28,7 +28,7 @@ const QuestionnairePanel = () => {
         const QuestionnaireRetriever = async () => {
           let  { data } =  await axiosInstance.get(`/question-api/questionnaires/${router.query.QuestionnaireID}/`);
           SetQuestionnaireInfo(data);
-          SetQuestionnaireReloader(false);
+          // SetQuestionnaireReloader(false);
        }
        if(router.query.QuestionnaireID)
          QuestionnaireRetriever();
@@ -44,7 +44,8 @@ const QuestionnairePanel = () => {
           }
         })
       }
-    },[router.query , QuestionnaireReloader])
+    },[])
+   
   return (
     <>
     <Head>
@@ -56,9 +57,7 @@ const QuestionnairePanel = () => {
     <Header SetSideBar={() => setOpen(!SideBarOpen)} goToFolders={true}/>
       <QuestionnairePanelContainer>
         <PanelInnerContainer> 
-          { QuestionnaireInfo ?  
-          <QuestionnairePanelHeader SideState={SideState} ChangeSide={SetSideState} 
-          Questionnaire={QuestionnaireInfo}/> : <Skeleton active rows={5} />}
+          {  <QuestionnairePanelHeader SideState={SideState} ChangeSide={SetSideState} Questionnaire={QuestionnaireInfo}/>}
           {
             SideState == 'question_design' ? <QuestionDesignPanel QuestionnaireReloader={SetQuestionnaireReloader} Questionnaire={QuestionnaireInfo}/> 
             : <SettingPanel Questionnaire={QuestionnaireInfo}/>

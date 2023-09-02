@@ -5,6 +5,7 @@ import { OptionAdder, OptionModifier, OptionRemover, ReorderOptions } from '@/ut
 import React from 'react'
 import { DragDropContext , Droppable , Draggable } from '@hello-pangea/dnd';
 import { useDispatch } from 'react-redux';
+import { useState } from 'react';
 
 const MultipleAnswer = ({ QuestionInfo }) => {
   const Dispatcher = useDispatch();
@@ -18,15 +19,14 @@ const MultipleAnswer = ({ QuestionInfo }) => {
   }
   const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1); // Corrected the startIndex
-    result.splice(endIndex, 0, removed); // Use endIndex for insertion
+    const [removed] = result.splice(startIndex, 1); 
+    result.splice(endIndex, 0, removed);
     return result;
   };
   const onDragEnd = async (result) =>  {
     if (!result.destination) {
       return;
     }
-    
     const reorderedItems = reorder(
       QuestionInfo.options,
       result.source.index,
@@ -36,7 +36,7 @@ const MultipleAnswer = ({ QuestionInfo }) => {
   }
   const OptionItem = (OptionItem) => {
     if(QuestionInfo.options.length > 2)
-      Dispatcher(OptionRemover({ QuestionID : QuestionInfo.id , OptionID : OptionItem.id}))
+      Dispatcher(OptionRemover({ QuestionID : QuestionInfo.id , OptionID : OptionItem.id }))
   }
   return (
     <OptionWritingContainer>
@@ -51,11 +51,11 @@ const MultipleAnswer = ({ QuestionInfo }) => {
             {(provided, snapshot) => <div><InputOptionsContainer ref={provided.innerRef} 
             {...provided.draggableProps}
             {...provided.dragHandleProps} key={item.id}>
-            <OptionalInputItem  type='text' 
+            <OptionalInputItem  type='text' autoFocus={item.newOption ? true : false}
             onChange={e => Dispatcher(OptionModifier({ QuestionID : QuestionInfo.id , OptionID : item.id , OptionText : e.target.value }))}
             defaultValue={(item.text != 'null') ? item.text : ''} placeholder='چیزی بنویسید'/>
             <div className='option_button_container'>
-              <button onClick={() => Dispatcher(OptionAdder({ QuestionID : QuestionInfo.id , NewOptionID : RandomIdGenerator() , OptionID : item.id 
+              <button onClick={() => Dispatcher(OptionAdder({ QuestionID : QuestionInfo.id , NewOptionID : RandomIdGenerator() , OptionID : item.id , newOption : true
                 , OptionText : null }))}>
                 <Icon name='CirclePlus'/>
               </button>
@@ -72,7 +72,9 @@ const MultipleAnswer = ({ QuestionInfo }) => {
           
         </Droppable>
       </DragDropContext>
-      <AddOptionButton onClick={() => Dispatcher(OptionAdder({ QuestionID : QuestionInfo.id , NewOptionID : RandomIdGenerator() , OptionText : null }))}>
+      <AddOptionButton onClick={() => Dispatcher(OptionAdder({ 
+        QuestionID : QuestionInfo.id , NewOptionID : RandomIdGenerator() , OptionText : null , newOption : true
+        }))}>
         برای افزودن گزینه ضربه بزنید
       </AddOptionButton>
     </OptionWritingContainer>

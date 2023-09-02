@@ -11,7 +11,6 @@ export default function App({ Component, pageProps }) {
   const [ readyToRender , setReadyToRender ] = useState(false);
 
   const { getItem , setItem } = useLocalStorage();
-
     const authentication = async () => {
     if(getItem('cookie'))
     {
@@ -39,7 +38,7 @@ export default function App({ Component, pageProps }) {
           authentication();
       else
         setReadyToRender(true)
-    })
+    },[])
 
   return <AuthContextProvider>
       { readyToRender && <Component {...pageProps} /> }

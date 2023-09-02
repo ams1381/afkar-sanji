@@ -1,7 +1,9 @@
 import { Select, Skeleton, Spin, message } from 'antd';
 import React, { useEffect, useRef, useState } from 'react'
 import { ClearSearchInputButton, QuestionDesignTitle, QuestionDesignBox,
-   QuestionnairePanelBodyContainer  , QuestionSearchContainer , QuestionSearchInput, AddNonQuestionItem
+   QuestionnairePanelBodyContainer  , QuestionSearchContainer , QuestionSearchInput,
+    AddNonQuestionItem, QuestionItemRow, QuestionDesignItem, QuestionItemSurface, 
+    LoadingQuestionItem, QuestionItemButtonContainer
 } from '@/styles/questionnairePanel/QuestionDesignPanel';
 import { Icon } from '@/styles/icons';
 import { QuestionItem } from './QuestionItem';
@@ -14,6 +16,7 @@ import { initialQuestionsSetter } from '@/utilities/QuestionStore';
 import { useSelector } from 'react-redux';
 import { DragDropContext , Droppable , Draggable } from '@hello-pangea/dnd';
 
+
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
@@ -24,7 +27,20 @@ const reorder = (list, startIndex, endIndex) => {
 const getListStyle = (isDraggingOver) => ({
   width: '100%',
 });
-
+export const ReorderPoster = async (UUID,reOrderedArray) => {
+  axiosInstance.defaults.headers['Content-Type'] = 'application/json';
+  console.log(reOrderedArray, axiosInstance.defaults.headers['Content-Type'])
+  try
+     {
+      await axiosInstance.post(`/question-api/questionnaires/${UUID}/change-questions-placements/`,{
+        'placements' : reOrderedArray
+      })
+     }
+    catch(err)
+    {
+      throw err;
+    }
+}
 const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
   const QuestionDataDispatcher = useDispatch();
   const [ SearchResult , SetSearchResult ] = useState([]);
@@ -32,10 +48,10 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
   const [ QuestionsReload , SetQuestionsReloaded ] = useState(false);
   const [ActiveQuestionId, setActiveQuestionId] = useState(null);
   const [ SavedMessage , contextHolder] = message.useMessage();
-  // const [ QuestionsToPreview ]
   const regex = /(<([^>]+)>)/gi;
   const  AllQuestion = useSelector(s => s.reducer.data)
   const NonQuestions = useSelector(s => s.reducer.nonQuestionData)
+  
   useEffect(() => {
     if(Questionnaire)
     {
@@ -63,7 +79,7 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
   }
   const SearchSelectHandler = (QuestionID) => {
     setActiveQuestionId(QuestionID);
-    document.querySelector(`.QuestionItem${QuestionID}`)?.scrollIntoView();
+     document.querySelector(`.QuestionItem${QuestionID}`)?.scrollIntoView({ behavior : 'smooth' });
   }
   const onDragEnd = async (result) =>  {
     if (!result.destination) {
@@ -82,14 +98,12 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
       if(item.question)
         return { question_id : item.question.id , new_placement : index + 1}
      })
-     axiosInstance.defaults.headers['Content-Type'] = 'application/json';
+     
      reOrderedArray.forEach((item,index) => !item ? reOrderedArray.splice(index,1) : '')
-     try
-     {
-      await axiosInstance.post(`/question-api/questionnaires/${Questionnaire.uuid}/change-questions-placements/`,{
-        'placements' : reOrderedArray
-      })
-     }
+    try 
+    {
+      await ReorderPoster(Questionnaire.uuid,reOrderedArray)
+    }
     catch(err)
     {
       SavedMessage.error({
@@ -106,15 +120,21 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
     }
   };
   const AddWelcomeHandler = () => {
-    QuestionDataDispatcher(AddWelcome({ QuestionnaireID : Questionnaire.uuid , WelcomeID : Date.now() }))
-    console.log(NonQuestions)
+    let welcomeID = Date.now();
+    QuestionDataDispatcher(AddWelcome({ QuestionnaireID : Questionnaire.uuid , WelcomeID : welcomeID }));
+
+    setActiveQuestionId(welcomeID)
   }
   const AddThanksHandler = () => {
-    QuestionDataDispatcher(AddThanks({ QuestionnaireID : Questionnaire.uuid , ThanksID : Date.now() }))
+    let ThanksID = Date.now();
+    QuestionDataDispatcher(AddThanks({ QuestionnaireID : Questionnaire.uuid , ThanksID : ThanksID }));
 
+    setActiveQuestionId(ThanksID)
   }
   const AddFirstQuestion = () => {
-    QuestionDataDispatcher(AddQuestion({AddedQuestionID : Date.now() }))
+    let FirstQuestionID = Date.now();
+    QuestionDataDispatcher(AddQuestion({AddedQuestionID : FirstQuestionID }))
+    setActiveQuestionId(FirstQuestionID)
   }
   return (
     <QuestionnairePanelBodyContainer>
@@ -139,7 +159,7 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                 notFoundContent={null}
                 
                 filterOption={(_, option) => option ? option.label : ''}/>
-                </> : ''}
+                </> : <Skeleton.Input active />}
               </QuestionSearchContainer>
       </div>
       <QuestionDesignTitle>
@@ -153,13 +173,22 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                 UUID={Questionnaire.uuid}
                 activeQuestionId={ActiveQuestionId}
                 setActiveQuestion={setActiveQuestionId}
-                question={NonQuestions[0].question}/> :
-                 <AddNonQuestionItem onClick={AddWelcomeHandler}  style={{  marginBottom : 10 }}>
+                question={NonQuestions[0]}/> :
+                 <AddNonQuestionItem onClick={AddWelcomeHandler}  >
                   <p>افزودن خوش آمد گویی</p>
                   </AddNonQuestionItem> : 
-                  <AddNonQuestionItem style={{ border : 'none' }}>
-                      <Skeleton loading />
-                  </AddNonQuestionItem>}
+                  <LoadingQuestionItem className='question_design_item loading-skeleton' >
+                  <QuestionItemSurface className='loading_surface' >
+                  <QuestionItemButtonContainer style={{ display : 'flex' }}>
+                        <Skeleton.Button style={{ width : 10 , borderRadius : 2 }} active loading block shape='square'/>
+                        <Skeleton.Button style={{ width : 10 , borderRadius : 2 }} active loading block shape='square'/>
+                    </QuestionItemButtonContainer>
+                    <div className='question_item_info'>
+                        <Skeleton.Input size='small' style={{ height : 20 , width : 150 }} active loading />
+                      </div>
+          
+                  </QuestionItemSurface>
+              </LoadingQuestionItem>}
                 { Questionnaire ? AllQuestion.length ?
                 <DragDropContext onDragEnd={onDragEnd}>
                   <Droppable droppableId='dropboard'>
@@ -178,16 +207,11 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                           IsQuestion={true}
                           UUID={Questionnaire.uuid}
                           key={item.question.id}
-                          question={item.question}
+                          question={item}
                           provided={provided}
                           activeQuestionId={ActiveQuestionId}
                           setActiveQuestion={setActiveQuestionId}
-                          dropboardprovide={provided}
-                        >
-                          ams
-                        </QuestionItem>
-
-                      
+                          dropboardprovide={provided}/>         
                       </div>
                     )}
                   </Draggable> : null)}
@@ -195,7 +219,7 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                   </div>  } 
                   </Droppable>
                 </DragDropContext>
-                :  <AddNonQuestionItem addquestion='true' onClick={AddFirstQuestion}>
+                :  <AddNonQuestionItem style={{ marginTop : 10 }} addquestion='true' onClick={AddFirstQuestion}>
                   <svg width="17" height="16" viewBox="0 0 17 16" xmlns="http://www.w3.org/2000/svg">
                   <path d="M16.5 8C16.5 12.4183 12.9183 16 8.5 16C4.08172 16 0.5 12.4183 0.5 8C0.5 3.58172 4.08172 0 8.5 0C12.9183 0 16.5 3.58172 16.5 8ZM4.5 8C4.5 8.27614 4.72386 8.5 5 8.5H8V11.5C8 11.7761 8.22386 12 8.5 12C8.77614 12 9 11.7761 9 11.5V8.5H12C12.2761 8.5 12.5 8.27614 12.5 8C12.5 7.72386 12.2761 7.5 12 7.5H9V4.5C9 4.22386 8.77614 4 8.5 4C8.22386 4 8 4.22386 8 4.5V7.5H5C4.72386 7.5 4.5 7.72386 4.5 8Z"/>
                   </svg>
@@ -210,19 +234,60 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                   setActiveQuestion={setActiveQuestionId}
                   IsQuestion={false} 
                   UUID={Questionnaire.uuid} 
-                  question={NonQuestions[1].question} /> :
+                  question={NonQuestions[1]} /> :
                    <AddNonQuestionItem onClick={AddThanksHandler} style={{  marginTop : 10 }}>
                   <p>افزودن صفحه تشکر</p>
                  </AddNonQuestionItem>
-                 :  <AddNonQuestionItem style={{ border : 'none' , marginTop : 70 }}>
-                      <Skeleton loading />
-                 </AddNonQuestionItem>}
+                 : 
+                 <>
+                  <LoadingQuestionItem className='question_design_item loading-skeleton' >
+                        <QuestionItemSurface className='loading_surface' >
+                        <QuestionItemButtonContainer style={{ display : 'flex' }}>
+                              <Skeleton.Button style={{ width : 10 , borderRadius : 2 }} active loading block shape='square'/>
+                              <Skeleton.Button style={{ width : 10 , borderRadius : 2 }} active loading block shape='square'/>
+                              <Skeleton.Button style={{ width : 10 , borderRadius : 2 }} active loading block shape='square'/>
+                          </QuestionItemButtonContainer>
+                          <div className='question_item_info'>
+                              <Skeleton.Input size='small' style={{ height : 20 , width : 150 }} active loading />
+                            </div>
+                
+                        </QuestionItemSurface>
+                    </LoadingQuestionItem>
+                    <LoadingQuestionItem className='question_design_item loading-skeleton' >
+                        <QuestionItemSurface className='loading_surface' >
+                        <QuestionItemButtonContainer style={{ display : 'flex' }}>
+                              <Skeleton.Button style={{ width : 10 , borderRadius : 2 }} active loading block shape='square'/>
+                              <Skeleton.Button style={{ width : 10 , borderRadius : 2 }} active loading block shape='square'/>
+                              <Skeleton.Button style={{ width : 10 , borderRadius : 2 }} active loading block shape='square'/>
+                          </QuestionItemButtonContainer>
+                          <div className='question_item_info'>
+                              <Skeleton.Input size='small' style={{ height : 20 , width : 150 }} active loading />
+                            </div>
+                
+                        </QuestionItemSurface>
+                    </LoadingQuestionItem>
+                    <LoadingQuestionItem className='question_design_item loading-skeleton' >
+                        <QuestionItemSurface className='loading_surface' >
+                        <QuestionItemButtonContainer style={{ display : 'flex' }}>
+                              <Skeleton.Button style={{ width : 10 , borderRadius : 2 }} active loading block shape='square'/>
+                          </QuestionItemButtonContainer>
+                          <div className='question_item_info'>
+                              <Skeleton.Input size='small' style={{ height : 20 , width : 150 }} active loading />
+                            </div>
+                
+                        </QuestionItemSurface>
+                    </LoadingQuestionItem>
+                 </>
+                   
+                
+                //  <AddNonQuestionItem style={{ marginTop : 55 , border : 'none' , direction : 'rtl' }}>
+                //       <Skeleton loading row={1} />
+                //       </AddNonQuestionItem>
+                  }
                   </div> : <></>}
                   { !ActiveQuestionId && Questionnaire && <div className='QuestionDesignLeftContainer' >
                        <p>جهت ویرایش یک از سوالات را از قسمت سمت‌راست انتخاب کنید</p>
                    </div> }
-                 
-
         
       </QuestionDesignBox>
     </QuestionnairePanelBodyContainer>

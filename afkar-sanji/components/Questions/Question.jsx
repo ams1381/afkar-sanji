@@ -44,17 +44,18 @@ const QuestionComponentBodyProvider = (QuestionType,QuestionInfo) => {
             return <InputAnswer InputPlaceholder={QuestionInfo.answer_template} QuestionInfo={QuestionInfo}/>
   }
 }
-const QuestionComponent = ({ QuestionInfo , ChildQuestion , mobilePreview }) => {
+const QuestionComponent = ({ QuestionInfo , ChildQuestion , mobilepreview }) => {
   const QuestionBodyComponent = QuestionComponentBodyProvider(QuestionInfo.question_type,QuestionInfo);
   const regex = /(<([^>]+)>)/gi;
 
   return (
-    QuestionInfo.question_type == 'welcome_page' ? <WelcomeComponent WelcomeInfo={QuestionInfo} /> 
-    : QuestionInfo.question_type != 'thanks_page' ? <QuestionComponentContainer className='question_component'
-    childq={ChildQuestion ? 'true' : null} mobilePreview={mobilePreview}>
+    QuestionInfo.question_type == 'welcome_page' ? <WelcomeComponent WelcomeInfo={QuestionInfo} mobilepreview={mobilepreview} /> 
+    : QuestionInfo.question_type != 'thanks_page' ? <QuestionComponentContainer 
+    className={`question_component  ${QuestionInfo.group ? 'group_question' : ''} `}
+    childq={ChildQuestion ? 'true' : null} mobilepreview={mobilepreview}>
         <div className='question_header' >
         <QuestionTitle>
-            <p>{<>{(QuestionInfo.is_required && ' * ')} {QuestionInfo.title?.replace(regex,"")} </>}</p>
+            <p>{<>{QuestionInfo.title?.replace(regex,"")} {(QuestionInfo.is_required && ' * ')} </>}</p>
             { !QuestionInfo.show_number ? <span className='question_number'>
             { '-' + (persianNumberMin.convertEnToPe(QuestionInfo.placement)) }
             </span> : '' }
@@ -67,14 +68,14 @@ const QuestionComponent = ({ QuestionInfo , ChildQuestion , mobilePreview }) => 
 
         { QuestionInfo.media ?
             (typeof QuestionInfo.media == 'object') ?
-            <div className='uploaded_file_preview' style={{ margin : '1.5rem 0' }}>
+            <div className='uploaded_file_preview' style={{ margin : '20px 0' }}>
                 { detectFileFormat(QuestionInfo.media.name) == 'Picture' ? 
                 <Image width='100%' src={URL.createObjectURL(QuestionInfo.media)}
                  placeholder={true} /> : <Player >
                  <source src={URL.createObjectURL(QuestionInfo.media)} />
                </Player>}
             </div> 
-            : <div className='uploaded_file_preview' style={{ margin : '1.5rem 0' }}>
+            : <div className='uploaded_file_preview' style={{ margin : '20px 0' }}>
                 { detectFileFormat(QuestionInfo.media) == 'Picture' ? 
                 <Image width='100%' src={QuestionInfo.media}
                 placeholder={true} /> : <Player>

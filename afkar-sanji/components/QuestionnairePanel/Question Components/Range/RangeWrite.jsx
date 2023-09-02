@@ -3,7 +3,7 @@ import { Input, Slider } from 'antd';
 import React from 'react'
 import { useDispatch } from 'react-redux';
 import PN from 'persian-number';
-import { RangeLabelContainer, RangeLabelInput } from '@/styles/questionnairePanel/QuestionDesignPanel';
+import { RangeLabelContainer, RangeLabelInput , SliderContainer } from '@/styles/questionnairePanel/QuestionDesignPanel';
 import { digitsEnToFa } from '@persian-tools/persian-tools';
 
 export const RangeWrite = ({ QuestionInfo }) => {
@@ -16,24 +16,23 @@ export const RangeWrite = ({ QuestionInfo }) => {
         dispatcher(ChangeLabelHandler({ QuestionID : QuestionInfo.id , Label : LabelName , LabelValue : e.target.value }))
     }
   return (
-    <>
-    <div>
+    <div style={{ textAlign : 'right' , color : 'var(--Neutral-Gray9)' }}>
+    <p>تنظیم طیف</p>
+    <SliderContainer>
         <Slider
-          min={4}
-          max={12}
+          min={3}
+          max={7}
           step={1}
-          marks={SlideMarkGenerator()}
-          trackStyle={{ background : 'var(--primary-color)' }}
+          marks={SlideMarkGenerator(3,7)}
+          trackStyle={{ background : '#A4ABFF' }}
           draggableTrack={true}
           dots={true}
           onChange={DegreeChangeHandler}
-          value={QuestionInfo.max}
-          className="custom-slider"
-          tipFormatter={(value) => value.toString()} // Convert the value to string
-          tipProps={{ 'data-persian-value': digitsEnToFa(value) }} // Use your digitsEnToFa function
-          
-        />
-    </div>
+          value={QuestionInfo.max ? QuestionInfo.max  : 3}
+          tipFormatter={(e) => <span style={{ width : '100%'}}>{digitsEnToFa(e)}</span>}
+          style={{ marginTop : 20 }}
+          className="custom-slider"/>
+    </SliderContainer>
     <RangeLabelContainer>
         <p>برچسب ها</p>
         <div className='label_container'>
@@ -58,66 +57,19 @@ export const RangeWrite = ({ QuestionInfo }) => {
             </label>
         </div>
     </RangeLabelContainer>
-    </>
-    
-    
+    </div>   
   )
 }
-const SlideMarkGenerator = () => {
-    return  {
-      4: {
-        label : digitsEnToFa(4),
-        style : {
-          fontFamily : 'IRANSans'
-        }
-      } ,
-      5: {
-        label : digitsEnToFa(5),
-        style : {
-          fontFamily : 'IRANSans'
-        }
-      },
-      6: {
-        label : digitsEnToFa(6),
-        style : {
-          fontFamily : 'IRANSans'
-        }
-      },
-      7: {
-        label : digitsEnToFa(7),
-        style : {
-          fontFamily : 'IRANSans'
-        }
-      },
-      8: {
-        label : digitsEnToFa(8),
-        style : {
-          fontFamily : 'IRANSans'
-        }
-      },
-      9 : {
-        label : digitsEnToFa(9),
-        style : {
-          fontFamily : 'IRANSans'
-        }
-      } ,
-      10 : {
-        label : digitsEnToFa(10),
-        style : {
-          fontFamily : 'IRANSans'
-        } 
-      } ,
-      11 : {
-        label : digitsEnToFa(11),
-        style : {
-          fontFamily : 'IRANSans'
-        }
-      },
-      12 : {
-        label : digitsEnToFa(12),
-        style : {
-          fontFamily : 'IRANSans'
-        }
-      },
+const SlideMarkGenerator = (start, end) => {
+  const result = {};
+
+  for (let i = start; i <= end; i++) {
+    result[i] = {
+      label: digitsEnToFa(i),
+      style: {
+        fontFamily: 'IRANSans'
+      }
     };
   }
+  return result;
+};

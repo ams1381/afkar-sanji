@@ -80,5 +80,5 @@ export const RemoveModalTextContent = styled.div`
     line-height: 2rem;
 `
 export const RemoveModalIcon = styled.div`
-    margin-top: 5px;
+    margin-top: 8px;
 `

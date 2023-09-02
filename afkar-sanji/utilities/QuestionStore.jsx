@@ -3,14 +3,19 @@ import { configureStore , createSlice , current, getDefaultMiddleware } from '@r
 
 var InitialValue = {
     nonQuestionData : [],
-    data : []
+    data : [],
 }
 const QuestionSlice =  createSlice({
     name : 'QuestionsSlice',
     initialState : InitialValue,
     reducers : {
         initialQuestionsSetter : (state,action) => {
-            state.data = action.payload;
+            // state.data = action.payload.map(item => item.question ? {/ question : item.question } : '');
+            state.data.length = 0;
+            action.payload.forEach(item => {
+                if(item.question)
+                    state.data.push({ question : item.question })
+            })  
         },
         DuplicateQuestionHandler : (state , action) =>{
             const { QuestionID , CopiedQuestionID} = action.payload;
@@ -20,7 +25,7 @@ const QuestionSlice =  createSlice({
             state.data.splice(DuplicatedIndex + 1, 0, DuplicatedElement);
             state.data[[DuplicatedIndex + 1]].question.id = CopiedQuestionID;
             state.data[DuplicatedIndex + 1].question.newFace = true;
-
+            state.data[DuplicatedIndex + 1].question.duplicated = true;
         },
         DeleteQuestionHandler : (state , action) => {
             const { QuestionID , isQuestion } = action.payload;
@@ -42,21 +47,29 @@ const QuestionSlice =  createSlice({
 
         },
         finalizer : (state , action) => {
-            const { isQuestion , QuestionID , ResponseID } = action.payload;
-
+            const { isQuestion , QuestionID , Response } = action.payload;
+            
             if(isQuestion)
             {
-                if(state.data.find(item => item.question ? item.question.id == QuestionID : '')){
-                    state.data.find(item => item.question ? item.question.id == QuestionID : '').question.newFace = null;
-                    state.data.find(item => item.question ? item.question.id == QuestionID : '').question.id = ResponseID
+                if(state.data.find(item => item.question && item.question.id == QuestionID)){
+                    // console.log(JSON.parse(JSON.stringify(state.data.find(item => item.question.id == QuestionID).question)),Response)
+                    console.log(JSON.parse(JSON.stringify(state.data.find(item => item.question.id == QuestionID).question)))
+                    state.data.find(item => item.question.id == QuestionID).question = Response;
+                    console.log(JSON.parse(JSON.stringify(state.data)))
                 }
                 else
-                state.data.forEach(item => item.question.child_questions ?
-                    item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                    .question.newFace = null : '')
-                state.data.forEach(item => item.question.child_questions ?
-                    item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                    .question.id = ResponseID : '')
+                {
+                    state.data.forEach(item => item.question.child_questions ?
+                        item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
+                        .question = Response : '')
+                //  state.data.forEach(item => item.question.child_questions ?
+                //     item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
+                //     .question.newFace = null : '')
+                // state.data.forEach(item => item.question.child_questions ?
+                //     item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
+                //     .question.id = ResponseID : '')   
+                }
+                
             }
             else
             {
@@ -66,8 +79,8 @@ const QuestionSlice =  createSlice({
             
         } ,
         QuestionSorter : (state , action) => {
-            state.data.forEach((item,index) => !item.question ? state.data.splice(index,1) : '')
-            state.data.forEach((item,index) => item.question ? item.question.placement = index + 1 : '')
+            // state.data.forEach((item,index) => !item.question ? state.data.splice(index,1) : '')
+            state.data.forEach((item,index) => item.question.placement = index + 1)
         },
         QuestionReorder : (state , action) => {
             const { newPlacementArray } = action.payload;
@@ -104,25 +117,6 @@ const QuestionSlice =  createSlice({
                 newFace : true,
                 nonquestion : true
             }})
-        },
-        ChangeQuestionType : (state , action) => {
-            const { QuestionID , newType , Prefix_url} = action.payload;
-            if(state.data.find(item => item.question.id == QuestionID))
-            {
-                state.data.find(item => item.question.id == QuestionID).question.question_type = newType;
-                state.data.find(item => item.question.id == QuestionID).question.url_prefix = Prefix_url;
-            }
-            else
-            {
-                state.data.forEach(item => item.question.child_questions ?
-                    item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                    .question.question_type = newType : '')
-                state.data.forEach(item => item.question.child_questions ?
-                    item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                    .question.url_prefix = Prefix_url : '')
-            }
-
-            console.log(state.data.find(item => item.question.id == QuestionID).question.question_type)
         },
         NonQuestionSetter : (state, action) => {
             state.nonQuestionData = action.payload
@@ -207,7 +201,7 @@ const QuestionSlice =  createSlice({
             (item => item.id == OptionID).text = OptionText : '')
         },
         OptionAdder : (state, action) => {
-            const  { QuestionID , OptionID , NewOptionID , OptionText} = action.payload;
+            const  { QuestionID , OptionID , NewOptionID , OptionText , newOption} = action.payload;
             if(OptionID)
             {
                 if(state.data.find(questionItem => questionItem.question.id == QuestionID))
@@ -218,6 +212,9 @@ const QuestionSlice =  createSlice({
                 state.data.find(questionItem => questionItem.question.id == QuestionID).question.options.splice(DuplicatedIndex + 1, 0, DuplicatedOption);
                 state.data.find(questionItem => questionItem.question.id == QuestionID).question.options[DuplicatedIndex + 1].text = OptionText;
                 state.data.find(questionItem => questionItem.question.id == QuestionID).question.options[DuplicatedIndex + 1].id = NewOptionID;
+                state.data.find(questionItem => questionItem.question.id == QuestionID).question.options[DuplicatedIndex + 1].newOption = newOption;
+
+                
                 }
                 else
                 {
@@ -236,19 +233,24 @@ const QuestionSlice =  createSlice({
                     state.data.forEach(item => item.question.child_questions ?
                         item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
                         .question.options.id = NewOptionID : '')
+                    state.data.forEach(item => item.question.child_questions ?
+                        item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
+                        .question.options.newOption = newOption : '')
                 }
             }
             else
                 state.data.find(questionItem => questionItem.question.id == QuestionID) ?
                 state.data.find(questionItem => questionItem.question.id == QuestionID).question.options.push({
                     id : NewOptionID ,
-                    text : OptionText
+                    text : OptionText , 
+                    newOption : newOption,
                 }) :
                 state.data.forEach(item => item.question.child_questions ?
                     item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
                     .question.options.push({
                         id : NewOptionID ,
-                        text : OptionText
+                        text : OptionText,
+                        newOption : newOption
                     })  : '')
         },
         OptionRemover : (state, action) => {
@@ -322,7 +324,7 @@ const QuestionSlice =  createSlice({
                 id : AddedQuestionID,
                 placement : 1,
                 is_required : null,
-                max : 4,
+                max : null,
                 additional_options : false,
                 url_prefix: "optional-questions",
                 media: null,
@@ -349,7 +351,7 @@ const QuestionSlice =  createSlice({
                 {
                     let TopQuestionIndex = JSON.parse(JSON.stringify(state.data)).
                     findIndex(item => (item.question && item.question.id == TopQuestionID));
-                    initialQuestionData.placement = TopQuestionIndex + 1;
+                    initialQuestionData.question.placement = TopQuestionIndex + 1;
                     state.data.splice(TopQuestionIndex + 1, 0,initialQuestionData);
                 }
                 else if(ParentQuestion)
@@ -357,19 +359,66 @@ const QuestionSlice =  createSlice({
                     let TopQuestionIndex = JSON.parse(JSON.stringify(state.data)).
                     forEach(item => item.question.child_questions ?
                         item.question.child_questions.findIndex(child_item => child_item.question.id == TopQuestionID) : '');
-                    console.log(TopQuestionIndex)
 
-                    initialQuestionData.placement = TopQuestionIndex + 1;
+                    initialQuestionData.question.placement = TopQuestionIndex + 1;
                     state.data.find(item => item.question.id == ParentQuestion)
                     .child_questions.splice(TopQuestionIndex + 1 ,0,initialQuestionData)
                 }
             }
             else
             {
-                initialQuestionData.placement = 1;
+                initialQuestionData.question.placement = 1;
                 unshiftQuestion ? state.data.unshift(initialQuestionData)
                 : state.data.push(initialQuestionData);
             }
+        },
+        ChangeQuestionType : (state , action) => {
+            const { QuestionID , newType , Prefix_url} = action.payload;
+            let newMin , newMax;
+            switch(newType)
+            {
+                case 'number_answer':
+                    newMin = null;
+                    newMax= null;
+                    break;
+                case 'integer_selective':
+                    newMax= 4;
+                    break;
+                case 'text_answer':
+                    newMin = null;
+                    newMax= null;
+                    break;
+                case 'text_answer':
+                    newMin = null;
+                    newMax= 4;
+                    break;
+            }
+            if(state.data.find(item => item.question.id == QuestionID))
+            {
+                
+                state.data.find(item => item.question.id == QuestionID).question.question_type = newType;
+                state.data.find(item => item.question.id == QuestionID).question.url_prefix = Prefix_url;
+               
+                state.data.find(item => item.question.id == QuestionID).question.min = newMin;
+                state.data.find(item => item.question.id == QuestionID).question.max = newMax;
+            }
+            else
+            {
+                state.data.forEach(item => item.question.child_questions ?
+                    item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
+                    .question.question_type = newType : '')
+                state.data.forEach(item => item.question.child_questions ?
+                    item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
+                    .question.url_prefix = Prefix_url : '')
+                state.data.forEach(item => item.question.child_questions ?
+                    item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
+                    .question.min = newMin : '')
+                state.data.forEach(item => item.question.child_questions ?
+                    item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
+                    .question.max = newMax : '')
+            }
+
+            console.log(state.data.find(item => item.question.id == QuestionID).question.question_type)
         },
         ChangeAnswerPattern : (state, action) => {
             const { QuestionID , NewPattern , answer_template} = action.payload;
@@ -443,6 +492,11 @@ const QuestionSlice =  createSlice({
             const { ParentQuestionID , NewChildQuestion } = action.payload;
             console.log(ParentQuestionID , NewChildQuestion)
             // state.data.find(item => item.question && item.question.id == ParentQuestionID).question.child_questions = NewChildQuestion;
+        },
+        FileVolumeTypeHandler : (state, action) => {
+            const { QuestionID , NewVolumeType } = action.payload;
+
+            state.data.find(item => item.question && item.question.id == QuestionID).question.volume_unit = NewVolumeType;
         }
     }
 })
@@ -460,7 +514,7 @@ export const { initialQuestionsSetter , ChangeDescriptionHandler ,
     ChangeToggleHandler,  ChangeNameHandler , ChangeMinOrMaxAnswerHandler,
      ChangeLabelHandler , OptionsAlphaBeticalSorter , ReorderOptions ,
     OptionModifier , OptionAdder , OptionRemover , ChangeUploadSizeHandler
-    , ChangeDegreeShapeHandler , OptionRemoverByText , finalizer ,
+    , ChangeDegreeShapeHandler , OptionRemoverByText , finalizer , FileVolumeTypeHandler ,
     ChangeAnswerPattern , QuestionReorder , UploadFileHandler , RemoveFileHandler , AddWelcome , AddThanks ,
     QuestionSorter , ChangeDegreeHandler , NonQuestionSetter} = QuestionSlice.actions;
 

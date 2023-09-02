@@ -3,6 +3,7 @@ import { Checkbox, Switch } from 'antd'
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { ChangeDegreeShapeHandler } from '@/utilities/QuestionStore'
+import { CommonSetting } from '../Common/CommonSetting'
 
 export const RateQuestionSetting = ({ QuestionInfo }) => {
     const dispatcher = useDispatch();
@@ -10,6 +11,8 @@ export const RateQuestionSetting = ({ QuestionInfo }) => {
         dispatcher(ChangeDegreeShapeHandler({ QuestionID : QuestionInfo.id , NewIconName : IconName , NewShape : ShapeName}))
     }
   return (
+    <>
+   
     <DegreeShapeContainer>
         <p>سفارشی کردن آیکون</p>
         <ShapeSelectorContainer>
@@ -38,16 +41,8 @@ export const RateQuestionSetting = ({ QuestionInfo }) => {
             </svg>
             </label>
         </ShapeSelectorContainer>
-        <ToggleContainer>
-        <div className='checkbox_container'>
-            <p>عدم نمایش شماره سوال</p>
-            <Switch/>
-        </div>
-        <div className='checkbox_container'>
-            <p>پاسخ به سوال اجباری باشد</p>
-            <Switch/>
-        </div>
-    </ToggleContainer>
     </DegreeShapeContainer>
+    <CommonSetting QuestionInfo={QuestionInfo} />
+    </>
   )
 }

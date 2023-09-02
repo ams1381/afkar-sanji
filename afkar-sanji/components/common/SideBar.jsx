@@ -32,6 +32,13 @@ const SideBar = ({ isopen , SetSideBar , folders , SelectedFolder  , ReadyToCrea
         (ReadyToCreate && FolderInput.current) ? FolderInput.current.focus() : ''
         // console.log(FolderInput.current)
         // FolderInput.current ? console.log(FolderInput.current) : ''
+
+        if(folders && !folders.length)
+        {
+            setReadyToCreate(true);
+            SetAddFolderState(true)
+        }
+            
     },[folders])
     const AddFolder = async () => {
         axiosInstance.defaults.headers['Content-Type'] = 'application/json';

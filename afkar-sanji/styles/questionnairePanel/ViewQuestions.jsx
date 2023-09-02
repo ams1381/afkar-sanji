@@ -31,6 +31,7 @@ export const ControlButtonsContainer = styled.div`
     @media screen and (max-width : 480px)
     {
         width : 95%;
+        justify-content: center;
     }
 `
 export const PreviewPageContainer = styled.div`
@@ -82,6 +83,24 @@ export const PreviewPageContainer = styled.div`
      {
         width: 100%;
         height: 100vh;
+     }
+     .swiper-slide.swiper-slide-next
+     {
+        justify-content : flex-start;
+     }
+     .swiper-slide.swiper-slide-prev
+     {
+        justify-content : flex-end;
+     }
+     .swiper-slide.swiper-slide-next .question_component
+     {
+        margin-top : -120px;
+        opacity : 0.6;
+     }
+     .swiper-slide.swiper-slide-prev .question_component
+     {
+        margin-bottom : -120px;
+        opacity : 0.6;
      }
     @media screen and (max-width : 768px)
     {

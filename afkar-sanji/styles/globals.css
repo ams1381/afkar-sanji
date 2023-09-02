@@ -70,6 +70,7 @@ html::-webkit-scrollbar-thumb
 {
   display: grid !important;
   grid-template-columns: auto auto !important;
+  padding: 10px;
 }
 .question_design_item .rc-virtual-list-holder > div
 {
@@ -86,6 +87,7 @@ html::-webkit-scrollbar-thumb
 .ant-select-dropdown.css-dev-only-do-not-override-byeoj0
 {
   width: 390px !important;
+  border-radius: 2px !important;
 }
 #select-type-container .rc-virtual-list-holder-inner
 {
@@ -97,6 +99,11 @@ html::-webkit-scrollbar-thumb
 {
   height: 163px !important;
 }
+.ant-modal-content
+{
+  border-radius: 2px !important;
+}
+
 @media screen and (max-width : 500px)
 {
     .ant-picker-datetime-panel { 
@@ -115,6 +122,10 @@ html::-webkit-scrollbar-thumb
     .ant-drawer-content-wrapper
     {
       width : 310px !important;
+    }
+    .ant-select-dropdown.css-dev-only-do-not-override-byeoj0
+    {
+      width: 290px !important;
     }
 }
 @media screen and (max-width : 420px)

@@ -11,6 +11,7 @@ import { axiosInstance } from '@/utilities/axios';
 import { Icon } from '@/styles/icons';
 import { handleInputWidth } from '@/utilities/RenameFunctions';
 import { digitsEnToFa } from '@persian-tools/persian-tools';
+import Link from 'next/link';
 
 const convertToJalaliDate = (inputDate) => {
     const [year, month, day] = inputDate.split('-');
@@ -22,34 +23,46 @@ const QuestionnaireBox = ({Questionnaire , FolderReload}) => {
     const [ QuestionnaireName , setQuestionnaireName ] = useState(Questionnaire.name);
     const [ NameInputWidth , SetInputWidth ] = useState(null);
     const nameRef = useRef(null);
-    
+    const isRenamePending = useRef(false);
     useEffect(() => {
         handleInputWidth(nameRef,QuestionnaireName);
-    },[nameRef])
+    },[])
+    // useEffect(() => {
+        
     const RenameStateHandler = () => {
         setChangeNameState(!ChangeNameActive)
         setTimeout(()=> {
             nameRef.current.select();
         }, 100)
         if(ChangeNameActive)
-            RenameQuestionnaire();
+           RenameQuestionnaire();
+        
+            
+
     }
     const RenameQuestionnaire = async () => {
-        if(QuestionnaireName == Questionnaire.name)
-            return
+          if (QuestionnaireName === Questionnaire.name) {
+            return;
+          }
+        handleInputWidth(nameRef,QuestionnaireName)
         try
         {
+            setQuestionnaireName(QuestionnaireName);
             await axiosInstance.patch(`/question-api/questionnaires/${Questionnaire.uuid}/`,{ name : QuestionnaireName });
-            handleInputWidth(nameRef,QuestionnaireName);
+            FolderReload()
+            // handleInputWidth(nameRef,QuestionnaireName);
         }
        catch(err)
        {
-        handleInputWidth(nameRef,QuestionnaireName);
-        console.log(err)
+        // handleInputWidth(nameRef,QuestionnaireName);
+       }
+       finally
+       {
+        setChangeNameState(false);
        }
     }
-    const nameInputChangeHandler = (e) => {
-        handleInputWidth(nameRef,QuestionnaireName);
+    const nameInputChangeHandler = async (e) => {
+        handleInputWidth(nameRef,e.target.value);
         setQuestionnaireName(e.target.value)
     }
     
@@ -61,14 +74,14 @@ const QuestionnaireBox = ({Questionnaire , FolderReload}) => {
                 }}>
          <QuestionnaireHeader>
              {Questionnaire ? <QuestionnaireNameContainer>
-                 <QuestionnaireNameInput ref={nameRef} type="text" onChange={nameInputChangeHandler}
+                 <QuestionnaireNameInput ref={nameRef} onKeyDown={e => e.key == 'Enter' ? RenameQuestionnaire() : ''} 
+                 type="text" onChange={nameInputChangeHandler}
                   value={QuestionnaireName} disabled={!ChangeNameActive}/>
-                 <RenameSpan clickable={(ChangeNameActive && !QuestionnaireName) ? null : 'true'} 
+                 <RenameSpan clickable={(ChangeNameActive && !QuestionnaireName) ? null : 'active'} 
                   onClick={RenameStateHandler}>
                     {!ChangeNameActive ? <Icon name='RenameQuestionnaire' /> : 
                     <div> 
                         <Icon name='RenameQuestionnaireCheck' />
-                       
                      </div>}
                  </RenameSpan>
                  {ChangeNameActive && <RenameSpan clickable={true}
@@ -81,9 +94,14 @@ const QuestionnaireBox = ({Questionnaire , FolderReload}) => {
                  </RenameSpan>}
              </QuestionnaireNameContainer> : <Skeleton active /> }
              <div className="questionnaire_preview">
+                {Questionnaire.question_count != 0  ? 
+                <Link href={`/questionnaire/${Questionnaire.uuid}/ViewQuestions/`} target='_blank'>
                  <QuestionnairePreviewButton disabled={Questionnaire.question_count == 0}>
                      پیش نمایش
                  </QuestionnairePreviewButton>
+                </Link> : <QuestionnairePreviewButton disabled={Questionnaire.question_count == 0}>
+                     پیش نمایش
+                 </QuestionnairePreviewButton>}
              </div>
          </QuestionnaireHeader>
          <div className="questionnaire_body">
@@ -99,10 +117,11 @@ const QuestionnaireBox = ({Questionnaire , FolderReload}) => {
                  </QuestionnaireBodyStat> </>: <Skeleton active />}
              </div>
              <div className="questionnaire_see_result">
+             <Link href={`/questionnaire/${Questionnaire.uuid}/Results/`} target='_blank'>
                  <QuestionnaireSeeResultButton>
                      <p>مشاهده نتایج</p>
                  </QuestionnaireSeeResultButton>
-                     
+            </Link>        
                      
              </div>
          </div>

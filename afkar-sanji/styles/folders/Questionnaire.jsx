@@ -7,7 +7,7 @@ export const QuestionnaireContainer = styled.div`
     display: grid;
     row-gap: 1.3rem;
     grid-template-columns: repeat(auto-fill,minmax(406px,1fr));
-    justify-items: baseline;
+    justify-items: center;
     direction: rtl;
     grid-auto-flow: dense;
     column-gap: 2rem;
@@ -77,7 +77,7 @@ export const QuestionnaireBodyStat = styled.div`
 `
 export const QuestionnaireFooter = styled.div`
     display: flex;
-    justify-content: space-around;
+    justify-content: ${p => p.loading ? 'space-evenly' : 'space-around'};
 `
 export const QuestionnaireNameInput = styled.input`
     font-family: 'IRANSANS';
@@ -98,6 +98,10 @@ export const QuestionnaireNameInput = styled.input`
     &::selection 
     {
         background : #86B6FF;
+    }
+    @media screen and (max-width : 480px)
+    {
+        max-width: 162px;
     }
 `
 export const RenameSpan = styled.span`
@@ -138,6 +142,18 @@ export const QuestionnaireSeeResultButton = styled.button`
         margin-left: 0.5rem;
         margin-bottom: 10px;
     }
+    .ant-skeleton.ant-skeleton-element
+    {
+        min-width: 20px !important;
+        margin-left: 20px !important;
+        margin-bottom: 13px !important;
+    }
+    .ant-skeleton.ant-skeleton-element .ant-skeleton-button
+    {
+        min-width: 20px !important;
+        width: 108px !important;
+        height: 20px !important;
+    }
 `
 export const ContentBox = styled.div`
     width: 100%;
@@ -166,6 +182,11 @@ export const FolderEditContainer = styled.div`
     {
         margin-left: 0.5rem;
     }
+    & input
+    {
+     max-width : 70%;   
+    }
+    
 `
 export const FolderPopoverToggle = styled.button`
     background: none;

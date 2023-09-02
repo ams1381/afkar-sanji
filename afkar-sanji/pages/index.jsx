@@ -3,7 +3,7 @@ import SideBar from '@/components/common/SideBar';
 import { ScreenMask } from '@/styles/common';
 import { CornerAddButton } from '@/styles/folders/cornerAdd';
 import AddPopoverContent from '@/components/Folders/AddPopoverContent';
-import { ContentBox, QuestionnaireNameInput } from '@/styles/folders/Questionnaire';
+import { ContentBox, QuestionnaireBodyStat, QuestionnaireDiv, QuestionnaireFooter, QuestionnaireHeader, QuestionnaireNameContainer, QuestionnaireNameInput, QuestionnaireSeeResultButton } from '@/styles/folders/Questionnaire';
 import QuestionnaireBox from '@/components/Folders/questionnaire';
 import { Popover, Progress, message } from 'antd';
 import { Icon } from '@/styles/icons';
@@ -79,8 +79,9 @@ export default function Home() {
     getData();
   },[FolderReload])
   useEffect(() => {
-    handleInputWidth(FolderNameInput,FolderName);
-  },[FolderNameInput.current , SelectedFolder])
+    if(folders && folders[SelectedFolder])
+      handleInputWidth(FolderNameInput,folders[SelectedFolder].name);
+  },[folders , FolderNameInput , SelectedFolder])
 
   const folderNameChangeHandler = (e) => {
     handleInputWidth(FolderNameInput,FolderName);
@@ -90,7 +91,8 @@ export default function Home() {
     try 
     {
       await axiosInstance.patch(`/user-api/folders/${folders[SelectedFolder].id}/`, { 'name' : FolderName });
-      handleInputWidth(nameRef,QuestionnaireName);
+      handleInputWidth(FolderNameInput,FolderName);
+      SetFolderReload(true)
     }
     catch(err)
     {
@@ -102,6 +104,7 @@ export default function Home() {
           direction : 'rtl'
         }
       })
+      handleInputWidth(FolderNameInput,folders[SelectedFolder]?.name);
     }
     SetChangeFolderNameState(false);
   }
@@ -152,14 +155,13 @@ export default function Home() {
                     {ChangeFolderName ? <Icon name='GrayCheck' style={{ width : 20 }} /> : <Icon name='Menu' /> }
                   </FolderPopoverToggle>
               {ChangeFolderName && <FolderPopoverToggle onClick={() => {
-                  SetChangeFolderNameState(false);
                   SetFolderName(folders[SelectedFolder]?.name)
-                  handleInputWidth(FolderNameInput,folders[SelectFolder]?.name)
-                  // FolderNameInput.current.de
+                  handleInputWidth(FolderNameInput,folders[SelectedFolder]?.name)
+                  SetChangeFolderNameState(false);
               }}>
                 <Icon name='BlackClose' style={{ width : 15 , marginLeft : 10}} />
               </FolderPopoverToggle>}
-              <QuestionnaireNameInput type='text' 
+              <QuestionnaireNameInput type='text' onKeyDown={e => e.key == 'Enter' ? folderRenameConfirm() : ''}
               ref={FolderNameInput} value={FolderName} onChange={folderNameChangeHandler}
                disabled={!ChangeFolderName} /> 
           </FolderEditContainer>
@@ -190,12 +192,112 @@ export default function Home() {
                 <Icon name='Folder' />
                </button>
          </EmptyFolderContainer> : <MainContainer>
+          <FolderEditContainer>
+            <Skeleton.Input active style={{ height : 20 }}/>
+          </FolderEditContainer>
          <QuestionnaireContainer>
-             <Skeleton block style={{ margin : '2rem auto'}} loading active />
-
-             <Skeleton block style={{ margin : '2rem auto'}} loading active />
-
-             <Skeleton block style={{ margin : '2rem auto'}} loading active />
+          <QuestionnaireDiv style={{ background : 'none' , border : 'none' }}>
+              <QuestionnaireHeader>
+                  <QuestionnaireNameContainer>
+                      <Skeleton.Input active  style={{ height : 20 }}/>
+                  </QuestionnaireNameContainer>
+                  <div className='questionnaire_preview'>
+                    <Skeleton.Input active style={{ minWidth : 20 , width : 90 , height : 20 }}/>
+                  </div>
+              </QuestionnaireHeader>
+              <div className="questionnaire_body">
+                  <div className="questionnaire_stats">
+                          <QuestionnaireBodyStat>
+                              <Skeleton.Input active style={{ height : 20 , width: 80 , minWidth : 20}} />
+                              <Skeleton.Input active style={{ height : 20 , width: 90 , minWidth : 20}}/>
+                          </QuestionnaireBodyStat>
+                          <QuestionnaireBodyStat>
+                              <Skeleton.Input active  style={{ height : 20 , width: 70 , minWidth : 20}}/>
+                              <Skeleton.Input active  style={{ height : 20 , width: 110 , minWidth : 20}}/>
+                          </QuestionnaireBodyStat>
+                    </div>
+                    <div className="questionnaire_see_result">
+                      <QuestionnaireSeeResultButton>
+                          <Skeleton.Button active />
+                      </QuestionnaireSeeResultButton>
+                      
+                    </div>
+              </div>
+              <QuestionnaireFooter loading='active'>
+                  <Skeleton.Button active style={{ width : 73 }} />
+                  <Skeleton.Button active style={{ width : 73 }}/>
+                  <Skeleton.Button active style={{ width : 73 }}/>
+                  <Skeleton.Button active style={{ width : 73 }}/>
+              </QuestionnaireFooter>
+          </QuestionnaireDiv>
+          <QuestionnaireDiv style={{ background : 'none' , border : 'none' }}>
+              <QuestionnaireHeader>
+                  <QuestionnaireNameContainer>
+                      <Skeleton.Input active  style={{ height : 20 }}/>
+                  </QuestionnaireNameContainer>
+                  <div className='questionnaire_preview'>
+                    <Skeleton.Input active style={{ minWidth : 20 , width : 90 , height : 20 }}/>
+                  </div>
+              </QuestionnaireHeader>
+              <div className="questionnaire_body">
+                  <div className="questionnaire_stats">
+                          <QuestionnaireBodyStat>
+                              <Skeleton.Input active style={{ height : 20 , width: 80 , minWidth : 20}} />
+                              <Skeleton.Input active style={{ height : 20 , width: 90 , minWidth : 20}}/>
+                          </QuestionnaireBodyStat>
+                          <QuestionnaireBodyStat>
+                              <Skeleton.Input active  style={{ height : 20 , width: 70 , minWidth : 20}}/>
+                              <Skeleton.Input active  style={{ height : 20 , width: 110 , minWidth : 20}}/>
+                          </QuestionnaireBodyStat>
+                    </div>
+                    <div className="questionnaire_see_result">
+                      <QuestionnaireSeeResultButton>
+                          <Skeleton.Button active />
+                      </QuestionnaireSeeResultButton>
+                      
+                    </div>
+              </div>
+              <QuestionnaireFooter loading='active'>
+                  <Skeleton.Button active style={{ width : 73 }} />
+                  <Skeleton.Button active style={{ width : 73 }}/>
+                  <Skeleton.Button active style={{ width : 73 }}/>
+                  <Skeleton.Button active style={{ width : 73 }}/>
+              </QuestionnaireFooter>
+          </QuestionnaireDiv>
+          <QuestionnaireDiv style={{ background : 'none' , border : 'none' }}>
+              <QuestionnaireHeader>
+                  <QuestionnaireNameContainer>
+                      <Skeleton.Input active  style={{ height : 20 }}/>
+                  </QuestionnaireNameContainer>
+                  <div className='questionnaire_preview'>
+                    <Skeleton.Input active style={{ minWidth : 20 , width : 90 , height : 20 }}/>
+                  </div>
+              </QuestionnaireHeader>
+              <div className="questionnaire_body">
+                  <div className="questionnaire_stats">
+                          <QuestionnaireBodyStat>
+                              <Skeleton.Input active style={{ height : 20 , width: 80 , minWidth : 20}} />
+                              <Skeleton.Input active style={{ height : 20 , width: 90 , minWidth : 20}}/>
+                          </QuestionnaireBodyStat>
+                          <QuestionnaireBodyStat>
+                              <Skeleton.Input active  style={{ height : 20 , width: 70 , minWidth : 20}}/>
+                              <Skeleton.Input active  style={{ height : 20 , width: 110 , minWidth : 20}}/>
+                          </QuestionnaireBodyStat>
+                    </div>
+                    <div className="questionnaire_see_result">
+                      <QuestionnaireSeeResultButton>
+                          <Skeleton.Button active />
+                      </QuestionnaireSeeResultButton>
+                      
+                    </div>
+              </div>
+              <QuestionnaireFooter loading='active'>
+                  <Skeleton.Button active style={{ width : 73 }} />
+                  <Skeleton.Button active style={{ width : 73 }}/>
+                  <Skeleton.Button active style={{ width : 73 }}/>
+                  <Skeleton.Button active style={{ width : 73 }}/>
+              </QuestionnaireFooter>
+          </QuestionnaireDiv>
          </QuestionnaireContainer>
         </MainContainer> 
       } 

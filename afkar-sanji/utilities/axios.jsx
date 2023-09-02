@@ -1,6 +1,7 @@
 import axios from "axios";
 import { AuthContext } from "./AuthContext";
 import { useLocalStorage } from "./useLocalStorage";
+export const baseURL = 'https://mostafarm7.pythonanywhere.com';
 axios.defaults.baseURL = 'https://mostafarm7.pythonanywhere.com';
 
 const { getItem , setItem } = useLocalStorage();
@@ -40,6 +41,9 @@ axiosInstance.interceptors.response.use(function (response) {
                 console.log(err)
                 window.location.pathname = '/auth'
             }
+            break;
+        case 403:
+            window.location.pathname = '/auth'
             break;
         case 404:
             break;

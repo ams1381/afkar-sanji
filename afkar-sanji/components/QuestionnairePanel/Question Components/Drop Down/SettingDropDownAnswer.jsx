@@ -41,11 +41,13 @@ export const SettingDropDownAnswer = ({ QuestionInfo }) => {
        { QuestionInfo.multiple_choice ? <AlphabetNumberContainer>
           <p>تعداد گزینه های قابل انتخاب</p>
           <label>
-              <InputNumber min={0} onChange={(e) => ChangeMinMaxHandler(e,'min_selected_options')} />
+              <InputNumber min={1} value={QuestionInfo.min_selected_options} 
+              onChange={(e) => ChangeMinMaxHandler(e,'min_selected_options')} />
               <p>حداقل</p>
           </label>
           <label>
-              <InputNumber min={0} onChange={(e) => ChangeMinMaxHandler(e,'max_selected_options')}/>
+              <InputNumber min={1} value={QuestionInfo.max_selected_options} 
+              onChange={(e) => ChangeMinMaxHandler(e,'max_selected_options')}/>
               <p>حداکثر</p>
           </label>
         </AlphabetNumberContainer> : ''}

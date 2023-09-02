@@ -16,7 +16,15 @@ export const QuestionnaireDatePickerContainer  = styled.div`
     {
         font-family : IRANSans !important;
     }
- 
+    .picker_container.time_picker .ant-picker , .picker_container.date_picker
+    {
+        border-radius: 2px;
+    }
+    .picker_container.time_picker .ant-picker
+    {
+        width: 274px;
+        height: 34px;
+    }
 `
 export const QuestionnaireSettingContainer = styled.div`
     display: flex;
@@ -41,16 +49,13 @@ export const QuestionnaireSettingContainer = styled.div`
         height : 34px;
         border-radius : 2px;
     }
-    .questionnaire_setting_footer button  p 
-    {
-        margin-right : 0.5rem;
-    }
     .picker_header
     {
         display: flex;
         justify-content: space-between;
         flex-direction: row-reverse;
         text-align: right;
+        cursor: pointer;
     }
     .picker_header button 
     {
@@ -85,7 +90,7 @@ export const QuestionnaireSettingContainer = styled.div`
     }
     .ant-picker-input input 
     {
-        direction : rtl;
+        direction : ltr;
         text-align : right;
     }
 `

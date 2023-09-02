@@ -38,11 +38,25 @@ export const FolderPopoverItem =  styled.div`
     }
 ` 
 export const SharePopoverContainer = styled.div`
-    width: 200px;
+    width: 225px;
     display: flex;
     justify-content: space-between;
     font-family: 'IRANSans';
     font-size: 13px;
+    flex-direction: column;
+    text-align: right;
+
+    .share_icon_container
+    {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+    .share_icon_container .icon_container i 
+    {
+        width : 20px;
+        height : 20px;
+    }
 `
 export const SharePopoverButton = styled.div`
     width: 100%;
@@ -51,8 +65,14 @@ export const SharePopoverButton = styled.div`
     cursor: pointer;
     color: white;
     font-family: 'IRANSans';
-    TEXT-ALIGN: CENTER;
+    display : flex;
+    justify-content : center;
+    align-items : center;
+    text-align : center;
+    height : 24px;
     margin-top: 0.8rem;
+
+    
 `
 export const RemovePopoverContainer = styled.div`
     display: flex;

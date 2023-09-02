@@ -1,50 +1,82 @@
 import { Icon } from '@/styles/icons';
 import { OptionalAnswerBlockContainer } from '@/styles/questionnairePanel/QuestionComponent';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { DragDropContext , Droppable , Draggable } from '@hello-pangea/dnd';
 import { useDrag } from 'react-dnd'
+import { useDispatch  , useSelector} from 'react-redux';
+import { SortOptions } from '@/utilities/AnswerStore';
+
 
 const Prioritize = ({ QuestionInfo }) => {
+  const dispatcher = useDispatch();
+  const [sortedOptionArray, setSortedOptionArray] = useState(QuestionInfo.options);
+  const QuestionsAnswerSet = useSelector(state => state.reducer.AnswerSet);
+
+  useEffect(() => {
+    setSortedOptionArray(QuestionInfo.options)
+  },[QuestionInfo.options])
+  useEffect(() => {
+    if(QuestionsAnswerSet && QuestionsAnswerSet.length)
+       dispatcher(SortOptions({ QuestionID : QuestionInfo.id , NewOptionsArray : sortedOptionArray }))
+  },[sortedOptionArray])
+  
   const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex + 1, 0, removed);
+    result.splice(endIndex, 0, removed);
     return result;
   };
-  const onDragEnd = async (result) =>  {
-    if (!result.destination) {
-      return;
-    }
+
+  const onDragEnd = (result) => {
+    if (!result.destination) return;
 
     const reorderedItems = reorder(
-      QuestionInfo.options,
+      sortedOptionArray,
       result.source.index,
       result.destination.index
-    );  
-  }
+    );
+    setSortedOptionArray(reorderedItems);
+  };
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId='dropboard'> 
-      {(provided, snapshot) => <OptionalAnswerBlockContainer vertical='true' 
-      provided={provided} {...provided.droppableProps} 
-        ref={provided.innerRef}>
-          {QuestionInfo.options.map((item,index) => <Draggable  key={item.id} 
-          draggableId={item.id.toString()} index={index}>
-            {(provided, snapshot) => <div ref={provided.innerRef} 
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}>
-               <label  
-            className='OptionalAnswerItemContainer Prioritize' key={item.id} style={{ cursor : 'pointer' }}>
-            <Icon name='DND' />
-            <p style={{ marginRight : 15 }}>{item.text}</p>
-           
-          </label></div>}
-        </Draggable> 
+      <Droppable droppableId='prioritize_droppable'>
+        {(droppableProvided, droppableSnapshot) => (
+          <OptionalAnswerBlockContainer
+            vertical='true'
+            ref={droppableProvided.innerRef}
+            
+            {...droppableProvided.droppableProps}
+          >
+            {sortedOptionArray.map((item, index) => (
+              <Draggable
+                key={item.id}
+                draggableId={item.id.toString()}
+                index={index}
+              >
+                {(draggableProvided, draggableSnapshot) => (
+                  <div
+                    ref={draggableProvided.innerRef}
+                    {...draggableProvided.draggableProps}
+                    {...draggableProvided.dragHandleProps}
+                  >
+                    <label
+                      className='OptionalAnswerItemContainer Prioritize'
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <Icon name='DND' />
+                      <p style={{ marginRight: 15 }}>{item.text}</p>
+                    </label>
+                  </div>
+                )}
+              </Draggable>
+            ))}
+            {droppableProvided.placeholder}
+          </OptionalAnswerBlockContainer>
         )}
-        {provided.placeholder}
-      </OptionalAnswerBlockContainer>}
-    </Droppable>
+      </Droppable>
     </DragDropContext>
-  )
-}
+  );
+};
+
 export default Prioritize;

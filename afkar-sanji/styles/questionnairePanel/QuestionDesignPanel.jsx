@@ -70,6 +70,11 @@ export const QuestionSearchContainer = styled.div`
         left : 65px;
         top : 20px;
     }
+    & .ant-skeleton.ant-skeleton-element , .ant-skeleton-input
+    {
+        width : 100% !important;
+        border-radius: 2px;
+    }
 `
 export const QuestionSearchInput = styled.input`
     width: 100%;
@@ -101,8 +106,16 @@ export const QuestionDesignTitle = styled.div`
 export const QuestionDesignBox = styled.div`
     display: flex;
     flex-direction: row-reverse;
-    margin-top: 1rem;
+    margin-top: 10px;
     position: relative;
+    max-height : 478px;
+    overflow : scroll;
+
+    &::-webkit-scrollbar
+    {
+        width : 0;
+        scroll-behavior: smooth;
+    }
 
     & > div
     {
@@ -140,6 +153,7 @@ export const QuestionDesignBox = styled.div`
             display : none;
         }
     }
+    
 `
 export const QuestionDesignItem = styled.div`
     padding: 10px 12px;
@@ -178,13 +192,42 @@ export const QuestionDesignItem = styled.div`
     }
 
 `
+export const LoadingQuestionItem = styled(QuestionDesignItem)`
+        background : none;
+        direction : rtl;
+        display : flex;
+        justify-content : flex-start;
+        margin-top : 10px;
+
+        .question_item_info
+        {
+            display : flex;
+            justify-content : flex-end;
+        }
+        .loading_surface
+        {
+            width : 50%;
+            display : flex;
+            justify-content : space-between;
+        }
+        @media screen and (max-width : 768px)
+        {
+            .loading_surface
+            {
+                width : 100% !important;
+            }
+        }
+`
 export const QuestionItemRow = styled.div`
     width: 100%;
     display: flex;
     justify-content: flex-end;
     flex-direction: row-reverse;
     align-items: flex-start;
-
+    & .question_design_item
+    {
+        overflow: hidden;
+    }
     & .question_preview
     {
         width : 50%;
@@ -230,6 +273,7 @@ export const QuestionItemSurface = styled.div`
     {
         color : #B8B8B8;
         margin-right : 0.4rem;
+        direction: rtl;
     }
 `
 export const DropDownQuestionButton = styled.button`
@@ -244,7 +288,7 @@ export const DropDownQuestionButton = styled.button`
     & i 
     {
         transition : 0.3s;
-        transform : ${p => p?.dropped ? 'rotate(-90deg)' : 'none'};
+        transform : ${p => p.dropped ? 'rotate(-90deg)' : 'none'};
     }
     
 `
@@ -276,12 +320,21 @@ export const QuestionItemButtonContainer = styled.div`
     {
         border: 1px solid var(--primary-color);
     }
+    .ant-skeleton-button
+    {
+        min-width : 32px !important;
+        width : 32px;
+        border-radius: 2px;
+    }
 `
 export const QuestionItemActionSelector = styled.div`
-    width: 100%;
+    // width: 100%;
+    width: 110%;
+    margin-left: -20px;
     margin-top: 0.8rem;
     border-top: 1px solid #0000000F;
     display: flex;
+    overflow: hidden;
 
     & .view_question
     {
@@ -310,20 +363,42 @@ export const QuestionItemActionButton = styled.button`
     border-bottom : ${p => p.selected ? '2px solid var(--primary-color)' : 'none'};
     color : ${p => p.selected ? 'var(--primary-color)' : '#8F8F8F'};
     flex-direction: row-reverse;
-    font: 12px IRANSans;
+    font: 14px IRANSans;
     height: 40px;
     align-items: center;
     cursor: pointer;
     margin-top: 0.4rem;
     box-sizing: content-box;
+    outline : none;
     & p 
     {
-        margin-left: 0.5rem
+        margin-left: 0.5rem;
+        white-space: nowrap;
     }
     & svg
     {
         transition : 0.3s;
-        fill : ${p => p.selected ? 'var(--primary-color)' : '#8F8F8F'}
+        fill : ${p => p.selected ? 'var(--primary-color)' : '#8F8F8F'};
+        
+    }
+    @media screen and (max-width : 480px)
+    {
+        & svg
+        {
+            width: 18px;    
+        }
+        &.setting_button
+        {
+            margin-left: -9px;
+        } 
+        & svg
+        {
+            margin-left: 20px;
+        }
+        &.write_button svg
+        {
+            margin-left: 0;
+        } 
     }
 `
 export const QuestionItemSettingContainer = styled.div`
@@ -357,14 +432,16 @@ export const QuestionItemFooter = styled.div`
         border-radius : 2px;
         text-align : center;
         font-family : IRANSans;
+        outline : none;
     }
     button:first-child
     {
-        background: var(--primary-color);
+        background: ${p => p.SaveButtonActive ? '#F4F4F4' : 'var(--primary-color)'};
+        color : ${p => p.SaveButtonActive ? '#c9c9c9' : 'white'};
+        pointer-events : ${p => p.SaveButtonActive ? 'none' : 'all'};
     }
 `
-export const DescriptionTextField = styled.input`
-    
+export const DescriptionTextField = styled.input`   
 `
 export const OptionalInputItem = styled.input`
     width: 80%;
@@ -376,10 +453,15 @@ export const OptionalInputItem = styled.input`
     outline: none;
     font-family: 'IRANSANS';
     direction: rtl;
+    transition : 0.3s;
 
     &::placeholder 
     {
         color: #D9D9D9;
+    }
+    &:focus 
+    {
+        border : 1px solid var(--primary-color);
     }
 `
 export const InputOptionsContainer = styled.div`
@@ -429,7 +511,6 @@ export const AddOptionButton = styled.button`
     height: 40px;
     outline: none;
 `
-
 export const RangeLabelContainer = styled.div`
     text-align: right;
     font-family: 'IRANSANS';
@@ -442,7 +523,7 @@ export const RangeLabelContainer = styled.div`
     }
     & .ant-input
     {
-        width: 80%;
+        width: 90%;
         border: 1px solid #D9D9D9;
         font-family: 'IRANSANS';
         text-align: right;
@@ -488,5 +569,12 @@ export const AddNonQuestionItem = styled.div`
     @media screen and (max-width: 768px)
     {
         width : 100% !important;
+    }
+`
+export const SliderContainer = styled.div`
+    & .ant-slider 
+    {
+        margin-top : 20px !important;
+        margin-bottom : 35px !important;
     }
 `

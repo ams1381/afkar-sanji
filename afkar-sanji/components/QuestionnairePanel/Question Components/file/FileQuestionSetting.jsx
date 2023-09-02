@@ -3,7 +3,7 @@ import { CommonSetting } from '../Common/CommonSetting'
 import { InputNumber } from 'antd'
 import { FileSizeTypeSelector , FileSizeContainer } from '@/styles/questionnairePanel/QuestionComponent'
 import { useDispatch } from 'react-redux'
-import { ChangeUploadSizeHandler } from '@/utilities/QuestionStore'
+import { ChangeUploadSizeHandler, FileVolumeTypeHandler } from '@/utilities/QuestionStore'
 
 export const FileQuestionSetting = ({ QuestionInfo }) => {
   const dispatcher = useDispatch();
@@ -16,15 +16,17 @@ export const FileQuestionSetting = ({ QuestionInfo }) => {
         <p>حجم فایل</p>
       <div className='file_size_selector'>
           <div className='file_size_input'>
-              <InputNumber min={0} onChange={ChangeFileSizeHandler} value={QuestionInfo.max_volume}/>
+              <InputNumber min={1} onChange={ChangeFileSizeHandler} value={QuestionInfo.max_volume}/>
           </div>
           <FileSizeTypeSelector>
             <input type='radio' name='sizeType' id='KBSize' defaultChecked={QuestionInfo.volume_unit == 'kb'} />
-              <label htmlFor='KBSize' className='size_type_label'>
+              <label htmlFor='KBSize' onClick={() =>  dispatcher(FileVolumeTypeHandler({ QuestionID : QuestionInfo.id , NewVolumeType : 'kb' }))}
+               className='size_type_label'>
                 KB
               </label>
               <input  type='radio' name='sizeType' id='MBSize'  defaultChecked={QuestionInfo.volume_unit == 'mb'}/>
-              <label htmlFor='MBSize' className='size_type_label'>
+              <label htmlFor='MBSize'  onClick={() =>  dispatcher(FileVolumeTypeHandler({ QuestionID : QuestionInfo.id , NewVolumeType : 'mb' }))}
+               className='size_type_label'>
                 MB
               </label>
            </FileSizeTypeSelector>

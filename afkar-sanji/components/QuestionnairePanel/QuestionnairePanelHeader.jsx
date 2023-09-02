@@ -14,7 +14,7 @@ import { handleInputWidth } from '@/utilities/RenameFunctions';
 
 const QuestionnairePanelHeader = ({ FolderName , Questionnaire , SideState , ChangeSide }) => {
   const router = useRouter();
-  const [ QuestionnaireName , SetQuestionnaireName ]= useState(Questionnaire.name);
+  const [ QuestionnaireName , SetQuestionnaireName ]= useState(Questionnaire ? Questionnaire.name : null);
   const [ RenameState , SetRenameState ] = useState(false);
   const [ QuestionnairePopoverState , SetQuestionnairePopoverState ] = useState(false);
   const QuestionnaireNameInputRef = useRef(null);
@@ -22,12 +22,16 @@ const QuestionnairePanelHeader = ({ FolderName , Questionnaire , SideState , Cha
   useEffect(() => {
     handleInputWidth(QuestionnaireNameInputRef,QuestionnaireName);
   },[QuestionnaireNameInputRef.current])
-
+  useEffect(() => {
+    Questionnaire ? SetQuestionnaireName(Questionnaire.name) : ''
+  },[Questionnaire])
   const QuestionnaireNameChangeHandler = (e) => {
     SetQuestionnaireName(e.target.value);
     handleInputWidth(QuestionnaireNameInputRef,QuestionnaireName);
   }
   const QuestionnaireRenameConfirmHandler = async () => {
+    if(!QuestionnaireName)
+      return
    await axiosInstance.patch(`/question-api/questionnaires/${Questionnaire.uuid}/`,{ name : QuestionnaireName });
    SetRenameState(false);
   }
@@ -37,8 +41,9 @@ const QuestionnairePanelHeader = ({ FolderName , Questionnaire , SideState , Cha
     <PanelHeader>
           <QuestionnaireDirectoryContainer>
             <QuestionnaireDirectoryPath>
-              <QuestionnaireNameInput style={{ marginRight : 10 , fontSize : 14}} ref={QuestionnaireNameInputRef}
-               value={QuestionnaireName} onChange={QuestionnaireNameChangeHandler} disabled={!RenameState} /> /
+              <QuestionnaireNameInput style={{ marginRight : 10 , fontSize : 14 }} ref={QuestionnaireNameInputRef}
+               value={QuestionnaireName} onKeyDown={e => e.key == 'Enter' ? QuestionnaireRenameConfirmHandler() : ''}
+               onChange={QuestionnaireNameChangeHandler} disabled={!RenameState} /> /
               <Link href={{
                 pathname : '/'
               }}> {Questionnaire.folder} </Link>
@@ -48,21 +53,28 @@ const QuestionnairePanelHeader = ({ FolderName , Questionnaire , SideState , Cha
                 Questionnaire={Questionnaire}
                 RenameChangeState={SetRenameState} SetQuestionnairePopoverState={SetQuestionnairePopoverState} />}
                 open={QuestionnairePopoverState}
-                onOpenChange={() => SetQuestionnairePopoverState(false)}
-                >
-                <FolderPopoverToggle
+                onOpenChange={() => SetQuestionnairePopoverState(false)}>
+                </Popover>
+                <FolderPopoverToggle 
                 onClick={RenameState ? QuestionnaireRenameConfirmHandler : 
                   () => SetQuestionnairePopoverState(!QuestionnairePopoverState)}>
                   {RenameState ? <Icon name='GrayCheck' /> : <Icon name='Menu' />}
                 </FolderPopoverToggle>
-                </Popover>
+                {RenameState && <FolderPopoverToggle style={{ marginRight : 0 }}
+                onClick={() => {
+                  SetQuestionnaireName(Questionnaire?.name)
+                  handleInputWidth(QuestionnaireNameInputRef,Questionnaire?.name)
+                  SetRenameState(false);
+              }}><Icon name='BlackClose' style={{ width : 15}} /></FolderPopoverToggle>}
               </div>
           </QuestionnaireDirectoryContainer>
           <div>
+            <Link href={`/questionnaire/${Questionnaire.uuid}/Results/`} target='_blank'>
             <SeeResultButton>
               <p>مشاهده نتایج</p>
               <Icon name='SeeResult' />
             </SeeResultButton>
+            </Link>
           </div>
         </PanelHeader>
         <QuestionnaireEditItemsContainer>
@@ -77,7 +89,8 @@ const QuestionnairePanelHeader = ({ FolderName , Questionnaire , SideState , Cha
                 </QuestionnaireEditItem>
             </QuestionnaireEditItemsInnerContainer>
             <QuestionnaireEditButtonContainer>
-            <Link href={`/questionnaire/${Questionnaire.uuid}/ViewQuestions/`} target='_blank'>
+            <Link onClick={(e) => { !Questionnaire.questions.length ? e.preventDefault() : '' }}
+            href={`/questionnaire/${Questionnaire.uuid}/ViewQuestions/`}  target='_blank'>
               <button style={{ pointerEvents :(Questionnaire.questions &&  Questionnaire.questions.length) ? 'all' : 'none' }}>
                      <Icon name='BlackEye' />
               </button>
@@ -88,7 +101,30 @@ const QuestionnairePanelHeader = ({ FolderName , Questionnaire , SideState , Cha
             </QuestionnaireEditButtonContainer>
         </QuestionnaireEditItemsContainer>
         
-    </> : <Skeleton active />
+    </> : <> <PanelHeader>
+        <QuestionnaireDirectoryContainer loading='active'>
+          <QuestionnaireDirectoryPath>
+              <Skeleton.Input active  style={{ borderRadius : 2 }} />
+          </QuestionnaireDirectoryPath>
+            <div>
+              <Skeleton.Input active style={{ borderRadius : 2 }}/>
+            </div>
+        </QuestionnaireDirectoryContainer>
+      </PanelHeader>
+        <QuestionnaireEditItemsContainer loading={'active'}>
+          <QuestionnaireEditItemsInnerContainer loading={'active'}>
+              <Skeleton.Button active style={{ borderRadius : 2 }} Button />
+             <Skeleton.Button active style={{ borderRadius : 2 }} Button />
+          </QuestionnaireEditItemsInnerContainer>
+          
+          <QuestionnaireEditButtonContainer>
+          <Skeleton.Button active style={{ width : 15 , borderRadius : 2 }} />
+          <Skeleton.Button active style={{ width : 15 , borderRadius : 2 }} />
+        </QuestionnaireEditButtonContainer>
+        </QuestionnaireEditItemsContainer>
+        
+    
+    </>
         
   )
 }

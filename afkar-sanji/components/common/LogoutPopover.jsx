@@ -11,9 +11,8 @@ import { digitsEnToFa } from '@persian-tools/persian-tools';
 const AvatarComponent = () => {
     const Auth = useContext(AuthContext);
     const router = useRouter();
-    console.log('test')
     const LogoutHandler = () => {
-        typeof window !== 'undefined' ?  router.push('/auth') : ''
+        router.push('/auth')
     }
   return (
     <LogoutPopOverLayout>

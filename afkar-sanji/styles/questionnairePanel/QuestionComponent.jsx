@@ -1,21 +1,71 @@
+import { Input } from "antd";
 import { styled } from "styled-components";
 
 
 export const QuestionComponentContainer = styled.div`
-    width: ${p => p.mobilePreview ? '100%' : '90%'};
+    width: ${p => p.mobilepreview ? '100%' : '90%'};
     margin: 0.55rem auto;
     word-break: break-word;
     text-align: right;
-    box-shadow: ${p => (p.childq || p.mobilePreview) ? 'none' : '0px 2px 8px 0px rgba(0, 0, 0, 0.15)'};
+    box-shadow: ${p => (p.childq || p.mobilepreview) ? 'none' : '0px 2px 8px 0px rgba(0, 0, 0, 0.15)'};
     padding: 1rem;
     border-radius: 2px;
-    background: ${p => p.mobilePreview ? 'none' : 'var(--surface)'};
+    background: ${p => p.mobilepreview ? 'none' : 'var(--surface)'};
 
     .uploaded_file_preview .video-react-button.video-react-big-play-button
     {
         left: 50%;
         top: 50%;
         transform: translate(-50%,-30%);
+    }
+    .thank_description
+    {
+        color: #1D1D1D;
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+    .default_thanks_button_container {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        flex-direction: row-reverse;
+    }
+    .default_thanks_button_container button {
+        width: 50%;
+        height: 26px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0px 7px;
+        background: var(--surface);
+        box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.02);
+        border: 1px solid #D9D9D9;
+        border-radius: 2px;
+        cursor : pointer;
+        transition : 0.3s;
+    }
+    .default_thanks_button_container button:hover 
+    {
+        border: 1px solid var(--primary-color);
+        color : var(--primary-color)
+    }
+    .brand_button 
+    {
+        text-align: center;
+        margin-top: 60px;
+    }
+    .brand_button  button 
+    {
+        border-radius : 2px;
+    }
+    .brand_button  button p span 
+    {
+        font-weight : 700;
+    }
+    .video-react .video-react-progress-holder .video-react-play-progress
+    {
+        display : flex;
+        // width : auto !important;
     }
 `
 export const QuestionTitle = styled.div`
@@ -26,6 +76,7 @@ export const QuestionTitle = styled.div`
     font-size: 16px;
     font-weight: 600;
     word-break: break-word;
+    
 
     .question_header
     {
@@ -36,10 +87,15 @@ export const QuestionTitle = styled.div`
         margin-left : 0.5rem;
         white-space: nowrap;
     }
+    & p 
+    {
+        direction: rtl;
+    }
 `
 export const QuestionDescription = styled.div`
     color : #666666;
     margin-bottom : 0.4rem;
+    direction: rtl;
 `
 export const WelcomeComponentContainer = styled.div`
     text-align : center;
@@ -77,22 +133,23 @@ export const OptionalAnswerBlockContainer = styled.div`
     display: grid;
     grid-template-columns : ${p => p.vertical ? 'auto' : 'auto auto'};
     direction: rtl;
+    gap: 16px;
+    margin-top: 20px;
    
     &  .OptionalAnswerItemContainer
     {
-            display: flex;
-            justify-content: flex-start;
-            flex-direction: row;
-            background: #FFFFFF;
-            border: 2px dotted rgb(217, 217, 217);
-            color: var(--Neutral-Gray9);
-            padding: 0.4rem;
-            margin: 0.4rem 0.4rem;
-            border-radius: 2px;
-            align-items: center;
-            cursor : pointer;
-            word-break: break-word;
-            min-height: 40px;
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: row;
+        background: #FFFFFF;
+        border: 2px dotted rgb(217, 217, 217);
+        color: var(--Neutral-Gray9);
+        border-radius: 2px;
+        align-items: center;
+        padding: 4px 8px;
+        word-break: break-word;
+        min-height: 40px;
+        cursor : pointer;
     }
     & > .OptionalAnswerItemContainer p 
     {
@@ -120,7 +177,7 @@ export const QuestionWithAnswerContainer = styled.div`
         font-family : IRANSans;
     }
 `
-export const TextAnswerInputBox = styled.input`
+export const TextAnswerInputBox = styled(Input)`
     border: 1px solid #D9D9D9;
     background: white;
     width: 100%;
@@ -153,6 +210,10 @@ export const DropDownContainer = styled.div`
     {
         font-family : IRANSans;
     }
+    .ant-select-selection-item-content
+    {
+        color : var(--primary-color);
+    }
 `
 export const EmailInputContainer = styled.div`
     display: flex;
@@ -162,25 +223,35 @@ export const EmailInputContainer = styled.div`
     
     & input 
     {
-        border: none;
+        // border: none;
         text-align: right;
         border-radius: 2px;
         height: 100%;
+        font-family : IRANSans;
+        direction: rtl;
     }
-    & input:focus
+    & input::placeholder 
     {
-        border : none;
-        box-shadow : none;
+        text-align : left;
     }
     & span 
     {
         height: 100%;
         display: flex;
-        width: 12%;
+        width: 40px;
         justify-content: center;
         align-items: center;
         background: #F5F5F5;
         border-left : 1px solid #D9D9D9;
+    }
+`
+export const RangeQuestion = styled.div`
+    width: 50%;
+    margin: 20px auto;
+
+    @media screen and (max-width : 480px)
+    {
+        width: 80%;
     }
 `
 export const RangeQuestionContainer = styled.div`
@@ -306,8 +377,10 @@ export const RateContainer = styled.div`
     box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.15);
     align-items: center;
     justify-content: center;
-    padding: 0.95rem 0.5rem 0.95rem 0.4rem;
+    padding: 12px;
     gap: 20px;
+    width: fit-content;
+    margin: 0 auto;
 
 
     .rate_selector {
@@ -329,6 +402,23 @@ export const RateContainer = styled.div`
         display: flex;
         flex-wrap: wrap;
     }
+    .ant-rate-star svg
+    {
+        fill : #8F8F8F;
+        transition : 0.3s;
+        width : 24px;
+        height : 24px;
+    }
+    .ant-rate-star.ant-rate-star-full svg
+    {
+        fill : #FBDB14;
+    }
+    .ant-rate-star-second
+    {
+        display: flex;
+        width: 25px;
+        height: 25px;
+    }
     
 `
 export const FileQuestionContainer = styled.div`
@@ -337,7 +427,37 @@ export const FileQuestionContainer = styled.div`
     {
         border-radius: 2px;
         direction: rtl;
-        display: flex;
+        display: flex !important;
         align-items: center;
+        justify-content: center !important;
+    }
+    .ant-upload-list-item-undefined
+    {
+        transition : 0.3s !important;
+        border-radius : 2px !important;
+        border-color : ${p => p.uploaderror ? '#ff4d4f' : '#d9d9d9'} !important;
+        color : ${p => p.uploaderror ? '#ff4d4f' : 'black'} !important;
+    }
+`
+export const NumberInputContainer = styled.div`
+    & .ant-input-number
+    {
+        font-family: IRANSans;
+        direction: ltr;
+        text-align: left;
+        width: 100%;
+        border-radius: 2px;
+    }
+    .ant-input-number-input-wrap
+    {
+        padding: 4px 12px;
+    }
+    .ant-input-number-input
+    {
+        padding : 1px;
+    }
+    & .ant-input-number-input-wrap input::placeholder
+    {
+        font-family: IRANSans;
     }
 `

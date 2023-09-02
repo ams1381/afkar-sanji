@@ -6,8 +6,10 @@ export const QuestionFileUploadContainer = styled.div`
     align-items: flex-start;
     font-size: 14px;
     color: var(--Neutral-Gray6);
-    margin: 0.7rem auto;
+    padding-bottom: 24px;
+    margin-top: 1.3rem;
     flex-direction: row-reverse;
+    border-bottom: 1px solid rgb(217 217 217 / 20%);
     // flex-wrap: wrap;
 
     & button 
@@ -27,6 +29,13 @@ export const QuestionFileUploadContainer = styled.div`
         word-break: break-word !important;
         white-space: initial !important;
         text-overflow: clip !important;
+    }
+    .ant-upload-list-item-undefined
+    {
+        transition : 0.3s !important;
+        border-radius : 2px !important;
+        border-color : ${p => p.uploaderror ? '#ff4d4f' : '#d9d9d9'} !important;
+        color : ${p => p.uploaderror ? '#ff4d4f' : 'black'} !important;
     }
     .upload-list-inline .ant-upload-list-item {
         float: left;
@@ -54,7 +63,7 @@ export const QuestionFileUploadContainer = styled.div`
 export const QuestionDescriptionContainer = styled.div`
     display: flex;
     flex-direction : column;
-    margin: 0.9rem auto;
+    margin: 24px auto 48px auto;
 
     & .Description_checkbox_container
     {
@@ -80,6 +89,7 @@ export const DescriptionTextField = styled.input`
     font-family: 'IRANSANS';
     transition : 0.3s;
     direction: rtl;
+    border-radius: 2px;
     &:focus 
     {
         border : 1px solid var(--primary-color);
@@ -104,7 +114,7 @@ export const ToggleContainer = styled.div`
         flex-direction: row-reverse;
         cursor : pointer;
         width : 100%;
-        border-bottom: 1px solid #D9D9D9;
+        border-bottom: 1px solid rgb(217 217 217 / 20%);
         padding: 1.5rem 0 1.5rem 0;
         align-items: center;
     }
@@ -148,6 +158,8 @@ export const TextAnswerSettingContainer = styled.div`
         justify-content: space-between;
         color: #8F8F8F;
         align-items: center;
+        padding: 24px 0;
+        border-bottom: 1px solid rgb(217 217 217 / 20%);
     }
     .ant-select-selector
     {
@@ -160,7 +172,7 @@ export const TextAnswerSettingContainer = styled.div`
     }
     .ant-select
     {
-        width : 106px;
+        width: 130px;
     }
 `
 export const AlphabetNumberContainer = styled.div`
@@ -168,6 +180,7 @@ export const AlphabetNumberContainer = styled.div`
     flex-direction: column;
     color: #A3A3A3;
     text-align: right;
+    margin-top: 24px;
 
     & label 
     {
@@ -175,6 +188,10 @@ export const AlphabetNumberContainer = styled.div`
         width: 100%;
         margin-top: 0.8rem;
         justify-content: space-between;
+    }
+    & label .ant-input-number
+    {
+        border-radius : 2px;
     }
 `
 export const DegreeShapeContainer = styled.div`
@@ -189,6 +206,9 @@ export const ShapeSelectorContainer = styled.div`
     justify-content: space-around;
     align-items: center;
     margin-top: 0.8rem;
+    padding: 2px;
+    width: 164px;
+    background: #E9EAEF;
 
     & input 
     {
@@ -199,7 +219,7 @@ export const ShapeSelectorContainer = styled.div`
         cursor: pointer;
         width: 40px;
         height: 40px;
-        background: #E2DBF1;
+        background: #E9EAEF;
         justify-content: center;
         display: flex;
         align-items: center;
@@ -232,4 +252,14 @@ export const DatePickerInput = styled.input`
     font-family : IRANSans;
     cursor : pointer !important;
     user-select : none;
+`
+export const RangeWriteContainer = styled.div`
+    color : #8F8F8F;
+    text-align : right;
+
+    & .ant-slider 
+    {
+        margin-top : 20px !important;
+        margin-bottom : 35px !important;
+    }
 `

@@ -7,6 +7,7 @@ import { SettingDropDownAnswer } from './Drop Down/SettingDropDownAnswer'
 import { SettingNumberAnswer } from './Number Answer/SettingNumberAnswer'
 import { CommonSetting } from './Common/CommonSetting'
 import { FileQuestionSetting } from './file/FileQuestionSetting'
+import { RangeSetting } from './Range/RangeSetting'
 
 export const SettingSectionProvider = (Type , QuestionInfo) => {
     switch(Type)
@@ -18,7 +19,7 @@ export const SettingSectionProvider = (Type , QuestionInfo) => {
         case 'integer_selective':
             return <RateQuestionSetting QuestionInfo={QuestionInfo} />
         case 'integer_range':
-            return <CommonSetting QuestionInfo={QuestionInfo}/>
+            return <RangeSetting QuestionInfo={QuestionInfo}/>
         case 'sort':
             return <SettingPrioritize QuestionInfo={QuestionInfo}/>
         case 'link':

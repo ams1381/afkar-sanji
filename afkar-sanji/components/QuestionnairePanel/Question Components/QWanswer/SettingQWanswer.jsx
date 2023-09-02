@@ -46,11 +46,11 @@ const SettingQWanswer = ({ QuestionInfo }) => {
         ? <AlphabetNumberContainer>
           <p>تعداد حروف</p>
           <label>
-              <InputNumber value={QuestionInfo.min}  onChange={(e) => ChangeMinMaxHandler(e,'min')}/>
+              <InputNumber value={QuestionInfo.min} min={0} onChange={(e) => ChangeMinMaxHandler(e,'min')}/>
               <p>حداقل</p>
           </label>
           <label>
-              <InputNumber value={QuestionInfo.max} onChange={(e) => ChangeMinMaxHandler(e,'max')}/>
+              <InputNumber value={QuestionInfo.max} min={1} onChange={(e) => ChangeMinMaxHandler(e,'max')}/>
               <p>حداکثر</p>
           </label>
         </AlphabetNumberContainer> : ''}

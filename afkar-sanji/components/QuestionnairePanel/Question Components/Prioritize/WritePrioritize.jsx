@@ -19,14 +19,22 @@ export const WritePrioritize = ({ QuestionInfo }) => {
     if(QuestionInfo.options.length > 2)
       Dispatcher(OptionRemover({ QuestionID : QuestionInfo.id , OptionID : OptionItem.id}))
   }
+  
   return (
     <OptionWritingContainer>
       <p>گزینه ها</p>
-      {QuestionInfo.options.map(item => <InputOptionsContainer>
-        <OptionalInputItem key={item.id} type='text' placeholder='چیزی بنویسید'  onChange={e => Dispatcher(OptionModifier({ QuestionID : QuestionInfo.id , OptionID : item.id , OptionText : e.target.value }))}
+      {QuestionInfo.options.map(item => <InputOptionsContainer key={item.id}>
+        <OptionalInputItem key={item.id} type='text'  autoFocus={item.newOption ? true : false}
+        placeholder='چیزی بنویسید'  onChange={e => Dispatcher(OptionModifier({ QuestionID : QuestionInfo.id , OptionID : item.id , OptionText : e.target.value }))}
         defaultValue={item.text}/>
         <div className='option_button_container'>
-          <button onClick={() => Dispatcher(OptionAdder({ QuestionID : QuestionInfo.id , NewOptionID : RandomIdGenerator() , OptionID : item.id , OptionText : null }))}>
+          <button onClick={() => Dispatcher(OptionAdder({ 
+            QuestionID : QuestionInfo.id ,
+             NewOptionID : RandomIdGenerator() ,
+             newOption : true,
+              OptionID : item.id ,
+               OptionText : null }
+            ))}>
             <Icon name='CirclePlus' />
           </button>
           <button onClick={() => OptionItem(item)}>
@@ -34,7 +42,12 @@ export const WritePrioritize = ({ QuestionInfo }) => {
           </button>
         </div>
       </InputOptionsContainer>)}
-      <AddOptionButton onClick={() => Dispatcher(OptionAdder({ QuestionID : QuestionInfo.id , NewOptionID : RandomIdGenerator() , OptionText : null }))}>
+      <AddOptionButton onClick={() => Dispatcher(OptionAdder({ 
+        QuestionID : QuestionInfo.id ,
+         NewOptionID : RandomIdGenerator() ,
+          newOption : true,
+          OptionText : null
+         }))}>
         برای افزودن گزینه ضربه بزنید
       </AddOptionButton>
     </OptionWritingContainer>

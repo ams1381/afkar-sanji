@@ -1,69 +1,128 @@
-import { OptionalAnswerBlockContainer } from '@/styles/questionnairePanel/QuestionComponent';
+import { OptionalAnswerBlockContainer, QuestionTitle } from '@/styles/questionnairePanel/QuestionComponent';
+import { ChoseOption, OtherOptionHandler } from '@/utilities/AnswerStore';
 import { Checkbox, Input } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+
+const shuffleArray = (array) => {
+    const shuffledArray = [...array];
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+    }
+    return shuffledArray;
+  };
 
 const OptionalComponent = ({ QuestionInfo }) => {
+  const dispatcher = useDispatch();
+  const QuestionsAnswerSet = useSelector(state => state.reducer.AnswerSet);
   const [selectedValues, setSelectedValues] = useState([]);
   const [showInput, setShowInput] = useState(false);
   const [otherInputValue, setOtherInputValue] = useState("");
   const regex = /(<([^>]+)>)/gi;
+  let shuffledOptions = QuestionInfo.is_random_options
+  ? shuffleArray(QuestionInfo.options) : QuestionInfo.options;
   const cleanText = (text) => {
-    
     return text?.replace(regex, '');
   };
-
-  const handleCheckboxChange = (value) => {
-    const { max_selected_options } = QuestionInfo;
+  useEffect(() => {
+      if(QuestionsAnswerSet && QuestionsAnswerSet.length)
+      {
+        dispatcher(ChoseOption({ 
+           QuestionID : QuestionInfo.id ,
+           ChoseOptionsArray : selectedValues ,
+           other_text : otherInputValue
+        }))
+        
+      }
+  },[selectedValues , otherInputValue])
+  useEffect(() => {
+    if(QuestionsAnswerSet && QuestionsAnswerSet.length)
+    {
+      let selected_options_array = QuestionsAnswerSet.find(item => item.question == QuestionInfo.id).answer?.selected_options;
+      setSelectedValues(QuestionInfo.options.filter(OptionItem => selected_options_array?.includes(OptionItem.id)));
+      if(QuestionsAnswerSet.find(item => item.question == QuestionInfo.id).answer?.other_text)
+      {
+        console.log(QuestionsAnswerSet.find(item => item.question == QuestionInfo.id).answer?.other_text)
+        setShowInput(true);
+        setOtherInputValue(QuestionsAnswerSet.find(item => item.question == QuestionInfo.id).answer?.other_text)
+      }
+    }
+  },[])
+  const handleCheckboxChange = (item) => {
+    const max_selected_options = QuestionInfo.max_selected_options || 1;
+    const cleanedValue = cleanText(item.text);
   
-    if (value === '<span>همه گزینه ها</span>' || value === '<span>هیچ کدام</span>' || value === '<span>سایر</span>') {
-      setSelectedValues([value]); // Select only the special value
+    if (
+      item.text === '<span>همه گزینه ها</span>' ||
+      item.text === '<span>هیچ کدام</span>' ||
+      item.text === '<span>سایر</span>'
+    ) {
+      setSelectedValues([item]); 
       
-    (value == '<span>سایر</span>') ? setShowInput(true) : setOtherInputValue("");
+      if (item.text === '<span>سایر</span>') {
+        setShowInput(true);
+        setOtherInputValue("");
+      } else {
+        setShowInput(false);
+      }
     } else {
       setSelectedValues(prevSelected => {
-        const cleanedValue = cleanText(value);
+        let updatedSelected;
   
-        let updatedSelected = prevSelected.filter(
-          val =>
-            cleanText(val) !== 'همه گزینه ها' &&
-            cleanText(val) !== 'هیچ کدام' &&
-            cleanText(val) !== 'سایر'
-        );
-        if (updatedSelected.includes('همه گزینه ها') || updatedSelected.includes('هیچ کدام')) {
-          updatedSelected.length = 0;
-          setShowInput(false);
-        }
-        if (!updatedSelected.includes(cleanedValue)) {
-          if (!max_selected_options || updatedSelected.length < max_selected_options) {
-            updatedSelected.push(cleanedValue);
-          }
+        if (max_selected_options === 1) {
+          updatedSelected = prevSelected[0]?.id === item.id ? [] : [item];
         } else {
-          updatedSelected = updatedSelected.filter(val => val !== cleanedValue);
+          updatedSelected = prevSelected.filter(val =>
+            cleanText(val.text) !== 'همه گزینه ها' &&
+            cleanText(val.text) !== 'هیچ کدام' &&
+            cleanText(val.text) !== 'سایر'
+          );
+  
+          if (
+            updatedSelected.some(val => cleanText(val.text) === 'همه گزینه ها') ||
+            updatedSelected.some(val => cleanText(val.text) === 'هیچ کدام')
+          ) {
+            updatedSelected.length = 0;
+            setShowInput(false);
+          }
+  
+          if (!updatedSelected.some(val => cleanText(val.text) === cleanedValue)) {
+            if (!max_selected_options || updatedSelected.length < max_selected_options) {
+              updatedSelected.push(item);
+            }
+          } else {
+            updatedSelected = updatedSelected.filter(val => cleanText(val.text) !== cleanedValue);
+          }
         }
   
         return updatedSelected;
       });
+  
       setShowInput(false);
       setOtherInputValue("");
     }
+
   };
+
 
   return (
     <OptionalAnswerBlockContainer vertical={QuestionInfo.is_vertical ? 'active' : null}>
-      {QuestionInfo.options.map(item => (
+      {shuffledOptions.map(item => (
         <label className='OptionalAnswerItemContainer' key={item.id}>
           <Checkbox
             value={item.text}
-            onChange={() => handleCheckboxChange(item.text)}
+            onChange={() => handleCheckboxChange(item)}
+            key={item.id}
             name='optional_answer_item'
-            checked={selectedValues.includes(item.text)}
+            checked={selectedValues.some(val => val.id === item.id)}
           />
-            {item.text !== 'null'
-              && 
-              <>{(item.text?.replace(regex,'') === 'سایر' && showInput) ? <Input placeholder='چیزی بنویسید' />
-              : <p>{cleanText(item.text)}</p>
-             }</>}
-    
+          {item.text !== 'null' &&
+            <>{(item.text?.replace(regex,'') === 'سایر' && showInput) ? <Input onChange={(e) => setOtherInputValue(e.target.value)}
+             placeholder='چیزی بنویسید' value={otherInputValue} />
+            : <p>{cleanText(item.text)}</p>
+            }</>}
         </label>
       ))}
     </OptionalAnswerBlockContainer>
