@@ -384,6 +384,10 @@ const QuestionSlice =  createSlice({
                 case 'integer_selective':
                     newMax= 4;
                     break;
+                case 'integer_range':
+                    newMax = 3;
+                    newMin = 1;
+                    break;
                 case 'text_answer':
                     newMin = null;
                     newMax= null;

@@ -160,7 +160,7 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                 
                 filterOption={(_, option) => option ? option.label : ''}/>
                 </> : <Skeleton.Input active />}
-              </QuestionSearchContainer>
+          </QuestionSearchContainer>
       </div>
       <QuestionDesignTitle>
         { Questionnaire &&  <p>سوالی را ایجاد یا ویرایش کنید</p> }
@@ -278,11 +278,6 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                         </QuestionItemSurface>
                     </LoadingQuestionItem>
                  </>
-                   
-                
-                //  <AddNonQuestionItem style={{ marginTop : 55 , border : 'none' , direction : 'rtl' }}>
-                //       <Skeleton loading row={1} />
-                //       </AddNonQuestionItem>
                   }
                   </div> : <></>}
                   { !ActiveQuestionId && Questionnaire && <div className='QuestionDesignLeftContainer' >

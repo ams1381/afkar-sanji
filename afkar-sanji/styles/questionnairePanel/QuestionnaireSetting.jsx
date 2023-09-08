@@ -74,7 +74,8 @@ export const QuestionnaireSettingContainer = styled.div`
     }
    .ant-picker.ant-picker-range
    {
-    direction : rtl;
+        direction : rtl;
+        border-radius: 2px;
    }
     .ant-picker-range-separator
     {

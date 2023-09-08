@@ -12,6 +12,7 @@ const AvatarComponent = () => {
     const Auth = useContext(AuthContext);
     const router = useRouter();
     const LogoutHandler = () => {
+        delete axiosInstance.defaults.headers['Authorization'];
         router.push('/auth')
     }
   return (

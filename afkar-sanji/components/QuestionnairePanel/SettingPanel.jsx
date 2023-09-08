@@ -13,10 +13,9 @@ import PN from 'persian-number';
 import { DatePickerInput } from '@/styles/questionnairePanel/QuestionSetting';
 import moment from 'moment-jalaali';
 import { NumberFormat } from 'react-hichestan-numberinput';
-
 import locale from 'antd/lib/date-picker/locale/fa_IR';
 
-const convertStringToDate = str => {
+export const convertStringToDate = str => {
   const [datePart, timezonePart] = str.split(/[T+]/);
   const [timezoneHours, timezoneMinutes] = timezonePart.split(":").map(Number);
 
@@ -192,7 +191,7 @@ const SettingPanel = ({ Questionnaire }) => {
 }
 
 export default SettingPanel;
-const convertDate = (inputDate, dateType) => {
+export const convertDate = (inputDate, dateType) => {
   const [year, month, day] = inputDate.split('-');
 
   if (dateType === 'jalali') {

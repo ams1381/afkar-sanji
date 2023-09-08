@@ -318,7 +318,7 @@ export const RangeQuestionLabelContainer = styled.div`
 `
 export const QuestionRangeLabel = styled.div`
     position: relative;
-    width: 20%;
+    width: 26%;
     text-align: center;
     word-break: break-word;
     padding-top: 1.5rem;

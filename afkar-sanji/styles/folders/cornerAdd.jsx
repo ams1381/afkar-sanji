@@ -10,7 +10,7 @@ export const CornerAddButton = styled.button`
     cursor: pointer;
     border: 2px solid var(--primary-color);
     position: fixed;
-    right: 6vw;
+    right: 6.5vw;
     bottom: 1rem;
     z-index: 1;
     transition : 0.3s;

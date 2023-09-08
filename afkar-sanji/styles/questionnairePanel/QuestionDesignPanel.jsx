@@ -156,7 +156,6 @@ export const QuestionDesignBox = styled.div`
     
 `
 export const QuestionDesignItem = styled.div`
-    padding: 10px 12px;
     border: 1px solid ${p => p.isopen ? p.childq ? '#7C86FA' : '#7C86FA' : 'none'};
     border-radius: 2px;
     margin-top : 10px;
@@ -175,6 +174,10 @@ export const QuestionDesignItem = styled.div`
         background: #F5F5F5;
         display: flex;
         align-items: center;
+    }
+    .question_bold_info .ant-select-selection-item
+    {
+        padding : 0;
     }
     .question_type_selector > div {
         width : auto !important;
@@ -255,6 +258,7 @@ export const QuestionItemSurface = styled.div`
     display: flex;
     justify-content: space-between;
     flex-direction: row-reverse;
+    padding : 10px 12px;
 
     & > div
     {
@@ -328,9 +332,7 @@ export const QuestionItemButtonContainer = styled.div`
     }
 `
 export const QuestionItemActionSelector = styled.div`
-    // width: 100%;
-    width: 110%;
-    margin-left: -20px;
+    width: 100%;
     margin-top: 0.8rem;
     border-top: 1px solid #0000000F;
     display: flex;
@@ -387,23 +389,27 @@ export const QuestionItemActionButton = styled.button`
         {
             width: 18px;    
         }
-        &.setting_button
-        {
-            margin-left: -9px;
-        } 
-        & svg
-        {
-            margin-left: 20px;
-        }
-        &.write_button svg
-        {
-            margin-left: 0;
-        } 
+        // &.setting_button
+        // {
+        //     margin-left: -9px;
+        // } 
+        // & svg
+        // {
+        //     margin-left: 20px;
+        // }
+        // &.write_button svg
+        // {
+        //     margin-left: 0;
+        // } 
     }
 `
 export const QuestionItemSettingContainer = styled.div`
-    width: 100%;
-    margin-top: 1rem;
+    width: 96%;
+    margin : 1rem auto;
+`
+export const QuestionItemWriteContainer = styled.div`
+    width: 96%;
+    margin : 0 auto;
 `
 export const QuestionItemTitleContainer = styled.div`
     height: 40px;
@@ -423,8 +429,11 @@ export const QuestionItemTitleInput = styled.input`
 `
 export const QuestionItemFooter = styled.div`
     display : flex;
-    gap : 10px;
-    margin-top: 0.7rem;
+    gap: 20px;
+    width: 95%;
+    margin: 0 auto;
+    margin-bottom: 20px;
+
     button 
     {
         width : 50%;
@@ -545,6 +554,7 @@ export const AddNonQuestionItem = styled.div`
     // margin: 0.6rem 0;
     cursor: pointer;
     transition : 0.3s;
+    padding : 20px 0;
     border-radius : 2px;
 
     & svg

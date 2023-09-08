@@ -4,7 +4,10 @@ import { axiosInstance } from '@/utilities/axios'
 import { useLocalStorage } from '@/utilities/useLocalStorage'
 import { useRouter } from 'next/router'
 import { useContext, useEffect, useState } from 'react'
+import { QueryClientProvider , QueryClient} from '@tanstack/react-query'
 
+
+const queryClient = new QueryClient()
 
 export default function App({ Component, pageProps }) {
   const router = useRouter();
@@ -41,6 +44,8 @@ export default function App({ Component, pageProps }) {
     },[])
 
   return <AuthContextProvider>
+    <QueryClientProvider client={queryClient}>
       { readyToRender && <Component {...pageProps} /> }
+      </QueryClientProvider>
   </AuthContextProvider> 
 }

@@ -103,10 +103,20 @@ html::-webkit-scrollbar-thumb
 {
   border-radius: 2px !important;
 }
-
+.ant-popover-inner , .ant-tooltip-inner
+{
+  border-radius: 2px !important;
+}
+.tooltip_container
+{
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  cursor: pointer;
+}
 @media screen and (max-width : 500px)
 {
-    .ant-picker-datetime-panel { 
+    .ant-picker-datetime-panel , .ant-picker-panels{ 
         flex-direction: column !important;
     } 
     .ant-picker-range-wrapper.ant-picker-date-range-wrapper

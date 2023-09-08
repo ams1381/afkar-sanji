@@ -1,7 +1,7 @@
 import { Icon } from '@/styles/icons'
 import { QuestionDesignItem , QuestionItemSurface ,DropDownQuestionButton , QuestionItemActionSelector ,
   QuestionItemButtonContainer, QuestionItemSettingContainer, QuestionItemTitleContainer ,
-  QuestionItemTitleInput , QuestionItemFooter ,
+  QuestionItemTitleInput , QuestionItemFooter , QuestionItemWriteContainer ,
   QuestionItemActionButton, PreviewMobileSizeComponent ,
   QuestionItemRow} from '@/styles/questionnairePanel/QuestionDesignPanel'
 import Dropdown from 'react-dropdown';
@@ -180,7 +180,7 @@ export const QuestionItem = ({  activeQuestionId, provided ,setActiveQuestion , 
     {
       delete QDataInstance.question['media'];
     }
-     axiosInstance.defaults.headers['content-type'] = 'multipart/form-data';
+     axiosInstance.defaults.headers['Content-Type'] = 'multipart/form-data';
     try
     { 
       if(questionsData.question.url_prefix)
@@ -188,6 +188,8 @@ export const QuestionItem = ({  activeQuestionId, provided ,setActiveQuestion , 
       else
         questionsData.question.question_type == 'welcome_page' ? axiosInstance.patch(`/question-api/questionnaires/${UUID}/welcome-pages/${questionsData.question.id}/`,form_data_convertor(QDataInstance.question)) 
         : axiosInstance.patch(`/question-api/questionnaires/${UUID}/thanks-pages/${questionsData.question.id}/`,form_data_convertor(QDataInstance.question)) 
+
+        axiosInstance.defaults.headers['Content-Type'] = 'application/json'; 
     }
     catch(err)
     {
@@ -230,7 +232,9 @@ export const QuestionItem = ({  activeQuestionId, provided ,setActiveQuestion , 
         let sorted_questions_array = QuestionsArray.map(item =>
           ({ question_id : item.question.id > 10000000000 ? data.id : item.question.id ,
             new_placement : item.question.placement }));
-        ReorderPoster(UUID,sorted_questions_array)
+        await axiosInstance.post(`/question-api/questionnaires/${UUID}/change-questions-placements/`,{
+          'placements' : sorted_questions_array
+        })
           }
       else
       {
@@ -256,7 +260,6 @@ export const QuestionItem = ({  activeQuestionId, provided ,setActiveQuestion , 
           alignItems : 'center',
           justifyContent : 'center',
           direction : 'rtl'
-          
         }
       })
     }
@@ -369,10 +372,10 @@ export const QuestionItem = ({  activeQuestionId, provided ,setActiveQuestion , 
                 <QuestionDescription IsQuestion={IsQuestion} QuestionInfo={questionsData.question} QuestionDataDispatcher={QuestionDispatcher} />
                 { WritingSectionProvider(questionsData.question.question_type,questionsData.question) }
             </QuestionItemSettingContainer> : QuestionActionState == 'setting' ? 
-            <>
+            <QuestionItemWriteContainer>
               <FileUpload QuestionInfo={questionsData.question} />
               { SettingSectionProvider(questionsData.question.question_type,questionsData.question) }
-            </>
+            </QuestionItemWriteContainer>
             : <PreviewMobileSizeComponent>
               <QuestionComponent mobilepreview={true} QuestionInfo={questionsData.question} />
               </PreviewMobileSizeComponent>}

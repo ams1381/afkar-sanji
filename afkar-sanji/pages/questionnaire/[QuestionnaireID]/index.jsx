@@ -13,39 +13,61 @@ import ProgressBarLoading from '@/styles/ProgressBarLoading';
 import { Provider } from 'react-redux';
 import QuestionStore from '@/utilities/QuestionStore';
 import { message } from 'antd';
+import { useQuery } from '@tanstack/react-query';
 
 const QuestionnairePanel = () => {
     const router = useRouter();
     const [ messageApi , messageContext ] = message.useMessage()
     const [ SideBarOpen , setOpen ] = useState(false);
-    const [ QuestionnaireInfo , SetQuestionnaireInfo ] = useState(null);
     const [ SideState , SetSideState ] = useState('question_design');
     const [ QuestionnaireReloader , SetQuestionnaireReloader ] = useState(false);
-  
-    useEffect(() => {
-      try 
-      {
-        const QuestionnaireRetriever = async () => {
-          let  { data } =  await axiosInstance.get(`/question-api/questionnaires/${router.query.QuestionnaireID}/`);
-          SetQuestionnaireInfo(data);
-          // SetQuestionnaireReloader(false);
-       }
-       if(router.query.QuestionnaireID)
-         QuestionnaireRetriever();
-      }
-      catch(err)
-      {
+    const { data , isLoading , refetch , error , isFetched} = useQuery(['QuestionnaireRetrieve'],
+    async () => await axiosInstance.get(`/question-api/questionnaires/${router?.query?.QuestionnaireID}/`))
+    // useEffect(() => {
+    //   try 
+    //   {
+    //     const QuestionnaireRetriever = async () => {
+    //       let  { data } =  await axiosInstance.get(`/question-api/questionnaires/${router.query.QuestionnaireID}/`);
+    //       SetQuestionnaireInfo(data);
+    //       // SetQuestionnaireReloader(false);
+    //    }
+    //    if(router.query.QuestionnaireID)
+    //      QuestionnaireRetriever();
+    //   }
+    //   catch(err)
+    //   {
+    //     messageApi.error({
+    //       content : err.response.data,
+    //       duration : 6,
+    //       style : {
+    //         fontFamily : 'IRANSans',
+    //         direction : 'rtl'
+    //       }
+    //     })
+    //   }
+    // },[])
+    if(error && error?.response)
+    {
+      if(error?.response.status == 404)
         messageApi.error({
-          content : err.response.data,
-          duration : 6,
-          style : {
-            fontFamily : 'IRANSans',
-            direction : 'rtl'
-          }
-        })
-      }
-    },[])
-   
+                content : 'یافت نشد',
+                duration : 6,
+                style : {
+                  fontFamily : 'IRANSans',
+                  direction : 'rtl'
+                }
+              })
+        else
+          messageApi.error({
+            content : error.response.data,
+            duration : 6,
+            style : {
+              fontFamily : 'IRANSans',
+              direction : 'rtl'
+            }
+          })
+    }
+
   return (
     <>
     <Head>
@@ -57,10 +79,11 @@ const QuestionnairePanel = () => {
     <Header SetSideBar={() => setOpen(!SideBarOpen)} goToFolders={true}/>
       <QuestionnairePanelContainer>
         <PanelInnerContainer> 
-          {  <QuestionnairePanelHeader SideState={SideState} ChangeSide={SetSideState} Questionnaire={QuestionnaireInfo}/>}
+          {  <QuestionnairePanelHeader SideState={SideState} isFetched={isFetched}
+           ChangeSide={SetSideState} Questionnaire={data?.data}/>}
           {
-            SideState == 'question_design' ? <QuestionDesignPanel QuestionnaireReloader={SetQuestionnaireReloader} Questionnaire={QuestionnaireInfo}/> 
-            : <SettingPanel Questionnaire={QuestionnaireInfo}/>
+            SideState == 'question_design' ? <QuestionDesignPanel QuestionnaireReloader={refetch} Questionnaire={data?.data}/> 
+            : <SettingPanel Questionnaire={data?.data}/>
             }
           </PanelInnerContainer>
       </QuestionnairePanelContainer>

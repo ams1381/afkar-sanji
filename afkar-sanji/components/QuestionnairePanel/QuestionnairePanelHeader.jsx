@@ -11,14 +11,17 @@ import { axiosInstance } from '@/utilities/axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { handleInputWidth } from '@/utilities/RenameFunctions';
+import { SharePopOverContent } from '../Folders/SharePopover';
 
-const QuestionnairePanelHeader = ({ FolderName , Questionnaire , SideState , ChangeSide }) => {
+const QuestionnairePanelHeader = ({ FolderName , isFetched , Questionnaire , SideState , ChangeSide }) => {
   const router = useRouter();
   const [ QuestionnaireName , SetQuestionnaireName ]= useState(Questionnaire ? Questionnaire.name : null);
   const [ RenameState , SetRenameState ] = useState(false);
+  const [ SharePopover , setSharePopOver] = useState(false);
   const [ QuestionnairePopoverState , SetQuestionnairePopoverState ] = useState(false);
   const QuestionnaireNameInputRef = useRef(null);
-
+  if(isFetched)
+    handleInputWidth(QuestionnaireNameInputRef,QuestionnaireName)
   useEffect(() => {
     handleInputWidth(QuestionnaireNameInputRef,QuestionnaireName);
   },[QuestionnaireNameInputRef.current])
@@ -41,10 +44,12 @@ const QuestionnairePanelHeader = ({ FolderName , Questionnaire , SideState , Cha
     <PanelHeader>
           <QuestionnaireDirectoryContainer>
             <QuestionnaireDirectoryPath>
-              <QuestionnaireNameInput style={{ marginRight : 10 , fontSize : 14 }} ref={QuestionnaireNameInputRef}
+              <QuestionnaireNameInput style={{ marginRight : 10 , fontSize : 14 , color : '#000000D9' }} 
+              ref={QuestionnaireNameInputRef} questionnairePanel='active'
                value={QuestionnaireName} onKeyDown={e => e.key == 'Enter' ? QuestionnaireRenameConfirmHandler() : ''}
-               onChange={QuestionnaireNameChangeHandler} disabled={!RenameState} /> /
-              <Link href={{
+               onChange={QuestionnaireNameChangeHandler} disabled={!RenameState} /> 
+               <span style={{ color : '#00000073' }}>/</span>
+              <Link style={{ color : '#A3A3A3' }} href={{
                 pathname : '/'
               }}> {Questionnaire.folder} </Link>
             </QuestionnaireDirectoryPath>
@@ -55,12 +60,12 @@ const QuestionnairePanelHeader = ({ FolderName , Questionnaire , SideState , Cha
                 open={QuestionnairePopoverState}
                 onOpenChange={() => SetQuestionnairePopoverState(false)}>
                 </Popover>
-                <FolderPopoverToggle 
+                <FolderPopoverToggle style={{ marginRight : RenameState ? 10 : 8 }}
                 onClick={RenameState ? QuestionnaireRenameConfirmHandler : 
                   () => SetQuestionnairePopoverState(!QuestionnairePopoverState)}>
                   {RenameState ? <Icon name='GrayCheck' /> : <Icon name='Menu' />}
                 </FolderPopoverToggle>
-                {RenameState && <FolderPopoverToggle style={{ marginRight : 0 }}
+                {RenameState && <FolderPopoverToggle style={{ marginRight : 8 }}
                 onClick={() => {
                   SetQuestionnaireName(Questionnaire?.name)
                   handleInputWidth(QuestionnaireNameInputRef,Questionnaire?.name)
@@ -69,7 +74,7 @@ const QuestionnairePanelHeader = ({ FolderName , Questionnaire , SideState , Cha
               </div>
           </QuestionnaireDirectoryContainer>
           <div>
-            <Link href={`/questionnaire/${Questionnaire.uuid}/Results/`} target='_blank'>
+            <Link href={`/questionnaire/${Questionnaire.uuid}/Results/`}>
             <SeeResultButton>
               <p>مشاهده نتایج</p>
               <Icon name='SeeResult' />
@@ -95,9 +100,15 @@ const QuestionnairePanelHeader = ({ FolderName , Questionnaire , SideState , Cha
                      <Icon name='BlackEye' />
               </button>
               </Link>
-              <button>
-                <Icon name='Share' />
+              <Popover
+            content={SharePopOverContent}
+            trigger="click"
+            open={SharePopover}
+            onOpenChange={() => setSharePopOver(false)}>
+              <button onClick={() => setSharePopOver(!SharePopover)}>
+                  <Icon name='Share' />
               </button>
+            </Popover>
             </QuestionnaireEditButtonContainer>
         </QuestionnaireEditItemsContainer>
         
@@ -117,9 +128,9 @@ const QuestionnairePanelHeader = ({ FolderName , Questionnaire , SideState , Cha
              <Skeleton.Button active style={{ borderRadius : 2 }} Button />
           </QuestionnaireEditItemsInnerContainer>
           
-          <QuestionnaireEditButtonContainer>
-          <Skeleton.Button active style={{ width : 15 , borderRadius : 2 }} />
-          <Skeleton.Button active style={{ width : 15 , borderRadius : 2 }} />
+          <QuestionnaireEditButtonContainer isloading={'active'}>
+            <Skeleton.Button active style={{ width : 15 , borderRadius : 2 }} />
+            <Skeleton.Button active style={{ width : 15 , borderRadius : 2 }} />
         </QuestionnaireEditButtonContainer>
         </QuestionnaireEditItemsContainer>
         

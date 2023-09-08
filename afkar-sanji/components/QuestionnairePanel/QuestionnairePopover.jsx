@@ -21,12 +21,6 @@ export const QuestionnairePopover = ({ Questionnaire , RenameInput  , RenameChan
     }
   return (
     <FolderPopoverContainer style={{ height : 'auto' }}>
-      <FolderPopoverItem>
-        <button>
-          <Icon name='statics' />
-          <p>نمودار</p>
-        </button>
-      </FolderPopoverItem>
         <FolderPopoverItem>
           <button onClick={() => {
             SetQuestionnairePopoverState(false)

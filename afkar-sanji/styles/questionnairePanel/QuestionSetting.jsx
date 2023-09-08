@@ -45,6 +45,7 @@ export const QuestionFileUploadContainer = styled.div`
     .ant-upload-list-item
     {
         height : auto !important;
+        border-radius : 2px !important;
     }
     .file_upload_title
     {

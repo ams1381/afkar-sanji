@@ -11,8 +11,13 @@ export const HeaderContainer = styled.div`
 export const HeaderComponent = styled.div`
     display: flex;
     justify-content: space-between;
-    width: 90%;
+    width: 84%;
     margin: 0 auto;
+    
+    & a 
+    {
+        text-decoration : none;
+    }
     @media screen and (max-width : 768px)
     {
         width : 95%;

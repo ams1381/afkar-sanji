@@ -20,12 +20,13 @@ export const QuestionnaireContainer = styled.div`
 `
 export const QuestionnaireDiv = styled.div`
     height: fit-content;
-    border: 1px solid #CCCCCC;
+    border: ${p => p.isloading ? 'none' : '1px solid #CCCCCC'};
     border-radius: 2px;
     font-family: 'IRANSans';
     width: 420px;
     direction: ltr;
-    background: var(--surface);
+    background: ${p => p.isloading ? '#E7E7E7' : 'var(--surface)'};
+    padding-bottom : ${p => p.isloading ? '20px' : '0'};
 
     @media screen and (max-width : 680px)
     {
@@ -87,21 +88,24 @@ export const QuestionnaireNameInput = styled.input`
     font-weight: 600;
     font-size: 1rem;
     outline: none;
-    min-width:50px!important;
+    min-width: 25px!important;
     max-width: 259px;
     transition: width 0.25s;
     box-sizing: border-box;
     text-align: right;
     margin-left: 0.8rem;
     direction: rtl;
-
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    
     &::selection 
     {
         background : #86B6FF;
     }
     @media screen and (max-width : 480px)
     {
-        max-width: 162px;
+        max-width: ${p => p.questionnairePanel ? '55px !important' : '162px'};
     }
 `
 export const RenameSpan = styled.span`
@@ -128,10 +132,11 @@ export const QuestionnaireSeeResultButton = styled.button`
     background: none;
     border: none;
     cursor: pointer;
-    color: var(--primary-color);
+    color: ${p => p.disabled ? 'Gray' : 'var(--primary-color)'};
     padding: 0.5rem;
     align-items: center;
     margin-left : 0.5rem;
+    pointer-events : ${p => p.disabled ? 'none' : 'all'};
 
     & i 
     {
@@ -162,7 +167,7 @@ export const ContentBox = styled.div`
 `
 export const MainContainer = styled.div`
     height: 97%;
-    width: 85%;
+    width: 84%;
     margin: 0 auto;
     padding: 1rem 0 0 0;
 

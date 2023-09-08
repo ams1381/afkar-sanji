@@ -6,9 +6,14 @@ export const QuestionnairePanelContainer = styled.div`
     height : 90vh;
 `
 export const PanelInnerContainer = styled.div`
-    width: 90%;
+    width: 84%;
     margin: 1.2rem auto;
     height: 95%;
+
+    @media screen and (max-width : 768px)
+    {
+        width : 90%;
+    }
 `
 export const PanelHeader = styled.div`
     display: flex;
@@ -190,5 +195,6 @@ export const QuestionnaireEditButtonContainer = styled.div`
     @media screen and (max-width : 768px)
     {
         margin-bottom: 0.7rem;
+        width : ${p => p.isloading ? '100%' : 'auto'};
     }
 `

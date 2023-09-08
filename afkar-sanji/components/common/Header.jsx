@@ -9,6 +9,7 @@ import { Icon } from '@/styles/icons';
 import AvatarComponent from './LogoutPopover';
 import { Router, useRouter } from 'next/router';
 import PN from 'persian-number';
+import Link from 'next/link';
 
 export const Header = ({SetSideBar , goToFolders}) => {
     const [ logoutPopOver , switchPopover ] = useState(false);
@@ -23,27 +24,32 @@ export const Header = ({SetSideBar , goToFolders}) => {
     }
   return (
     <HeaderContainer>
-    <HeaderComponent>
-        <ConfigProvider theme={themeContext}>
-            <Popover
-            content={AvatarComponent}
-            trigger="click"
-            className='LogoutPopover'
-            open={logoutPopOver}
-            overlayInnerStyle={{ marginLeft : 15}}
-            onOpenChange={() => switchPopover(false)}
-            style={{width : 190}}
-            >
-                <UserAvatarLogout onClick={() => switchPopover(!logoutPopOver)}>
-                    <Icon name='GrayUser' />
-                </UserAvatarLogout>
-            </Popover>
-        </ConfigProvider>
-       <SideBarToggleButton onClick={FolderButtonHandler}>
-        <p>پوشه ها</p>
-        <Icon name='Folder' style={{ width : 15 }} />
-       </SideBarToggleButton>
-    </HeaderComponent>
+        <HeaderComponent>
+            <ConfigProvider theme={themeContext}>
+                <Popover
+                content={AvatarComponent}
+                trigger="click"
+                className='LogoutPopover'
+                open={logoutPopOver}
+                overlayInnerStyle={{ marginLeft : 15}}
+                onOpenChange={() => switchPopover(false)}
+                style={{width : 190}}
+                >
+                    <UserAvatarLogout onClick={() => switchPopover(!logoutPopOver)}>
+                        <Icon name='GrayUser' />
+                    </UserAvatarLogout>
+                </Popover>
+            </ConfigProvider>
+        {goToFolders ? <Link href={`/`}>
+            <SideBarToggleButton style={{ height : '100%' }}>
+                <p>پوشه ها</p>
+                <Icon name='Folder' style={{ width : 15 }} />
+            </SideBarToggleButton>
+        </Link> : <SideBarToggleButton onClick={() => SetSideBar()}>
+                <p>پوشه ها</p>
+                <Icon name='Folder' style={{ width : 15 }} />
+            </SideBarToggleButton>}
+        </HeaderComponent>
     </HeaderContainer>
   )
 }

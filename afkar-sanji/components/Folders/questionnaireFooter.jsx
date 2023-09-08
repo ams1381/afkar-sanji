@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import RemovePopup from '../common/RemovePopup';
 import { axiosInstance } from '@/utilities/axios';
+import { PdfGenerator } from './pdfExport';
 
 
 const QuestionnaireFooterPart = ({ questionnaire , FolderReload }) => {
@@ -77,11 +78,13 @@ const QuestionnaireFooterPart = ({ questionnaire , FolderReload }) => {
             </Link>
         </QuestionnaireFooterItem>
         <QuestionnaireFooterItem>
+        <Link href={`questionnaire/${questionnaire.uuid}}/Charts/`}>
             <QuestionnaireFooterButton>
             <Icon name='statics' />
             </QuestionnaireFooterButton>
+        </Link>
         </QuestionnaireFooterItem>
-        <QuestionnaireFooterItem style={{ borderRight : 0 }}>
+        <QuestionnaireFooterItem style={{ borderRight : 0 }} onClick={PdfGenerator}>
             <QuestionnaireFooterButton>
             <Icon name='pdf' />
             </QuestionnaireFooterButton>

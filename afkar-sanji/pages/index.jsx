@@ -21,6 +21,7 @@ import AddQuestionnairePopUp from '@/components/Folders/AddQuestionnairePopUp';
 import ProgressBarLoading from '@/styles/ProgressBarLoading';
 import { useLocalStorage } from '@/utilities/useLocalStorage';
 import { handleInputWidth } from '@/utilities/RenameFunctions';
+import { useQuery } from '@tanstack/react-query';
 
 export default function Home() {
   const router = useRouter();
@@ -38,50 +39,35 @@ export default function Home() {
   const FolderNameInput = useRef(null);
   const [ ChangeFolderName , SetChangeFolderNameState ] = useState(false);
   const [ FolderName , SetFolderName ] = useState(null);
-
+  const { data , isLoading, error , refetch } = useQuery(['FolderFetch'],async () => await axiosInstance.get('/user-api/folders/'))
+ 
   useEffect(() => {
     let scroll_position = 0;
-    const { getItem , setItem } = useLocalStorage();
     let scroll_direction;
-    const getData = async () => {
-        try
-        {
-          let { data } = await axiosInstance.get('/user-api/folders/');
-        setFolder(data);
-        SetFolderReload(false);
-        if(data[SelectedFolder])
-          SetFolderName(data[SelectedFolder].name) 
+    window.addEventListener('scroll', function(e){
+      scroll_direction = (document.body.getBoundingClientRect()).top > scroll_position ? 'up' : 'down';
+      scroll_position = (document.body.getBoundingClientRect()).top;
+      if(CornerButton.current)
+      {
+        scroll_direction == 'down' ? CornerButton.current.setAttribute('style',' right : -30%;') :
+         CornerButton.current.removeAttribute('style');
+      }
+  });
+  },[])
+ 
+  useEffect(() => {   
+    // const { getItem , setItem } = useLocalStorage();
+        if(data?.data[SelectedFolder])
+          SetFolderName(data?.data[SelectedFolder]?.name) 
           else {
             SelectFolder(0);
             removeItem('SelectedFolder')
           }  
-        }
-         catch(err)
-         {
-          MessageApi.error({
-            content : 'در لود کردن فولدر ها مشکلی پیش آمد',
-            style : {
-              fontFamily : 'IRANSans',
-              direction : 'rtl'
-            }
-          })
-         }
-    }
-    window.addEventListener('scroll', function(e){
-        scroll_direction = (document.body.getBoundingClientRect()).top > scroll_position ? 'up' : 'down';
-        scroll_position = (document.body.getBoundingClientRect()).top;
-        if(CornerButton.current)
-        {
-          scroll_direction == 'down' ? CornerButton.current.setAttribute('style',' right : -30%;') :
-           CornerButton.current.removeAttribute('style');
-        }
-    });
-    getData();
-  },[FolderReload])
+  },[data])
   useEffect(() => {
-    if(folders && folders[SelectedFolder])
-      handleInputWidth(FolderNameInput,folders[SelectedFolder].name);
-  },[folders , FolderNameInput , SelectedFolder])
+    if(data?.data && data?.data[SelectedFolder])
+      handleInputWidth(FolderNameInput,data?.data[SelectedFolder].name);
+  },[data?.data , FolderNameInput , SelectedFolder])
 
   const folderNameChangeHandler = (e) => {
     handleInputWidth(FolderNameInput,FolderName);
@@ -90,9 +76,10 @@ export default function Home() {
   const folderRenameConfirm = async () => {
     try 
     {
-      await axiosInstance.patch(`/user-api/folders/${folders[SelectedFolder].id}/`, { 'name' : FolderName });
+      await axiosInstance.patch(`/user-api/folders/${data?.data[SelectedFolder].id}/`, { 'name' : FolderName });
       handleInputWidth(FolderNameInput,FolderName);
-      SetFolderReload(true)
+      // SetFolderReload(true)
+      refetch();
     }
     catch(err)
     {
@@ -104,7 +91,7 @@ export default function Home() {
           direction : 'rtl'
         }
       })
-      handleInputWidth(FolderNameInput,folders[SelectedFolder]?.name);
+      handleInputWidth(FolderNameInput,data?.data[SelectedFolder]?.name);
     }
     SetChangeFolderNameState(false);
   }
@@ -119,12 +106,12 @@ export default function Home() {
       {MessageContext}
       <ProgressBarLoading />
       <Header SetSideBar={() => setOpen(!SideBarOpen)} />
-      <SideBar folders={folders} SelectedFolder={SelectedFolder} isopen={SideBarOpen} ReadyToCreate={readyToCreate}
-       setReadyToCreate={setReadyToCreate} FolderReload={() => SetFolderReload(true)}  ChangeFolder={SelectFolder}
+      <SideBar folders={data?.data} SelectedFolder={SelectedFolder} isopen={SideBarOpen} ReadyToCreate={readyToCreate}
+       setReadyToCreate={setReadyToCreate} FolderReload={refetch}  ChangeFolder={SelectFolder}
         SetSideBar={() => setOpen(!SideBarOpen)} ChangeFolderName={SetFolderName}/>
       <Popover
             content={<AddPopoverContent SelectedFolderNumber={SelectedFolder} 
-            folders={folders} FolderReload={() => SetFolderReload(true)} 
+            folders={data?.data} FolderReload={refetch} 
             SetSideBar={() => setOpen(!SideBarOpen)} setReadyToCreate={setReadyToCreate}
             setAddPopover={() => setAddPopover(!addPopOver)}/>}
             trigger="click"
@@ -138,14 +125,14 @@ export default function Home() {
         </Popover>
     <ContentBox >
       { 
-        folders && folders.length !== 0 ? <MainContainer>
+        data?.data && data?.data.length !== 0 ? <MainContainer>
         <FolderEditContainer>
             <Popover
             trigger="click"
             content={<FolderPopoverContent RenameFolderState={SetChangeFolderNameState} RenameInput={FolderNameInput}
-            SelectFolder={SelectFolder} FolderReload={() => SetFolderReload(true)} 
+            SelectFolder={SelectFolder} FolderReload={refetch} 
             closeEditPopover={() => setFolderPopover(false)}
-             SelectedFolderNumber={SelectedFolder} Folders={folders} />}
+             SelectedFolderNumber={SelectedFolder} Folders={data?.data} />}
             open={FolderPopover}
             placement="bottom"
             overlayInnerStyle={{ marginRight : 15}}
@@ -155,8 +142,8 @@ export default function Home() {
                     {ChangeFolderName ? <Icon name='GrayCheck' style={{ width : 20 }} /> : <Icon name='Menu' /> }
                   </FolderPopoverToggle>
               {ChangeFolderName && <FolderPopoverToggle onClick={() => {
-                  SetFolderName(folders[SelectedFolder]?.name)
-                  handleInputWidth(FolderNameInput,folders[SelectedFolder]?.name)
+                  SetFolderName(data?.data[SelectedFolder]?.name)
+                  handleInputWidth(FolderNameInput,data?.data[SelectedFolder]?.name)
                   SetChangeFolderNameState(false);
               }}>
                 <Icon name='BlackClose' style={{ width : 15 , marginLeft : 10}} />
@@ -167,14 +154,14 @@ export default function Home() {
           </FolderEditContainer>
       <QuestionnaireContainer>        
         {
-          folders[SelectedFolder].questionnaires.length ? folders[SelectedFolder].questionnaires.map((item) => 
-          <QuestionnaireBox FolderReload={() => SetFolderReload(true)}  Questionnaire={item} key={item.id} />)
+          data?.data[SelectedFolder].questionnaires.length ? data?.data[SelectedFolder].questionnaires.map((item) => 
+          <QuestionnaireBox FolderReload={refetch}  Questionnaire={item} key={item.id} />)
           : <EmptyFolderContainer>
           <p>یک پرسشنامه درست کنید</p>
           <AddQuestionnairePopUp AddQuestionnaireModal={AddQuestionnaireState}
           setQuestionnaireModalState={() => setAddQuestionnaireState(!AddQuestionnaireState)}
-          FolderReload={() => SetFolderReload(true)} 
-          folders={folders}
+          FolderReload={refetch} 
+          folders={data?.data}
           SelectedFolderNumber={SelectedFolder}
           />
           <button onClick={() => setAddQuestionnaireState(true)}>
@@ -185,7 +172,7 @@ export default function Home() {
         }
       </QuestionnaireContainer>
         </MainContainer> 
-        : folders ?  <EmptyFolderContainer>
+        : data?.data ?  <EmptyFolderContainer>
             <p>برای مدیریت بهتر نظر سنجی ها یک پوشه درست کن</p>
             <button onClick={() => setOpen(true)}>
                 <p>پوشه ها</p>
@@ -196,7 +183,7 @@ export default function Home() {
             <Skeleton.Input active style={{ height : 20 }}/>
           </FolderEditContainer>
          <QuestionnaireContainer>
-          <QuestionnaireDiv style={{ background : 'none' , border : 'none' }}>
+          <QuestionnaireDiv isloading={true}>
               <QuestionnaireHeader>
                   <QuestionnaireNameContainer>
                       <Skeleton.Input active  style={{ height : 20 }}/>
@@ -230,7 +217,7 @@ export default function Home() {
                   <Skeleton.Button active style={{ width : 73 }}/>
               </QuestionnaireFooter>
           </QuestionnaireDiv>
-          <QuestionnaireDiv style={{ background : 'none' , border : 'none' }}>
+          <QuestionnaireDiv isloading={true}>
               <QuestionnaireHeader>
                   <QuestionnaireNameContainer>
                       <Skeleton.Input active  style={{ height : 20 }}/>
@@ -264,7 +251,7 @@ export default function Home() {
                   <Skeleton.Button active style={{ width : 73 }}/>
               </QuestionnaireFooter>
           </QuestionnaireDiv>
-          <QuestionnaireDiv style={{ background : 'none' , border : 'none' }}>
+          <QuestionnaireDiv isloading={true}>
               <QuestionnaireHeader>
                   <QuestionnaireNameContainer>
                       <Skeleton.Input active  style={{ height : 20 }}/>
