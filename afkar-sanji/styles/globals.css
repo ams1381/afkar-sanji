@@ -66,6 +66,10 @@ html::-webkit-scrollbar-thumb
   width: 400px !important;
   height: 175px;
 }
+.ant-popover-inner
+{
+  padding: 0 !important;
+}
 .type_selector .rc-virtual-list-holder-inner
 {
   display: grid !important;

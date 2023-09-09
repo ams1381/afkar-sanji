@@ -105,7 +105,7 @@ export const QuestionnaireNameInput = styled.input`
     }
     @media screen and (max-width : 480px)
     {
-        max-width: ${p => p.questionnairePanel ? '55px !important' : '162px'};
+        max-width: ${p => p.questionnairePanel ? '106px !important' : '162px'};
     }
 `
 export const RenameSpan = styled.span`
@@ -167,7 +167,7 @@ export const ContentBox = styled.div`
 `
 export const MainContainer = styled.div`
     height: 97%;
-    width: 84%;
+    width: 83.5%;
     margin: 0 auto;
     padding: 1rem 0 0 0;
 
@@ -222,9 +222,6 @@ export const QuestionnaireFooterButton = styled.button`
     background: none;
     border: none;
     cursor: pointer;
-
-    
-    
 `
 export const EmptyFolderContainer = styled.div`
     position: absolute;

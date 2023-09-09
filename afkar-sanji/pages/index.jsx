@@ -27,9 +27,7 @@ export default function Home() {
   const router = useRouter();
   const { getItem , removeItem } = useLocalStorage();
   const [ MessageApi , MessageContext ] = message.useMessage();
-  const [ folders , setFolder ] = useState(null);
   const [ SelectedFolder , SelectFolder ] = useState(getItem('SelectedFolder') || 0);
-  const [ FolderReload , SetFolderReload ] = useState(false);
   const [ AddQuestionnaireState , setAddQuestionnaireState ] = useState(false);
   const [ SideBarOpen , setOpen ] = useState(false);
   const [ addPopOver , setAddPopover ] = useState(false);
@@ -116,7 +114,7 @@ export default function Home() {
             setAddPopover={() => setAddPopover(!addPopOver)}/>}
             trigger="click"
             open={addPopOver}
-            overlayInnerStyle={{ boxShadow : 'none' , marginRight : '5.5vw' , background : 'transparent'}}
+            overlayInnerStyle={{ boxShadow : 'none' , marginRight : '6.5vw' , background : 'transparent'}}
             onOpenChange={() => setAddPopover(false)}
             style={{marginRight : 15}}>
                 <CornerAddButton ref={CornerButton} clicked={addPopOver ? 'true' : null} onClick={() => setAddPopover(!addPopOver)}>
@@ -131,7 +129,7 @@ export default function Home() {
             trigger="click"
             content={<FolderPopoverContent RenameFolderState={SetChangeFolderNameState} RenameInput={FolderNameInput}
             SelectFolder={SelectFolder} FolderReload={refetch} 
-            closeEditPopover={() => setFolderPopover(false)}
+            // closeEditPopover={() => setFolderPopover(false)}
              SelectedFolderNumber={SelectedFolder} Folders={data?.data} />}
             open={FolderPopover}
             placement="bottom"

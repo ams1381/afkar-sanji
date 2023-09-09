@@ -56,6 +56,7 @@ const QuestionnairePanelHeader = ({ FolderName , isFetched , Questionnaire , Sid
               <div>
                 <Popover content={<QuestionnairePopover RenameInput={QuestionnaireNameInputRef}
                 Questionnaire={Questionnaire}
+                trigger='click'
                 RenameChangeState={SetRenameState} SetQuestionnairePopoverState={SetQuestionnairePopoverState} />}
                 open={QuestionnairePopoverState}
                 onOpenChange={() => SetQuestionnairePopoverState(false)}>

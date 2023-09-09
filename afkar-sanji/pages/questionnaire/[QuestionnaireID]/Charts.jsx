@@ -37,7 +37,7 @@ const ChartsPage = () => {
       <Header SetSideBar={() => setOpen(!SideBarOpen)} goToFolders={true}/>
       <PanelInnerContainer>
         <ChartsHeader QuestionnaireQuery={QuestionnaireQuery}/>
-        <ChartsBody ChartQuery={ChartQuery} />
+        <ChartsBody ChartQuery={ChartQuery} QuestionnaireQuery={QuestionnaireQuery}/>
     </PanelInnerContainer>
     </>
     

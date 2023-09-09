@@ -20,7 +20,7 @@ export const HeaderComponent = styled.div`
     }
     @media screen and (max-width : 768px)
     {
-        width : 95%;
+        width : 96%;
     }
 `
 export const SideBarToggleButton = styled.button`
@@ -56,7 +56,14 @@ export const UserAvatarLogout = styled.button`
     padding: 4px 10px 4px 10px;
     border-radius: 2px;
     cursor: pointer;
-    border: 2px solid #D9D9D9;
+    border: 1px solid #D9D9D9;
+    transition : 0.3s;
+    box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.02);
+
+    &:hover 
+    {
+        border : 1px solid var(--primary-color);
+    }
 `
 export const LogoutPopOverInfo = styled.div`
     width : 95%;
@@ -70,6 +77,7 @@ export const LogoutPopOverLayout = styled.div`
     width: 235px;
     display: flex;
     flex-direction: column;
+    padding: 16px;
 
     button 
     {

@@ -1,19 +1,23 @@
 import { styled } from "styled-components";
 
 export const FolderPopoverContainer = styled.div`
-    height: 100px;
+    height: 118px;
     margin: 0 auto;
+    padding: 16px;
+    row-gap: 18px;
+    border-radius: 2px;
     display: flex;
     justify-content: space-around;
     flex-direction: column;
     font-family: 'IRANSANS';
 `
 export const FolderPopoverItem =  styled.div`
-    width: 105%;
-    margin: 0.5rem auto;
+    // width: 105%;
+    // margin: 0.5rem auto;
     display: flex;
     justify-content: space-between;
-    padding: 0.4rem 1rem 0.4rem 1rem;
+    padding: 4px 15px;
+    border-radius: 2px;
     
     &:hover
     {
@@ -31,6 +35,10 @@ export const FolderPopoverItem =  styled.div`
         cursor: pointer;
         color : ${p => p.deleteitem ? 'red' : ''};
     }
+    & button p 
+    {
+        white-space : nowrap;
+    }
     & button i 
     {
         display : flex;
@@ -38,13 +46,14 @@ export const FolderPopoverItem =  styled.div`
     }
 ` 
 export const SharePopoverContainer = styled.div`
-    width: 225px;
+    width: 236px;
     display: flex;
     justify-content: space-between;
     font-family: 'IRANSans';
     font-size: 13px;
     flex-direction: column;
     text-align: right;
+    padding: 8px 10px;
 
     .share_icon_container
     {
@@ -56,6 +65,10 @@ export const SharePopoverContainer = styled.div`
     {
         width : 20px;
         height : 20px;
+    }
+    & p 
+    {
+        white-space : nowrap;
     }
 `
 export const SharePopoverButton = styled.div`

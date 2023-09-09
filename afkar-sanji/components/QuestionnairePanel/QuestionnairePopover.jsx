@@ -20,7 +20,7 @@ export const QuestionnairePopover = ({ Questionnaire , RenameInput  , RenameChan
       typeof window !== 'undefined' ? router.push('../') : ''
     }
   return (
-    <FolderPopoverContainer style={{ height : 'auto' }}>
+    <FolderPopoverContainer >
         <FolderPopoverItem>
           <button onClick={() => {
             SetQuestionnairePopoverState(false)

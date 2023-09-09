@@ -117,3 +117,32 @@ export const QuestionTypeComponentGenerator = (Type) => {
             return QuestionTypeComponent('welcome','خوش آمد گویی');
   }
 }
+export const QuestionTypeIcon = (Type) => {
+  switch(Type)
+    {
+        case 'optional':
+            return <Icon name='optional' />
+        case 'drop_down':
+            return <Icon name='SlideList' />
+        case 'integer_selective':
+            return <Icon name='Degree' />
+        case 'integer_range':
+            return <Icon name='range' />
+        case 'sort':
+            return <Icon name='Prioritize' />
+        case 'link':
+            return <Icon name='Link' />
+        case 'email_field':
+            return <Icon name='Email' />
+        case 'file':
+            return <Icon name='Upload' />
+        case 'number_answer':
+            return <Icon name='Number' />
+        case 'text_answer':
+            return <Icon name='QWAnswer' />
+        case 'group':
+            return <Icon name='GroupQuestion' />
+        case 'noanwser':
+            return <Icon name='QWOut' />
+  }
+}
