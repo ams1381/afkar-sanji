@@ -20,7 +20,6 @@ const OTPSms = () => {
     FormBodyMessage : 'لطفا کد ارسال شده را وارد کن',
     ButtonText : 'ثبت کد تایید',
     FormType : 'OTP_SMS'
-    
   }
 
   Auth.Login_Function = async (value) => {

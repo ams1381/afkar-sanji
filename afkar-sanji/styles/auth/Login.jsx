@@ -30,6 +30,7 @@ export const LeftLight = styled.span`
     right: 0;
     bottom: 0;
     animation : ${p => p.filltext ? 'LeftLightAnim 2s 0.4s' : 'none'};
+    animation-delay: 0.5s;
 
     @keyframes LeftLightAnim 
     {
@@ -59,6 +60,7 @@ export const RightLight = styled.span`
     border-radius: 50%;
     z-index: -2;
     animation : ${p => p.filltext ? 'RightLightAnim 2s 0.4s' : 'none'};
+    animation-delay: 0.5s;
 
     @keyframes RightLightAnim 
     {
@@ -92,8 +94,8 @@ export const LoginHeaderText = styled.h2`
     font-family: Arial, Helvetica, sans-serif;
     overflow: hidden;
     transition : 0.3s;
-    animation : ${p => p.filltext ? 'LoginTitleAnim 2s ease' : 'none'};
-    animation-delay: 1s;
+    animation : ${p => p.filltext ? 'LoginTitleAnim 1.7s ease' : 'none'};
+    animation-delay: 0.7s;
 
     &::after 
     {
