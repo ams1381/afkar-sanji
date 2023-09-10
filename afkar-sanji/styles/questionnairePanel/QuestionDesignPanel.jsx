@@ -175,6 +175,14 @@ export const QuestionDesignItem = styled.div`
         display: flex;
         align-items: center;
     }
+    .question_type_selector .ant-select-selection-item
+    {
+        color : var(--primary-color);
+    }
+    .question_type_selector .ant-select-selection-item  i 
+    {
+        filter : invert(37%) sepia(74%) saturate(1045%) hue-rotate(210deg) brightness(91%) contrast(105%);
+    }
     .question_bold_info .ant-select-selection-item
     {
         padding : 0;
@@ -271,13 +279,17 @@ export const QuestionItemSurface = styled.div`
     }
     .question_item_info
     {
-        width : 100%;
+        width : 80%;
+        overflow: hidden;
     }
     .question_item_info p 
     {
         color : #B8B8B8;
         margin-right : 0.4rem;
         direction: rtl;
+        text-overflow: ellipsis;
+        white-space: pre;
+        overflow: hidden;
     }
 `
 export const DropDownQuestionButton = styled.button`
@@ -404,11 +416,11 @@ export const QuestionItemActionButton = styled.button`
     }
 `
 export const QuestionItemSettingContainer = styled.div`
-    width: 96%;
+    width: 95%;
     margin : 1rem auto;
 `
 export const QuestionItemWriteContainer = styled.div`
-    width: 96%;
+    width: 95%;
     margin : 0 auto;
 `
 export const QuestionItemTitleContainer = styled.div`
@@ -432,7 +444,7 @@ export const QuestionItemFooter = styled.div`
     gap: 20px;
     width: 95%;
     margin: 0 auto;
-    margin-bottom: 20px;
+    margin-bottom: 13px;
 
     button 
     {

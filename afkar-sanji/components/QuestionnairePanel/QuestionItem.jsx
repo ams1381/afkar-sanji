@@ -85,25 +85,6 @@ export const QuestionItem = ({  activeQuestionId, provided ,setActiveQuestion , 
         SetQuestionRootOpenState(false)
 
   },[activeQuestionId])
-  // if(!questionsData)
-  // {
-  //   if(GroupID && question.group)
-  //   {
-  //     // questionsData =
-  //     questionsData = (useSelector(s => s.reducer.data.find(question_item => (question_item.question) && question_item.question.id == GroupID))
-  //     .question.child_questions.find(item => item.question.id == question.id))
-  //     // return
-  //   }
-  //   else
-  //   {
-  //     // questionsData =
-  //     IsQuestion ?
-  //     questionsData = (useSelector(s => s.reducer.data.find(question_item => (question_item.question && question_item.question.id == question.id))))
-  //    :
-  //    questionsData = (useSelector(s => s.reducer.nonQuestionData.find(nonquestion_item => (nonquestion_item.question && nonquestion_item.question.id == question.id))))
-  //   }   
-  //  InitialQuestionData.current = questionsData;
-  // }
    
   const DeleteQuestion = async () => {
     (questionsData.question.question_type == 'welcome_page' ||
@@ -351,6 +332,7 @@ export const QuestionItem = ({  activeQuestionId, provided ,setActiveQuestion , 
                     <Select
                         bordered={false}
                         maxTagTextLength={6}
+                        listHeight={360}
                         className='type_selector'
                         columns={2} 
                         labelInValue
@@ -358,10 +340,12 @@ export const QuestionItem = ({  activeQuestionId, provided ,setActiveQuestion , 
                            questionsData.question.duplicated ||
                            questionsData.question.nonquestion) ? true : false}
                         defaultValue={{
-                         label : <span style={{ color : 'blue' }}>{QuestionTypeComponentGenerator(questionsData.question.question_type)}</span>,
+                         label : <span style={{ color : 'blue' }}>
+                          {QuestionTypeComponentGenerator(questionsData.question.question_type,'active')}
+                          </span>,
                          value : questionsData.question.question_type
                         }}
-                        style={{ width: 120 , border : 'none'}}
+                        style={{ width: 120 , border : 'none' , color : 'var(--primary-color)'}}
                         dropdownStyle={{ width : '350px !important' }}
                         options={Question_types}
                         onChange={ChangeQuestionTypeHandler}

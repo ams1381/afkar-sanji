@@ -94,7 +94,7 @@ html::-webkit-scrollbar-thumb
 }
 .ant-select-dropdown.css-dev-only-do-not-override-byeoj0
 {
-  width: 390px !important;
+  width: 330px !important;
   border-radius: 2px !important;
 }
 #select-type-container .rc-virtual-list-holder-inner
@@ -102,16 +102,20 @@ html::-webkit-scrollbar-thumb
   display: grid !important;
   grid-template-columns: auto auto;
   transform: none !important;
+  border-radius: 2px;
+  gap: 16px !important;
+  padding: 10px !important;
 }
-#select-type-container .rc-virtual-list-holder > div 
+/* #select-type-container .rc-virtual-list-holder > div 
 {
   height: 163px !important;
-}
+} */
 .ant-modal-content
 {
   border-radius: 2px !important;
 }
-.ant-popover-inner , .ant-tooltip-inner
+.ant-popover-inner , .ant-tooltip-inner , .ant-select-item.ant-select-item-option  ,
+ .ant-select-item.ant-select-item-option.ant-select-item-option-selected
 {
   border-radius: 2px !important;
 }
@@ -141,10 +145,10 @@ html::-webkit-scrollbar-thumb
     {
       width : 310px !important;
     }
-    .ant-select-dropdown.css-dev-only-do-not-override-byeoj0
+    /* .ant-select-dropdown.css-dev-only-do-not-override-byeoj0
     {
       width: 290px !important;
-    }
+    } */
 }
 @media screen and (max-width : 420px)
 {

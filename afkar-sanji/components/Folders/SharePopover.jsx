@@ -1,9 +1,11 @@
 import { SharePopoverContainer , SharePopoverButton } from '@/styles/folders/Popovers'
 import { Icon } from '@/styles/icons'
 import React from 'react'
+import { useState } from 'react'
 
 
 export const SharePopOverContent = () => {
+  const [ CopiedState , setCopiedState ] = useState(false);
   return (
    
     <SharePopoverContainer>
@@ -30,8 +32,11 @@ export const SharePopOverContent = () => {
           </a>
         </div>
       </div>
-    <SharePopoverButton  onClick={() => navigator.clipboard.writeText('لینک پرسشنامه مثلا')}>
-      کپی لینک
+    <SharePopoverButton  onClick={() => {
+      navigator.clipboard.writeText('لینک پرسشنامه مثلا')
+      setCopiedState(true);
+      }}>
+       { CopiedState ? <p>کپی شد</p> : <p>کپی لینک</p> }
     </SharePopoverButton>
   </SharePopoverContainer>
   )

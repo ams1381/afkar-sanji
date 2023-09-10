@@ -19,6 +19,7 @@ import { configureStore, createSlice } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { AnswerSetFormDataConverter } from '@/utilities/FormData';
+import { digitsEnToFa } from '@persian-tools/persian-tools';
 
 SwiperCore.use([Navigation]);
 
@@ -143,7 +144,8 @@ const ViewQuestions = ({ answerSetID }) => {
     <PreviewPageContainer >  
       <PreviewPageHeader>
           {QuestionnaireInfo.progress_bar ? 
-          <Progress percent={CurrentIndex == 'Thanks' ? 100
+          <Progress  format={(percent) => `${digitsEnToFa(percent)}%`}
+          percent={CurrentIndex == 'Thanks' ? 100
           : Math.floor((CurrentIndex / QuestionsData.length) * 100)}  steps={QuestionsData.length} /> : ''}
       </PreviewPageHeader>
       <PreviewQuestionsContainer slidemode={(!QuestionnaireInfo.show_question_in_pages && CurrentIndex != 'Thanks')? 'active' : null}>

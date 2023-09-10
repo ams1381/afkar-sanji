@@ -42,7 +42,8 @@ export const Login_form = ({ setLoggedIn }) => {
       if(typeof error == 'string')
         setErMessage(error)
       if(typeof error == 'object' && error.response)
-        setErMessage(error.response.data[0])
+        setErMessage(error.response.data[0].split('.')[0])
+        
     }
     finally
     {

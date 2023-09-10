@@ -28,8 +28,6 @@ export const QuestionChart = ({ PlotDetail }) => {
                         <Icon name='Filter' />
                 </button>
                 </Popover>
-                
-                {/* ChartTypePopover */}
                 <Popover open={ChangeChartTypePopover}
                 placement='bottom'
                 content={<ChartTypePopover />}

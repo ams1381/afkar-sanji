@@ -14,9 +14,9 @@ export const Link = ({ QuestionInfo }) => {
     {
       setLinkAnswer(QuestionsAnswerSet.find(item => item.question == QuestionInfo.id).answer?.Link)
     }
-      
   },[])
   const LinkAnswerHandler = (Value) => {
+    setLinkAnswer(Value.target.value)
     if(QuestionsAnswerSet && QuestionsAnswerSet.length)
     {
       dispatcher(ChangeInputAnswer({
@@ -26,10 +26,9 @@ export const Link = ({ QuestionInfo }) => {
         }))
     }
   }
-
   return (
     <EmailInputContainer >
-        <Input type='email' value={LinkAnswer} onChange={LinkAnswerHandler}
+        <Input type='text' value={LinkAnswer ? LinkAnswer : ''} onChange={LinkAnswerHandler}
         placeholder='www.google.com' style={{ textAlign : 'left' , direction : 'ltr' }} />
     </EmailInputContainer>
   )

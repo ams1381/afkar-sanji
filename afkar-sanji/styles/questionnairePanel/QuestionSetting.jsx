@@ -180,14 +180,15 @@ export const AlphabetNumberContainer = styled.div`
     display: flex;
     flex-direction: column;
     color: #A3A3A3;
-    text-align: right;
+    text-align: left;
     margin-top: 24px;
+    margin-bottom: 24px;
 
     & label 
     {
         display: flex;
         width: 100%;
-        margin-top: 0.8rem;
+        margin-top: 5px;
         justify-content: space-between;
     }
     & label .ant-input-number

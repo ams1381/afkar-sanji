@@ -46,6 +46,11 @@ export const LeftLight = styled.span`
             top : 400px;
         }
     }
+    @media screen and (max-width : 480px)
+    {
+        width: 206px;
+        height: 200px;
+    }
 `
 export const RightLight = styled.span`
     left: 0;
@@ -75,6 +80,11 @@ export const RightLight = styled.span`
             top : 0;
             bottom : 400px;
         }
+    }
+    @media screen and (max-width : 480px)
+    {
+        width: 206px;
+        height: 200px;
     }
 `
 export const LoginForm = styled.form`
@@ -124,6 +134,10 @@ export const LoginHeaderText = styled.h2`
         50% { transform : scale(1)  }
         75% { transform : scale(1.5)  }
         100% { transform : scale(1)  }
+    }
+    @media screen and (max-width : 480px)
+    {
+        font-size: 40px;
     }
 `
 export const LoginInput = styled.input`

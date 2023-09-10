@@ -50,7 +50,7 @@ export const RangeQuestionComponent = ({ QuestionInfo }) => {
          {QuestionInfo.min_label && <RangeLabelText>{QuestionInfo.min_label}</RangeLabelText>}
       </QuestionRangeLabel> 
      <QuestionRangeLabel>
-      {QuestionInfo.mid_label && <RangeLabelText>{QuestionInfo.mid_label}</RangeLabelText>}
+      {QuestionInfo.mid_label && QuestionInfo.max % 2 == 0 && <RangeLabelText>{QuestionInfo.mid_label}</RangeLabelText>}
       </QuestionRangeLabel> 
        <QuestionRangeLabel>
         {QuestionInfo.max_label && <RangeLabelText>{QuestionInfo.max_label}</RangeLabelText>}

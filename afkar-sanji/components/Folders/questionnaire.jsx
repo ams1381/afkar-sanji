@@ -117,7 +117,7 @@ const QuestionnaireBox = ({Questionnaire , FolderReload}) => {
                  </QuestionnaireBodyStat> </>: <Skeleton active />}
              </div>
              <div className="questionnaire_see_result">
-             {Questionnaire.answer_count != 0 ? <Link href={`/questionnaire/${Questionnaire.uuid}/Results/`}>
+             {Questionnaire.answer_count != 0 ? <Link style={{ width : '30%' , display : 'block' }} href={`/questionnaire/${Questionnaire.uuid}/Results/`}>
                  <QuestionnaireSeeResultButton>
                      <p>مشاهده نتایج</p>
                  </QuestionnaireSeeResultButton>

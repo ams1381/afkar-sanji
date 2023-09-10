@@ -7,19 +7,22 @@ export const QuestionTypeContainer = styled.div`
   font-family : IRANSans;
   font-size : 13px;
   align-items: center;
-  color: black;
+  color: ${p => p.activetype ? 'var(--primary-color)' : 'auto'};
 
   & p 
   {
     margin-right : 0.5rem;
   }
+  & i 
+  {
+    filter: ${p => p.activetype ? 'invert(37%) sepia(74%) saturate(1045%) hue-rotate(210deg) brightness(91%) contrast(105%)' : 'none'};
+  }
 `
-export const QuestionTypeComponent = (Type  , TypeText) => 
-  <QuestionTypeContainer>
+export const QuestionTypeComponent = (Type  , TypeText , ActiveType) => 
+  <QuestionTypeContainer activetype={ActiveType}>
     <p>{TypeText}</p>
     <Icon name={Type}/>
   </QuestionTypeContainer>
-
 
 export const Question_types = [
     {
@@ -84,37 +87,37 @@ export const Question_types = [
       },
 
 ]
-export const QuestionTypeComponentGenerator = (Type) => {
+export const QuestionTypeComponentGenerator = (Type,ActiveType) => {
   switch(Type)
     {
         case 'optional':
-            return QuestionTypeComponent('optional','چند گزینه ای')
+            return QuestionTypeComponent('optional','چند گزینه ای',ActiveType)
         case 'drop_down':
-            return QuestionTypeComponent('SlideList','لیست کشویی');
+            return QuestionTypeComponent('SlideList','لیست کشویی',ActiveType);
         case 'integer_selective':
-            return QuestionTypeComponent('Degree','درجه بندی')
+            return QuestionTypeComponent('Degree','درجه بندی',ActiveType)
         case 'integer_range':
-            return QuestionTypeComponent('range','طیفی')
+            return QuestionTypeComponent('range','طیفی',ActiveType)
         case 'sort':
-            return QuestionTypeComponent('Prioritize','اولویت دهی');
+            return QuestionTypeComponent('Prioritize','اولویت دهی',ActiveType);
         case 'link':
-            return QuestionTypeComponent('Link','لینک')
+            return QuestionTypeComponent('Link','لینک',ActiveType)
         case 'email_field':
-            return QuestionTypeComponent('Email','ایمیل');
+            return QuestionTypeComponent('Email','ایمیل',ActiveType);
         case 'file':
-            return QuestionTypeComponent('Upload','فایل');
+            return QuestionTypeComponent('Upload','فایل',ActiveType);
         case 'number_answer':
-            return QuestionTypeComponent('Number','عدد')
+            return QuestionTypeComponent('Number','عدد',ActiveType)
         case 'text_answer':
-            return QuestionTypeComponent('QWAnswer','متنی با پاسخ');
+            return QuestionTypeComponent('QWAnswer','متنی با پاسخ',ActiveType);
         case 'group':
-            return QuestionTypeComponent('GroupQuestion','سوال گروهی')
+            return QuestionTypeComponent('GroupQuestion','سوال گروهی',ActiveType)
         case 'noanwser':
-            return QuestionTypeComponent('QWOut','متنی بدون پاسخ');
+            return QuestionTypeComponent('QWOut','متنی بدون پاسخ',ActiveType);
         case 'thanks_page' : 
-            return QuestionTypeComponent('Thanks','صفحه ی تشکر');
+            return QuestionTypeComponent('Thanks','صفحه ی تشکر',ActiveType);
         case 'welcome_page' : 
-            return QuestionTypeComponent('welcome','خوش آمد گویی');
+            return QuestionTypeComponent('welcome','خوش آمد گویی',ActiveType);
   }
 }
 export const QuestionTypeIcon = (Type) => {

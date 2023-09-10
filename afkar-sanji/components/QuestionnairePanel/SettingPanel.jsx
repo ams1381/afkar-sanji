@@ -14,7 +14,12 @@ import { DatePickerInput } from '@/styles/questionnairePanel/QuestionSetting';
 import moment from 'moment-jalaali';
 import { NumberFormat } from 'react-hichestan-numberinput';
 import locale from 'antd/lib/date-picker/locale/fa_IR';
+import { digitsEnToFa } from '@persian-tools/persian-tools';
 
+moment.loadPersian({
+  usePersianDigits: true, // Set Persian numbers
+});
+moment.locale('fa')
 export const convertStringToDate = str => {
   const [datePart, timezonePart] = str.split(/[T+]/);
   const [timezoneHours, timezoneMinutes] = timezonePart.split(":").map(Number);
@@ -133,6 +138,7 @@ const SettingPanel = ({ Questionnaire }) => {
           <div className='picker_container date_picker'>
             <DatePickerJalali.RangePicker showTime status={ErrorType == 'date_error' ? 'error' : null}
               locale={fa_IR.DatePicker}
+              inputReadOnly 
               disabled={!DateActive}
               defaultValue={defaultDatePickerValue}
               onChange={DateChangeHandler} />
@@ -145,17 +151,22 @@ const SettingPanel = ({ Questionnaire }) => {
             <Switch checked={TimerActive} />
           </div>
           <div className='picker_container time_picker'>
-            <TimePicker
-              open={TimerOpen}
-              onOpenChange={setTimerOpen}
-              onChange={TimerChangeHandler}
-              disabled={!TimerActive}
-              showNow={false}
-              defaultValue={
-                TimerValue
-                  ? moment(TimerValue, 'HH:mm:ss') // Set Jalali locale for moment
-                  : null
-              } />
+        
+              <TimePicker
+                open={TimerOpen}
+                onOpenChange={setTimerOpen}
+                onChange={TimerChangeHandler}
+                disabled={!TimerActive}
+                showNow={false}
+                cellRender={(current, info) => <>{digitsEnToFa(current)}</>}
+                inputReadOnly 
+                locale={{ momentLocale: 'fa' }} 
+                defaultValue={
+                  TimerValue
+                    ? moment(TimerValue, 'HH:mm:ss') // Set Jalali locale for moment
+                    : null
+                } />
+    
           </div>
         </QuestionnaireDatePickerContainer>
         <QuestionnaireDatePickerContainer>

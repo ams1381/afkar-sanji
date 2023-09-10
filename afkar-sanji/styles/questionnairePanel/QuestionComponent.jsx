@@ -214,6 +214,10 @@ export const DropDownContainer = styled.div`
     {
         color : var(--primary-color);
     }
+    .ant-select-selector
+    {
+        border-radius : 2px;
+    }
 `
 export const EmailInputContainer = styled.div`
     display: flex;
@@ -394,7 +398,6 @@ export const RateContainer = styled.div`
         justify-content: center;
         color: #A3A3A3;
         border: 2px solid #A3A3A3;
-        border-radius: 2px;
         height: 28px;
     }
     .ant-rate
