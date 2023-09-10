@@ -32,7 +32,7 @@ const OTPSms = () => {
     {
       LoginMessage.success({
         content : 'ورود با موفقیت انجام شد' ,
-        duration : 4,
+        duration : 50,
         style : {
           fontFamily : 'IRANSans',
           display : 'flex',
@@ -47,7 +47,6 @@ const OTPSms = () => {
       setTimeout(() => {
         typeof window !== 'undefined' ? router.push("../") : ''
       },2000)
-      
     }
     else
     {

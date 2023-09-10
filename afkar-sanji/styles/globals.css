@@ -70,6 +70,10 @@ html::-webkit-scrollbar-thumb
 {
   padding: 0 !important;
 }
+.ant-message-custom-content.ant-message-success
+{
+  display: flex;
+}
 .type_selector .rc-virtual-list-holder-inner
 {
   display: grid !important;

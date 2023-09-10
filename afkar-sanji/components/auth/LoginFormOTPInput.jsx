@@ -39,16 +39,6 @@ export const LoginFormOTPInput = ({ErrorHandler , authentication}) => {
           ChangeTimeOutState(true);
         }
       }, [timeOutState, timer]);
-    // setTimeout(() => {
-    //     if(timer == 0)
-    //     {
-    //         clearTimeout(this);
-    //         ChangeTimeOutState(true)
-    //         return
-    //     }
-    //     SetTimer(timer - 1)
-
-    // },1000);
     
     const resend_sms = async () => {
         axiosInstance.defaults.headers['Content-Type'] = 'application/json';

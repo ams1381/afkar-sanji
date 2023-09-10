@@ -16,35 +16,64 @@ export const LoginContainer = styled.div`
     width: 100%;
     position: relative;
     height: 100vh;
-    
-    &::before , &::after 
+`
+export const LeftLight = styled.span`
+    width: 30%;
+    height: 401px;
+    position: absolute;
+    background: #A4ABFF;
+    content: '';
+    opacity: 50%;
+    filter: blur(142px);
+    border-radius: 50%;
+    z-index: -2;
+    right: 0;
+    bottom: 0;
+    animation : ${p => p.filltext ? 'LeftLightAnim 2s 0.4s' : 'none'};
+
+    @keyframes LeftLightAnim 
     {
-        width: 30%;
-        height: 401px;
-        position: absolute;
-        background: #A4ABFF;
-        content: '';
-        opacity: 50%;
-        filter: blur(142px);
-        border-radius: 50%;
-        z-index: -2;
-        animation-delay : 1s;
+        0% { bottom : 0; }
+        25% { bottom : 400px;
+            top : 0; }
+        50% { bottom : 0;
+            top : 400px }
+        75% { bottom : 400px;
+            top : 0; }
+        100% {
+            bottom : 0;
+            top : 400px;
+        }
     }
-    &::before 
+`
+export const RightLight = styled.span`
+    left: 0;
+    top: 0;
+    width: 30%;
+    height: 401px;
+    position: absolute;
+    background: #A4ABFF;
+    content: '';
+    opacity: 50%;
+    filter: blur(142px);
+    border-radius: 50%;
+    z-index: -2;
+    animation : ${p => p.filltext ? 'RightLightAnim 2s 0.4s' : 'none'};
+
+    @keyframes RightLightAnim 
     {
-        left: 0;
-        top: 0;
-        transition : 0.3s;
-        animation : ${p => p.filltext ? 'LoginContainerBeforeAnim 1s ease' : 'none'};
+        0% { top : 0; }
+        25% { top : 400px;
+            bottom : 0; }
+        50% { top : 0;
+            bottom : 400px }
+        75% { top : 400px;
+            bottom : 0; }
+        100% {
+            top : 0;
+            bottom : 400px;
+        }
     }
-    &::after 
-    {
-        right: 0;
-        bottom: 0;
-        transition : 0.3s;
-        animation : ${p => p.filltext ? 'LoginContainerAfterAnim 1s ease' : 'none'};
-    }
-   
 `
 export const LoginForm = styled.form`
   height: 100%;
@@ -75,10 +104,10 @@ export const LoginHeaderText = styled.h2`
         -webkit-text-fill-color: var(--primary-color);
         width: 0;
         overflow: hidden;
-        transition: .3s;
+        transition: width 0.3s;
         text-overflow: clip;
         text-align: left;
-        animation : ${p => p.halffill ? 'OTPAnimation 1s ease' : 'none'};
+        // animation : ${p => p.halffill ? 'OTPAnimation 1s ease' : 'none'};
         width : ${p => p.filltext ? '100% !important' : p.halffill ? '50% !important' : ''};
         // width : ${p => p.halffill ? '50% !important' : ''}; 
     }
