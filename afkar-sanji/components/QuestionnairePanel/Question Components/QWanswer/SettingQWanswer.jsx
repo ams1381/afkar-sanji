@@ -40,7 +40,7 @@ const SettingQWanswer = ({ QuestionInfo }) => {
       <div className='pattern_selector_container'>
       <Select placeholder='الگوی پاسخ' 
         options={[
-          { label : 'تاریخ میلادی' , value  : 'gregorian_date' } , 
+          { label : 'تاریخ میلادی' , value  : 'georgian_date ' } , 
           { label : 'تاریخ شمسی' , value  : 'jalali_date' } ,
           { label : 'متن آزاد' , value  : 'free' } , 
           { label : 'شماره تلفن' , value : 'phone_number' } , 
