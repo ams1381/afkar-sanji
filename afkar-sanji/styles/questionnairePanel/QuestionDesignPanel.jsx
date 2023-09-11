@@ -235,6 +235,7 @@ export const QuestionItemRow = styled.div`
     justify-content: flex-end;
     flex-direction: row-reverse;
     align-items: flex-start;
+    max-height : ${p => (p.isopen != null && p.maxheight && p.maxheight > 200) ? p.maxheight + 10 + 'px'  : 'fit-content'};
     & .question_design_item
     {
         overflow: hidden;
@@ -246,6 +247,7 @@ export const QuestionItemRow = styled.div`
    
     @media screen and (max-width : 768px)
     {
+        max-height : fit-content !important;
         & .question_design_item 
         {
             width : 100% !important;
@@ -457,9 +459,9 @@ export const QuestionItemFooter = styled.div`
     }
     button:first-child
     {
-        background: ${p => p.SaveButtonActive ? '#F4F4F4' : 'var(--primary-color)'};
-        color : ${p => p.SaveButtonActive ? '#c9c9c9' : 'white'};
-        pointer-events : ${p => p.SaveButtonActive ? 'none' : 'all'};
+        background: ${p => p.savebuttonactive ? '#F4F4F4' : 'var(--primary-color)'};
+        color : ${p => p.savebuttonactive ? '#c9c9c9' : 'white'};
+        pointer-events : ${p => p.savebuttonactive ? 'none' : 'all'};
     }
 `
 export const DescriptionTextField = styled.input`   

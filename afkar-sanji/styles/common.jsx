@@ -12,11 +12,13 @@ export const HeaderComponent = styled.div`
     display: flex;
     justify-content: space-between;
     width: 84%;
+    align-items : center;
     margin: 0 auto;
     
     & a 
     {
         text-decoration : none;
+        height : 34px;
     }
     @media screen and (max-width : 768px)
     {
@@ -33,19 +35,37 @@ export const SideBarToggleButton = styled.button`
     color: white;
     display: flex;
     align-items: center;
+    box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.06);
+    gap: 6px;
     font-family: IRANSans;
     transition : 0.3s;
 
-    & p 
-    {
-        margin-right: 0.5rem;
-    }
+    // & p 
+    // {
+    //     margin-right: 0.5rem;
+    // }
 
     &:hover 
     {
         background : #848CFA;
         border : none;
         border: 2px solid #848CFA;
+    }
+`
+export const HeaderFolderButton = styled(SideBarToggleButton)`
+    padding : 0;
+    gap : 8px;
+    padding: 4px 15px;
+    border: 1px solid var(--Key-Primary, #5360ED);
+    height: 34px;
+    justify-content: center;
+    box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.06);
+
+    &:hover 
+    {
+        background : #848CFA;
+        border : none;
+        // border: 1px solid #848CFA;
     }
 `
 export const UserAvatarLogout = styled.button`

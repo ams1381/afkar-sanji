@@ -4,8 +4,8 @@ import { FormChildDiv } from '@/styles/auth/Login';
 export const LoginFormHeader = ({ Title }) => {
   return (
     <FormChildDiv>
-            <div>
-                <p>ورود با رمز یکبار مصرف</p>
+            <div style={{ color : 'var(--Neutral-Gray9)' , padding : '10px 0' , marginTop : 20}}>
+                <p>ورود یا عضویت</p>
             </div>
       </FormChildDiv>
   )

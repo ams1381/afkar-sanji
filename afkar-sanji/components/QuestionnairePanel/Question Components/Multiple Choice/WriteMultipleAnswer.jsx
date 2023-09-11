@@ -48,10 +48,11 @@ const MultipleAnswer = ({ QuestionInfo }) => {
             {
           QuestionInfo.options.map((item,index) => !item.text?.includes('<span>','</span>') ?
            <Draggable key={item.id} draggableId={item.id.toString()} index={index}>
-            {(provided, snapshot) => <div><InputOptionsContainer ref={provided.innerRef} 
+            {(provided, snapshot) => <div key={item.id}>
+              <InputOptionsContainer ref={provided.innerRef} 
             {...provided.draggableProps}
-            {...provided.dragHandleProps} key={item.id}>
-            <OptionalInputItem  type='text' autoFocus={item.newOption ? true : false}
+            {...provided.dragHandleProps}>
+            <OptionalInputItem  type='text' autoFocus={item.newOption ? true : false} key={item.id}
             onChange={e => Dispatcher(OptionModifier({ QuestionID : QuestionInfo.id , OptionID : item.id , OptionText : e.target.value }))}
             defaultValue={(item.text != 'null') ? item.text : ''} placeholder='چیزی بنویسید'/>
             <div className='option_button_container'>

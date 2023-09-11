@@ -250,8 +250,9 @@ export const EmailInputContainer = styled.div`
     }
 `
 export const RangeQuestion = styled.div`
-    width: 50%;
+    // width: 50%;
     margin: 20px auto;
+    margin-bottom: ${p => p.longestLabelHeight ? p.longestLabelHeight + 30 + 'px' : '0'};
 
     @media screen and (max-width : 480px)
     {
@@ -261,18 +262,27 @@ export const RangeQuestion = styled.div`
 export const RangeQuestionContainer = styled.div`
     display: flex;
     border: 3px solid #7C86FA;
-    width: 90%;
+    width: fit-content;
     margin: 1rem auto 0 auto;
     border-radius: 2px;
     justify-content: space-around;
+    // flex-wrap: wrap;
+
+    @media screen and (max-width : 768px)
+    {
+        width : auto;
+    }
 `
 export const RangeQuestionAnswerItem = styled.div`
-    width: 100%;
+    // width: 100%;
     height: 40px;
     display: flex;
+    flex: 1 1;
     align-items: center;
+    position: ${p => p.haslabel ? 'relative' : 'initial'};
     justify-content: center;
-
+    // max-width: 40px;
+    width: calc(1.6vw + 0.8rem);
     & input 
     {
         display : none;
@@ -288,6 +298,9 @@ export const RangeQuestionAnswerItem = styled.div`
         display: flex;
         align-items: center;
         justify-content: center;
+        // padding: 0 15px 0 15px;
+        // padding: 10px;
+        white-space: nowrap;
     }
     & label:hover
     {
@@ -299,9 +312,13 @@ export const RangeQuestionAnswerItem = styled.div`
         background : var(--primary-color);
         color : white;
     }
+    @media screen and (max-width : 768px)
+    {
+        width: calc(1.6vw + 1.1rem);
+    }
 `
 export const RangeLabelText = styled.p`
-
+    margin : 0 auto;
     &::before
     {
         content: '';
@@ -315,17 +332,17 @@ export const RangeLabelText = styled.p`
     }
 `
 export const RangeQuestionLabelContainer = styled.div`
-    width: 90%;
+    // width: 90%;
     margin: 0.4rem auto;
     display : flex;
     justify-content : space-between;
 `
 export const QuestionRangeLabel = styled.div`
-    position: relative;
-    width: 26%;
+    position: absolute;
+    width: 53px;
     text-align: center;
-    word-break: break-word;
     padding-top: 1.5rem;
+    top: 48px;
 `
 export const FileSizeContainer = styled.div`
     text-align: right;
@@ -440,6 +457,10 @@ export const FileQuestionContainer = styled.div`
         border-radius : 2px !important;
         border-color : ${p => p.uploaderror ? '#ff4d4f' : '#d9d9d9'} !important;
         color : ${p => p.uploaderror ? '#ff4d4f' : 'black'} !important;
+    }
+    .ant-upload-list-item.ant-upload-list-item-error
+    {
+        border-radius : 2px !important;
     }
 `
 export const NumberInputContainer = styled.div`

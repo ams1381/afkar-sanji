@@ -80,7 +80,9 @@ const AnswerSetSlice =  createSlice({
         },
         FileRemoveHandler : (state , action) => {
             const { QuestionID } = action.payload;
-            console.log(JSON.parse(JSON.stringify(state.AnswerSet.find(item => item.question == QuestionID))))
+            // console.log(state.AnswerSet.length)
+            if(!state.AnswerSet.length)
+                return
             state.AnswerSet.find(item => item.question == QuestionID).file = null;
         }
     }

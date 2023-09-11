@@ -74,7 +74,7 @@ const QuestionnairePanelHeader = ({ FolderName , isFetched , Questionnaire , Sid
               }}><Icon name='BlackClose' style={{ width : 15}} /></FolderPopoverToggle>}
               </div>
           </QuestionnaireDirectoryContainer>
-          <div>
+          <div className='see_result_container'>
             <Link href={`/questionnaire/${Questionnaire.uuid}/Results/`}>
             <SeeResultButton>
               <p>مشاهده نتایج</p>

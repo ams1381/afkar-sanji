@@ -25,6 +25,16 @@ export const PanelHeader = styled.div`
     {
         text-decoration : none;
     }
+    .see_result_container
+    {
+        padding: 4px 15px;
+        gap: 10px;
+        transition : 0.3s;
+    }
+    .see_result_container:hover 
+    {
+        background : white;
+    }
 `
 export const SeeResultButton = styled.div`
     background: none;

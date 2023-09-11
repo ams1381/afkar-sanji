@@ -57,7 +57,7 @@ export const Login_form = ({ setLoggedIn }) => {
         <LoginFormBody body_message={LoginContext.Login_Context_value.FormBodyMessage} />
         <div>
           { LoginContext.Login_Context_value.FormType == 'PhoneNumber' ? 
-          <LoginFormInput ErrorHandler={{message : errMessage , SetNull : setErMessage}}/> :
+          <LoginFormInput ErrorHandler={{message : errMessage , SetNull : setErMessage}} authentication={authentication}/> :
             <LoginFormOTPInput  ErrorHandler={{message : errMessage , SetNull : setErMessage}} authentication={authentication}  /> 
           }
           <ConfigProvider theme={themeContext}>

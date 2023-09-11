@@ -11,7 +11,7 @@ import { NumberFormat } from 'react-hichestan-numberinput';
 import * as persianTools from "@persian-tools/persian-tools";
 import { digitsEnToFa } from "@persian-tools/persian-tools";
 
-const LoginFormInput = ({ ErrorHandler }) => {
+const LoginFormInput = ({ ErrorHandler , authentication}) => {
   const LoginContext = useContext(AuthContext);
   const [InputFocusState, SetFocusState] = useState(false);
   const [showClearState, SetClearState] = useState(false);
@@ -46,6 +46,7 @@ const LoginFormInput = ({ ErrorHandler }) => {
           type="text" // Change to "text" to allow Persian digits
           name="phoneNumber"
           value={LoginContext.PhoneNumber ? LoginContext.PhoneNumber : ''}
+          onKeyDown={e => e.key == 'Enter' ? authentication(LoginContext.PhoneNumber) : ''} 
           onFocus={() => SetFocusState(true)}
           onBlur={() => {
             SetFocusState(false);

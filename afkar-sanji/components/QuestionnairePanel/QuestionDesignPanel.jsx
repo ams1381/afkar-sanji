@@ -29,7 +29,6 @@ const getListStyle = (isDraggingOver) => ({
 });
 export const ReorderPoster = async (UUID,reOrderedArray) => {
   axiosInstance.defaults.headers['Content-Type'] = 'application/json';
-  console.log(reOrderedArray, axiosInstance.defaults.headers['Content-Type'])
   try
      {
       await axiosInstance.post(`/question-api/questionnaires/${UUID}/change-questions-placements/`,{

@@ -100,7 +100,7 @@ export const FileQuestionComponent = ({ QuestionInfo }) => {
         // onPreview={handlePreview}
         beforeUpload={beforeUpload}
         onRemove={() => {
-            console.log('check')
+          if (QuestionsAnswerSet && QuestionsAnswerSet.length)
             dispatcher(FileRemoveHandler(
             { QuestionID : QuestionInfo.id }
           ))

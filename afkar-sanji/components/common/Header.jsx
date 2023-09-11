@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { HeaderComponent, UserAvatarLogout , HeaderContainer ,
-    SideBarToggleButton , LogoutPopOverInfo, LogoutPopOverLayout} from '@/styles/common';
+    SideBarToggleButton , HeaderFolderButton , LogoutPopOverInfo, LogoutPopOverLayout} from '@/styles/common';
 import { Button, ConfigProvider, Popover } from 'antd';
 import { AuthContext } from '@/utilities/AuthContext';
 import { themeContext } from '@/utilities/ThemeContext';
@@ -41,14 +41,14 @@ export const Header = ({SetSideBar , goToFolders}) => {
                 </Popover>
             </ConfigProvider>
         {goToFolders ? <Link href={`/`}>
-            <SideBarToggleButton style={{ height : '100%' }}>
-                <p>پوشه ها</p>
+            <HeaderFolderButton style={{ height : '100%' , gap : 8 , padding: '4px 15px '}}>
+                <p>پوشه‌ها</p>
                 <Icon name='Folder' style={{ width : 15 }} />
-            </SideBarToggleButton>
-        </Link> : <SideBarToggleButton onClick={() => SetSideBar()}>
-                <p>پوشه ها</p>
-                <Icon name='Folder' style={{ width : 15 }} />
-            </SideBarToggleButton>}
+            </HeaderFolderButton>
+        </Link> : <HeaderFolderButton onClick={() => SetSideBar()}>
+                <p>پوشه‌ها</p>
+                <Icon name='Folder' style={{ width : 15 , gap : 8 }} />
+            </HeaderFolderButton>}
         </HeaderComponent>
     </HeaderContainer>
   )
