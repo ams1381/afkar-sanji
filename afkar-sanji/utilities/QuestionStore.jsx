@@ -4,6 +4,7 @@ import { configureStore , createSlice , current, getDefaultMiddleware } from '@r
 var InitialValue = {
     nonQuestionData : [],
     data : [],
+    Error : null
 }
 const QuestionSlice =  createSlice({
     name : 'QuestionsSlice',
@@ -16,6 +17,11 @@ const QuestionSlice =  createSlice({
                 if(item.question)
                     state.data.push({ question : item.question })
             })  
+        },
+        ChangeErrorData : (state,action) => {
+            const { actionErrorObject } = action.payload;
+            state.Error = actionErrorObject?.data;
+            
         },
         DuplicateQuestionHandler : (state , action) =>{
             const { QuestionID , CopiedQuestionID} = action.payload;
@@ -123,7 +129,7 @@ const QuestionSlice =  createSlice({
         },
         ChangeNameHandler : (state, action) => {
             const { QuestionID , NewTitle , QuestionChanged} = action.payload;
-
+            delete state.Error?.title;
             QuestionChanged ? 
             state.data.find(item => item.question.id == QuestionID) ? 
             state.data.find(item => item.question.id == QuestionID).question.title = NewTitle
@@ -157,7 +163,12 @@ const QuestionSlice =  createSlice({
         },
         ChangeMinOrMaxAnswerHandler : (state, action) => {
             const  { QuestionID , MinMaxName , MinMaxValue} = action.payload;
-
+            if(state.Error && state.Error[MinMaxName])
+            {
+                delete  state.Error[MinMaxName];
+                console.log(JSON.parse(JSON.stringify(state.Error)))
+            }
+                
             state.data.find(item => item.question.id == QuestionID) ? 
             state.data.find(item => item.question.id == QuestionID).question[MinMaxName] = MinMaxValue 
             :
@@ -514,7 +525,7 @@ const QuestionStore = configureStore({
 })
 export const { initialQuestionsSetter , ChangeDescriptionHandler ,
     DuplicateQuestionHandler,   ChangeQuestionType , DeleteQuestionHandler ,
-     AddQuestion , DeleteNonQuestionHandler , ChildQuestionReorder ,
+     AddQuestion , DeleteNonQuestionHandler , ChildQuestionReorder , ChangeErrorData ,
     ChangeToggleHandler,  ChangeNameHandler , ChangeMinOrMaxAnswerHandler,
      ChangeLabelHandler , OptionsAlphaBeticalSorter , ReorderOptions ,
     OptionModifier , OptionAdder , OptionRemover , ChangeUploadSizeHandler

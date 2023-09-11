@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AlphabetNumberContainer, ToggleContainer } from '@/styles/questionnairePanel/QuestionSetting';
 import ToggleCheckBoxItem from '../Common/Toggle';
 import { ChangeToggleHandler , ChangeMinOrMaxAnswerHandler, OptionAdder, OptionRemoverByText } from '@/utilities/QuestionStore';
@@ -7,6 +7,8 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 
 const SettingMultipleAnswer = ({QuestionInfo}) => {
+    const OcurredError = useSelector(state => state.reducer.Error);
+    const [ inputError , setInputError ] = useState(null);
     const RandomIdGenerator = () => {
         let ID = Date.now();
         QuestionInfo.options.forEach(item => {
@@ -15,10 +17,20 @@ const SettingMultipleAnswer = ({QuestionInfo}) => {
         })
         return ID;
        }
+    useEffect(() => {
+        if(OcurredError)
+        {
+            if(OcurredError.min_selected_options || OcurredError.max_selected_options)
+                setInputError('active')
+            else
+                setInputError(null)
+        }
+        else
+            setInputError(null)
+    },[OcurredError])
     const [ AdditionalOptionState , SetAdditionalOptionState ] = useState(QuestionInfo.additional_options);
     const [ MultipleAnswerState , SetMultipleAnswerState ] = useState(QuestionInfo.multiple_choice);
     const OptionalDispatcher = useDispatch();
-
     const MultipleAnswerToggleHandler = () => {
         SetMultipleAnswerState(!MultipleAnswerState)
         OptionalDispatcher(ChangeToggleHandler({
@@ -27,6 +39,7 @@ const SettingMultipleAnswer = ({QuestionInfo}) => {
         
     }
     const ChangeMinMaxHandler = (event,InputName) => {
+
         OptionalDispatcher(ChangeMinOrMaxAnswerHandler({
              QuestionID : QuestionInfo.id , MinMaxName : InputName , MinMaxValue : event
          }))
@@ -64,7 +77,7 @@ const SettingMultipleAnswer = ({QuestionInfo}) => {
             <p>سوال چند انتخابی باشد</p>
             <Switch checked={QuestionInfo.multiple_choice} />
         </div>
-       { MultipleAnswerState ? <AlphabetNumberContainer >
+       { MultipleAnswerState ? <AlphabetNumberContainer inputerror={inputError}>
           <p>تعداد گزینه های قابل انتخاب</p>
           <label>
               <InputNumber value={QuestionInfo.min_selected_options} min={1} onChange={(e) => ChangeMinMaxHandler(e,'min_selected_options')}/>

@@ -27,7 +27,7 @@ export const QuestionTypeComponent = (Type  , TypeText , ActiveType) =>
 export const Question_types = [
     {
       value: 'integer_range',
-      label: QuestionTypeComponent('range','طیفی'),
+      label: QuestionTypeComponent('Range','طیفی'),
       url_prefix : 'integerrange-questions'
     },
     {
@@ -47,7 +47,7 @@ export const Question_types = [
     },
     {
         value: 'optional',
-        label: QuestionTypeComponent('optional','چند گزینه ای'),
+        label: QuestionTypeComponent('Optional','چند گزینه ای'),
         url_prefix : 'optional-questions'
       },
       {
@@ -66,7 +66,7 @@ export const Question_types = [
         url_prefix : 'email-questions'
       },
       {
-        value: 'متنی بدون پاسخ',
+        value: 'noanwser',
         label: QuestionTypeComponent('QWOut','متنی بدون پاسخ'),
         url_prefix : 'noanswer-questions'
       },

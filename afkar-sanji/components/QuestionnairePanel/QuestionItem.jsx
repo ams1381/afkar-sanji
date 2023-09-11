@@ -15,7 +15,7 @@ import QuestionDescription from './Question Components/Common/Description';
 import QuestionComponent from '../Questions/Question';
 import FileUpload from './Question Components/Common/FileUpload';
 import { axiosInstance } from '@/utilities/axios';
-import { AddQuestion, ChangeNameHandler, ChildQuestionReorder, DeleteNonQuestionHandler, DeleteQuestionHandler, DuplicateQuestionHandler, QuestionSorter, RemoveFileHandler, finalizer } from '@/utilities/QuestionStore';
+import { AddQuestion, ChangeErrorData, ChangeNameHandler, ChildQuestionReorder, DeleteNonQuestionHandler, DeleteQuestionHandler, DuplicateQuestionHandler, QuestionSorter, RemoveFileHandler, finalizer } from '@/utilities/QuestionStore';
 import { SettingSectionProvider } from './Question Components/SettingSectionProvider';
 import { WritingSectionProvider } from './Question Components/WritingSectionProvider';
 import { ChangeQuestionType } from '@/utilities/QuestionStore';
@@ -60,11 +60,12 @@ export const QuestionItem = ({  activeQuestionId, provided ,setActiveQuestion , 
   const InitialQuestionData = useRef(null);
   const QuestionDesignElement = useRef(null);
   const [maxheight, setMaxHeight] = useState(null);
+  const [ titleError , setTitleError ] = useState(false);
+  const OcurredError = useSelector(state => state.reducer.Error);
   // const InitialQuestionData = IsQuestion ? : useSelector(s => s.reducer.nonQuestionData.find(item => item.question && item.question.id == question.id));
   const regex = /(<([^>]+)>)/gi;
   // const [ questionsData , setQuestionData ] = useState(null)
   let questionsData = question;
-
   
   useEffect(() => {
     InitialQuestionData.current = question;
@@ -184,11 +185,14 @@ export const QuestionItem = ({  activeQuestionId, provided ,setActiveQuestion , 
         : axiosInstance.patch(`/question-api/questionnaires/${UUID}/thanks-pages/${questionsData.question.id}/`,form_data_convertor(QDataInstance.question)) 
 
         axiosInstance.defaults.headers['Content-Type'] = 'application/json'; 
+        setQuestionChangedState(false);
     }
     catch(err)
     {
       if(err.response)
-        SavedMessage.error({
+      {
+        QuestionDispatcher(ChangeErrorData({ actionErrorObject : err.response}))
+         SavedMessage.error({
           content : Object.values(err.response.data)[0],
           duration : 4,
           style : {
@@ -199,9 +203,11 @@ export const QuestionItem = ({  activeQuestionId, provided ,setActiveQuestion , 
             direction : 'rtl'
           }
         })  
+      }
+       
     }
    SetSaveButtonLoadingState(false);
-   setQuestionChangedState(false);
+   
   }
   const QuestionCreator = async () => {
     axiosInstance.defaults.headers['Content-Type'] = 'multipart/form-data'
@@ -232,20 +238,22 @@ export const QuestionItem = ({  activeQuestionId, provided ,setActiveQuestion , 
           }
       else
       {
-        SetSaveButtonLoadingState(true);
+        
         let { data } = questionsData.question.question_type == 'welcome_page' ? axiosInstance.post(`/question-api/questionnaires/${UUID}/welcome-pages/`,form_data_convertor(questionsData.question)) 
         : axiosInstance.post(`/question-api/questionnaires/${UUID}/thanks-pages/`,form_data_convertor(questionsData.question))
         
         QuestionDispatcher(finalizer({ isQuestion :  false , QuestionID : questionsData.question.id , Response : data }))
+        
       }
       QuestionDispatcher(QuestionSorter())
       setQuestionChangedState(false);
     }
     catch(err)
     {
-      console.log(err)
       if(err.response)
-      SavedMessage.error({
+      {
+        QuestionDispatcher(ChangeErrorData({ actionErrorObject : err.response}))
+         SavedMessage.error({
         content :  Object.values(err.response.data)[0],
         duration : 11,
         style : {
@@ -256,8 +264,12 @@ export const QuestionItem = ({  activeQuestionId, provided ,setActiveQuestion , 
           direction : 'rtl'
         }
       })
+
+      // console.log(OcurredError)
+      }
+     
     }
-   SetSaveButtonLoadingState(false);
+    SetSaveButtonLoadingState(false);
   }
   const handleDragEnd = (result) => {
     if (!result.destination) return;
@@ -276,7 +288,8 @@ export const QuestionItem = ({  activeQuestionId, provided ,setActiveQuestion , 
     className={`QuestionItem${questionsData.question.id}`}>
       {contextHolder}
       <div className='design_container' style={{ width : !questionsData.question.group ? '50%' : '100%' }}> 
-    <QuestionDesignItem className='question_design_item' isopen={QuestionRootOpenState ? 'true' : null} ref={QuestionDesignElement}
+    <QuestionDesignItem className='question_design_item' errorocurr={OcurredError ? Object.keys(OcurredError).includes('title') ? 'active' : null : null}
+     isopen={QuestionRootOpenState ? 'true' : null} ref={QuestionDesignElement}
     childq={questionsData.question.group ? 'true' : null}>     
           <QuestionItemSurface >
               <div className="question_item_info" onClick={QuestionOpenHandler} 
@@ -337,9 +350,9 @@ export const QuestionItem = ({  activeQuestionId, provided ,setActiveQuestion , 
                     </svg>
                 </QuestionItemActionButton>         
             </QuestionItemActionSelector>
-            { QuestionActionState == 'edit' ? <QuestionItemSettingContainer>
+            { QuestionActionState == 'edit' ? <QuestionItemSettingContainer >
                 <div className="question_bold_info">
-                    <QuestionItemTitleContainer>
+                    <QuestionItemTitleContainer >
                         <QuestionItemTitleInput value={questionsData.question.title.replace(regex,"")} 
                         onChange={(e) => QuestionDispatcher(ChangeNameHandler({ NewTitle : e.target.value , QuestionID : questionsData.question.id , QuestionChanged : IsQuestion}))}
                          type="text" placeholder='عنوان سوال' />

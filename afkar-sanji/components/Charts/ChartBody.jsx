@@ -9,7 +9,6 @@ import {
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import React, { useState } from 'react'
-import { faker } from '@faker-js/faker'
 import { Icon } from '@/styles/icons';
 import { ResultButton } from '@/styles/Result/ResultPage';
 import { ChartSelectItem, TopBar, TopBarButtonsContainer, TopBarChartSelectorContainer } from '@/styles/Charts/ChartsPage';
@@ -38,23 +37,7 @@ export const options = {
   },
 };
 
-const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
 
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: 'Dataset 1',
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-      backgroundColor: 'rgba(255, 99, 132, 0.5)',
-    },
-    {
-      label: 'Dataset 2',
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-      backgroundColor: 'rgba(53, 162, 235, 0.5)',
-    },
-  ],
-};
 
 const ChartsBody = ({ ChartQuery , QuestionnaireQuery }) => {
   const [ filterPopover , setFilterPopover ] = useState(false);

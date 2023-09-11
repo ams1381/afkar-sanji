@@ -166,11 +166,12 @@ export const QuestionDesignItem = styled.div`
     .question_bold_info 
     {
         display : flex;
-        border: 1px solid var(--primary-color);
+        transition : 0.3s;
+        border: 1px solid ${p => p.errorocurr ? '#ff4d4f' : 'var(--primary-color)'};
         border-radius: 2px;
     }
     .question_bold_info  .question_type_selector {
-        border-left: 1px solid var(--primary-color);
+        border-left: 1px solid ${p => p.errorocurr ? '#ff4d4f' : 'var(--primary-color)'};
         background: #F5F5F5;
         display: flex;
         align-items: center;

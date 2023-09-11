@@ -1,11 +1,14 @@
 import { InputNumber, Select } from 'antd';
 import { AlphabetNumberContainer, TextAnswerSettingContainer } from '@/styles/questionnairePanel/QuestionSetting';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { ChangeAnswerPattern, ChangeMinOrMaxAnswerHandler } from '@/utilities/QuestionStore';
+import { useSelector } from 'react-redux';
 
 const SettingQWanswer = ({ QuestionInfo }) => {
   const dispatcher = useDispatch();
+  const [ inputError , setInputError ] = useState(null);
+  const OcurredError = useSelector(state => state.reducer.Error);
   const ChangeAnswerPatternHandler = (e) => {
       dispatcher(ChangeAnswerPattern(
         { QuestionID : QuestionInfo.id , NewPattern : e , answer_template : PatternGenerator(e).answer_template}
@@ -13,7 +16,18 @@ const SettingQWanswer = ({ QuestionInfo }) => {
       
         console.log(e)
   }
- 
+  useEffect(() => {
+    console.log(OcurredError)
+    if(OcurredError)
+    {
+        if(OcurredError.min || OcurredError.max)
+            setInputError('active')
+        else
+            setInputError(null)
+    }
+    else
+        setInputError(null)
+},[OcurredError])
   const ChangeMinMaxHandler = (event,InputName) => {
     console.log(event,InputName)
     dispatcher(ChangeMinOrMaxAnswerHandler({
@@ -43,7 +57,7 @@ const SettingQWanswer = ({ QuestionInfo }) => {
       </div>
         
         { (QuestionInfo.pattern == 'free' || QuestionInfo.pattern == 'persian_letters' || QuestionInfo.pattern == 'english_letters' )
-        ? <AlphabetNumberContainer>
+        ? <AlphabetNumberContainer inputerror={inputError}>
           <p>تعداد حروف</p>
           <label>
               <InputNumber value={QuestionInfo.min} min={0} onChange={(e) => ChangeMinMaxHandler(e,'min')}/>

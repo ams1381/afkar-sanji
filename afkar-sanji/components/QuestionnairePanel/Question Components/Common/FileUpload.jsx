@@ -102,7 +102,7 @@ const FileUpload = ({ QuestionInfo }) => {
             ))
           }}
         >
-          <Button  icon={<Icon name='upload' style={{ width : 12 }} />}>آپلود کنید</Button>
+          <Button  icon={<Icon name='Upload' style={{ width : 12 }} />}>آپلود کنید</Button>
         </Upload>
       </div>
         

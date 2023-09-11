@@ -162,10 +162,11 @@ export const TextAnswerSettingContainer = styled.div`
         padding: 24px 0;
         border-bottom: 1px solid rgb(217 217 217 / 20%);
     }
-    .ant-select-selector
+    .ant-select-selector 
     {
         border-radius : 2px;
         direction: rtl;
+        width: 117px !important;
     }
     .ant-select-arrow
     {
@@ -191,10 +192,20 @@ export const AlphabetNumberContainer = styled.div`
         margin-top: 5px;
         justify-content: space-between;
     }
+
     & label .ant-input-number
     {
         border-radius : 2px;
+        border : ${p => p.inputerror ? '1px solid #ff4d4f' : 'auto'};
     }
+    // & label:first-child .ant-input-number
+    // {
+    //     border : ${p => p.OcurredError ? '1px solid #ff4d4f' : 'initial'};
+    // }
+    // & label:last-child .ant-input-number
+    // {
+    //     border : ${p => p.OcurredError ? '1px solid #ff4d4f' : 'initial'};
+    // }
 `
 export const DegreeShapeContainer = styled.div`
     text-align: right;
