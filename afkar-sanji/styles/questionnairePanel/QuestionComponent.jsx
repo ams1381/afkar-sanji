@@ -333,16 +333,22 @@ export const RangeLabelText = styled.p`
 `
 export const RangeQuestionLabelContainer = styled.div`
     // width: 90%;
-    margin: 0.4rem auto;
+    margin: 0.4rem 4px;
     display : flex;
     justify-content : space-between;
 `
 export const QuestionRangeLabel = styled.div`
     position: absolute;
-    width: 53px;
+    // width: 53px;
+    width: calc(1.6vw + 0.8rem);
     text-align: center;
     padding-top: 1.5rem;
     top: 48px;
+
+    @media screen and (max-width : 768px)
+    {
+        width : 50px;
+    }
 `
 export const FileSizeContainer = styled.div`
     text-align: right;

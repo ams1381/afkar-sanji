@@ -23,15 +23,29 @@ export const RangeQuestionComponent = ({ QuestionInfo }) => {
     // integer_selective
   },[])
   useEffect(() => {
-    if(leftLabelRef.current && midLabelRef.current && rightLabelRef.current)
-    {
-      
-      let labelsHeightArray = [ leftLabelRef.current.offsetHeight , midLabelRef.current.offsetHeight  , rightLabelRef.current.offsetHeight ]
-      
-      setLongestLabelHeight(labelsHeightArray.reduce((a, b) => Math.max(a, b), -Infinity))
-      console.log('hi',labelsHeightArray)
-      // console.log(longestLabelHeight,labelsHeightArray)
-    }
+    console.log(leftLabelRef.current,midLabelRef.current,rightLabelRef.current)
+    // if(leftLabelRef.current && midLabelRef.current && rightLabelRef.current)
+    // {
+      // let labelsHeightArray = [ leftLabelRef?.current?.offsetHeight , midLabelRef?.current?.offsetHeight  , rightLabelRef?.current?.offsetHeight ]
+
+      // setLongestLabelHeight(labelsHeightArray.reduce((a, b) => {
+      //   if (b === null) {
+      //     return a; // Skip null values
+      //   }
+      //   return Math.max(a, b);
+      // }, -Infinity))
+      // // console.log('hi',labelsHeightArray)
+      // // console.log(longestLabelHeight,labelsHeightArray)
+      // console.log(longestLabelHeight)
+      const labelRefs = [leftLabelRef, midLabelRef, rightLabelRef];
+      const labelsHeightArray = labelRefs
+        .map(ref => (ref && ref.current ? ref.current.offsetHeight : null))
+        .filter(height => height !== null);
+
+    const longestLabelHeight = labelsHeightArray.reduce((a, b) => Math.max(a, b), -Infinity);
+
+    setLongestLabelHeight(longestLabelHeight);
+    // }
   },[QuestionInfo , leftLabelRef.current , midLabelRef.current , rightLabelRef.current])
   const RangeAnswerHandler = (RangeNumber) => {
     setRangeAnswerValue(RangeNumber)
@@ -58,7 +72,7 @@ export const RangeQuestionComponent = ({ QuestionInfo }) => {
             {<QuestionRangeLabel>
               <RangeQuestionLabelContainer>
          {index == 0 && QuestionInfo.min_label && <RangeLabelText ref={leftLabelRef}>{QuestionInfo.min_label}</RangeLabelText>}
-         {QuestionInfo.max % 2 != 0 && index == Math.floor(QuestionInfo.max / 2) && <RangeLabelText ref={midLabelRef}>{QuestionInfo.mid_label}</RangeLabelText>}
+         {QuestionInfo.max % 2 != 0 && QuestionInfo.mid_label && index == Math.floor(QuestionInfo.max / 2) && <RangeLabelText ref={midLabelRef}>{QuestionInfo.mid_label}</RangeLabelText>}
          {index == QuestionInfo.max -1  && QuestionInfo.max_label && <RangeLabelText ref={rightLabelRef}>{QuestionInfo.max_label}</RangeLabelText>}
          </RangeQuestionLabelContainer>
       </QuestionRangeLabel>}

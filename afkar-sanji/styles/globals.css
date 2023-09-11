@@ -92,7 +92,7 @@ html::-webkit-scrollbar-thumb
 {
   font-family: IRANSans;
 }
-.ant-select-dropdown.css-dev-only-do-not-override-byeoj0
+.ant-select-dropdown.css-dev-only-do-not-override-byeoj0 , .ant-select-dropdown.css-17a39f8
 {
   width: 330px !important;
   border-radius: 2px !important;

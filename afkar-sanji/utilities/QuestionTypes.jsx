@@ -91,13 +91,13 @@ export const QuestionTypeComponentGenerator = (Type,ActiveType) => {
   switch(Type)
     {
         case 'optional':
-            return QuestionTypeComponent('optional','چند گزینه ای',ActiveType)
+            return QuestionTypeComponent('Optional','چند گزینه ای',ActiveType)
         case 'drop_down':
             return QuestionTypeComponent('SlideList','لیست کشویی',ActiveType);
         case 'integer_selective':
             return QuestionTypeComponent('Degree','درجه بندی',ActiveType)
         case 'integer_range':
-            return QuestionTypeComponent('range','طیفی',ActiveType)
+            return QuestionTypeComponent('Range','طیفی',ActiveType)
         case 'sort':
             return QuestionTypeComponent('Prioritize','اولویت دهی',ActiveType);
         case 'link':
