@@ -108,7 +108,7 @@ export const FileQuestionComponent = ({ QuestionInfo }) => {
         className="upload-list-inline"
         style={{ fontFamily: 'IRANSans' }}
       >
-        <Button icon={<Icon name='upload' style={{ width: 12 }} />}>کلیک برای آپلود</Button>
+        <Button icon={<Icon name='Upload' style={{ width: 12 }} />}>کلیک برای آپلود</Button>
       </Upload>
       {/* <Modal visible={previewVisible} footer={null} onCancel={handleCancel}>
         <img alt="Preview" style={{ width: '100%' }} src={previewImage} />

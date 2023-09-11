@@ -124,13 +124,13 @@ export const QuestionTypeIcon = (Type) => {
   switch(Type)
     {
         case 'optional':
-            return <Icon name='optional' />
+            return <Icon name='Optional' />
         case 'drop_down':
             return <Icon name='SlideList' />
         case 'integer_selective':
             return <Icon name='Degree' />
         case 'integer_range':
-            return <Icon name='range' />
+            return <Icon name='Range' />
         case 'sort':
             return <Icon name='Prioritize' />
         case 'link':
