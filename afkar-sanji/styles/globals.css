@@ -106,6 +106,19 @@ html::-webkit-scrollbar-thumb
   gap: 16px !important;
   padding: 10px !important;
 }
+.ant-picker-time-panel-cell .time_cell
+    {
+        text-align : center;
+    }
+  .time_picker .ant-picker-time-panel-cell.ant-picker-time-panel-cell-selected div
+  {
+      background : #e6f4ff;
+      line-height: 28px;
+  }
+.ant-picker-time-panel-column::-webkit-scrollbar
+{
+  width: 0;
+}
 /* #select-type-container .rc-virtual-list-holder > div 
 {
   height: 163px !important;

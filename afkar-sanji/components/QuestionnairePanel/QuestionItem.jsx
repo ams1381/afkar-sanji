@@ -23,8 +23,9 @@ import { form_data_convertor } from '@/utilities/FormData';
 import { DragDropContext, Droppable ,  Draggable } from '@hello-pangea/dnd';
 import { digitsEnToFa } from '@persian-tools/persian-tools';
 import { themeContext } from '@/utilities/ThemeContext';
-import { ReorderPoster } from './QuestionDesignPanel';
+import { ReorderPoster, getListStyle } from './QuestionDesignPanel';
 import { StyleSheetConsumer } from 'styled-components';
+import { NestedDndItem } from './nestedDndItem';
 
 function shallowEqual(obj1, obj2) {
   if (obj1 === null || obj2 === null || typeof obj1 !== 'object' || typeof obj2 !== 'object') {
@@ -44,7 +45,7 @@ function shallowEqual(obj1, obj2) {
       : val1 === val2;
   });
 }
-export const QuestionItem = ({  activeQuestionId, provided ,setActiveQuestion , IsQuestion , question , UUID , parentPlacement , GroupID }) => {
+export const QuestionItem = ({  activeQuestionId, provided ,setActiveQuestion , Questionnaire , IsQuestion , question , UUID , parentPlacement , GroupID }) => {
   const [ QuestionRootOpenState , SetQuestionRootOpenState ] = useState(question.newFace ? true : false);
   const [ QuestionActionState , SetQuestionActionState ] = useState('edit');
   const [nestedQuestions, setNestedQuestions] = useState(question.child_questions);
@@ -273,12 +274,12 @@ export const QuestionItem = ({  activeQuestionId, provided ,setActiveQuestion , 
   }
   const handleDragEnd = (result) => {
     if (!result.destination) return;
-    
-    const updatedNestedQuestions = Array.from(nestedQuestions);
-    const [removed] = updatedNestedQuestions.splice(result.source.index, 1);
-    updatedNestedQuestions.splice(result.destination.index, 0, removed);
-    QuestionDispatcher(ChildQuestionReorder({ ParentQuestionID : GroupID , NewChildQuestion : updatedNestedQuestions }))
-    setNestedQuestions(updatedNestedQuestions);
+    console.log(result)
+    // const updatedNestedQuestions = Array.from(nestedQuestions);
+    // const [removed] = updatedNestedQuestions.splice(result.source.index, 1);
+    // updatedNestedQuestions.splice(result.destination.index, 0, removed);
+    // QuestionDispatcher(ChildQuestionReorder({ ParentQuestionID : GroupID , NewChildQuestion : updatedNestedQuestions }))
+    // setNestedQuestions(updatedNestedQuestions);
   };
   return (
     (questionsData) ? 
@@ -403,48 +404,42 @@ export const QuestionItem = ({  activeQuestionId, provided ,setActiveQuestion , 
               </Button>
 
             </QuestionItemFooter> : ''}
-            
           </div> : '' }
           
         </QuestionDesignItem>
         {questionsData.question.question_type === 'group' && 
-        // <DragDropContext onDragEnd={handleDragEnd}>
-        // <Droppable droppableId={"dropboard"} type="NESTED_QUESTION">
-        //   {(provided) => (
-        //     <div ref={provided.innerRef} {...provided.droppableProps}>
-        <Droppable droppableId='test-droppable'>
-              {(provided) => <div {...provided.droppableProps}  ref={provided.innerRef}>
-                 {questionsData.question.child_questions?.map((nestedQuestion, index) => (
-                 <Draggable 
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <Droppable droppableId="dropboard" type="CHILD">
+            {(provided, snapshot) => (
+              <div ref={provided.innerRef} {...provided.droppableProps} style={getListStyle(snapshot.isDraggingOver)}>
+                {questionsData.question.child_questions?.map((nestedQuestion, index) => (
+                  <Draggable
                     key={nestedQuestion.question.id}
                     draggableId={nestedQuestion.question.id.toString()}
-                    index={index}
-                  >
+                    index={index}>
                     {(provided) => (
                       <div
                         ref={provided.innerRef}
-                       {...provided.draggableProps}
-                      >
-                        <QuestionItem 
-                        activeQuestionId={activeQuestionId}
-                        setActiveQuestion={setActiveQuestion}
-                        IsQuestion={IsQuestion}
-                        UUID
-                        provided={provided}
-                        parentPlacement={questionsData.question.placement}
-                        GroupID={questionsData.question.id}
-                        question={nestedQuestion} />
+                        {...provided.draggableProps}>
+                        <QuestionItem
+                          activeQuestionId={activeQuestionId}
+                          setActiveQuestion={setActiveQuestion}
+                          IsQuestion
+                          UUID
+                          provided
+                          parentPlacement={questionsData.question.placement}
+                          GroupID={questionsData.question.id}
+                          question={nestedQuestion}
+                        />
                       </div>
                     )}
                   </Draggable>
-                ))}</div> }
-        </Droppable>
-        //       ))}
-        //       {provided.placeholder}
-        //     </div>
-        //   )}
-        // </Droppable>
-      // </DragDropContext>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+       </DragDropContext>
           }
            </div>
        { !GroupID ?  <div className='question_preview'>

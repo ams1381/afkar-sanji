@@ -9,6 +9,7 @@ import { QuestionnaireDatePickerContainer, QuestionnaireSettingContainer } from 
 import { Icon } from '@/styles/icons';
 import { axiosInstance } from '@/utilities/axios';
 import jalaali from 'jalaali-js';
+// import jalali from 'dayjs/plugin/jalali';
 import PN from 'persian-number';
 import { DatePickerInput } from '@/styles/questionnairePanel/QuestionSetting';
 import moment from 'moment-jalaali';
@@ -158,14 +159,16 @@ const SettingPanel = ({ Questionnaire }) => {
                 onChange={TimerChangeHandler}
                 disabled={!TimerActive}
                 showNow={false}
-                cellRender={(current, info) => <>{digitsEnToFa(current)}</>}
+                cellRender={(current, info) => <div className='time_cell'>{digitsEnToFa(current)}</div>}
                 inputReadOnly 
-                locale={{ momentLocale: 'fa' }} 
+                // locale={{ momentLocale: 'fa' }} 
                 defaultValue={
                   TimerValue
-                    ? moment(TimerValue, 'HH:mm:ss') // Set Jalali locale for moment
+                    ? (dayjs(TimerValue, 'HH:mm:ss'))
+                     // Set Jalali locale for moment
                     : null
-                } />
+                } 
+                />
     
           </div>
         </QuestionnaireDatePickerContainer>
@@ -265,4 +268,20 @@ const QuestionnaireReducerFunction = (State,ACTION) => {
       return ACTION.Resetvalue
       
   }
+}
+function toPersianDigits(input) {
+  const digitsMap = {
+    '0': '۰',
+    '1': '۱',
+    '2': '۲',
+    '3': '۳',
+    '4': '۴',
+    '5': '۵',
+    '6': '۶',
+    '7': '۷',
+    '8': '۸',
+    '9': '۹',
+  };
+  console.log(input)
+  // return input.replace(/[0-9]/g, (match) => digitsMap[match]);
 }

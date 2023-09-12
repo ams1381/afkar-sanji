@@ -15,7 +15,7 @@ import { useDispatch } from 'react-redux';
 import { initialQuestionsSetter } from '@/utilities/QuestionStore';
 import { useSelector } from 'react-redux';
 import { DragDropContext , Droppable , Draggable } from '@hello-pangea/dnd';
-
+import { NestedDndItem } from './nestedDndItem';
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -24,7 +24,7 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-const getListStyle = (isDraggingOver) => ({
+export const getListStyle = (isDraggingOver) => ({
   width: '100%',
 });
 export const ReorderPoster = async (UUID,reOrderedArray) => {
@@ -189,35 +189,37 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                   </QuestionItemSurface>
               </LoadingQuestionItem>}
                 { Questionnaire ? AllQuestion.length ?
-                <DragDropContext onDragEnd={onDragEnd}>
-                  <Droppable droppableId='dropboard'>
-                  {(provided, snapshot) => <div  
-                    ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
-                    {AllQuestion.map((item,index) => 
-                    ( item.question)? 
-                    <Draggable
-                    key={item.question.id}
-                    draggableId={item.question.id.toString()}
-                    index={index}
-                  >
-                    {(provided, snapshot) => (
-                      <div ref={provided.innerRef} {...provided.draggableProps}>
-                        <QuestionItem
-                          IsQuestion={true}
-                          UUID={Questionnaire.uuid}
-                          key={item.question.id}
-                          question={item}
-                          provided={provided}
-                          activeQuestionId={ActiveQuestionId}
-                          setActiveQuestion={setActiveQuestionId}
-                          dropboardprovide={provided}/>         
-                      </div>
-                    )}
-                  </Draggable> : null)}
-                  {provided.placeholder}
-                  </div>  } 
-                  </Droppable>
-                </DragDropContext>
+                <NestedDndItem  ListToRender={AllQuestion} Questionnaire={Questionnaire} onDrag={onDragEnd}
+                 ActiveQuestionId={ActiveQuestionId}
+                 setActiveQuestionId={setActiveQuestionId} />
+                // <DragDropContext onDragEnd={onDragEnd} >
+                //   <Droppable droppableId='dropboard'>
+                //   {(provided, snapshot) => <div  
+                //     ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
+                //     {AllQuestion.map((item,index) => 
+                //     ( item.question)? 
+                //       <Draggable
+                //       key={item.question.id}
+                //       draggableId={item.question.id.toString()}
+                //       index={index}>
+                //       {(provided, snapshot) => (
+                //         <div ref={provided.innerRef} {...provided.draggableProps}>
+                //           <QuestionItem
+                //             IsQuestion={true}
+                //             UUID={Questionnaire.uuid}
+                //             key={item.question.id}
+                //             question={item}
+                //             provided={provided}
+                //             activeQuestionId={ActiveQuestionId}
+                //             setActiveQuestion={setActiveQuestionId}
+                //             dropboardprovide={provided}/>         
+                //         </div>
+                //       )}
+                //     </Draggable> : null)}
+                //   {provided.placeholder}
+                //   </div>  } 
+                //   </Droppable>
+                // </DragDropContext>
                 :  <AddNonQuestionItem style={{ marginTop : 10 }} addquestion='true' onClick={AddFirstQuestion}>
                   <svg width="17" height="16" viewBox="0 0 17 16" xmlns="http://www.w3.org/2000/svg">
                   <path d="M16.5 8C16.5 12.4183 12.9183 16 8.5 16C4.08172 16 0.5 12.4183 0.5 8C0.5 3.58172 4.08172 0 8.5 0C12.9183 0 16.5 3.58172 16.5 8ZM4.5 8C4.5 8.27614 4.72386 8.5 5 8.5H8V11.5C8 11.7761 8.22386 12 8.5 12C8.77614 12 9 11.7761 9 11.5V8.5H12C12.2761 8.5 12.5 8.27614 12.5 8C12.5 7.72386 12.2761 7.5 12 7.5H9V4.5C9 4.22386 8.77614 4 8.5 4C8.22386 4 8 4.22386 8 4.5V7.5H5C4.72386 7.5 4.5 7.72386 4.5 8Z"/>
