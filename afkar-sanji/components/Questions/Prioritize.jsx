@@ -11,14 +11,19 @@ const Prioritize = ({ QuestionInfo }) => {
   const dispatcher = useDispatch();
   const [sortedOptionArray, setSortedOptionArray] = useState(QuestionInfo.options);
   const QuestionsAnswerSet = useSelector(state => state.reducer.AnswerSet);
-
+  console.log(QuestionInfo)
   useEffect(() => {
     setSortedOptionArray(QuestionInfo.options)
   },[QuestionInfo.options])
   useEffect(() => {
     if(QuestionsAnswerSet && QuestionsAnswerSet.length)
-       dispatcher(SortOptions({ QuestionID : QuestionInfo.id , NewOptionsArray : sortedOptionArray }))
-  },[sortedOptionArray])
+    {
+      if(QuestionsAnswerSet.find(item => item.question == QuestionInfo.id)?.answer?.sorted_options)
+          setSortedOptionArray(QuestionsAnswerSet.find(item => item.question == QuestionInfo.id).answer?.sorted_options);
+      else
+        dispatcher(SortOptions({ QuestionID : QuestionInfo.id ,  NewOptionsArray : sortedOptionArray }))
+    }
+  },[QuestionInfo])
   
   const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list);
@@ -36,6 +41,8 @@ const Prioritize = ({ QuestionInfo }) => {
       result.destination.index
     );
     setSortedOptionArray(reorderedItems);
+    if(QuestionsAnswerSet && QuestionsAnswerSet.length)
+      dispatcher(SortOptions({ QuestionID : QuestionInfo.id , NewOptionsArray : reorderedItems }))
   };
 
   return (

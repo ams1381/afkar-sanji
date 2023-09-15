@@ -25,7 +25,7 @@ const Login_container = () => {
   return (
     <LoginContainer filltext={isLoggedIn ? 'true' : null}>
       <LeftLight filltext={isLoggedIn ? 'true' : null} />
-      <LoginBox>
+      <LoginBox filltext={isLoggedIn ? 'true' : null}>
             <div className="login_content">
                 <div className={Classes ["login__header"]}>
                     <LoginHeaderText filltext={isLoggedIn ? 'true' : null} ref={HeaderText}

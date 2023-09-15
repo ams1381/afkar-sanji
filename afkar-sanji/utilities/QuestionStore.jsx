@@ -32,6 +32,7 @@ const QuestionSlice =  createSlice({
             state.data[[DuplicatedIndex + 1]].question.id = CopiedQuestionID;
             state.data[DuplicatedIndex + 1].question.newFace = true;
             state.data[DuplicatedIndex + 1].question.duplicated = true;
+            state.data[DuplicatedIndex + 1].question.is_finalized = false;
         },
         DeleteQuestionHandler : (state , action) => {
             const { QuestionID , isQuestion } = action.payload;
@@ -59,28 +60,20 @@ const QuestionSlice =  createSlice({
             {
                 if(state.data.find(item => item.question && item.question.id == QuestionID)){
                     // console.log(JSON.parse(JSON.stringify(state.data.find(item => item.question.id == QuestionID).question)),Response)
-                    console.log(JSON.parse(JSON.stringify(state.data.find(item => item.question.id == QuestionID).question)))
                     state.data.find(item => item.question.id == QuestionID).question = Response;
-                    console.log(JSON.parse(JSON.stringify(state.data)))
                 }
                 else
                 {
                     state.data.forEach(item => item.question.child_questions ?
                         item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                        .question = Response : '')
-                //  state.data.forEach(item => item.question.child_questions ?
-                //     item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                //     .question.newFace = null : '')
-                // state.data.forEach(item => item.question.child_questions ?
-                //     item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                //     .question.id = ResponseID : '')   
+                        .question = Response : '') 
                 }
                 
             }
             else
             {
                 state.nonQuestionData.find(item => (item.question && item.question.id == QuestionID)).question.newFace = null;
-                state.nonQuestionData.find(item => (item.question && item.question.id == QuestionID)).question.id = ResponseID;
+                state.nonQuestionData.find(item => (item.question && item.question.id == QuestionID)).question = Response;
             }
             
         } ,

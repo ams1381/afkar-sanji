@@ -9,7 +9,7 @@ import { Icon } from '@/styles/icons'
 import { axiosInstance } from '@/utilities/axios'
 
 export const ResultHeader = ({ QuestionnaireQuery }) => {
-    const [ SearchValue , setSearchValue ] = useState(null)
+    const [ SearchValue , setSearchValue ] = useState('')
     const { refetch, data , isLoading } = useQuery(
         ["key", "ResultSearch"],
        async () => 
@@ -18,11 +18,6 @@ export const ResultHeader = ({ QuestionnaireQuery }) => {
           enabled: false,
         }
       );
-
-    const ResultSearchHandler = (e) => {
-        setSearchValue(e);
-        refetch();
-    }
 
   return (
     QuestionnaireQuery.isLoading ? <>
@@ -56,26 +51,7 @@ export const ResultHeader = ({ QuestionnaireQuery }) => {
           </QuestionnaireDirectoryContainer>
           
         </PanelHeader>
-        <QuestionSearchContainer style={{ marginTop : 10 }}>   
-                <Select
-                showSearch
-                defaultActiveFirstOption={false}
-                suffixIcon={<div>
-                  <Icon name='GraySearch' style={{ width : 15 }}/>
-                  </div>}
-                allowClear
-                placeholder="براساس عنوان سوال جست‌وجو کنید"
-                optionFilterProp="children"
-                options={data?.data}
-                // onSelect={SearchSelectHandler}
-                onChange={(e) => ResultSearchHandler(e)}
-                style={{ width : '100%' , height : '100%' , direction : 'rtl' , fontFamily : 'IRANSans' }}
-                onSearch={ResultSearchHandler}
-                notFoundContent={null}
-                
-                filterOption={(_, option) => option ? option.label : ''}/>
-                 
-          </QuestionSearchContainer>
+        
         </> 
   )
 }

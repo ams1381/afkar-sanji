@@ -8,22 +8,71 @@ export const QuestionnaireDatePickerContainer  = styled.div`
     flex-direction: column;
     margin: 0.7rem 0;
     padding-bottom: 1rem;
-    border-bottom: 1px solid #CCCCCC;
+    border-bottom: 1px solid  #CCCCCC;
 
-    & .ant-picker .ant-picker-input > input:placeholder-shown , .ant-picker-date-panel ,
-    .time_picker .ant-picker-ok button , .ant-picker-input > input , 
-    .ant-picker-month-btn 
-    {
-        font-family : IRANSans !important;
-    }
     .picker_container.time_picker .ant-picker , .picker_container.date_picker
     {
         border-radius: 2px;
     }
-    .picker_container.time_picker .ant-picker
+    .picker_container.date_picker .rmdp-input
     {
-        width: 274px;
+        border-radius: 2px;
+        width: 300px;
         height: 34px;
+        padding: 5px var(--radius-XL, 12px);
+        border: 1px solid var(--neutral-5, #D9D9D9);
+        text-align: right !important;
+        
+    }
+    .picker_container .rmdp-container 
+    {
+        background : ${p => p.active ? 'white' : 'rgba(0, 0, 0, 0.04)'}
+    }
+    .picker_container.date_picker .icon icon-tabler.icon-tabler-calendar-event
+    {
+        stroke: #8F8F8F;
+    }
+    .picker_container .rmdp-time-picker input
+    {
+        outline : none;
+        border : none !important;
+        width: 28px;
+    }
+    .rmdp-arrow-container.rmdp-up 
+    {
+        align-items: flex-start;
+    }
+    .rmdp-arrow-container.rmdp-down 
+    {
+        align-items: center;
+    }
+`
+export const TimePickerContainer = styled.div`
+    display: flex;
+    align-items: center;
+    border: 1px solid ${p => p.Error ? 'red' :  'var(--neutral-5, #D9D9D9)'};
+    border-radius: 2px;
+    padding: 5px var(--radius-XL, 12px);
+    gap: var(--radius-none, 0px);
+    height: 32px;
+    width: 300px;
+    flex-direction: row-reverse;
+
+    & input 
+    {
+        width: 100%;
+        text-align: right;
+        border: none;
+        transition : 0.3s;
+        
+        outline: none;
+        background : transparent;
+        color : ${p => p.active ? 'black' : 'rgba(0, 0, 0, 0.25)'};
+        pointer-events : ${p => p.active ? 'all' : 'none'};
+    }
+    & input::placeholder 
+    {
+        color: var(--Neutral-Gray6);
     }
 `
 export const QuestionnaireSettingContainer = styled.div`

@@ -64,7 +64,7 @@ export const FileQuestionComponent = ({ QuestionInfo }) => {
   useEffect(() => {
     if (QuestionsAnswerSet && QuestionsAnswerSet.length) {
       const Uploaded_file = QuestionsAnswerSet.find(item => item.question === QuestionInfo.id)?.file;
-      console.log(Uploaded_file)
+  
       if (Uploaded_file) {
         const initialFile = {
           uid: 'uploaded-file',

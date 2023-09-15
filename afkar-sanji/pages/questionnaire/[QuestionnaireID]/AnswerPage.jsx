@@ -19,7 +19,7 @@ const AnswerPage = () => {
     const answerSetCreator = async () => {
       try
       {
-        let { data } = await axios.post(`${baseURL}/question-api/questionnaires/${router.query.QuestionnaireID}/answer-sets/`);
+        let { data } = await axios.post(`${baseURL}question-api/questionnaires/${router.query.QuestionnaireID}/answer-sets/`);
         setAnswerSetID(data.id)
       }
       catch(err)

@@ -1,19 +1,29 @@
-import { ResultBodyContainer , ResultButton , DeleteRowButton ,
-      ResultTableContainer , ResultBodyTopPart , TableOutPut } from '@/styles/Result/ResultPage';
+import { ResultBodyContainer , ResultButton , DeleteRowButton , EmptyButtonPage ,
+      ResultTableContainer , EmptyResultContainer , ResultBodyTopPart , TableOutPut } from '@/styles/Result/ResultPage';
 import { Icon } from '@/styles/icons';
-import { Skeleton , Table , ConfigProvider, Upload, message, Tooltip } from 'antd';
+import { Skeleton , Table , ConfigProvider, Upload, message, Tooltip, Button, Modal, Select } from 'antd';
 import fa_IR from "antd/lib/locale/fa_IR";
 import dayjs from 'dayjs';
 import React, { useEffect } from 'react'
 import { DatePicker as DatePickerJalali, JalaliLocaleListener } from "antd-jalali";
 import moment from 'moment-jalaali';
 import Link from 'next/link';
+import transition from "react-element-popper/animations/transition"
 import { axiosInstance } from '@/utilities/axios';
+import EmptyImage from '../../public/Images/empty-image.png'
 import ScrollContainer from 'react-indiana-drag-scroll'
-import { digitsEnToFa } from '@persian-tools/persian-tools';
+import { digitsEnToFa, digitsFaToEn } from '@persian-tools/persian-tools';
 import { convertDate, convertStringToDate } from '../QuestionnairePanel/SettingPanel';
 import { Excel } from 'antd-table-saveas-excel';
 import { useRef } from 'react';
+import RemovePopup from '../common/RemovePopup';
+import { useState } from 'react';
+import { QuestionSearchContainer } from '@/styles/questionnairePanel/QuestionDesignPanel';
+import DatePicker from 'react-multi-date-picker';
+import { TimePickerContainer } from '@/styles/questionnairePanel/QuestionnaireSetting';
+import persian_fa from 'react-date-object/locales/persian_fa';
+import persian from 'react-date-object/calendars/persian';
+import DatePanel from 'react-multi-date-picker/plugins/date_panel';
 
 const SkeletonTable = ({ columns, rowCount }) => {
     return (
@@ -96,9 +106,14 @@ const ExcelExportHandler = (Data,QuestionnaireQuery) => {
 }
 export const ResultBody = ({ ResultQuery , QuestionnaireQuery }) => {
   const [ resultMessage , contextHolder] = message.useMessage();
+  const [ deleteRowState , setDeleteRowState ] = useState(false);
+  const [ selectedRows , setSelectedRows ] = useState([]);
+  const [ SearchValue , setSearchValue ] = useState('')
+  const [ DateFilterValue , setDateFilterValue ] = useState(null);
+  const [ ClearedFilterState , setClearedFilterValueState ] = useState(false);
   const tableRef = useRef(null);
   let ResultData = ResultQuery.data?.data;
-  let selectedRows = [];
+  // let selectedRows = [];
   let columns = [];
   let rows = [];
 
@@ -112,7 +127,8 @@ export const ResultBody = ({ ResultQuery , QuestionnaireQuery }) => {
         title={<div className='tooltip_container' onClick={() => navigator.clipboard.writeText(item.question)}>
           {item.question} <Icon name='WDuplicate' />
           </div>}>
-          <p>{item.question}</p>
+              <p>{item.question}</p>
+          
           </Tooltip> , 
         render : (Answer) => (Answer && typeof Answer == 'string' && Answer.includes('/media/'))
         ? 
@@ -124,7 +140,7 @@ export const ResultBody = ({ ResultQuery , QuestionnaireQuery }) => {
           url: 'https://mostafarm7.pythonanywhere.com' + Answer,
           thumbUrl : 'https://mostafarm7.pythonanywhere.com' + Answer
         }]} />: 
-        <p>{Answer}</p>,
+        <div ><p>{Answer}</p></div>,
         dataIndex : item.question  , 
         key : item.id ,
         align : 'center' ,
@@ -160,35 +176,62 @@ export const ResultBody = ({ ResultQuery , QuestionnaireQuery }) => {
           if(typeof item.answer != 'object')
             rows[rows.length - 1][item.question] = item.answer;
           else
+          
           {
             if(item.answer.options)
+            {
+              
               item.answer.options.forEach(optionItem => {
-                rows[rows.length - 1][optionItem.text] = optionItem.text;
+                rows[rows.length - 1][optionItem.text] = optionItem.text ? optionItem.text : '';
               })
+            }
+              
           }
            
             rows[rows.length - 1]['key'] = item.id;
             rows[rows.length - 1]['ردیف'] = rows.length ;
+            
       })
+      rows[rows.length - 1]['id'] = AnswerSet.id;
     }
-  }) 
+  })
+ 
+
+const ResultSearchHandler = async (e) => {
+  if(!e)
+  {
+    ResultData = ResultQuery.data?.data
+    return
+  }    
+  try 
+  {
+   let { data } = await axiosInstance.get(`/result-api/${QuestionnaireQuery.data?.data?.uuid}/answer-sets/search/?search=${e}`);
+   ResultData = data;
+  }
+  catch(err)
+  {
+    console.log(err)
+    resultMessage.error({
+      content : 'یافت نشد',
+      duration : 6,
+      style : {
+        fontFamily : 'IRANSans',
+        direction : 'rtl'
+      }
+    })
+  }
+} 
 
   useEffect(() => {
     if(tableRef.current)
-      ScrollByDrag();  
+        ScrollByDrag();  
   }, [tableRef.current]);
-  const RowSelectHandler = (RowInfo) => {
-      if(selectedRows.find(item => item.key == RowInfo.key))
-        selectedRows.splice(selectedRows.findIndex(item => item.key == RowInfo.key) , 1)
-      else
-        selectedRows.push(RowInfo)
-  }
   const DeleteRowHandler = async () => {
     try
     {
       if(selectedRows.length)
         selectedRows.forEach(async (row) => {
-           await axiosInstance.delete(`/question-api/questionnaires/${QuestionnaireQuery.data?.data?.uuid}/answer-sets/${row.id}/`)
+           await axiosInstance.delete(`/question-api/questionnaires/${QuestionnaireQuery.data?.data?.uuid}/answer-sets/${row}/`)
     }) 
     }
     catch(err)
@@ -205,14 +248,21 @@ export const ResultBody = ({ ResultQuery , QuestionnaireQuery }) => {
       })
     }
   }
+
   const DateFilterHandler = async (_,filterDate) => {
+    // console.log(filterDate)
+    // console.log()
+    // convertDate
+    // return
     try {
-       if(filterDate[0].length == 0)
-        ResultData = ResultQuery.data?.data;
-       else {
-        let response =  await axiosInstance.get(`/result-api/${QuestionnaireQuery.data?.data?.uuid}/answer-sets/?answered_at&${convertDate(filterDate[0],'gregorian')}&${convertDate(filterDate[1],'gregorian')}`)
+      
+      //  else {
+        let response =  await axiosInstance.get(`/result-api/${QuestionnaireQuery.data?.data?.uuid}/answer-sets/?answered_at&start_date=
+        ${convertDate(digitsFaToEn(filterDate.validatedValue[0]),'gregorian')}
+        &end_date=${filterDate.validatedValue[1] ? convertDate(digitsFaToEn(filterDate.validatedValue[1]),'gregorian') : ''}`)
         ResultData =  response?.data;
-       }
+        console.log(ResultData)
+      //  }
     }
    catch(err)
    {
@@ -242,11 +292,30 @@ export const ResultBody = ({ ResultQuery , QuestionnaireQuery }) => {
     </ResultBodyContainer>
     </ResultTableContainer>  :
     <ResultBodyContainer>
+      <QuestionSearchContainer style={{ marginTop : 10 }}>   
+                <Select
+                showSearch
+                defaultActiveFirstOption={false}
+                suffixIcon={<div>
+                  <Icon name='GraySearch' style={{ width : 15 }}/>
+                  </div>}
+                allowClear
+                placeholder="براساس عنوان سوال جست‌وجو کنید"
+                optionFilterProp="children"
+                onSearch={ResultSearchHandler}
+               
+                style={{ width : '100%' , height : '100%' , direction : 'rtl' , fontFamily : 'IRANSans' }}
+                notFoundContent={null}
+                />
+                 
+          </QuestionSearchContainer>
       {contextHolder}
         <ResultBodyTopPart>
             <TableOutPut>
-                <div className='table_control'>   
-                    <DeleteRowButton>
+                <div className='table_control'>
+                <RemovePopup DeleteState={deleteRowState} onOkay={DeleteRowHandler}
+                setDeleteState={setDeleteRowState} title='نتیجه یا نتایجی که انتخاب کردید حذف شود؟'/>  
+                    <DeleteRowButton onClick={() => setDeleteRowState(true)} disabled={!selectedRows.length}>
                         <Icon name='trash' />
                      </DeleteRowButton>     
                     <ResultButton 
@@ -255,16 +324,27 @@ export const ResultBody = ({ ResultQuery , QuestionnaireQuery }) => {
                 </div>
                 
             </TableOutPut>
-            <div className='date_filter'>      
-                
-            <ConfigProvider locale={fa_IR} direction="rtl">
-                <DatePickerJalali.RangePicker direction="ltr"
-                onChange={DateFilterHandler}
-                defaultValue={[dayjs(convertDate(new Date().getFullYear() + '-' + new Date().getMonth() + '-' + new Date().getDay(),'jalali'))]}
-                locale={fa_IR.DatePicker} 
-                />
-                <JalaliLocaleListener /> 
-            </ConfigProvider>
+            <div className='date_filter'>         
+            <DatePicker  format="YYYY-MM-DD"
+            animations={[transition()]}
+            onChange={DateFilterHandler}
+              render={(value, openCalendar) => {
+             
+                return (
+                  <TimePickerContainer active={'active'} style={{ width : '100%' }}>
+                    <input value={value} onClick={openCalendar}  placeholder='انتخاب تاریخ' />
+                    <Icon name='Calender' />
+                  </TimePickerContainer>
+                )}}
+              range
+              plugins={[
+                <DatePanel position="left" />
+              ]}
+              // onChange={DateChangeHandler}
+              calendar={persian}
+              calendarPosition="bottom-left"
+              locale={persian_fa}
+            />
             <Link href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/Charts/`}>
                 <ResultButton>نمودار ها</ResultButton>
             </Link>
@@ -272,7 +352,7 @@ export const ResultBody = ({ ResultQuery , QuestionnaireQuery }) => {
             </div>
         </ResultBodyTopPart>
         <ResultTableContainer>
-            <Table 
+           { ResultData?.length ?  <Table 
               columns={columns}
               dataSource={rows}
               ref={tableRef}
@@ -282,7 +362,9 @@ export const ResultBody = ({ ResultQuery , QuestionnaireQuery }) => {
               pagination={false}
               components={(fd) => console.log(fd)}
               rowSelection={{
-                onSelect : RowSelectHandler,
+                onChange : (_,SelectedList) => {
+                  setSelectedRows(SelectedList?.map(item => item?.id))
+                },
                 hideSelectAll : true,
                 columnWidth : 54,
                 renderCell : 
@@ -300,7 +382,13 @@ export const ResultBody = ({ ResultQuery , QuestionnaireQuery }) => {
               size="middle"
               scroll={{  x: 2500, y: "50vh" , draggable : true}}
               scrollableTarget="table-wrapper"
-             />
+             /> : <EmptyResultContainer>
+                <img src={EmptyImage.src} />
+                <p>هنوز هیچ سوالی نساختید</p>
+                <Link href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/`}>
+                  <EmptyButtonPage type='primary'>الان بسازید</EmptyButtonPage>
+                </Link>
+              </EmptyResultContainer>}
         </ResultTableContainer>
     </ResultBodyContainer>
   )

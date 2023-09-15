@@ -30,7 +30,9 @@ export const LeftLight = styled.span`
     right: 0;
     bottom: 0;
     animation : ${p => p.filltext ? 'LeftLightAnim 2s 0.4s' : 'none'};
-    animation-delay: 0.5s;
+    animation-timing-function: cubic-bezier(0.7, -0.4, 0.4, 1.4);
+    // animation-duration: 400ms;
+    animation-delay: 700ms;
 
     @keyframes LeftLightAnim 
     {
@@ -65,7 +67,9 @@ export const RightLight = styled.span`
     border-radius: 50%;
     z-index: -2;
     animation : ${p => p.filltext ? 'RightLightAnim 2s 0.4s' : 'none'};
-    animation-delay: 0.5s;
+    animation-timing-function: cubic-bezier(0.7, -0.4, 0.4, 1.4);
+    // animation-duration: 400ms;
+    animation-delay: 700ms;
 
     @keyframes RightLightAnim 
     {
@@ -92,20 +96,42 @@ export const LoginForm = styled.form`
   display: flex;
   flex-direction: column;
   text-align : right;
+
+  .input_label_message 
+  {
+    padding: 10px 0px;
+    font-size: 14px;
+    color: var(--Neutral-Gray6);
+  }
+  .animation_container::before
+  {
+    content: '';
+    width: 4px;
+    height: 42px;
+    background: var(--Neutral-Gray10);
+    position: absolute;
+    right: 0;
+    bottom: 209px;
+    transition : 0.05s;
+    opacity : ${p => p.transitionLine ? '1' : '0'};
+    z-index: 5;
 `
 export const LoginHeaderText = styled.h2`
     margin: 20px auto;
     text-align: center;
     width: fit-content;
-    font-size: 3rem;
+    font-size: 43.59px;
     -webkit-text-fill-color: white;
     -webkit-text-stroke: 1px var(--primary-color);
     position: relative;
     font-family: Arial, Helvetica, sans-serif;
     overflow: hidden;
     transition : 0.3s;
+
     animation : ${p => p.filltext ? 'LoginTitleAnim 1.7s ease' : 'none'};
-    animation-delay: 0.7s;
+    animation-timing-function: cubic-bezier(0.7, -0.4, 0.4, 1.4);
+    // animation-duration: 400ms;
+    animation-delay: 800ms;
 
     &::after 
     {
@@ -170,14 +196,15 @@ export const LoginBox = styled.div`
     display: flex;
     justify-content: center;
     flex-direction: column;
+    overflow: ${p => p.filltext ? 'initial' : 'hidden'};
 
     @media screen and (max-width : 480px)
     {
-        width: 80%;
+        width: 93%;
     }
     @media screen and (min-width : 481px) and  (max-width : 780px)
     {
-        width: 60%;
+        width: 75%;
     }
 `
 export const InputBox = styled.div`
@@ -189,6 +216,7 @@ export const InputBox = styled.div`
     justify-content: space-between;
     border: 2px solid ${p => p.focused ? 'var(--login-input-default-border)' : '#7ACCFF'} ;
     transition: 0.3s border;
+    margin-bottom: 0;
 
     .resend_button_container .ant-btn-loading
     {

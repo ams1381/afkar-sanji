@@ -45,7 +45,7 @@ const OTPSms = () => {
       axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + otp_res.data.access;
       setTimeout(() => {
         typeof window !== 'undefined' ? router.push("../") : ''
-      },2000)
+      },3000)
     }
     else
     {

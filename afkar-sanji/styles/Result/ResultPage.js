@@ -1,3 +1,4 @@
+import { Button } from "antd";
 import { styled } from "styled-components";
 
 export const ResultBodyContainer = styled.div`
@@ -8,9 +9,28 @@ export const ResultBodyContainer = styled.div`
         display : flex;
         gap : 15px;
     }
+    .date_filter .rmdp-arrow-container
+    {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .date_filter .rmdp-arrow-container  i 
+    {
+        height: 3px !important;
+        margin-top: 0 !important;
+        padding: 3px !important;
+        width: 3px !important;
+    }
+  
+
     .date_filter a 
     {
         text-decoration : none;
+    }
+    .rmdp-container 
+    {
+        width : 60%;
     }
     .date_filter .ant-picker.ant-picker-range
     {
@@ -56,6 +76,11 @@ export const ResultBodyContainer = styled.div`
         .date_filter
         {
             width: 100%;
+            justify-content: space-between;
+        }
+        .rmdp-container 
+        {
+            width : 100%;
         }
     }
 `
@@ -65,13 +90,42 @@ export const ResultTableContainer = styled.div`
         margin-top : 10px;
         background : ${p => p.loading ? '#EFE9E9' : 'none'};
     }
+    table 
+    {
+        // table-layout: auto !important;
+        // min-width : 5000px !important;
+    }
+    .rmdp-panel-body li .b-deselect
+    {
+        margin-left : 10px !important;
+    }
     & .ant-table-cell
     {
         font-weight: 500 !important;
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
+        // min-width : 217px;
         color: var(--Neutral-Gray9) !important;
+    }
+    //  .ant-table-cell.ant-table-selection-column
+    // {
+    //     min-width : 70px !important;
+    // }
+    // colgroup col 
+    // {
+    //     min-width : 217px;
+    // }
+    & .ant-table-cell p 
+    {
+        width: 95%;
+        text-overflow: ellipsis;
+        white-space: pre;
+        overflow: hidden;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+    }
     }
     & .ant-table-tbody tr:nth-child(odd)
     {
@@ -126,6 +180,20 @@ export const ResultTableContainer = styled.div`
         padding : 0 !important;
     }
 `
+export const EmptyResultContainer = styled.div`
+    height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-size: 14px;
+    color: var(--character-title-85, rgba(0, 0, 0, 0.85));
+
+    & p 
+    {
+        margin-top : 8px;
+    }
+`
 export const ResultButton = styled.button`
     background: #FEFEFE;
     border: 1px solid #D9D9D9;
@@ -160,11 +228,13 @@ export const DeleteRowButton = styled.button`
     border: 1px solid #D9D9D9;
     align-items : center;
     border-radius: 2px;
+    pointer-events : ${p => p.disabled ? 'none' : 'all'};
 `
 export const ResultBodyTopPart = styled.div`
     display : flex;
     flex-direction : row-reverse;
     gap: 12px;
+    margin-top : 10px;
     @media screen and (max-width : 768px)
     {
        
@@ -183,4 +253,10 @@ export const TableOutPut= styled.div`
        display : flex;
        gap : 15px;
     }
+`
+export const EmptyButtonPage = styled(Button)`
+    border-radius : 2px;
+    margin-top: 16px;
+    box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.06);
+    padding: 4px 15px;
 `

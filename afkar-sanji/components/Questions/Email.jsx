@@ -19,13 +19,13 @@ const Email = ({ QuestionInfo }) => {
     }
       
 
-  },[])
+  },[QuestionInfo.id])
   const changeEmailAnswerHandler = (e) => {
 
     setEmailAnswer(e.target.value);
     if(QuestionsAnswerSet && QuestionsAnswerSet.length)
       dispatcher(ChangeInputAnswer({
-        QuestionID : QuestionInfo.id , InputName : 'email_field' , InputValue : emailAnswer
+        QuestionID : QuestionInfo.id , InputName : 'email_field' , InputValue : e.target.value
       }))
   }
   return (

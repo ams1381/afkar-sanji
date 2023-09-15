@@ -14,23 +14,36 @@ const AnswerSetSlice =  createSlice({
             Questions.forEach((QuestionItem) => {
                 if(!QuestionItem || !QuestionItem.question)
                     return
-                state.AnswerSet.push({
-                    question : QuestionItem.question.id,
-                    answer : {},
-                    file : null
-                })
+                if(QuestionItem.question && QuestionItem.question.child_questions)
+                {
+                    QuestionItem.question.child_questions.forEach((item) => {
+                        state.AnswerSet.push({
+                            question : item.question.id,
+                            answer : {},
+                            file : null
+                        })
+                    })
+                }
+                else
+                    state.AnswerSet.push({
+                        question : QuestionItem.question.id,
+                        answer : {},
+                        file : null
+                    })
             })
         },
         ChangeInputAnswer : (state , action) => {
             const { QuestionID , InputName , InputValue } = action.payload;
 
             state.AnswerSet.find(item => item.question == QuestionID).answer[InputName] = InputValue;
-  
+            console.log(JSON.parse(JSON.stringify(state.AnswerSet.find(item => item.question == QuestionID))),
+            InputName,InputValue,
+            JSON.parse(JSON.stringify(state.AnswerSet)))
         },
         SortOptions : (state , action) => {
             const { QuestionID , NewOptionsArray } = action.payload;
-
-            state.AnswerSet.find(item => item.question == QuestionID).answer.sorted_options = NewOptionsArray;
+            if(state.AnswerSet.find(item => item.question == QuestionID))
+                state.AnswerSet.find(item => item.question == QuestionID).answer.sorted_options = NewOptionsArray;
         },
         ChoseOption : (state , action) => {
             const { QuestionID , ChoseOptionsArray , other_text} = action.payload;
@@ -50,7 +63,6 @@ const AnswerSetSlice =  createSlice({
             }
             else if(typeof ChoseOptionsArray == 'object')
             { 
-                console.log(JSON.parse(JSON.stringify(state.AnswerSet.find(item => item.question == QuestionID))))
                 state.AnswerSet.find(item => item.question == QuestionID).answer = {
                     'selected_options' : [ChoseOptionsArray.id]
                 }

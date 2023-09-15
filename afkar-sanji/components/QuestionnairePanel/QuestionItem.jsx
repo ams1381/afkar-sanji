@@ -9,6 +9,7 @@ import { QuestionTypeComponentGenerator, Question_types } from '@/utilities/Ques
 import 'react-dropdown/style.css';
 import RemovePopup from '../common/RemovePopup';
 import React, { useEffect, useReducer, useRef, useState } from 'react'
+import { CSS } from "@dnd-kit/utilities";
 import {useDispatch, useSelector} from 'react-redux'
 import { Button, ConfigProvider, Select, Skeleton, Upload, message } from 'antd';
 import QuestionDescription from './Question Components/Common/Description';
@@ -26,6 +27,9 @@ import { themeContext } from '@/utilities/ThemeContext';
 import { ReorderPoster, getListStyle } from './QuestionDesignPanel';
 import { StyleSheetConsumer } from 'styled-components';
 import { NestedDndItem } from './nestedDndItem';
+import { Scrollbar } from 'react-scrollbars-custom';
+import { useDraggable , Translate} from '@dnd-kit/core';
+import { useSortable } from '@dnd-kit/sortable';
 
 function shallowEqual(obj1, obj2) {
   if (obj1 === null || obj2 === null || typeof obj1 !== 'object' || typeof obj2 !== 'object') {
@@ -45,12 +49,19 @@ function shallowEqual(obj1, obj2) {
       : val1 === val2;
   });
 }
-export const QuestionItem = ({  activeQuestionId, provided ,setActiveQuestion , Questionnaire , IsQuestion , question , UUID , parentPlacement , GroupID }) => {
-  const [ QuestionRootOpenState , SetQuestionRootOpenState ] = useState(question.newFace ? true : false);
+export const QuestionItem = ({  ActiveQuestion, provided ,setActiveQuestion , QuestionsList  , IsQuestion , question , UUID , parentPlacement , GroupID }) => {
+  const [ QuestionRootOpenState , SetQuestionRootOpenState ] = useState(false);
   const [ QuestionActionState , SetQuestionActionState ] = useState('edit');
   const [nestedQuestions, setNestedQuestions] = useState(question.child_questions);
   const [ DeleteQuestionState , SetDeleteQuestionState ] = useState(false);
-  // const [ QuestionTypeState , ChangeQuestionTypeState ] = useState(question.question_type);
+  // const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+  //   id : question?.question?.id,
+  //   data: {
+  //     id: question?.question?.id,
+  //     type: "draggable"
+  //   }
+  // });
+
   const [ SaveButtonLoadingState , SetSaveButtonLoadingState ] = useState(false);
   const [ QuestionsReload , SetQuestionsReload ] = useState(false);
   const [ SavedMessage , contextHolder] = message.useMessage();
@@ -94,12 +105,12 @@ export const QuestionItem = ({  activeQuestionId, provided ,setActiveQuestion , 
   }
 }, [QuestionRootOpenState , QuestionActionState , questionsData]); 
   useEffect(() => {
-    if((activeQuestionId == questionsData.question.id))
+    if((ActiveQuestion?.QuestionID == questionsData.question.id && ActiveQuestion?.QuestionType == questionsData.question.question_type))
         SetQuestionRootOpenState(true);
       else
         SetQuestionRootOpenState(false)
 
-  },[activeQuestionId])
+  },[ActiveQuestion])
    
   const DeleteQuestion = async () => {
     (questionsData.question.question_type == 'welcome_page' ||
@@ -136,17 +147,24 @@ export const QuestionItem = ({  activeQuestionId, provided ,setActiveQuestion , 
         CopiedQuestionID : copiedQuestionId 
       }))
     QuestionDispatcher(QuestionSorter());
-    setActiveQuestion(copiedQuestionId)
+    setActiveQuestion({ 
+      'QuestionID' : copiedQuestionId,
+      'QuestionType' : questionsData?.question?.question_type
+    })
   }
   const QuestionOpenHandler = () => {
     SetQuestionRootOpenState(!QuestionRootOpenState);
 
     if(!QuestionRootOpenState)
     {
-      setActiveQuestion(questionsData.question.id)
+      console.log(questionsData.question.id)
+      setActiveQuestion({
+        'QuestionID' : questionsData.question.id , 
+        'QuestionType' : questionsData.question.question_type
+      })
       document.querySelector(`.QuestionItem${questionsData.question.id}`)?.scrollIntoView({ behavior : 'smooth' });
     }
-      
+    
     else
       setActiveQuestion(null)
   }
@@ -165,8 +183,10 @@ export const QuestionItem = ({  activeQuestionId, provided ,setActiveQuestion , 
     QuestionDispatcher(AddQuestion({ TopQuestionID : questionsData.question.id , AddedQuestionID : newQuestionId}))
 
     QuestionDispatcher(QuestionSorter())
-    
-    setActiveQuestion(newQuestionId)
+    setActiveQuestion({
+      'QuestionID' : newQuestionId ,
+      'QuestionType' : 'optional'
+      })
   }
   const QuestionPatcher = async () => {
     SetSaveButtonLoadingState(true);
@@ -218,39 +238,54 @@ export const QuestionItem = ({  activeQuestionId, provided ,setActiveQuestion , 
     }
     try
     {
-      SetSaveButtonLoadingState(true);
+      
       if(questionsData.question.url_prefix)
       {
+        SetSaveButtonLoadingState(true);
        let { data }  = await axiosInstance.post(`/question-api/questionnaires/${UUID}/${questionsData.question.url_prefix}/`,
        form_data_convertor(questionsData.question));
-       setActiveQuestion(data.id)
+       setActiveQuestion({ 
+        'QuestionID' : data.id ,
+        'QuestionType' : data.question_type
+      })
         QuestionDispatcher(finalizer({
            isQuestion :  true , 
            QuestionID : questionsData.question.id ,
             Response : data  
           }))
           axiosInstance.defaults.headers['Content-Type'] = 'application/json';
-        let sorted_questions_array = QuestionsArray.map(item =>
-          ({ question_id : item.question.id > 10000000000 ? data.id : item.question.id ,
-            new_placement : item.question.placement }));
+        let sorted_questions_array = QuestionsArray.map(item => {
+          if(!item.question.newFace) 
+          return ({ question_id : item.question.id > 10000000000 ? data.id : item.question.id ,
+            new_placement : item.question.placement })
+          });
+          sorted_questions_array.forEach((item,index) => !item  ? sorted_questions_array.splice(index,1) : '')
+
         await axiosInstance.post(`/question-api/questionnaires/${UUID}/change-questions-placements/`,{
           'placements' : sorted_questions_array
         })
+        QuestionDispatcher(QuestionSorter())
           }
       else
       {
-        
-        let { data } = questionsData.question.question_type == 'welcome_page' ? axiosInstance.post(`/question-api/questionnaires/${UUID}/welcome-pages/`,form_data_convertor(questionsData.question)) 
-        : axiosInstance.post(`/question-api/questionnaires/${UUID}/thanks-pages/`,form_data_convertor(questionsData.question))
-        
+        SetSaveButtonLoadingState(true);
+        let { data } = questionsData.question.question_type == 'welcome_page' ? await axiosInstance.post(`/question-api/questionnaires/${UUID}/welcome-pages/`,form_data_convertor(questionsData.question)) 
+        : await axiosInstance.post(`/question-api/questionnaires/${UUID}/thanks-pages/`,form_data_convertor(questionsData.question))
+     
         QuestionDispatcher(finalizer({ isQuestion :  false , QuestionID : questionsData.question.id , Response : data }))
-        
+        setActiveQuestion({ 
+        'QuestionID' : data.id ,
+        'QuestionType' : data.question_type
+      })
+        InitialQuestionData.current = { question : data };
+
       }
-      QuestionDispatcher(QuestionSorter())
+      
       setQuestionChangedState(false);
     }
     catch(err)
     {
+      console.group(err)
       if(err.response)
       {
         QuestionDispatcher(ChangeErrorData({ actionErrorObject : err.response}))
@@ -283,6 +318,7 @@ export const QuestionItem = ({  activeQuestionId, provided ,setActiveQuestion , 
   };
   return (
     (questionsData) ? 
+    
     <QuestionItemRow childq={questionsData.question.group ? 'true' : null}
     maxheight={maxheight}
     isopen={QuestionRootOpenState ? 'true' : null}
@@ -294,7 +330,8 @@ export const QuestionItem = ({  activeQuestionId, provided ,setActiveQuestion , 
     childq={questionsData.question.group ? 'true' : null}>     
           <QuestionItemSurface >
               <div className="question_item_info" onClick={QuestionOpenHandler} 
-              {...provided?.dragHandleProps?? null}>
+              {...provided?.dragHandleProps?? null}
+              >
                   <DropDownQuestionButton  dropped={QuestionRootOpenState ? 'true' : null}>   
                      <Icon name='ArrowDown' />
                                                         
@@ -367,7 +404,6 @@ export const QuestionItem = ({  activeQuestionId, provided ,setActiveQuestion , 
                         columns={2} 
                         labelInValue
                         disabled={(!questionsData.question.newFace ||
-                           questionsData.question.duplicated ||
                            questionsData.question.nonquestion) ? true : false}
                         defaultValue={{
                          label : <span style={{ color : 'blue' }}>
@@ -407,45 +443,46 @@ export const QuestionItem = ({  activeQuestionId, provided ,setActiveQuestion , 
           </div> : '' }
           
         </QuestionDesignItem>
-        {questionsData.question.question_type === 'group' && 
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <Droppable droppableId="dropboard" type="CHILD">
-            {(provided, snapshot) => (
-              <div ref={provided.innerRef} {...provided.droppableProps} style={getListStyle(snapshot.isDraggingOver)}>
-                {questionsData.question.child_questions?.map((nestedQuestion, index) => (
-                  <Draggable
-                    key={nestedQuestion.question.id}
-                    draggableId={nestedQuestion.question.id.toString()}
-                    index={index}>
-                    {(provided) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}>
-                        <QuestionItem
-                          activeQuestionId={activeQuestionId}
-                          setActiveQuestion={setActiveQuestion}
-                          IsQuestion
-                          UUID
-                          provided
-                          parentPlacement={questionsData.question.placement}
-                          GroupID={questionsData.question.id}
-                          question={nestedQuestion}
-                        />
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-       </DragDropContext>
+        {questionsData.question.question_type === 'group' && ''
+      //   <DragDropContext onDragEnd={handleDragEnd}>
+      //     <Droppable droppableId="dropboard" type="CHILD">
+      //       {(provided, snapshot) => (
+      //         <div ref={provided.innerRef} {...provided.droppableProps} style={getListStyle(snapshot.isDraggingOver)}>
+      //           {questionsData.question.child_questions?.map((nestedQuestion, index) => (
+      //             <Draggable
+      //               key={nestedQuestion.question.id}
+      //               draggableId={nestedQuestion.question.id.toString()}
+      //               index={index}>
+      //               {(provided) => (
+      //                 <div
+      //                   ref={provided.innerRef}
+      //                   {...provided.draggableProps}>
+      //                   <QuestionItem
+      //                     ActiveQuestion={ActiveQuestion}
+      //                     setActiveQuestion={setActiveQuestion}
+      //                     IsQuestion
+      //                     UUID
+      //                     provided
+      //                     parentPlacement={questionsData.question.placement}
+      //                     GroupID={questionsData.question.id}
+      //                     question={nestedQuestion}
+      //                   />
+      //                 </div>
+      //               )}
+      //             </Draggable>
+      //           ))}
+      //           {provided.placeholder}
+      //         </div>
+      //       )}
+      //     </Droppable>
+      //  </DragDropContext>
           }
            </div>
-       { !GroupID ?  <div className='question_preview'>
+       { !GroupID ?  <div className='question_preview'> 
               {QuestionRootOpenState ? <QuestionComponent QuestionInfo={questionsData.question} 
-              ChildQuestion={questionsData.question.group ? 'true' : null} /> : ''}
-        </div> : ''}
+              ChildQuestion={questionsData.question.group ? 'true' : null} />
+               : ''}
+        </div>: ''}
     </QuestionItemRow> : ''
   )
 }

@@ -9,13 +9,18 @@ import {
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import React, { useState } from 'react'
+import EmptyImage from '../../public/Images/empty-image.png'
 import { Icon } from '@/styles/icons';
-import { ResultButton } from '@/styles/Result/ResultPage';
-import { ChartSelectItem, TopBar, TopBarButtonsContainer, TopBarChartSelectorContainer } from '@/styles/Charts/ChartsPage';
+import { EmptyButtonPage, ResultButton , EmptyResultContainer } from '@/styles/Result/ResultPage';
+import { ChartSelectItem, TopBar, TopBarButtonsContainer,
+  QuestionChartBodyContainer ,  TopBarChartSelectorContainer
+   , QuestionChartContainer, QuestionChartContainerHeader } from '@/styles/Charts/ChartsPage';
 import Link from 'next/link';
-import { Popover } from 'antd';
+import { Popover, Skeleton } from 'antd';
 import { SortPopoverContent } from './SortPopoverContent';
 import { QuestionChart } from './QuestionChart';
+import html2canvas from "html2canvas";
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -41,37 +46,112 @@ export const options = {
 
 const ChartsBody = ({ ChartQuery , QuestionnaireQuery }) => {
   const [ filterPopover , setFilterPopover ] = useState(false);
-  console.log(ChartQuery.data)
+  const [ totalChartType , setTotalChartType ] = useState(null);
+  const [ totalChartSort , setTotalSort ] = useState(null);
+
+  const DownloadAllCharts = async () => {
+    let ChartArrayHTML = '';
+    let ChartsArray = document.querySelectorAll('canvas');
+    try 
+    {
+      ChartsArray.forEach(async (item) => {
+        const canvas = await html2canvas(item);
+        const imgData = canvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        link.href = imgData;
+        link.download = 'chart.png';
+        link.click();
+      });
+    }
+    catch(err)
+    {
+      console.log(err)
+    }   
+  }
+
   return (
-    ChartQuery.isLoading ? 'Loading'
+    ChartQuery.isLoading ? <div>
+       <TopBar>
+    <TopBarChartSelectorContainer loading={true}>
+        <Skeleton.Input style={{ width : '65%' }} loading active />
+        <Skeleton.Input style={{ width : '65%' }} loading active />
+        <Skeleton.Input style={{ width : '65%' }} loading active />
+        <Skeleton.Input style={{ width : '65%' }} loading active />
+        <Skeleton.Input style={{ width : '65%' }} loading active />
+    </TopBarChartSelectorContainer>
+    <TopBarButtonsContainer>
+      <div style={{ display : 'flex' , gap : '12px' }}>
+        <Skeleton.Button loading active />
+        <Skeleton.Button loading active />
+      </div>
+        <Skeleton.Button active />
+    </TopBarButtonsContainer>
+  </TopBar>
+  <QuestionChartBodyContainer>  
+        {/* <QuestionChart totalChartType={totalChartType} key={item.question_id} PlotDetail={item} /> */}
+        <QuestionChartContainer loading={true}>
+          <QuestionChartContainerHeader>
+          <div className='question_chart_title'>
+                <Skeleton.Input />
+            </div>
+            <div className='question_chart_buttons'>
+              <Skeleton.Button active />
+              <Skeleton.Button active />
+            </div>
+          </QuestionChartContainerHeader>
+        </QuestionChartContainer>
+        <QuestionChartContainer loading={true}>
+          <QuestionChartContainerHeader>
+          <div className='question_chart_title'>
+                <Skeleton.Input />
+            </div>
+            <div className='question_chart_buttons'>
+              <Skeleton.Button active />
+              <Skeleton.Button active />
+            </div>
+          </QuestionChartContainerHeader>
+        </QuestionChartContainer>
+        <QuestionChartContainer loading={true}>
+          <QuestionChartContainerHeader>
+          <div className='question_chart_title'>
+                <Skeleton.Input />
+            </div>
+            <div className='question_chart_buttons'>
+              <Skeleton.Button active />
+              <Skeleton.Button active />
+            </div>
+          </QuestionChartContainerHeader>
+        </QuestionChartContainer>
+      </QuestionChartBodyContainer>
+  </div>
      : <div>
         <TopBar>
           <TopBarChartSelectorContainer>
-            <ChartSelectItem>
+            <ChartSelectItem onClick={() => setTotalChartType('Table')}>
               <p>جدول</p>
               <span>
                 <Icon name='tablePlot' />
               </span>
             </ChartSelectItem>
-            <ChartSelectItem>
+            <ChartSelectItem onClick={() => setTotalChartType('Pie')}>
               <p>دایره‌‌ای</p>
               <span>
                 <Icon name='circlePlot' />
               </span>
             </ChartSelectItem>
-            <ChartSelectItem>
+            <ChartSelectItem onClick={() => setTotalChartType('Line')}>
               <p>خطی</p>
               <span>
                 <Icon name='linearPlot' /> 
               </span>
             </ChartSelectItem>
-            <ChartSelectItem>
+            <ChartSelectItem onClick={() => setTotalChartType('Bar')}>
               <p>عمودی</p>
               <span>
                 <Icon name='verticalPlot' />
               </span>
             </ChartSelectItem>
-            <ChartSelectItem>
+            <ChartSelectItem onClick={() => setTotalChartType('HorizontalBar')}>
               <p>افقی</p>
               <span>
                 <Icon name='horizontalPlot' />
@@ -80,7 +160,7 @@ const ChartsBody = ({ ChartQuery , QuestionnaireQuery }) => {
           </TopBarChartSelectorContainer>
           <TopBarButtonsContainer>
             <div style={{ display : 'flex' , gap : '12px' }}>
-            <ResultButton className='download_charts_btn'>
+            <ResultButton className='download_charts_btn' onClick={DownloadAllCharts}>
                 <p>دانلود نمودار‌ها</p>
                 <Icon name='Upload'/>
               </ResultButton>
@@ -90,27 +170,35 @@ const ChartsBody = ({ ChartQuery , QuestionnaireQuery }) => {
                 </ResultButton>
               </Link>
             </div>
-            <Popover content={<SortPopoverContent />}
+            <Popover content={<SortPopoverContent setCurrentSort={setTotalSort}/>}
             className='test'
             trigger="click"
             onOpenChange={() => setFilterPopover(false)}
              placement='bottom'
              open={filterPopover}>
               <ResultButton onClick={() => setFilterPopover(!filterPopover)}>
-              <Icon name='filter' />
+              <Icon name='Filter' />
             </ResultButton>
             </Popover>
             
 
           </TopBarButtonsContainer>
         </TopBar>
-        <div style={{ marginTop : 24 }}>
+        <QuestionChartBodyContainer>
           {
-            ChartQuery.data?.data?.map(item => <QuestionChart key={item.question_id} PlotDetail={item} />)
+            ChartQuery.data?.data?.length ?
+            ChartQuery.data?.data?.map(item => <QuestionChart totalChartType={totalChartType} totalChartSort={totalChartSort}
+               key={item.question_id} PlotDetail={item} />)
+            :
+            <EmptyResultContainer>
+                <img src={EmptyImage.src} />
+                <p>هنوز هیچ سوالی نساختید</p>
+                <Link href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/`}>
+                  <EmptyButtonPage type='primary'>الان بسازید</EmptyButtonPage>
+                </Link>
+              </EmptyResultContainer>
           }
-          
-        </div>
-      {/* <Bar options={options} data={data} /> */}
+        </QuestionChartBodyContainer>
      </div>
   )
 }

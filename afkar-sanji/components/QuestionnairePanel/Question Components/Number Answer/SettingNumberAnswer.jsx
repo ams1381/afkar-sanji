@@ -1,14 +1,33 @@
 import { AlphabetNumberContainer, ToggleContainer } from '@/styles/questionnairePanel/QuestionSetting'
 import { ChangeMinOrMaxAnswerHandler, ChangeToggleHandler } from '@/utilities/QuestionStore';
 import { InputNumber, Switch } from 'antd'
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 
 export const SettingNumberAnswer = ({ QuestionInfo }) => {
+    const OcurredError = useSelector(state => state.reducer.Error);
+    const [ inputError , setInputError ] = useState(null);
     const dispatcher = useDispatch();
+    const LimitContainerRef = useRef(null);
     const RegularToggleHandler = (Event , TName) => {
         dispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : TName , ToggleValue : Event}))
     }
+    useEffect(() => {
+        if(OcurredError)
+        {
+            if(OcurredError.min || OcurredError.max)
+            {
+                setInputError('active')
+                LimitContainerRef.current?.scrollIntoView({ behavior : 'smooth' }) 
+            }
+                
+            else
+                setInputError(null)
+        }
+        else
+            setInputError(null)
+    },[OcurredError])
     const ChangeMinMaxHandler = (event,InputName) => {
         console.log(event,InputName)
         dispatcher(ChangeMinOrMaxAnswerHandler({
@@ -17,7 +36,7 @@ export const SettingNumberAnswer = ({ QuestionInfo }) => {
     }
   return (
     <>
-    <AlphabetNumberContainer>
+    <AlphabetNumberContainer  inputerror={inputError} ref={LimitContainerRef}>
           <p>محدودیت اعداد وارد شده</p>
           <label>
               <InputNumber min={0} value={QuestionInfo.min}  onChange={(e) => ChangeMinMaxHandler(e,'min')}/>

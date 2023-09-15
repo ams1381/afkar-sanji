@@ -9,12 +9,19 @@ export const Number = ({ QuestionInfo }) => {
   const dispatcher = useDispatch();
   const QuestionsAnswerSet = useSelector(state => state.reducer.AnswerSet);
   const [ NumberAnswer , setNumberAnswer ] = useState(null);
-  
+
   useEffect(() => {
+    
     if(QuestionsAnswerSet && QuestionsAnswerSet.length)
-       setNumberAnswer(QuestionsAnswerSet.find(item => item.question == QuestionInfo.id).answer?.number_answer)
-  },[])
+    {
+      if(QuestionsAnswerSet.find(item => item.question == QuestionInfo.id).answer?.number_answer)
+        setNumberAnswer(QuestionsAnswerSet.find(item => item.question == QuestionInfo.id).answer?.number_answer);
+      else
+        setNumberAnswer(null)
+    }
+  },[QuestionInfo.id])
   const NumberAnswerHandler = (NumberValue) => {
+    setNumberAnswer(NumberValue)
     if(QuestionsAnswerSet && QuestionsAnswerSet.length)
     {
       dispatcher(ChangeInputAnswer({

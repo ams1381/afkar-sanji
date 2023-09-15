@@ -18,7 +18,7 @@ const InputAnswer = ({ InputPlaceholder , QuestionInfo }) => {
     
     }
       
-  },[])
+  },[QuestionInfo.id])
 
   const ChangeInputHandler = (e) => {
       e.target.value ? SetShowClearButtonState(true) : false ;

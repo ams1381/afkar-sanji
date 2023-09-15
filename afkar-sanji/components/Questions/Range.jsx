@@ -14,38 +14,22 @@ export const RangeQuestionComponent = ({ QuestionInfo }) => {
   const midLabelRef = useRef(null);
   const rightLabelRef = useRef(null);
   const [ RangeAnswerValue , setRangeAnswerValue ] = useState(null); 
-  const [ longestLabelHeight , setLongestLabelHeight ] = useState(null)
+  const [ longestlabelheight , setlongestlabelheight ] = useState(null)
 
   useEffect(() => {
     if(QuestionsAnswerSet && QuestionsAnswerSet.length)
       setRangeAnswerValue(QuestionsAnswerSet.find(item => item.question == QuestionInfo.id).answer?.integer_range);
-    
-    // integer_selective
+
   },[])
   useEffect(() => {
-    console.log(leftLabelRef.current,midLabelRef.current,rightLabelRef.current)
-    // if(leftLabelRef.current && midLabelRef.current && rightLabelRef.current)
-    // {
-      // let labelsHeightArray = [ leftLabelRef?.current?.offsetHeight , midLabelRef?.current?.offsetHeight  , rightLabelRef?.current?.offsetHeight ]
-
-      // setLongestLabelHeight(labelsHeightArray.reduce((a, b) => {
-      //   if (b === null) {
-      //     return a; // Skip null values
-      //   }
-      //   return Math.max(a, b);
-      // }, -Infinity))
-      // // console.log('hi',labelsHeightArray)
-      // // console.log(longestLabelHeight,labelsHeightArray)
-      // console.log(longestLabelHeight)
       const labelRefs = [leftLabelRef, midLabelRef, rightLabelRef];
       const labelsHeightArray = labelRefs
         .map(ref => (ref && ref.current ? ref.current.offsetHeight : null))
         .filter(height => height !== null);
 
-    const longestLabelHeight = labelsHeightArray.reduce((a, b) => Math.max(a, b), -Infinity);
+    const longestlabelheight = labelsHeightArray.reduce((a, b) => Math.max(a, b), -Infinity);
 
-    setLongestLabelHeight(longestLabelHeight);
-    // }
+    setlongestlabelheight(longestlabelheight);
   },[QuestionInfo , leftLabelRef.current , midLabelRef.current , rightLabelRef.current])
   const RangeAnswerHandler = (RangeNumber) => {
     setRangeAnswerValue(RangeNumber)
@@ -57,7 +41,7 @@ export const RangeQuestionComponent = ({ QuestionInfo }) => {
     }
   }
   return (
-    <RangeQuestion longestLabelHeight={longestLabelHeight}>
+    <RangeQuestion longestlabelheight={longestlabelheight}>
   <RangeQuestionContainer >
         {Array.from({ length : (QuestionInfo.max) }).map((_,index) => 
         <>
@@ -82,20 +66,6 @@ export const RangeQuestionComponent = ({ QuestionInfo }) => {
         
           )}
       </RangeQuestionContainer>
-      {/* <RangeQuestionLabelContainer>
-
-      { (QuestionInfo.min_label || QuestionInfo.max_label || QuestionInfo.mid_label) && <>
-      <QuestionRangeLabel>
-         {QuestionInfo.min_label && <RangeLabelText>{QuestionInfo.min_label}</RangeLabelText>}
-      </QuestionRangeLabel> 
-     <QuestionRangeLabel>
-      {QuestionInfo.mid_label && QuestionInfo.max % 2 == 0 && <RangeLabelText>{QuestionInfo.mid_label}</RangeLabelText>}
-      </QuestionRangeLabel> 
-       <QuestionRangeLabel>
-        {QuestionInfo.max_label && <RangeLabelText>{QuestionInfo.max_label}</RangeLabelText>}
-      </QuestionRangeLabel> 
-      </>}
-      </RangeQuestionLabelContainer> */}
     </RangeQuestion>
     
   )

@@ -5,10 +5,12 @@ import { ChangeToggleHandler , ChangeMinOrMaxAnswerHandler, OptionAdder, OptionR
 import { Checkbox, Input, InputNumber, Switch } from 'antd';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
+import { useRef } from 'react';
 
 const SettingMultipleAnswer = ({QuestionInfo}) => {
     const OcurredError = useSelector(state => state.reducer.Error);
     const [ inputError , setInputError ] = useState(null);
+    const LimitContainerRef = useRef(null);
     const RandomIdGenerator = () => {
         let ID = Date.now();
         QuestionInfo.options.forEach(item => {
@@ -21,7 +23,10 @@ const SettingMultipleAnswer = ({QuestionInfo}) => {
         if(OcurredError)
         {
             if(OcurredError.min_selected_options || OcurredError.max_selected_options)
-                setInputError('active')
+            {
+                setInputError('active');
+                LimitContainerRef.current?.scrollIntoView({ behavior : 'smooth' })
+            }
             else
                 setInputError(null)
         }
@@ -77,7 +82,7 @@ const SettingMultipleAnswer = ({QuestionInfo}) => {
             <p>سوال چند انتخابی باشد</p>
             <Switch checked={QuestionInfo.multiple_choice} />
         </div>
-       { MultipleAnswerState ? <AlphabetNumberContainer inputerror={inputError}>
+       { MultipleAnswerState ? <AlphabetNumberContainer inputerror={inputError} ref={LimitContainerRef}>
           <p>تعداد گزینه های قابل انتخاب</p>
           <label>
               <InputNumber value={QuestionInfo.min_selected_options} min={1} onChange={(e) => ChangeMinMaxHandler(e,'min_selected_options')}/>

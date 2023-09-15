@@ -120,10 +120,10 @@ const ViewQuestions = ({ answerSetID }) => {
     try
     {
       if(FileQuestionQuestions && FileQuestionQuestions.length)
-      await axios.post(baseURL + `/question-api/questionnaires/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,AnswerSetFormDataConverter(FileQuestionQuestions),{
+      await axios.post(baseURL + `question-api/questionnaires/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,AnswerSetFormDataConverter(FileQuestionQuestions),{
         'Content-Type' : 'multipart/form-data'
       })
-    await axios.post(baseURL + `/question-api/questionnaires/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,
+    await axios.post(baseURL + `question-api/questionnaires/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,
     QuestionsAnswerSet)
     SetCurrentIndex('Thanks')
   }

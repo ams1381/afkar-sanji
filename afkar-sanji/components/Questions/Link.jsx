@@ -14,7 +14,7 @@ export const Link = ({ QuestionInfo }) => {
     {
       setLinkAnswer(QuestionsAnswerSet.find(item => item.question == QuestionInfo.id).answer?.Link)
     }
-  },[])
+  },[QuestionInfo.id])
   const LinkAnswerHandler = (Value) => {
     setLinkAnswer(Value.target.value)
     if(QuestionsAnswerSet && QuestionsAnswerSet.length)

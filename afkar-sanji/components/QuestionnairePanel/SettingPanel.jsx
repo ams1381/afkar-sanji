@@ -1,26 +1,23 @@
 import React, { useEffect, useReducer, useRef, useState } from 'react';
 import { ConfigProvider, Space, message } from 'antd';
-import { Button, TimePicker } from 'antd';
-import { DatePicker as DatePickerJalali, Calendar, JalaliLocaleListener } from "antd-jalali";
+import { Button } from 'antd';
 import dayjs from 'dayjs';
 import { Switch, Checkbox } from 'antd';
 import fa_IR from "antd/lib/locale/fa_IR";
-import { QuestionnaireDatePickerContainer, QuestionnaireSettingContainer } from '@/styles/questionnairePanel/QuestionnaireSetting';
+import { QuestionnaireDatePickerContainer, QuestionnaireSettingContainer , TimePickerContainer
+ } from '@/styles/questionnairePanel/QuestionnaireSetting';
 import { Icon } from '@/styles/icons';
 import { axiosInstance } from '@/utilities/axios';
 import jalaali from 'jalaali-js';
-// import jalali from 'dayjs/plugin/jalali';
-import PN from 'persian-number';
-import { DatePickerInput } from '@/styles/questionnairePanel/QuestionSetting';
-import moment from 'moment-jalaali';
 import { NumberFormat } from 'react-hichestan-numberinput';
-import locale from 'antd/lib/date-picker/locale/fa_IR';
-import { digitsEnToFa } from '@persian-tools/persian-tools';
+import TimePicker from "react-multi-date-picker/plugins/time_picker";
+import transition from "react-element-popper/animations/transition"
+import { digitsEnToFa, digitsFaToEn } from '@persian-tools/persian-tools';
+import DatePicker from 'react-multi-date-picker';
+import persian from "react-date-object/calendars/persian"
+import persian_fa from "react-date-object/locales/persian_fa"
+import moment from 'moment-jalaali';
 
-moment.loadPersian({
-  usePersianDigits: true, // Set Persian numbers
-});
-moment.locale('fa')
 export const convertStringToDate = str => {
   const [datePart, timezonePart] = str.split(/[T+]/);
   const [timezoneHours, timezoneMinutes] = timezonePart.split(":").map(Number);
@@ -48,13 +45,23 @@ const SettingPanel = ({ Questionnaire }) => {
   const [SettingLoading, SetSettingLoading] = useState(false);
   const [ErrorType, SetErrorType] = useState(null);
   const [TimerValue, setTimerValue] = useState(Questionnaire.timer);
-  let defaultDatePickerValue = [
-    dayjs(convertDate(convertStringToDate(Questionnaire.pub_date)[0], 'jalali') + ' ' + convertStringToDate(Questionnaire.pub_date)[1])
-  ]
-  QuestionnaireData.end_date ?
-    defaultDatePickerValue.push(dayjs(convertDate(convertStringToDate(QuestionnaireData.end_date)[0], 'jalali') + ' ' +
-      convertStringToDate(QuestionnaireData.end_date)[1]))
-    : ''
+  let end_date;
+  let pub_date;
+  const [ DatePickerValue , setDatePickerValue ] = useState(null);
+  // useEffect(() => {
+    if(QuestionnaireData.pub_date)
+       pub_date = digitsEnToFa((convertDate(convertStringToDate(QuestionnaireData.pub_date)[0], 'jalali'))) +
+    ' ' + digitsEnToFa(convertStringToDate(QuestionnaireData.pub_date)[1])
+    let date_picker = pub_date;
+    // setDatePickerValue(pub_date)
+    if(QuestionnaireData.end_date)
+    {
+     end_date = digitsEnToFa((convertDate(convertStringToDate(QuestionnaireData.end_date)[0], 'jalali'))) +
+     ' ' + digitsEnToFa(convertStringToDate(QuestionnaireData.end_date)[1]);
+ 
+     date_picker += ' ~ ' + end_date;
+    }
+ 
   const DateToggleHandler = (E) => {
     SetDateActive(E);
     if (!E)
@@ -67,23 +74,32 @@ const SettingPanel = ({ Questionnaire }) => {
       Dispatcher({ ACTION: 'Timer Cleared' });
     SetSettingChanged(true)
   }
-  const DateChangeHandler = (_, NewDate) => {
+  const DateChangeHandler = (ali, NewDate) => {
     SetErrorType(null)
-    if (!NewDate[0] && !NewDate[1])
-      Dispatcher({ ACTION: 'Timer Cleared' });
-    else {
-      if (NewDate[0])
-        Dispatcher({ ACTION: 'Pub date set', NewDate: convertToISOString(convertDate(NewDate[0].split(' ')[0], 'gregorian'), NewDate[0].split(' ')[1]) });
-      if (NewDate[1])
-        Dispatcher({ ACTION: 'End date set', NewDate: convertToISOString(convertDate(NewDate[1].split(' ')[0], 'gregorian'), NewDate[1].split(' ')[1]) });
+    console.log(NewDate)
+    if(NewDate.validatedValue && NewDate.validatedValue.length == 1)
+    {
+      pub_date = NewDate.validatedValue[0];
+      Dispatcher({ 
+        ACTION : 'Pub date set' , NewDate : convertPersianDateTimeToISO(NewDate.validatedValue[0])
+      })
+      Dispatcher({ 
+        ACTION : 'End date set' , NewDate : null
+      })
+    }
+    else if(NewDate.validatedValue && NewDate.validatedValue.length == 2)
+    {
+      end_date = NewDate.validatedValue[1];
+      Dispatcher({ 
+        ACTION : 'End date set' , NewDate : convertPersianDateTimeToISO(NewDate.validatedValue[1])
+      })
     }
     SetSettingChanged(true)
   }
 
   const TimerChangeHandler = (_, Timer) => {
-    console.log(Timer)
-    setTimerValue(Timer)
-    Dispatcher({ ACTION: 'Timer Change', NewTimer: Timer });
+    setTimerValue(digitsFaToEn(Timer.validatedValue[0]))
+    Dispatcher({ ACTION: 'Timer Change', NewTimer: digitsFaToEn(Timer.validatedValue[0]) });
     SetSettingChanged(true)
   }
   const ToggleCheckBoxHandler = (e, ToggleName) => {
@@ -102,6 +118,8 @@ const SettingPanel = ({ Questionnaire }) => {
       return
     SetSettingLoading(true)
     try {
+      if(!QuestionnaireData.pub_date)
+        delete QuestionnaireData.pub_date;
       delete QuestionnaireData.folder
       delete QuestionnaireData.welcome_page;
       delete QuestionnaireData.questions;
@@ -136,24 +154,58 @@ const SettingPanel = ({ Questionnaire }) => {
             <p>: فعال سازی دستی </p>
             <Switch checked={DateActive} />
           </div>
-          <div className='picker_container date_picker'>
-            <DatePickerJalali.RangePicker showTime status={ErrorType == 'date_error' ? 'error' : null}
-              locale={fa_IR.DatePicker}
-              inputReadOnly 
+          <div className='picker_container date_picker' >
+            <DatePicker  format="YYYY-MM-DD HH:mm:ss"
+            animations={[transition()]}
               disabled={!DateActive}
-              defaultValue={defaultDatePickerValue}
-              onChange={DateChangeHandler} />
-            <JalaliLocaleListener />
+              render={(value, openCalendar) => {
+                return (
+                  <TimePickerContainer Error={ErrorType == 'date_error' ? 'active' : false} active={DateActive ? 'active' : null}>
+                    <input value={date_picker} onClick={openCalendar}  placeholder='انتخاب تاریخ' />
+                    <Icon name='Calender' />
+                  </TimePickerContainer>
+                )}}
+              range
+              plugins={[
+                <TimePicker position="bottom" />
+              ]} 
+              
+              onChange={DateChangeHandler}
+              calendar={persian}
+              calendarPosition="bottom-left"
+              locale={persian_fa}
+            />
           </div>
         </QuestionnaireDatePickerContainer>
-        <QuestionnaireDatePickerContainer>
+        <QuestionnaireDatePickerContainer active={TimerActive ? 'active' : null}>
           <div className='picker_header time_picker' onClick={() => TimerToggleHandler(!TimerActive)}>
             <p>: تنظیم مهلت پاسخ دهی </p>
             <Switch checked={TimerActive} />
           </div>
-          <div className='picker_container time_picker'>
-        
-              <TimePicker
+          <div className='picker_container time_picker' >
+          <DatePicker 
+            disableDayPicker
+            format="HH:mm:ss"   
+            
+            onChange={TimerChangeHandler}
+            render={(value, openCalendar) => {
+                let timerValue = value && value.length ? value : QuestionnaireData.timer ? digitsEnToFa(QuestionnaireData.timer) : null
+              return (
+                <TimePickerContainer active={TimerActive ? 'active' : null} onClick={e => TimerActive ?  openCalendar() : e.preventDefault()}>
+                  <input value={timerValue}
+                   placeholder='تنظیم زمان' 
+                    />
+                  <Icon name='time' />
+                </TimePickerContainer>
+              )}}
+            plugins={[
+              <TimePicker />
+            ]} 
+            calendar={persian}
+            locale={persian_fa}
+            calendarPosition="bottom-right"
+          />
+              {/* <TimePicker
                 open={TimerOpen}
                 onOpenChange={setTimerOpen}
                 onChange={TimerChangeHandler}
@@ -168,7 +220,7 @@ const SettingPanel = ({ Questionnaire }) => {
                      // Set Jalali locale for moment
                     : null
                 } 
-                />
+                /> */}
     
           </div>
         </QuestionnaireDatePickerContainer>
@@ -269,19 +321,13 @@ const QuestionnaireReducerFunction = (State,ACTION) => {
       
   }
 }
-function toPersianDigits(input) {
-  const digitsMap = {
-    '0': '۰',
-    '1': '۱',
-    '2': '۲',
-    '3': '۳',
-    '4': '۴',
-    '5': '۵',
-    '6': '۶',
-    '7': '۷',
-    '8': '۸',
-    '9': '۹',
-  };
-  console.log(input)
-  // return input.replace(/[0-9]/g, (match) => digitsMap[match]);
+
+function convertPersianDateTimeToISO(persianDateTime) {
+  // Replace Persian numerals with English numerals
+  const englishDateTime = persianDateTime.replace(/[۰-۹]/g, (d) => String.fromCharCode(d.charCodeAt(0) - '۰'.charCodeAt(0) + '0'.charCodeAt(0)));
+
+  // Parse the Persian date and time using jalali-moment
+  const gregorianDateTime = moment(englishDateTime, 'jYYYY/jMM/jDD HH:mm:ss').locale('en').format('YYYY-MM-DDTHH:mm:ss');
+
+  return `${gregorianDateTime}+04:30`;
 }

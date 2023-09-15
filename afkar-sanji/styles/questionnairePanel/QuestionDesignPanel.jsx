@@ -28,6 +28,10 @@ export const QuestionSearchContainer = styled.div`
         font-family : IRANSans;
         border : none !important;
     }
+    & .ant-select-selection-search-input
+    {
+        width : 90% !important;
+    }
     & .ant-select-selector 
     {
         height : 100% !important;
@@ -233,7 +237,7 @@ export const LoadingQuestionItem = styled(QuestionDesignItem)`
 export const QuestionItemRow = styled.div`
     width: 100%;
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
     flex-direction: row-reverse;
     align-items: flex-start;
     max-height : ${p => (p.isopen != null && p.maxheight && p.maxheight > 200) ? p.maxheight + 10 + 'px'  : 'fit-content'};
@@ -244,8 +248,17 @@ export const QuestionItemRow = styled.div`
     & .question_preview
     {
         width : 50%;
+        position: fixed;
+        width: 44%;
+        left: 6%;
+        max-height: 492px;
+        overflow: scroll;
+        top: 269px;
     }
-   
+    & .question_preview::-webkit-scrollbar
+    {
+        width : 0;
+    }
     @media screen and (max-width : 768px)
     {
         max-height : fit-content !important;
@@ -257,6 +270,7 @@ export const QuestionItemRow = styled.div`
         & .question_preview
         {
             display : none;
+            position : unset;
         }
         & .design_container
         {

@@ -19,9 +19,14 @@ const DropDown = ({ QuestionInfo }) => {
     }
   },[])
   const DropDownAnswerHandler = (values) => {
-    const maxSelected = QuestionInfo.max_selected_answer || 1;
+    let maxSelected;
+    if(QuestionInfo.max_selected_options && QuestionInfo.max_selected_options > 1)
+      maxSelected = QuestionInfo.max_selected_options;
+    else
+      maxSelected = 1
+
     let selectedOptions;
-    console.log(!Array.isArray(values) && typeof values == 'string' , values)
+    console.log(!Array.isArray(values) && typeof values == 'string' , values , maxSelected)
     if (Array.isArray(values) && values.length <= maxSelected) {
       setSelectedValues(values);
       selectedOptions = values.map(value => {

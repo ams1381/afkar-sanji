@@ -16,6 +16,10 @@ import { initialQuestionsSetter } from '@/utilities/QuestionStore';
 import { useSelector } from 'react-redux';
 import { DragDropContext , Droppable , Draggable } from '@hello-pangea/dnd';
 import { NestedDndItem } from './nestedDndItem';
+import { DndContext, DragOverlay, useDroppable } from '@dnd-kit/core';
+import { SortableContext } from '@dnd-kit/sortable';
+import QuestionDraggable from './DND/Draggable';
+import { handleDragStart , handleDragEnd } from './DND/DNDHandler';
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -29,7 +33,7 @@ export const getListStyle = (isDraggingOver) => ({
 });
 export const ReorderPoster = async (UUID,reOrderedArray) => {
   axiosInstance.defaults.headers['Content-Type'] = 'application/json';
-  try
+  try 
      {
       await axiosInstance.post(`/question-api/questionnaires/${UUID}/change-questions-placements/`,{
         'placements' : reOrderedArray
@@ -45,12 +49,15 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
   const [ SearchResult , SetSearchResult ] = useState([]);
   const [ QuestionToPreview , SetQuestionToPreview ] = useState(null);
   const [ QuestionsReload , SetQuestionsReloaded ] = useState(false);
-  const [ActiveQuestionId, setActiveQuestionId] = useState(null);
+  const [ActiveQuestion, setActiveQuestion] = useState(null);
   const [ SavedMessage , contextHolder] = message.useMessage();
+  const dndContainer = useRef();
   const regex = /(<([^>]+)>)/gi;
-  const  AllQuestion = useSelector(s => s.reducer.data)
-  const NonQuestions = useSelector(s => s.reducer.nonQuestionData)
-  
+  const  AllQuestion = useSelector(s => s.reducer.data);
+  const NonQuestions = useSelector(s => s.reducer.nonQuestionData);
+   const { setNodeRef, isOver } = useDroppable({
+    id: 'question-list-droppable',
+  });
   useEffect(() => {
     if(Questionnaire)
     {
@@ -73,11 +80,16 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
         id : item.question.id
       }) : '')
       search_array.forEach((item,index) => !item ? search_array.splice(index,1)  : '')
+      
       SetSearchResult(search_array)
      }
   }
   const SearchSelectHandler = (QuestionID) => {
-    setActiveQuestionId(QuestionID);
+    let SelectedQuestion = AllQuestion.find(item => item && item.question && item.question.id == QuestionID);
+    setActiveQuestion({ 
+      'QuestionID' : SelectedQuestion.question.id ,
+       'QuestionType' : SelectedQuestion.question.question_type }
+      );
      document.querySelector(`.QuestionItem${QuestionID}`)?.scrollIntoView({ behavior : 'smooth' });
   }
   const onDragEnd = async (result) =>  {
@@ -94,11 +106,13 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
     QuestionDataDispatcher(QuestionReorder({ newPlacementArray : reorderedItems }))
     QuestionDataDispatcher(QuestionSorter())
     let reOrderedArray =  reorderedItems.map((item,index) => { 
-      if(item.question)
+      if(item.question && !item.question.newFace)
         return { question_id : item.question.id , new_placement : index + 1}
      })
-     
-     reOrderedArray.forEach((item,index) => !item ? reOrderedArray.splice(index,1) : '')
+    //  console.log(reOrderedArray)
+     reOrderedArray.forEach((item,index) => !item  ? reOrderedArray.splice(index,1) : '');
+     if(reOrderedArray.includes(undefined) || reOrderedArray.includes(null))
+        return
     try 
     {
       await ReorderPoster(Questionnaire.uuid,reOrderedArray)
@@ -120,20 +134,29 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
   };
   const AddWelcomeHandler = () => {
     let welcomeID = Date.now();
-    QuestionDataDispatcher(AddWelcome({ QuestionnaireID : Questionnaire.uuid , WelcomeID : welcomeID }));
+    QuestionDataDispatcher(AddWelcome({ QuestionnaireID : Questionnaire.id , WelcomeID : welcomeID }));
 
-    setActiveQuestionId(welcomeID)
+    setActiveQuestionId({
+       'QuestionID' : welcomeID ,
+       'QuestionType' : 'welcome_page'
+      })
   }
   const AddThanksHandler = () => {
     let ThanksID = Date.now();
-    QuestionDataDispatcher(AddThanks({ QuestionnaireID : Questionnaire.uuid , ThanksID : ThanksID }));
+    QuestionDataDispatcher(AddThanks({ QuestionnaireID : Questionnaire.id , ThanksID : ThanksID }));
 
-    setActiveQuestionId(ThanksID)
+    setActiveQuestion({
+       'QuestionID' : ThanksID ,
+       'QuestionType' : 'thanks_page'
+      })
   }
   const AddFirstQuestion = () => {
     let FirstQuestionID = Date.now();
     QuestionDataDispatcher(AddQuestion({AddedQuestionID : FirstQuestionID }))
-    setActiveQuestionId(FirstQuestionID)
+    setActiveQuestion({
+       'QuestionID' : FirstQuestionID ,
+       'QuestionType' : AllQuestion.find(item => item && item.question && item.question.id == FirstQuestionID).question.question_type
+      })
   }
   return (
     <QuestionnairePanelBodyContainer>
@@ -170,8 +193,8 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                 <QuestionItem 
                 IsQuestion={false}
                 UUID={Questionnaire.uuid}
-                activeQuestionId={ActiveQuestionId}
-                setActiveQuestion={setActiveQuestionId}
+                ActiveQuestion={ActiveQuestion}
+                setActiveQuestion={setActiveQuestion}
                 question={NonQuestions[0]}/> :
                  <AddNonQuestionItem onClick={AddWelcomeHandler}  >
                   <p>افزودن خوش آمد گویی</p>
@@ -189,50 +212,49 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                   </QuestionItemSurface>
               </LoadingQuestionItem>}
                 { Questionnaire ? AllQuestion.length ?
-                <NestedDndItem  ListToRender={AllQuestion} Questionnaire={Questionnaire} onDrag={onDragEnd}
-                 ActiveQuestionId={ActiveQuestionId}
-                 setActiveQuestionId={setActiveQuestionId} />
-                // <DragDropContext onDragEnd={onDragEnd} >
-                //   <Droppable droppableId='dropboard'>
-                //   {(provided, snapshot) => <div  
-                //     ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
-                //     {AllQuestion.map((item,index) => 
-                //     ( item.question)? 
-                //       <Draggable
-                //       key={item.question.id}
-                //       draggableId={item.question.id.toString()}
-                //       index={index}>
-                //       {(provided, snapshot) => (
-                //         <div ref={provided.innerRef} {...provided.draggableProps}>
-                //           <QuestionItem
-                //             IsQuestion={true}
-                //             UUID={Questionnaire.uuid}
-                //             key={item.question.id}
-                //             question={item}
-                //             provided={provided}
-                //             activeQuestionId={ActiveQuestionId}
-                //             setActiveQuestion={setActiveQuestionId}
-                //             dropboardprovide={provided}/>         
-                //         </div>
-                //       )}
-                //     </Draggable> : null)}
-                //   {provided.placeholder}
-                //   </div>  } 
-                //   </Droppable>
-                // </DragDropContext>
+                // <NestedDndItem  ListToRender={AllQuestion} Questionnaire={Questionnaire} onDrag={onDragEnd}
+                //  ActiveQuestionId={ActiveQuestionId}
+                //  setActiveQuestion={setActiveQuestion} />                 
+                <DragDropContext onDragEnd={onDragEnd} >
+                  <Droppable droppableId='dropboard'>
+                  {(provided, snapshot) => <div  
+                    ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
+                    {AllQuestion.map((item,index) => 
+                    ( item.question)? 
+                      <Draggable
+                      key={item.question.id}
+                      draggableId={item.question.id.toString()}
+                      index={index}>
+                      {(provided, snapshot) => (
+                        <div ref={provided.innerRef} {...provided.draggableProps}>
+                          <QuestionItem
+                            IsQuestion={true}
+                            UUID={Questionnaire.uuid}
+                            key={item.question.id}
+                            question={item}
+                            provided={provided}
+                            QuestionsList={AllQuestion}
+                            ActiveQuestion={ActiveQuestion}
+                            setActiveQuestion={setActiveQuestion}
+                            dropboardprovide={provided}/>         
+                        </div>
+                      )}
+                    </Draggable> : null)}
+                  {provided.placeholder}
+                  </div>  } 
+                  </Droppable>
+                </DragDropContext>
                 :  <AddNonQuestionItem style={{ marginTop : 10 }} addquestion='true' onClick={AddFirstQuestion}>
                   <svg width="17" height="16" viewBox="0 0 17 16" xmlns="http://www.w3.org/2000/svg">
                   <path d="M16.5 8C16.5 12.4183 12.9183 16 8.5 16C4.08172 16 0.5 12.4183 0.5 8C0.5 3.58172 4.08172 0 8.5 0C12.9183 0 16.5 3.58172 16.5 8ZM4.5 8C4.5 8.27614 4.72386 8.5 5 8.5H8V11.5C8 11.7761 8.22386 12 8.5 12C8.77614 12 9 11.7761 9 11.5V8.5H12C12.2761 8.5 12.5 8.27614 12.5 8C12.5 7.72386 12.2761 7.5 12 7.5H9V4.5C9 4.22386 8.77614 4 8.5 4C8.22386 4 8 4.22386 8 4.5V7.5H5C4.72386 7.5 4.5 7.72386 4.5 8Z"/>
                   </svg>
                 <p>برای افزودن اولین سوال کلیک کنید</p>
-                
-
                 </AddNonQuestionItem> : ''}
                 {(Questionnaire && NonQuestions.length ) ?
                  (NonQuestions[1] && NonQuestions[1].question) ? 
                  <QuestionItem 
-                  activeQuestionId={ActiveQuestionId}
-                  setActiveQuestion={setActiveQuestionId}
+                  ActiveQuestion={ActiveQuestion}
+                  setActiveQuestion={setActiveQuestion}
                   IsQuestion={false} 
                   UUID={Questionnaire.uuid} 
                   question={NonQuestions[1]} /> :
@@ -281,7 +303,7 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                  </>
                   }
                   </div> : <></>}
-                  { !ActiveQuestionId && Questionnaire && <div className='QuestionDesignLeftContainer' >
+                  { !ActiveQuestion && Questionnaire && <div className='QuestionDesignLeftContainer' >
                        <p>جهت ویرایش یک از سوالات را از قسمت سمت‌راست انتخاب کنید</p>
                    </div> }
         

@@ -61,6 +61,10 @@ html::-webkit-scrollbar-thumb
 {
   padding: 0 !important;
 }
+.rmdp-range
+{
+  background-color: var(--primary-color) !important;
+}
 .type_selector .ant-select-dropdown
 {
   width: 400px !important;

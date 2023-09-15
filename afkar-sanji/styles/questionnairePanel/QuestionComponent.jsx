@@ -252,7 +252,7 @@ export const EmailInputContainer = styled.div`
 export const RangeQuestion = styled.div`
     // width: 50%;
     margin: 20px auto;
-    margin-bottom: ${p => p.longestLabelHeight ? p.longestLabelHeight + 30 + 'px' : '0'};
+    margin-bottom: ${p => p.longestlabelheight ? p.longestlabelheight + 30 + 'px' : '0'};
 
     @media screen and (max-width : 480px)
     {

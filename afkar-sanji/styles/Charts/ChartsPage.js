@@ -2,7 +2,6 @@ import { styled } from "styled-components";
 
 export const TopBar = styled.div`
     display: flex;
-    height: 34px;
     flex-direction: row-reverse;
     margin-top: 24px;
     gap : 14px;
@@ -10,6 +9,7 @@ export const TopBar = styled.div`
     @media screen and (max-width : 768px)
     {
         flex-wrap : wrap-reverse;
+        justify-content : center;
         height : auto !important;
     }
 `
@@ -18,14 +18,25 @@ export const TopBarChartSelectorContainer = styled.div`
     display: flex;
     flex-direction: row-reverse;
     justify-content: space-around;
-    background: white;
+    background: ${p => p.loading ? 'none' : 'white'};
     padding: 2px;
+    height: 42px;
+    align-items: center;
+    border-radius: 2px;
 
+    & .ant-skeleton.ant-skeleton-element
+    {
+        width: 74px !important;
+    }
+    & .ant-skeleton-input
+    {
+        min-width : 75px !important;
+    }
     @media screen and (max-width : 768px)
     {
         width : 100%;
-        flex-wrap : wrap;
-        background : none;
+        // flex-wrap : wrap;
+        // background : none;
         
     }
 `
@@ -34,10 +45,12 @@ export const TopBarButtonsContainer = styled.div`
     width: 50%;
     gap: 13px;
     justify-content: space-between;
-
+    align-items: center;
+   
     & button 
     {
         box-shadow : none !important;
+        height: 42px;
     }
     & a 
     {
@@ -46,6 +59,8 @@ export const TopBarButtonsContainer = styled.div`
     .download_charts_btn
     {
         gap: 10px;
+        padding: 4px 15px;
+        height: 42px;
     }
     .download_charts_btn i 
     {
@@ -77,7 +92,7 @@ export const ChartSelectItem = styled.div`
     @media screen and (max-width : 768px)
     {
   
-        padding: 7px 8px;
+        // padding: 7px 8px;
         
     }
 `
@@ -107,10 +122,18 @@ export const  SortPopoverContainer = styled.div`
 `
 export const QuestionChartContainer = styled.div`
     border-radius: var(--radius-XS, 2px);
-    border: 1px solid var(--Outline-variant, #CCC);
-    background: var(--Surface, #FEFEFE);
+    border: ${p => p.loading ? 'none' : '1px solid var(--Outline-variant, #CCC)'};
+    background: ${p => p.loading ? '#E7E7E7' :  'var(--Surface, #FEFEFE)'};
     padding : 12px;
-    margin-top: 24px;
+
+    // @media screen and (max-width : 480px)
+    // {
+    //    & canvas
+    //    {
+    //     max-width: 60%;
+    //     object-fit: contain;
+    //    } 
+    // }
 `
 export const QuestionChartContainerHeader = styled.div`
     display: flex;
@@ -122,6 +145,11 @@ export const QuestionChartContainerHeader = styled.div`
     border-bottom: 1px solid #0000000F;
     padding-bottom: 10px;
 
+    & .question_chart_buttons .ant-skeleton-button
+    {
+        min-width : 50px !important;
+        width : 65px !important;
+    }
     .question_chart_title
     {
         width: 90%;
@@ -131,6 +159,7 @@ export const QuestionChartContainerHeader = styled.div`
         align-items: center;
         flex-direction: row-reverse;
         gap: 8px;
+        padding: 5px 12px;
     }
     .question_chart_title i {
         width: 14px;
@@ -141,16 +170,84 @@ export const QuestionChartContainerHeader = styled.div`
         display: flex;
         gap: 12px;
         align-items: center;
+        justify-content: space-between;
+        width: 120px;
     }
     .question_chart_buttons button {
         background: none;
         cursor: pointer;
         border: none;
+        width: 34px;
+        height: 23px;
+        display: flex;
+        justify-content: center;
         outline: none;
     }
     .question_chart_buttons button i {
-        width: 20px;
-        height: 20px;
+        width: 22px;
+        height: 22px;
+        filter: invert(31%) sepia(0%) saturate(0%) hue-rotate(183deg) brightness(93%) contrast(83%);
     }
+    .ExportChart i 
+    {
+        transform : rotate(180deg);
+    }
+}
+`
+export const QuestionChartBodyContainer = styled.div`
+    margin-top: 24px;
+    max-height: 600px;
+    gap: 24px;
+    flex-direction: column;
+    display: flex;
+    overflow: scroll;
+
+    & canvas 
+    {
+        margin : 24px auto;
+    }
+    &::-webkit-scrollbar
+    {
+        width : 0;
+    }
+`
+export const TableChart = styled.table`
+    table-layout: fixed;
+    margin: 24px auto;
+    color: var(--character-title-85, rgba(0, 0, 0, 0.85));
+    direction: rtl;
+    border-spacing: 0;
+    font-size: 14px;
+
+    & tr td 
+    {
+        padding: 16px;
+        border-bottom: 1px solid var(--conditional-divider, rgba(0, 0, 0, 0.06));
+        text-align: center;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: pre;
+        max-width: 163px;
+    }
+    @media screen and (max-width : 768px)
+    {
+        width : 100%;
+    }
+`
+export const TableHeadData = styled.td`
+&::before
+{
+    content: '';
+    width: 1px;
+    position: absolute;
+    height: 22px;
+    display: ${p => p.hasdivider ? 'block' : 'none'};
+    background: rgba(0, 0, 0, 0.06);
+    left: 0;
+}
+& 
+{
+    background: var(--neutral-2, #FAFAFA);
+    position : relative;
 }
 `
