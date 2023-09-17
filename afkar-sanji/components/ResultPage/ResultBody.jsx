@@ -374,11 +374,19 @@ const ResultSearchHandler = async (e) => {
            { (ResultData?.length && rows?.length) ?  <Table 
               columns={columns}
               dataSource={rows}
+              
               ref={tableRef}
               sticky
               bordered
               direction='ltr'
-              pagination={false}
+              pagination={{
+                total : 15,
+                defaultCurrent : 7,
+                defaultPageSize : 4,
+                onShowSizeChange : (asaf) => {
+                  console.log(asaf)
+                }
+              }}
               components={(fd) => console.log(fd)}
               rowSelection={{
                 onChange : (_,SelectedList) => {

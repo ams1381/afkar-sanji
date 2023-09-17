@@ -167,6 +167,7 @@ export const OptionalAnswerBlockContainer = styled.div`
         margin-right: 0.8rem;
         font-family: 'IRANSANS';
     }
+   
 `
 export const QuestionWithAnswerContainer = styled.div`
     position : relative;
@@ -346,14 +347,14 @@ export const RangeQuestionLabelContainer = styled.div`
 export const QuestionRangeLabel = styled.div`
     position: absolute;
     // width: 53px;
-    width: calc(1.6vw + 0.8rem);
+    width: calc(1.6vw + 0.99rem);
     text-align: center;
     padding-top: 1.5rem;
     top: 48px;
 
     @media screen and (max-width : 768px)
     {
-        width : 50px;
+        width: 69px;
     }
 `
 export const FileSizeContainer = styled.div`
@@ -504,4 +505,5 @@ export const NumberInputContainer = styled.div`
     {
         font-family: IRANSans;
     }
+    
 `

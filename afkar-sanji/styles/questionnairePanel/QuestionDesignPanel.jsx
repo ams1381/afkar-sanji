@@ -185,6 +185,13 @@ export const QuestionDesignBox = styled.div`
             display : none;
         }
     }
+    @media screen and (max-width : 480px)
+    {
+        .QuestionDesignRightContainer
+        {
+            max-height: 495px;
+        }
+    }
     
 `
 export const QuestionDesignItem = styled.div`
@@ -600,6 +607,13 @@ export const RangeLabelContainer = styled.div`
         border-radius: 2px;
         outline : none;
         direction : rtl;
+    }
+    @media screen and (max-width : 480px)
+    {
+        .ant-input
+        {
+            width : 86%;
+        }
     }
 `
 export const AddNonQuestionItem = styled.div`

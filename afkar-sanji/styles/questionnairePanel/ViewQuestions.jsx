@@ -9,6 +9,7 @@ export const PreviewPage = styled.div`
 export const ControlButtonsContainer = styled.div`
     display: flex;
     gap: 10px;
+    justify-content: center;
     width: 30%;
     margin: 1rem auto;
 
@@ -36,36 +37,102 @@ export const ControlButtonsContainer = styled.div`
 `
 export const AnimLight = styled.div`
     position : absolute;
+    z-index : -1;
 `
 export const AnimLightOne = styled(AnimLight)`
-    width :200px;
-    height : 100px;
-    background : red;
-    position : absolute;
+    width: 200px;
+    height: 100px;
+    background: #3E4ACB;
+    opacity: 0.5;
+    filter: blur(83px);
+    left: 65px;
+    position: absolute;
+    top: 30px;
+
+
+    animation : LightOneAnim 3s infinite;
+    animation-timing-function: ease-in-out;
+    animation-duration: 4800ms;
+    animation-delay: 100ms;
+    
+    @keyframes LightOneAnim 
+    {
+        0% { transform: translate(0, 0); }
+        25% { transform: translate(588px, 98px);  }
+        50% { transform: translate(342px, 305px);; }
+        75% { transform: translate(1082px, 421px); }
+        100% { transform: translate(0, 0); }
+    }
 `
 export const AnimLightTwo = styled(AnimLight)`
-    width :200px;
-    height : 100px;
-    background : blue;
-    position : absolute;
-    bottom : 0;
-    left : 0;
+    width: 200px;
+    height: 100px;
+    background: #87CCF2;
+    filter: blur(83px);
+    left: 50%;
+    top: 50%;
+    animation : LightTwoAnim 3s infinite;
+    animation-timing-function: ease-in-out;
+    animation-duration: 4800ms;
+    animation-delay: 100ms;
+
+    @keyframes LightTwoAnim 
+    {
+        0% { transform: translate(-50%, -50%); }
+        25% {     transform: translate(-456px, 131px);  }
+        50% {     transform: translate(241px, 162px); }
+        75% {     transform: translate(323px, -229px); }
+        100% {transform: translate(-50%, -50%); }
+    }
 `
 export const AnimLightThree = styled(AnimLight)`
-    width :200px;
-    height : 100px;
-    background : green;
+    width: 200px;
+    height: 100px;
+    background: #7982eb69;
+    filter: blur(83px);
     right : 0;
     position : absolute;
     top: 0;
+
+    animation : LightThreeAnim 3s infinite;
+    animation-timing-function: ease-in-out;
+    animation-duration: 4800ms;
+    animation-delay: 100ms;
+    
+    @keyframes LightThreeAnim 
+    {
+        0% { transform: translate(-32px, 50px); }
+        25% { transform: translate(-702px, 50px);  }
+        50% { transform: translate(-382px, 458px); }
+        75% {  transform: translate(-281px, 50px); }
+        100% { transform: translate(-51px, 50px); }
+    }
+    
 `
 export const AnimLightFour = styled(AnimLight)`
-    width :200px;
-    height : 100px;
-    position : absolute;
-    background : yellow;
-    right : 0;
-    bottom : 0;
+    width: 200px;
+    height: 100px;
+    background: #7982eb;
+    filter: blur(83px);
+    // right : 0;
+    opacity : 0.4;
+    // bottom : 0;
+
+    animation : LightFourAnim 3s infinite;
+    animation-timing-function: ease-in-out;
+    animation-duration: 3800ms;
+    animation-delay: 100ms;
+
+    @keyframes LightFourAnim 
+    {
+        0% { transform: translate(-38px, -181px); }
+        25% { transform: translate(-418px, -53px);  }
+        50% { transform: translate(-382px, 458px); }
+        75% { transform: translate(-1220px, -101px); }
+        100% { transform: translate(-1202px, -527px); }
+    }
+    // transform: translate(-38px, -181px);
+    
 `
 export const PreviewPageContainer = styled.div`
     width: 100%;
@@ -79,29 +146,29 @@ export const PreviewPageContainer = styled.div`
     {
         box-shadow : none;
     }
-    &::before , &::after 
-    {
-        width: 30%;
-        height: 401px;
-        position: absolute;
-        background: #A4ABFF;
-        content: '';
-        opacity: 50%;
-        filter: blur(142px);
-        border-radius: 50%;
-        z-index: -2;
-        animation-delay: 1s;
-    }
-    &::before 
-    {
-        left: 0;
-        top: 0;
-    }
-    &::after 
-    {
-        right: 0;
-        bottom: 0;
-    }
+    // &::before , &::after 
+    // {
+    //     width: 30%;
+    //     height: 401px;
+    //     position: absolute;
+    //     background: #A4ABFF;
+    //     content: '';
+    //     opacity: 50%;
+    //     filter: blur(142px);
+    //     border-radius: 50%;
+    //     z-index: -2;
+    //     animation-delay: 1s;
+    // }
+    // &::before 
+    // {
+    //     left: 0;
+    //     top: 0;
+    // }
+    // &::after 
+    // {
+    //     right: 0;
+    //     bottom: 0;
+    // }
      .swiper-slide
      {
         height: 100vh!important;

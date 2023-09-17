@@ -15,6 +15,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { useEffect } from 'react'
 import { useRef } from 'react'
 import html2canvas from 'html2canvas'
+// import { objectTraps } from 'immer/dist/internal'
 
 
 const exportChart = async (ChartID,ChartType) => {
@@ -119,28 +120,38 @@ export const QuestionChart = ({ PlotDetail , totalChartType , totalChartSort}) =
                 family : 'IRANSans'
             },
           //   callback: function(value, index, ticks) {
-          //     if(PlotDetail.question_type == 'optional')
-          //       return digitsEnToFa(PlotDetail.options[index]?.text?.replace(regex,""));
+          //     if(currentChartType != 'HorizontalBar')
+          //     {
+          //       if(PlotDetail.question_type == 'optional' ||
+          //       PlotDetail.question_type == 'drop_down')
+          //        return digitsEnToFa(PlotDetail.options[index]?.text?.replace(regex,""));
+          //      else 
+          //      {
+          //        let dataArray = objectToSparseArray(PlotDetail.counts , PlotDetail.max).map((item,index) => [ PlotDetail.min == 0 ? index : index + 1 , item ]);
+          //        let SortArray = currentSort == 'increase' ? Object.values(PlotDetail.counts).sort((a,b) => a - b) :
+          //          currentSort == 'decrease' ? Object.values(PlotDetail.counts).sort((a,b) => a - b).reverse() : ''
+                 
+          //        if(currentSort != 'default')
+          //          dataArray = dataArray.map(function(item) {
+          //            var n = SortArray.indexOf(item[1]);
+          //            SortArray[n] = '';
+          //            return [n, item]
+          //        }).sort().map(function(j) { return j[1] }).map(item => item[0])
+ 
+             
+          //        if(dataArray[index] && dataArray[index][0] && currentSort != 'default')
+          //          return digitsEnToFa(dataArray[index][0]?.toString())
+          //         else
+          //         return digitsEnToFa(value)
+          //      } 
+          //     }
           //     else
           //     {
-          //       let dataArray = objectToSparseArray(PlotDetail.counts , PlotDetail.max).map((item,index) => [ PlotDetail.min == 0 ? index : index + 1 , item ]);
-          //       let SortArray = currentSort == 'increase' ? Object.values(PlotDetail.counts).sort((a,b) => a - b) :
-          //         currentSort == 'decrease' ? Object.values(PlotDetail.counts).sort((a,b) => a - b).reverse() : ''
-                
-          //       if(currentSort != 'default')
-          //         dataArray = dataArray.map(function(item) {
-          //           var n = SortArray.indexOf(item[1]);
-          //           SortArray[n] = '';
-          //           return [n, item]
-          //       }).sort().map(function(j) { return j[1] }).map(item => item[0])
-
-          //       console.log(dataArray[index])
-          //       // if(dataArray[index])
-          //       //   return digitsEnToFa(dataArray[index][0])
-          //     } 
-          // }
-          //   callback: function(value, index, ticks) {
-          //     return digitsEnToFa(value);
+          //       return digitsEnToFa(value)
+            
+                  
+          //       //  return digitsEnToFa(Object.values(PlotDetail.counts)[index][0]);
+          //     }
           // }
           }
         } , 
@@ -153,7 +164,49 @@ export const QuestionChart = ({ PlotDetail , totalChartType , totalChartSort}) =
           },
           margin : 5,
           callback: function(value, index, ticks) {
-            return digitsEnToFa(value);
+            if(currentChartType != 'HorizontalBar')
+              return digitsEnToFa(value);
+            else
+            {
+              if(PlotDetail.question_type == 'optional' || PlotDetail.question_type == 'drop_down')
+              {
+                let dataArray = PlotDetail.options.map((item,index) => [ item?.text , Object.values(PlotDetail.counts)[index] ]);
+                 let SortArray = currentSort == 'increase' ? Object.values(PlotDetail.counts).sort((a,b) => a - b) :
+                   currentSort == 'decrease' ? Object.values(PlotDetail.counts).sort((a,b) => a - b).reverse() : ''
+                 
+                 if(currentSort != 'default')
+                   dataArray = dataArray.map(function(item) {
+                     var n = SortArray.indexOf(item[1]);
+                     SortArray[n] = '';
+                     return [n, item]
+                 }).sort().map(function(j) { return j[1] })
+
+
+               
+                 if(currentSort != 'default' && dataArray[index][0])
+                  return digitsEnToFa(dataArray[index][0]?.replace(regex,""))
+                else
+                  return digitsEnToFa(PlotDetail.options[index]?.text?.replace(regex,""))
+              }
+                 
+              else
+              {
+                let dataArray = objectToSparseArray(PlotDetail.counts , PlotDetail.max).map((item,index) => [ PlotDetail.min == 0 ? index : index + 1 , item ]);
+                 let SortArray = currentSort == 'increase' ? Object.values(PlotDetail.counts).sort((a,b) => a - b) :
+                   currentSort == 'decrease' ? Object.values(PlotDetail.counts).sort((a,b) => a - b).reverse() : ''
+                 
+                 if(currentSort != 'default')
+                   dataArray = dataArray.map(function(item) {
+                     var n = SortArray.indexOf(item[1]);
+                     SortArray[n] = '';
+                     return [n, item]
+                 }).sort().map(function(j) { return j[1] })
+ 
+                //  console.log(Array.isArray(dataArray[index]))
+                 if(dataArray[index] && dataArray[index][0])
+                   return digitsEnToFa(dataArray[index][0])
+              }
+            }
         }
           },
           title : {

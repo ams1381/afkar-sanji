@@ -148,10 +148,10 @@ const ViewQuestions = ({ answerSetID }) => {
     <Head>
       <title> Afkar Sanji | { answerSetID ? 'Answer Page' : 'Preview' }</title>
     </Head>
-    {/* <AnimLightOne />
+    <AnimLightOne />
       <AnimLightTwo />
       <AnimLightThree />
-      <AnimLightFour /> */}
+      <AnimLightFour />
     {messageContext}
     { QuestionnaireInfo ? <PreviewPage>
       
