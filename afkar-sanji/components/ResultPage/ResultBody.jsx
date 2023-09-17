@@ -5,7 +5,6 @@ import { Skeleton , Table , ConfigProvider, Upload, message, Tooltip, Button, Mo
 import fa_IR from "antd/lib/locale/fa_IR";
 import dayjs from 'dayjs';
 import React, { useEffect } from 'react'
-import { DatePicker as DatePickerJalali, JalaliLocaleListener } from "antd-jalali";
 import moment from 'moment-jalaali';
 import Link from 'next/link';
 import transition from "react-element-popper/animations/transition"
