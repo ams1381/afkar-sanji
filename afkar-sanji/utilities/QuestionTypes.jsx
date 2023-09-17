@@ -66,7 +66,7 @@ export const Question_types = [
         url_prefix : 'email-questions'
       },
       {
-        value: 'noanwser',
+        value: 'no_answer',
         label: QuestionTypeComponent('QWOut','متنی بدون پاسخ'),
         url_prefix : 'noanswer-questions'
       },
@@ -112,7 +112,7 @@ export const QuestionTypeComponentGenerator = (Type,ActiveType) => {
             return QuestionTypeComponent('QWAnswer','متنی با پاسخ',ActiveType);
         case 'group':
             return QuestionTypeComponent('GroupQuestion','سوال گروهی',ActiveType)
-        case 'noanwser':
+        case 'no_answer':
             return QuestionTypeComponent('QWOut','متنی بدون پاسخ',ActiveType);
         case 'thanks_page' : 
             return QuestionTypeComponent('Thanks','صفحه ی تشکر',ActiveType);
@@ -145,7 +145,7 @@ export const QuestionTypeIcon = (Type) => {
             return <Icon name='QWAnswer' />
         case 'group':
             return <Icon name='GroupQuestion' />
-        case 'noanwser':
+        case 'no_answer':
             return <Icon name='QWOut' />
   }
 }

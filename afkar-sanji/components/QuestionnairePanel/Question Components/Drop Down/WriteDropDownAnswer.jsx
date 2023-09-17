@@ -8,20 +8,20 @@ export const WriteDropDownAnswer = ({ QuestionInfo }) => {
   const Dispatcher = useDispatch();
   const RandomIdGenerator = () => {
    let ID = Math.floor(Math.random() * 100);
-   QuestionInfo.options.forEach(item => {
+   QuestionInfo.options?.forEach(item => {
     if(item.id == ID)
       return RandomIdGenerator();
    })
    return ID;
   }
   const QuestionRemover = (OptionItem) => {
-    if(QuestionInfo.options.length > 2)
+    if(QuestionInfo?.options?.length > 2)
       Dispatcher(OptionRemover({ QuestionID : QuestionInfo.id , OptionID : OptionItem.id}))
   }
   return (
     <OptionWritingContainer>
       <p>گزینه ها</p>
-      {QuestionInfo.options.map(item => <InputOptionsContainer key={item.id}>
+      {QuestionInfo.options?.map(item => <InputOptionsContainer key={item.id}>
         <OptionalInputItem type='text' autoFocus={item.newOption ? true : false} key={item.id} placeholder='چیزی بنویسید' 
         value={(item.text != 'null') ? item.text : ''}
          onChange={e => Dispatcher(OptionModifier({

@@ -38,7 +38,7 @@ export default function Home() {
   const [ ChangeFolderName , SetChangeFolderNameState ] = useState(false);
   const [ FolderName , SetFolderName ] = useState(null);
   const { data , isLoading, error , refetch } = useQuery(['FolderFetch'],async () => await axiosInstance.get('/user-api/folders/'))
- 
+
   useEffect(() => {
     let scroll_position = 0;
     let scroll_direction;
@@ -54,13 +54,18 @@ export default function Home() {
   },[])
  
   useEffect(() => {   
-    // const { getItem , setItem } = useLocalStorage();
-        if(data?.data[SelectedFolder])
-          SetFolderName(data?.data[SelectedFolder]?.name) 
-          else {
-            SelectFolder(0);
-            removeItem('SelectedFolder')
-          }  
+      if(getItem('SelectedFolder') && data?.data && data?.data[SelectedFolder])
+      {
+        SetFolderName(data?.data[getItem('SelectedFolder')]?.name) 
+        handleInputWidth(FolderNameInput,data?.data[getItem('SelectedFolder')]?.name)
+      }
+        
+      else {
+        SelectFolder(0);
+        SetFolderName(data?.data[0]?.name) 
+        handleInputWidth(FolderNameInput,data?.data[0]?.name)
+        removeItem('SelectedFolder')
+      }  
   },[data])
   useEffect(() => {
     if(data?.data && data?.data[SelectedFolder])
@@ -68,10 +73,19 @@ export default function Home() {
   },[data?.data , FolderNameInput , SelectedFolder])
 
   const folderNameChangeHandler = (e) => {
+
+    if(!e.target.value?.length && FolderNameInput.current)
+    {
+      handleInputWidth(FolderNameInput,'sdfs');
+      console.log()
+    }
+      
     handleInputWidth(FolderNameInput,FolderName);
     SetFolderName(e.target.value);
   }
   const folderRenameConfirm = async () => {
+    if(!FolderName)
+      return
     try 
     {
       await axiosInstance.patch(`/user-api/folders/${data?.data[SelectedFolder].id}/`, { 'name' : FolderName });
@@ -108,7 +122,7 @@ export default function Home() {
        setReadyToCreate={setReadyToCreate} FolderReload={refetch}  ChangeFolder={SelectFolder}
         SetSideBar={() => setOpen(!SideBarOpen)} ChangeFolderName={SetFolderName}/>
       <Popover
-            content={<AddPopoverContent SelectedFolderNumber={SelectedFolder} 
+            content={<AddPopoverContent  SelectedFolderNumber={SelectedFolder} 
             folders={data?.data} FolderReload={refetch} 
             SetSideBar={() => setOpen(!SideBarOpen)} setReadyToCreate={setReadyToCreate}
             setAddPopover={() => setAddPopover(!addPopOver)}/>}
@@ -127,9 +141,9 @@ export default function Home() {
         <FolderEditContainer>
             <Popover
             trigger="click"
-            content={<FolderPopoverContent RenameFolderState={SetChangeFolderNameState} RenameInput={FolderNameInput}
+            content={<FolderPopoverContent  RenameFolderState={SetChangeFolderNameState} RenameInput={FolderNameInput}
             SelectFolder={SelectFolder} FolderReload={refetch} 
-            // closeEditPopover={() => setFolderPopover(false)}
+            closeEditPopover={() => setFolderPopover(false)}
              SelectedFolderNumber={SelectedFolder} Folders={data?.data} />}
             open={FolderPopover}
             placement="bottom"
@@ -152,8 +166,9 @@ export default function Home() {
           </FolderEditContainer>
       <QuestionnaireContainer>        
         {
-          data?.data[SelectedFolder].questionnaires.length ? data?.data[SelectedFolder].questionnaires.map((item) => 
-          <QuestionnaireBox FolderReload={refetch}  Questionnaire={item} key={item.id} />)
+          data?.data[SelectedFolder]?.questionnaires.length ? data?.data[SelectedFolder].questionnaires.map((item) => 
+          <QuestionnaireBox FolderReload={refetch} folderNumber={SelectedFolder}
+           Questionnaire={item} key={item.id} />)
           : <EmptyFolderContainer>
           <p>یک پرسشنامه درست کنید</p>
           <AddQuestionnairePopUp AddQuestionnaireModal={AddQuestionnaireState}

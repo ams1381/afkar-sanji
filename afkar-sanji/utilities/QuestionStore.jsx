@@ -409,6 +409,31 @@ const QuestionSlice =  createSlice({
                
                 state.data.find(item => item.question.id == QuestionID).question.min = newMin;
                 state.data.find(item => item.question.id == QuestionID).question.max = newMax;
+
+                if(!state.data.find(item => item.question.id == QuestionID).question.options)
+                {
+                    state.data.find(item => item.question.id == QuestionID).question.options = [
+                        { id : Date.now() , text : null },
+                        { id : Date.now() , text : null }
+                    ]
+                }
+                if(!state.data.find(item => item.question.id == QuestionID).question.pattern)
+                {
+                    state.data.find(item => item.question.id == QuestionID).question.pattern = 'free'
+                }
+                if((newType == 'drop_down' || newType == 'sort') && state.data.find(item => item.question.id == QuestionID).question.options)
+                {
+                    const filteredArray = state.data.find(item => item.question.id == QuestionID).question.options.filter(item => !item.text?.includes('<span>'));
+
+                    state.data.find(item => item.question.id == QuestionID).question.all_options = false;
+                    state.data.find(item => item.question.id == QuestionID).question.additional_options = false;
+                    state.data.find(item => item.question.id == QuestionID).question.nothing_selected = false;
+                    state.data.find(item => item.question.id == QuestionID).question.options = filteredArray;
+                }
+                if(newType == 'file' && !state.data.find(item => item.question.id == QuestionID).question.volume_unit)
+                {
+                    state.data.find(item => item.question.id == QuestionID).question.volume_unit = 'kb';
+                }
             }
             else
             {

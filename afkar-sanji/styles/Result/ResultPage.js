@@ -2,12 +2,16 @@ import { Button } from "antd";
 import { styled } from "styled-components";
 
 export const ResultBodyContainer = styled.div`
-    margin-top : 20px;
+    margin-top : 10px;
     .date_filter
     {
         width: 45%;
         display : flex;
         gap : 15px;
+    }
+    .rmdp-panel-body li .b-deselect
+    {
+        margin-right : 10px !important;
     }
     .date_filter .rmdp-arrow-container
     {

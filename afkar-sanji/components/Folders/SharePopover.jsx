@@ -4,7 +4,7 @@ import React from 'react'
 import { useState } from 'react'
 
 
-export const SharePopOverContent = () => {
+export const SharePopOverContent = ({ Questionnaire }) => {
   const [ CopiedState , setCopiedState ] = useState(false);
   return (
    
@@ -33,7 +33,7 @@ export const SharePopOverContent = () => {
         </div>
       </div>
     <SharePopoverButton  onClick={() => {
-      navigator.clipboard.writeText('لینک پرسشنامه مثلا')
+      navigator.clipboard.writeText(`/questionnaire/${Questionnaire.uuid}/AnswerPage/`)
       setCopiedState(true);
       }}>
        { CopiedState ? <p>کپی شد</p> : <p>کپی لینک</p> }

@@ -20,9 +20,21 @@ const OptionalComponent = ({ QuestionInfo }) => {
   const [selectedValues, setSelectedValues] = useState([]);
   const [showInput, setShowInput] = useState(false);
   const [otherInputValue, setOtherInputValue] = useState("");
+  const [ isRandom , setIsRandom ] = useState(QuestionInfo.is_random_options);
+  const [ QuestionOptions , setQuestionOptions ] = useState(QuestionInfo.options);
   const regex = /(<([^>]+)>)/gi;
-  let shuffledOptions = QuestionInfo.is_random_options
-  ? shuffleArray(QuestionInfo.options) : QuestionInfo.options;
+  // let shuffledOptions = QuestionInfo.is_random_options
+  // ? shuffleArray(QuestionInfo.options) : QuestionInfo.options;
+  useEffect(() => {
+    if(QuestionInfo.is_random_options)
+    {
+      // setIsRandom(true);
+      setQuestionOptions(shuffleArray(QuestionInfo.options))
+    }
+    else
+      setQuestionOptions((QuestionInfo.options))
+    
+  },[QuestionInfo])
   const cleanText = (text) => {
     return text?.replace(regex, '');
   };
@@ -70,7 +82,7 @@ const OptionalComponent = ({ QuestionInfo }) => {
     } else {
       setSelectedValues(prevSelected => {
         let updatedSelected;
-  
+        console.log(prevSelected,item)
         if (max_selected_options === 1) {
           updatedSelected = prevSelected[0]?.id === item.id ? [] : [item];
         } else {
@@ -88,12 +100,12 @@ const OptionalComponent = ({ QuestionInfo }) => {
             setShowInput(false);
           }
   
-          if (!updatedSelected.some(val => cleanText(val.text) === cleanedValue)) {
+          if (!updatedSelected.some(val => (cleanText(val.text) === cleanedValue && item.id === val.id))) {
             if (!max_selected_options || updatedSelected.length < max_selected_options) {
               updatedSelected.push(item);
             }
           } else {
-            updatedSelected = updatedSelected.filter(val => cleanText(val.text) !== cleanedValue);
+            updatedSelected = updatedSelected.filter(val => (val.id !== item.id));
           }
         }
   
@@ -109,7 +121,7 @@ const OptionalComponent = ({ QuestionInfo }) => {
 
   return (
     <OptionalAnswerBlockContainer vertical={QuestionInfo.is_vertical ? 'active' : null}>
-      {shuffledOptions.map(item => (
+      {QuestionOptions.map(item => (
         <label className='OptionalAnswerItemContainer' key={item.id}>
           <Checkbox
             value={item.text}

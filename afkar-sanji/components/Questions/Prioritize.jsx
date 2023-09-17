@@ -11,7 +11,7 @@ const Prioritize = ({ QuestionInfo }) => {
   const dispatcher = useDispatch();
   const [sortedOptionArray, setSortedOptionArray] = useState(QuestionInfo.options);
   const QuestionsAnswerSet = useSelector(state => state.reducer.AnswerSet);
-  console.log(QuestionInfo)
+  
   useEffect(() => {
     setSortedOptionArray(QuestionInfo.options)
   },[QuestionInfo.options])
@@ -21,7 +21,7 @@ const Prioritize = ({ QuestionInfo }) => {
       if(QuestionsAnswerSet.find(item => item.question == QuestionInfo.id)?.answer?.sorted_options)
           setSortedOptionArray(QuestionsAnswerSet.find(item => item.question == QuestionInfo.id).answer?.sorted_options);
       else
-        dispatcher(SortOptions({ QuestionID : QuestionInfo.id ,  NewOptionsArray : sortedOptionArray }))
+        dispatcher(SortOptions({ QuestionID : QuestionInfo.id ,  NewOptionsArray : sortedOptionArray.map((item,index) => ({ id : item.id , placement : index + 1 })) }))
     }
   },[QuestionInfo])
   
@@ -41,8 +41,9 @@ const Prioritize = ({ QuestionInfo }) => {
       result.destination.index
     );
     setSortedOptionArray(reorderedItems);
+    console.log(reorderedItems)
     if(QuestionsAnswerSet && QuestionsAnswerSet.length)
-      dispatcher(SortOptions({ QuestionID : QuestionInfo.id , NewOptionsArray : reorderedItems }))
+      dispatcher(SortOptions({ QuestionID : QuestionInfo.id , NewOptionsArray : reorderedItems.map((item,index) => ({ id : item.id , placement : index + 1 })) }))
   };
 
   return (

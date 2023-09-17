@@ -89,15 +89,15 @@ export const QuestionnaireNameInput = styled.input`
     font-size: 1rem;
     outline: none;
     min-width: 25px!important;
-    max-width: 259px;
+    max-width: 231px;
     transition: width 0.25s;
     box-sizing: border-box;
     text-align: right;
     margin-left: 0.8rem;
     direction: rtl;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
+    // text-overflow: ellipsis;
+    // white-space: nowrap;
+    // overflow: hidden;
     
     &::selection 
     {
@@ -105,6 +105,9 @@ export const QuestionnaireNameInput = styled.input`
     }
     @media screen and (max-width : 480px)
     {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
         max-width: ${p => p.questionnairePanel ? '106px !important' : '162px'};
     }
 `

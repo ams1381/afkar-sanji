@@ -3,7 +3,9 @@ import QuestionComponent from '@/components/Questions/Question';
 import ThankComponent from '@/components/Questions/Thanks';
 import WelcomeComponent from '@/components/Questions/Welcome';
 import { Icon } from '@/styles/icons';
-import { PreviewPageContainer, PreviewPageHeader , ControlButtonsContainer, PreviewPage, PreviewQuestionsContainer } from '@/styles/questionnairePanel/ViewQuestions';
+import { PreviewPageContainer, PreviewPageHeader , ControlButtonsContainer
+  , PreviewPage, AnimLightOne , AnimLightTwo , AnimLightThree , AnimLightFour ,
+   PreviewQuestionsContainer } from '@/styles/questionnairePanel/ViewQuestions';
 import { axiosInstance, baseURL } from '@/utilities/axios';
 import { Button, Progress, Skeleton, message } from 'antd';
 import Head from 'next/head';
@@ -20,6 +22,7 @@ import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { AnswerSetFormDataConverter } from '@/utilities/FormData';
 import { digitsEnToFa } from '@persian-tools/persian-tools';
+
 
 SwiperCore.use([Navigation]);
 
@@ -120,16 +123,23 @@ const ViewQuestions = ({ answerSetID }) => {
     try
     {
       if(FileQuestionQuestions && FileQuestionQuestions.length)
-      await axios.post(baseURL + `question-api/questionnaires/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,AnswerSetFormDataConverter(FileQuestionQuestions),{
+      await axios.post(baseURL + `/question-api/questionnaires/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,AnswerSetFormDataConverter(FileQuestionQuestions),{
         'Content-Type' : 'multipart/form-data'
       })
-    await axios.post(baseURL + `question-api/questionnaires/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,
+    await axios.post(baseURL + `/question-api/questionnaires/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,
     QuestionsAnswerSet)
     SetCurrentIndex('Thanks')
   }
   catch(err)
   {
-
+   
+        messageApi.error({
+          content : 'به سوالات درست پاسخ دهید',
+          style : {
+            fontFamily : 'IRANSans'
+          }
+        })
+      
   }
     
   }
@@ -138,8 +148,13 @@ const ViewQuestions = ({ answerSetID }) => {
     <Head>
       <title> Afkar Sanji | { answerSetID ? 'Answer Page' : 'Preview' }</title>
     </Head>
+    {/* <AnimLightOne />
+      <AnimLightTwo />
+      <AnimLightThree />
+      <AnimLightFour /> */}
     {messageContext}
     { QuestionnaireInfo ? <PreviewPage>
+      
    <Provider store={AnswerStore}>
     <PreviewPageContainer >  
       <PreviewPageHeader>
@@ -209,13 +224,10 @@ const ViewQuestions = ({ answerSetID }) => {
             </>
           }
         </ControlButtonsContainer>}
-        {
-      
-          (!QuestionnaireInfo.show_question_in_pages) && <ControlButtonsContainer>
-        </ControlButtonsContainer>
-
-        
-        }
+          {
+            (!QuestionnaireInfo.show_question_in_pages) && <ControlButtonsContainer>
+          </ControlButtonsContainer>
+          }
         {
           (QuestionnaireInfo.show_question_in_pages && CurrentIndex =='Thanks') && <ControlButtonsContainer>
           </ControlButtonsContainer>

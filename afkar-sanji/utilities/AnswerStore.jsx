@@ -42,6 +42,7 @@ const AnswerSetSlice =  createSlice({
         },
         SortOptions : (state , action) => {
             const { QuestionID , NewOptionsArray } = action.payload;
+            console.log(NewOptionsArray)
             if(state.AnswerSet.find(item => item.question == QuestionID))
                 state.AnswerSet.find(item => item.question == QuestionID).answer.sorted_options = NewOptionsArray;
         },

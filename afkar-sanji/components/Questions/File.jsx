@@ -90,6 +90,8 @@ export const FileQuestionComponent = ({ QuestionInfo }) => {
         listType="picture"
         multiple={false}
         method={null}
+        
+        response={false}
         fileList={FileAnswer}
         showUploadList={{
           showTooltip: false, // Hide the tooltip

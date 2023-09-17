@@ -36,14 +36,19 @@ function shallowEqual(obj1, obj2) {
     return obj1 === obj2;
   }
 
-  const keys1 = Object.keys(obj1);
-  const keys2 = Object.keys(obj2);
+  let keys1 = Object.keys(obj1);
+  let keys2 = Object.keys(obj2);
+
+  keys1 = keys1.filter(item => item != 'placement');
+  keys2 = keys2.filter(item => item != 'placement');
 
   if (keys1.length !== keys2.length) return false;
 
   return keys1.every(key => {
+
     const val1 = obj1[key];
     const val2 = obj2[key];
+    
     return typeof val1 === 'object' && typeof val2 === 'object'
       ? shallowEqual(val1, val2)
       : val1 === val2;
@@ -54,18 +59,10 @@ export const QuestionItem = ({  ActiveQuestion, provided ,setActiveQuestion , Qu
   const [ QuestionActionState , SetQuestionActionState ] = useState('edit');
   const [nestedQuestions, setNestedQuestions] = useState(question.child_questions);
   const [ DeleteQuestionState , SetDeleteQuestionState ] = useState(false);
-  // const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
-  //   id : question?.question?.id,
-  //   data: {
-  //     id: question?.question?.id,
-  //     type: "draggable"
-  //   }
-  // });
-
   const [ SaveButtonLoadingState , SetSaveButtonLoadingState ] = useState(false);
   const [ QuestionsReload , SetQuestionsReload ] = useState(false);
   const [ SavedMessage , contextHolder] = message.useMessage();
-  const [ QuestionChanged , setQuestionChangedState ] = useState(question.newFace ? true : false)
+  const [ QuestionChanged , setQuestionChangedState ] = useState(false)
   const QuestionDispatcher = useDispatch();
   const QuestionsArray = useSelector(state => state.reducer.data);
   const NonQuestionArray = useSelector(state => state.reducer.nonQuestionData);
@@ -88,6 +85,7 @@ export const QuestionItem = ({  ActiveQuestion, provided ,setActiveQuestion , Qu
   
 })
  useEffect(() =>{
+  
   if(questionsData && InitialQuestionData.current)
   {    
     if(!shallowEqual(InitialQuestionData.current ,questionsData))
@@ -224,8 +222,7 @@ export const QuestionItem = ({  ActiveQuestion, provided ,setActiveQuestion , Qu
             direction : 'rtl'
           }
         })  
-      }
-       
+      }  
     }
    SetSaveButtonLoadingState(false);
    
@@ -278,7 +275,6 @@ export const QuestionItem = ({  ActiveQuestion, provided ,setActiveQuestion , Qu
         'QuestionType' : data.question_type
       })
         InitialQuestionData.current = { question : data };
-
       }
       
       setQuestionChangedState(false);
@@ -325,7 +321,9 @@ export const QuestionItem = ({  ActiveQuestion, provided ,setActiveQuestion , Qu
     className={`QuestionItem${questionsData.question.id}`}>
       {contextHolder}
       <div className='design_container' style={{ width : !questionsData.question.group ? '50%' : '100%' }}> 
-    <QuestionDesignItem className='question_design_item' errorocurr={OcurredError ? Object.keys(OcurredError).includes('title') ? 'active' : null : null}
+    <QuestionDesignItem className='question_design_item' saved={!QuestionChanged ? 'active' : null} 
+    style={{ marginTop : questionsData.question.question_type == 'welcome_page' ? 0 : '10px' }}
+     errorocurr={OcurredError ? Object.keys(OcurredError).includes('title') ? 'active' : null : null}
      isopen={QuestionRootOpenState ? 'true' : null} ref={QuestionDesignElement}
     childq={questionsData.question.group ? 'true' : null}>     
           <QuestionItemSurface >

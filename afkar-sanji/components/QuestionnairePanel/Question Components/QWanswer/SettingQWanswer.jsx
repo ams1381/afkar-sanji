@@ -14,7 +14,7 @@ const SettingQWanswer = ({ QuestionInfo }) => {
         { QuestionID : QuestionInfo.id , NewPattern : e , answer_template : PatternGenerator(e).answer_template}
         ))
       
-        console.log(e)
+  
   }
   useEffect(() => {
     console.log(OcurredError)
@@ -40,7 +40,7 @@ const SettingQWanswer = ({ QuestionInfo }) => {
       <div className='pattern_selector_container'>
       <Select placeholder='الگوی پاسخ' 
         options={[
-          { label : 'تاریخ میلادی' , value  : 'georgian_date ' } , 
+          { label : 'تاریخ میلادی' , value  : 'georgian_date' } , 
           { label : 'تاریخ شمسی' , value  : 'jalali_date' } ,
           { label : 'متن آزاد' , value  : 'free' } , 
           { label : 'شماره تلفن' , value : 'phone_number' } , 
@@ -74,8 +74,8 @@ const SettingQWanswer = ({ QuestionInfo }) => {
 const PatternGenerator = (Type) => {
   switch(Type)
   {
-    case 'gregorian_date':
-        return { "label" : 'تاریخ میلادی' , "value"  : 'gregorian_date' , answer_template : 'تاریخ میلادی' }
+    case 'georgian_date':
+        return { "label" : 'تاریخ میلادی' , "value"  : 'georgian_date' , answer_template : 'تاریخ میلادی' }
     case 'jalali_date':
         return { "label" : 'تاریخ شمسی' , "value"  : 'jalali_date' , answer_template : 'تاریخ شمسی' }
     case 'free':

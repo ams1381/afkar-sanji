@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 export const TopBar = styled.div`
     display: flex;
     flex-direction: row-reverse;
-    margin-top: 24px;
+    margin-top: 10px;
     gap : 14px;
 
     @media screen and (max-width : 768px)
@@ -195,8 +195,8 @@ export const QuestionChartContainerHeader = styled.div`
 }
 `
 export const QuestionChartBodyContainer = styled.div`
-    margin-top: 24px;
-    max-height: 600px;
+    margin-top: 14px;
+    max-height: 500px;
     gap: 24px;
     flex-direction: column;
     display: flex;

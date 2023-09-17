@@ -16,7 +16,8 @@ export const FileQuestionSetting = ({ QuestionInfo }) => {
         <p>حجم فایل</p>
       <div className='file_size_selector'>
           <div className='file_size_input'>
-              <InputNumber type='number' min={1} onChange={ChangeFileSizeHandler} value={QuestionInfo.max_volume}/>
+              <InputNumber type='number' min={1} onChange={ChangeFileSizeHandler} 
+              value={QuestionInfo.max_volume}/>
           </div>
           <FileSizeTypeSelector>
             <input type='radio' name='sizeType' id='KBSize' defaultChecked={QuestionInfo.volume_unit == 'kb'} />

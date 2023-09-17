@@ -20,7 +20,9 @@ export const PanelHeader = styled.div`
     justify-content: space-between;
     flex-direction: row-reverse;
     font: 14px IRANSans;
-
+    box-shadow: 0 1px 0 #D9D9D9;
+    padding-bottom: 10px;
+    
     & a
     {
         text-decoration : none;
@@ -34,6 +36,19 @@ export const PanelHeader = styled.div`
     .see_result_container:hover 
     {
         background : white;
+    }
+    .hDFXPt .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+        color: #A4ABFF!important;
+    }
+    .ebxDTv .ant-tabs-ink-bar.ant-tabs-ink-bar-animated {
+        background: #A4ABFF!important;
+        bottom: 5px;
+    }
+    @media screen and (max-width : 480px)
+    {
+        height : auto !important;
+        flex-wrap : wrap-reverse;
+        justify-content: flex-end;
     }
 `
 export const SeeResultButton = styled.div`
@@ -134,11 +149,16 @@ export const QuestionnaireEditItemsContainer = styled.div`
     font: 13px IRANSans;
     align-items : ${p => p.loading ? 'center' : 'auto'};
     width : ${p => p.loading ? '100%' : 'auto'};
-    margin: 1rem auto;
+    margin-bottom: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 0 #D9D9D9;
+    padding-bottom: 15px;
 
     @media screen and (max-width : 768px)
     {
         flex-direction: column-reverse;
+        flex-wrap : auto;
+        height : auto;
     }
 `
 export const QuestionnaireEditItemsInnerContainer = styled.div`
@@ -150,13 +170,39 @@ export const QuestionnaireEditItemsInnerContainer = styled.div`
     flex-direction: row-reverse;
     font: 13px IRANSans;
 
+    .ant-tabs
+    {
+        height : 34px !important; 
+    }
     & .ant-skeleton.ant-skeleton-element
     {
         width : 50%;
     }
+    .ant-tabs-nav-list
+    {
+        margin : 0 !important;
+    }
+    .ant-tabs-tab
+    {
+        margin : 0 !important;
+    }
     & .ant-skeleton.ant-skeleton-element .ant-skeleton-button
     {
         width : 100%;
+    }
+    .ant-tabs-tab
+    {
+        font-size: 16px;
+        color: var(--Neutral-Gray9);
+    }
+    .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn
+    {
+        color: #A4ABFF !important;  
+    }
+    .ant-tabs-ink-bar.ant-tabs-ink-bar-animated
+    {
+        background : #A4ABFF !important;
+        bottom: 5px;
     }
     @media screen and (max-width : 768px)
     {

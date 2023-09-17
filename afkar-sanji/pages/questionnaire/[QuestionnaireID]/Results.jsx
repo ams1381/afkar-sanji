@@ -19,16 +19,15 @@ const ResultsPage = () => {
     queries: [
       {
         queryKey: ['questionnaire'],
-        queryFn: async () =>
-          await axiosInstance.get(`/question-api/questionnaires/${router.query.QuestionnaireID}/`)
+        queryFn: async () => await axiosInstance.get(`/question-api/questionnaires/${router.query.QuestionnaireID}/`),
       },
-
       {
         queryKey: ['result'],
         queryFn: async () =>
           await axiosInstance.get(`/result-api/${router.query.QuestionnaireID}/answer-sets/?answered_at&start_date&end_date`)
       },
     ],
+    // staleTime : 6000
   });
 
   return (
@@ -37,7 +36,8 @@ const ResultsPage = () => {
       <title>Afkar Sanji | Result Page</title>
     </Head>
     <ProgressBarLoading />
-    <Header SetSideBar={() => setOpen(!SideBarOpen)} goToFolders={true}/>
+    <Header SetSideBar={() => setOpen(!SideBarOpen)} goToFolders={true} loadingHeader={QuestionnaireQuery.isLoading}
+    Questionnaire={QuestionnaireQuery.data?.data}/>
     <PanelInnerContainer>
       <ResultHeader QuestionnaireQuery={QuestionnaireQuery}/>
       <ResultBody ResultQuery={ResultQuery} QuestionnaireQuery={QuestionnaireQuery}/>

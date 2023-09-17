@@ -10,13 +10,15 @@ import { useRouter } from 'next/router';
 import RemovePopup from '../common/RemovePopup';
 import { axiosInstance } from '@/utilities/axios';
 import { PdfGenerator } from './pdfExport';
+import { useLocalStorage } from '@/utilities/useLocalStorage';
 
 
-const QuestionnaireFooterPart = ({ questionnaire , FolderReload }) => {
+const QuestionnaireFooterPart = ({ questionnaire , FolderReload , folderNumber}) => {
     const [ SharePopover , setSharePopOver] = useState(false);
     const [ DeletePopoverState , setDeletePopoverState ] = useState(false);
     const [ OperatingState, SetOperatingState ] = useState(false);
     const [ SavedMessage , contextHolder] = message.useMessage();
+    const { setItem } = useLocalStorage();
     const router = useRouter();
 
     const RemoveQuestionnaireHandler = async () => {
@@ -45,7 +47,7 @@ const QuestionnaireFooterPart = ({ questionnaire , FolderReload }) => {
         {contextHolder}
         <QuestionnaireFooterItem>
             <Popover
-            content={SharePopOverContent}
+            content={<SharePopOverContent Questionnaire={questionnaire} />}
             trigger="click"
             open={SharePopover}
             onOpenChange={() => setSharePopOver(false)}>
@@ -71,7 +73,7 @@ const QuestionnaireFooterPart = ({ questionnaire , FolderReload }) => {
             
         </QuestionnaireFooterItem>
         <QuestionnaireFooterItem>
-        <Link href={`questionnaire/${questionnaire.uuid}}/`}>
+        <Link href={`questionnaire/${questionnaire.uuid}}/`} onClick={() => setItem('SelectedFolder',folderNumber)}>
             <QuestionnaireFooterButton>
                     <Icon name='GrayPen' />
             </QuestionnaireFooterButton>

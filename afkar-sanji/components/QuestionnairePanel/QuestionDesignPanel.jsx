@@ -136,7 +136,7 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
     let welcomeID = Date.now();
     QuestionDataDispatcher(AddWelcome({ QuestionnaireID : Questionnaire.id , WelcomeID : welcomeID }));
 
-    setActiveQuestionId({
+    setActiveQuestion({
        'QuestionID' : welcomeID ,
        'QuestionType' : 'welcome_page'
       })
@@ -152,16 +152,18 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
   }
   const AddFirstQuestion = () => {
     let FirstQuestionID = Date.now();
+    
     QuestionDataDispatcher(AddQuestion({AddedQuestionID : FirstQuestionID }))
+    // console.log(AllQuestion,FirstQuestionID)
     setActiveQuestion({
        'QuestionID' : FirstQuestionID ,
-       'QuestionType' : AllQuestion.find(item => item && item.question && item.question.id == FirstQuestionID).question.question_type
+       'QuestionType' : 'optional'
       })
   }
   return (
     <QuestionnairePanelBodyContainer>
       {contextHolder}
-      <div>
+      {/* <div>
         <QuestionSearchContainer>   
               { Questionnaire ?  <>
                 <Select
@@ -183,11 +185,32 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                 filterOption={(_, option) => option ? option.label : ''}/>
                 </> : <Skeleton.Input active />}
           </QuestionSearchContainer>
-      </div>
-      <QuestionDesignTitle>
+      </div> */}
+      {/* <QuestionDesignTitle>
         { Questionnaire &&  <p>سوالی را ایجاد یا ویرایش کنید</p> }
-      </QuestionDesignTitle>
+      </QuestionDesignTitle> */}
       <QuestionDesignBox id='characters' className=''>
+      <QuestionSearchContainer questionnairePanel>   
+              { Questionnaire ?  <>
+                <Select
+                showSearch
+                defaultActiveFirstOption={false}
+                suffixIcon={<div>
+                  <Icon name='GraySearch' style={{ width : 15 }}/>
+                  </div>}
+                allowClear
+                placeholder="براساس عنوان سوال جست‌وجو کنید"
+                optionFilterProp="children"
+                options={SearchResult}
+                onSelect={SearchSelectHandler}
+                onChange={(e) => SearchQuestionHandler(e)}
+                style={{ width : '100%' , height : '100%' , direction : 'rtl' , fontFamily : 'IRANSans' }}
+                onSearch={SearchQuestionHandler}
+                notFoundContent={null}
+                
+                filterOption={(_, option) => option ? option.label : ''}/>
+                </> : <Skeleton.Input active />}
+          </QuestionSearchContainer>
         { (AllQuestion && NonQuestions) ? <div className='QuestionDesignRightContainer' >
                 {(Questionnaire && NonQuestions.length) ? (NonQuestions[0] && NonQuestions[0].question) ?
                 <QuestionItem 

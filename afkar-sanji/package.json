@@ -38,6 +38,7 @@
     "dragula": "^3.7.3",
     "framer-motion": "^10.16.4",
     "html2canvas": "^1.4.1",
+    "http-proxy-middleware": "^2.0.6",
     "jalaali-js": "^1.2.6",
     "jalali-moment": "^3.3.11",
     "jalali-react-datepicker": "^1.2.3",

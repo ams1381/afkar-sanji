@@ -66,8 +66,16 @@ const SettingMultipleAnswer = ({QuestionInfo}) => {
         OptionalDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : TName , ToggleValue : Event}))
 
         if(TName == 'all_options')
-            Event ? OptionalDispatcher(OptionAdder({ QuestionID : QuestionInfo.id , OptionText : '<span>همه گزینه ها</span>' , NewOptionID : RandomIdGenerator()}))
-            : OptionalDispatcher(OptionRemoverByText({ QuestionID : QuestionInfo.id , OptionText : '<span>همه گزینه ها</span>' }))
+        {
+            if(Event)
+            {
+                ChangeMinMaxHandler(1,'min_selected_options');
+                OptionalDispatcher(OptionAdder({ QuestionID : QuestionInfo.id , OptionText : '<span>همه گزینه ها</span>' , NewOptionID : RandomIdGenerator()}))
+            }
+            else
+              OptionalDispatcher(OptionRemoverByText({ QuestionID : QuestionInfo.id , OptionText : '<span>همه گزینه ها</span>' }))
+        }
+            
         if(TName == 'nothing_selected')
             Event ? OptionalDispatcher(OptionAdder({ QuestionID : QuestionInfo.id , OptionText : '<span>هیچ کدام</span>' , NewOptionID : RandomIdGenerator()}))
             : OptionalDispatcher(OptionRemoverByText({ QuestionID : QuestionInfo.id , OptionText : '<span>هیچ کدام</span>' }))
@@ -85,7 +93,9 @@ const SettingMultipleAnswer = ({QuestionInfo}) => {
        { MultipleAnswerState ? <AlphabetNumberContainer inputerror={inputError} ref={LimitContainerRef}>
           <p>تعداد گزینه های قابل انتخاب</p>
           <label>
-              <InputNumber value={QuestionInfo.min_selected_options} min={1} onChange={(e) => ChangeMinMaxHandler(e,'min_selected_options')}/>
+              <InputNumber value={QuestionInfo.all_options || QuestionInfo.nothing_selected || QuestionInfo.other_options ? 1 : QuestionInfo.min_selected_options}  min={1} 
+              disabled={QuestionInfo.all_options || QuestionInfo.nothing_selected || QuestionInfo.other_options}
+              onChange={(e) => ChangeMinMaxHandler(e,'min_selected_options')}/>
               <p>حداقل</p>
           </label>
           <label>

@@ -34,6 +34,39 @@ export const ControlButtonsContainer = styled.div`
         justify-content: center;
     }
 `
+export const AnimLight = styled.div`
+    position : absolute;
+`
+export const AnimLightOne = styled(AnimLight)`
+    width :200px;
+    height : 100px;
+    background : red;
+    position : absolute;
+`
+export const AnimLightTwo = styled(AnimLight)`
+    width :200px;
+    height : 100px;
+    background : blue;
+    position : absolute;
+    bottom : 0;
+    left : 0;
+`
+export const AnimLightThree = styled(AnimLight)`
+    width :200px;
+    height : 100px;
+    background : green;
+    right : 0;
+    position : absolute;
+    top: 0;
+`
+export const AnimLightFour = styled(AnimLight)`
+    width :200px;
+    height : 100px;
+    position : absolute;
+    background : yellow;
+    right : 0;
+    bottom : 0;
+`
 export const PreviewPageContainer = styled.div`
     width: 100%;
     height: 100%;
@@ -126,6 +159,13 @@ export const PreviewPageHeader = styled.div`
 `
 export const PreviewQuestionsContainer = styled.div`
     width : ${p => p.slidemode ? '50%' : '30%'};
+    max-height: 649px;
+    overflow: scroll;
+
+    &::-webkit-scrollbar 
+    {
+        width : 0;
+    }
     
     @media screen and (max-width : 980px)
     {

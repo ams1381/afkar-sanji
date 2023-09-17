@@ -20,7 +20,7 @@ export const DefaultThanks = ({ mobilepreview }) => {
                 <p>کپی لینک</p>
               </button>
               <button>
-                <Icon name='share' />
+                <Icon name='Share' />
               </button>
             </div>
             <div className='brand_button' >

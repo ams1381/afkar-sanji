@@ -24,12 +24,14 @@ const SideBar = ({ isopen , SetSideBar , folders , SelectedFolder  , ReadyToCrea
     useEffect(() => {   
         if(folders && folders[folders.length - 1] && FolderAdded)
         {
-            ChangeFolder([folders.length - 1])
+            console.log(folders.length - 1)
             setItem('SelectedFolder',folders.length - 1)
+            ChangeFolder([folders.length - 1])
+            
             ChangeFolderName(folders[folders.length - 1].name)
             SetAddFolderState(false)
+            setFolderAddedState(false)
         }
-        (ReadyToCreate && FolderInput.current) ? FolderInput.current.focus() : ''
         // console.log(FolderInput.current)
         // FolderInput.current ? console.log(FolderInput.current) : ''
 
@@ -40,10 +42,12 @@ const SideBar = ({ isopen , SetSideBar , folders , SelectedFolder  , ReadyToCrea
         }
             
     },[folders])
+    if(ReadyToCreate && FolderInput.current)
+      FolderInput.current.focus() 
     const AddFolder = async () => {
         axiosInstance.defaults.headers['Content-Type'] = 'application/json';
         setAddFolderLoading(true)
-        setFolderAddedState(!FolderAdded)
+        
         if(!newFolderName)
         {
             SetErrorMessage('نام پوشه نمیتواند خالی باشد');
@@ -54,7 +58,9 @@ const SideBar = ({ isopen , SetSideBar , folders , SelectedFolder  , ReadyToCrea
         {
             await axiosInstance.post('/user-api/folders/',{ name : newFolderName })
             setNewFolderName(null);
-            SetAddFolderState(false)
+            setItem('SelectedFolder',folders.length - 1)
+            SetAddFolderState(false);
+            setFolderAddedState(true)
             FolderReload();
         }
         catch(err)
@@ -94,11 +100,11 @@ const SideBar = ({ isopen , SetSideBar , folders , SelectedFolder  , ReadyToCrea
         {
             (ReadyToCreate || AddFolderState) ? <SideBarInputBox>
             <p>نام پوشه را وارد کنید</p>
-            <SideBarInput type="text" id="side_folder_name"  ref={FolderInput}
+            <SideBarInput type="text" id="side_folder_name"  ref={FolderInput} autoFocus 
             value={newFolderName ? newFolderName : ''} onChange={(e) => {
                 SetErrorMessage(null);
                 setNewFolderName(e.target.value)
-                }}/>
+                }}  onKeyDown={e => e.key == 'Enter' ? AddFolder() : ''}/>
             {ErrorMessage ? <LoginErrorMessage>{ErrorMessage}</LoginErrorMessage> : ''}
             <AddFolderButtons>
                 <SideBarConfirmButton disabled={!newFolderName} onClick={AddFolder}>

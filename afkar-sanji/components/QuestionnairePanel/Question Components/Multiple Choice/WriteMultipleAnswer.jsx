@@ -38,6 +38,7 @@ const MultipleAnswer = ({ QuestionInfo }) => {
     if(QuestionInfo.options.length > 2)
       Dispatcher(OptionRemover({ QuestionID : QuestionInfo.id , OptionID : OptionItem.id }))
   }
+  
   return (
     <OptionWritingContainer>
       <p>گزینه ها</p>

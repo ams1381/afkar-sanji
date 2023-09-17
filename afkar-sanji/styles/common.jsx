@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, Input } from "antd";
 import { styled } from "styled-components";
 
 //Header
@@ -65,7 +65,7 @@ export const HeaderFolderButton = styled(SideBarToggleButton)`
     {
         background : #848CFA;
         border : none;
-        // border: 1px solid #848CFA;
+        border: 1px solid #848CFA;
     }
 `
 export const UserAvatarLogout = styled.button`
@@ -158,7 +158,7 @@ export const SideBarInputBox = styled.div`
         font-size: 13px;
     }
 `
-export const SideBarInput = styled.input`
+export const SideBarInput = styled(Input)`
     width: 100%;
     margin: 0.6rem auto;
     padding: 0.5rem;

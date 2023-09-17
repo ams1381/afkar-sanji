@@ -6,23 +6,27 @@ import { Button, ConfigProvider, Modal, message } from 'antd'
 import RemoveFolderPopUpContent from '../Folders/RemoveFolderPopUp';
 import RemovePopup from './RemovePopup';
 import { handleInputWidth } from '@/utilities/RenameFunctions';
+import { useLocalStorage } from '@/utilities/useLocalStorage';
 
-const FolderPopoverContent = ({ FolderReload , RenameInput , RenameFolderState , SelectedFolderNumber , closeEditPopover, Folders , SelectFolder }) => {
+const FolderPopoverContent = ({ FolderReload , RenameInput , RenameFolderState , SelectedFolderNumber , closeEditPopover,
+   Folders , SelectFolder }) => {
   const [ deleteFolderState , setDeleteFolderState ] = useState(false);
+  const { setItem } = useLocalStorage();
   const [ MessageApi , MessageContext ] = message.useMessage();
   const deleteFolder = async () => {
     try
     {
       await axiosInstance.delete(`/user-api/folders/${Folders[SelectedFolderNumber].id}/`);
+      setItem('SelectedFolder',0)
       SelectFolder(0);
       FolderReload();
       closeEditPopover(); 
-      handleInputWidth();
+      // handleInputWidth();
       setDeleteFolderState(false);
     }
     catch(err)
     {
-      handleInputWidth();
+      // handleInputWidth();
       MessageApi.error({
         content : Object.values(err.response.data)[0],
         duration : 4,

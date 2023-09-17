@@ -96,7 +96,7 @@ export const RotatingLight = styled.div`
     &::after
     {
         top : 0;
-        left : 0;
+        left : 100px;
         opacity: 0.3;
     }
     &::before

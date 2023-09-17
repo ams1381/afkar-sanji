@@ -2,14 +2,23 @@ import { styled } from "styled-components";
 
 export const QuestionnairePanelBodyContainer = styled.div`
     font-family: 'IRANSANS';
-    margin-top: 0.9rem;
+    // margin-top: 0.9rem;
     font-size: 14px;
 `
 export const QuestionSearchContainer = styled.div`
+    width : ${p => p.questionnairePanel ? '50% !important' : '100%'};
     position: relative;
     height: 40px;
     font-family: 'IRANSANS';
-
+    margin-bottom: 10px;
+    .ant-select
+    {
+        height : 40px !important;
+    }
+    &::webkit-scrollbar 
+    {
+        width : 0;
+    }
     & label 
     {
         position: absolute;
@@ -79,6 +88,12 @@ export const QuestionSearchContainer = styled.div`
         width : 100% !important;
         border-radius: 2px;
     }
+    @media screen and (max-width : 768px)
+    {
+        width : 100% !important;
+        height : auto;
+        flex-wrap : wrap;
+    }
 `
 export const QuestionSearchInput = styled.input`
     width: 100%;
@@ -110,10 +125,12 @@ export const QuestionDesignTitle = styled.div`
 export const QuestionDesignBox = styled.div`
     display: flex;
     flex-direction: row-reverse;
-    margin-top: 10px;
+    // margin-top: 10px;
     position: relative;
-    max-height : 478px;
-    overflow : scroll;
+    // max-height : 478px;
+    align-items: flex-end;
+    // overflow : scroll;
+    flex-direction : column;
 
     &::-webkit-scrollbar
     {
@@ -142,6 +159,17 @@ export const QuestionDesignBox = styled.div`
         text-align: center;
         word-break: break-word;
         margin: 0 1rem;
+        
+    }
+    .QuestionDesignRightContainer
+    {
+        max-height: 533px;
+        overflow : scroll;
+        padding-bottom : 10px;
+    }
+    .QuestionDesignRightContainer::-webkit-scrollbar
+    {
+        width : 0;
     }
     .QuestionDesignLeftContainer  p 
     {
@@ -167,6 +195,8 @@ export const QuestionDesignItem = styled.div`
     width: ${p => p.childq ? '95%' : '100%'} !important;
     // margin-top : ${p => p.childq ? '1rem' : '0'};
     transition : border 0.3s;
+    border-right : 2px solid ${p => p.saved ? 'var(--primary-color)' : 'var(--Error-color)'};
+
     .question_bold_info 
     {
         display : flex;
@@ -214,7 +244,7 @@ export const LoadingQuestionItem = styled(QuestionDesignItem)`
         display : flex;
         justify-content : flex-start;
         margin-top : 10px;
-
+        border : none !important;
         .question_item_info
         {
             display : flex;
@@ -245,15 +275,16 @@ export const QuestionItemRow = styled.div`
     {
         overflow: hidden;
     }
+
     & .question_preview
     {
         width : 50%;
         position: fixed;
         width: 44%;
         left: 6%;
-        max-height: 492px;
+        max-height: 591px;
         overflow: scroll;
-        top: 269px;
+        top: 138px;
     }
     & .question_preview::-webkit-scrollbar
     {
@@ -584,6 +615,7 @@ export const AddNonQuestionItem = styled.div`
     cursor: pointer;
     transition : 0.3s;
     padding : 20px 0;
+    background: #FEFEFE;
     border-radius : 2px;
 
     & svg

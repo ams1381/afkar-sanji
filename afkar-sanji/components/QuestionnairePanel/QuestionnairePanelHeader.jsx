@@ -5,21 +5,63 @@ import { QuestionnairePanelContainer , PanelInnerContainer , SeeResultButton ,
 } from '@/styles/questionnairePanel/QuestionnairePanelHeader';
 import { Icon } from '@/styles/icons';
 import { FolderPopoverToggle, QuestionnaireNameInput } from '@/styles/folders/Questionnaire';
-import { Popover, Skeleton } from 'antd';
+import { Popover, Skeleton, Tabs } from 'antd';
 import { QuestionnairePopover } from './QuestionnairePopover';
 import { axiosInstance } from '@/utilities/axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { handleInputWidth } from '@/utilities/RenameFunctions';
 import { SharePopOverContent } from '../Folders/SharePopover';
+import { useLocalStorage } from '@/utilities/useLocalStorage';
 
 const QuestionnairePanelHeader = ({ FolderName , isFetched , Questionnaire , SideState , ChangeSide }) => {
   const router = useRouter();
+  const { getItem , setItem } = useLocalStorage();
   const [ QuestionnaireName , SetQuestionnaireName ]= useState(Questionnaire ? Questionnaire.name : null);
   const [ RenameState , SetRenameState ] = useState(false);
   const [ SharePopover , setSharePopOver] = useState(false);
   const [ QuestionnairePopoverState , SetQuestionnairePopoverState ] = useState(false);
   const QuestionnaireNameInputRef = useRef(null);
+  let TabIndex = 0;
+  const TabHeadItems = [
+    {
+      key: '4',
+      label: <div className='header_tab_item'> 
+          <p>نمودار </p>
+      </div>,
+    },
+    {
+      key: '3',
+      label: <div className='header_tab_item'>
+        <Icon name='tabArrow' />
+      <p>نتایج</p> 
+      </div>,
+    },
+    {
+      key: '2',
+      label: <div className='header_tab_item'>
+        <Icon name='tabArrow' />
+      <p>تنظیمات پرسشنامه </p>
+      </div>,
+    },
+    {
+      key: '1',
+      label: <div className='header_tab_item'>
+        <Icon name='tabArrow' />
+        <p>طراحی سوال</p>
+      </div>,
+    },
+  ]
+   if(getItem('tabType'))
+    {
+      console.log(getItem('tabType'))
+      ChangeSide(getItem('tabType'))
+      // getItem('tabType') == 'questionnaire_setting' ? TabIndex = 2 : TabIndex = 1;
+    
+    }
+      
+  // console.log(getItem('tabType'))
+
   if(isFetched)
     handleInputWidth(QuestionnaireNameInputRef,QuestionnaireName)
   useEffect(() => {
@@ -38,11 +80,27 @@ const QuestionnairePanelHeader = ({ FolderName , isFetched , Questionnaire , Sid
    await axiosInstance.patch(`/question-api/questionnaires/${Questionnaire.uuid}/`,{ name : QuestionnaireName });
    SetRenameState(false);
   }
+  const ChangeTabHandler = (ID) => {
+    if(ID == 1)
+    {
+      setItem('tabType','question_design');
+      ChangeSide('question_design')
+    }
+    else if(ID == 2)
+    {
+      setItem('tabType','questionnaire_setting');
+      ChangeSide('questionnaire_setting');
+    }
+    else if(ID == 3)
+      router.push(`/questionnaire/${Questionnaire.uuid}/Results/`);
+    else if(ID == 4)
+      router.push(`/questionnaire/${Questionnaire.uuid}/Charts/`);
+  }
   return (
     Questionnaire ? 
     <>
-    <PanelHeader>
-          <QuestionnaireDirectoryContainer>
+    {/* <PanelHeader> */}
+          {/* <QuestionnaireDirectoryContainer>
             <QuestionnaireDirectoryPath>
               <QuestionnaireNameInput style={{ marginRight : 10 , fontSize : 14 , color : '#000000D9' }} 
               ref={QuestionnaireNameInputRef} questionnairePanel='active'
@@ -73,26 +131,26 @@ const QuestionnairePanelHeader = ({ FolderName , isFetched , Questionnaire , Sid
                   SetRenameState(false);
               }}><Icon name='BlackClose' style={{ width : 15}} /></FolderPopoverToggle>}
               </div>
-          </QuestionnaireDirectoryContainer>
-          <div className='see_result_container'>
+          </QuestionnaireDirectoryContainer> */}
+          {/* <div className='see_result_container'>
             <Link href={`/questionnaire/${Questionnaire.uuid}/Results/`}>
             <SeeResultButton>
               <p>مشاهده نتایج</p>
               <Icon name='SeeResult' />
             </SeeResultButton>
             </Link>
-          </div>
-        </PanelHeader>
+          </div> */}
+        {/* </PanelHeader> */}
         <QuestionnaireEditItemsContainer>
             <QuestionnaireEditItemsInnerContainer>
-                <QuestionnaireEditItem selected={SideState == 'question_design' ? true : null} 
-                onClick={() => ChangeSide('question_design')}>
-                    <p>طراحی سوال</p>
-                </QuestionnaireEditItem>
-                <QuestionnaireEditItem selected={SideState == 'questionnaire_setting' ? true : null} 
-                onClick={() => ChangeSide('questionnaire_setting')}>
-                    <p>تنظیمات </p>
-                </QuestionnaireEditItem>
+            <Tabs
+                defaultActiveKey={getItem('tabType') == 'questionnaire_setting' ?  '2' : '1'}
+                items={TabHeadItems}
+                centered={true}
+                onChange={ChangeTabHandler}
+                indicatorSize={(origin) => origin - 16}
+                moreIcon={<Icon name='close' />}
+              />
             </QuestionnaireEditItemsInnerContainer>
             <QuestionnaireEditButtonContainer>
             <Link onClick={(e) => { !Questionnaire.questions.length ? e.preventDefault() : '' }}
@@ -102,7 +160,7 @@ const QuestionnairePanelHeader = ({ FolderName , isFetched , Questionnaire , Sid
               </button>
               </Link>
               <Popover
-            content={SharePopOverContent}
+            content={<SharePopOverContent Questionnaire={Questionnaire?.uuid} />}
             trigger="click"
             open={SharePopover}
             onOpenChange={() => setSharePopOver(false)}>
@@ -112,20 +170,13 @@ const QuestionnairePanelHeader = ({ FolderName , isFetched , Questionnaire , Sid
             </Popover>
             </QuestionnaireEditButtonContainer>
         </QuestionnaireEditItemsContainer>
-        
-    </> : <> <PanelHeader>
-        <QuestionnaireDirectoryContainer loading='active'>
-          <QuestionnaireDirectoryPath>
-              <Skeleton.Input active  style={{ borderRadius : 2 }} />
-          </QuestionnaireDirectoryPath>
-            <div>
-              <Skeleton.Input active style={{ borderRadius : 2 }}/>
-            </div>
-        </QuestionnaireDirectoryContainer>
-      </PanelHeader>
+     
+    </> : <> 
         <QuestionnaireEditItemsContainer loading={'active'}>
           <QuestionnaireEditItemsInnerContainer loading={'active'}>
               <Skeleton.Button active style={{ borderRadius : 2 }} Button />
+             <Skeleton.Button active style={{ borderRadius : 2 }} Button />
+             <Skeleton.Button active style={{ borderRadius : 2 }} Button />
              <Skeleton.Button active style={{ borderRadius : 2 }} Button />
           </QuestionnaireEditItemsInnerContainer>
           

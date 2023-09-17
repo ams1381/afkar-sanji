@@ -30,11 +30,18 @@ const ChartsPage = () => {
   });
   return (
     <>
+        <style global jsx>{`
+            html,
+            body {
+              overflow: hidden;
+            }
+    `}</style>
       <Head>
         <title>Afkar Sanji | Charts</title>
       </Head>
       <ProgressBarLoading />
-      <Header SetSideBar={() => setOpen(!SideBarOpen)} goToFolders={true}/>
+      <Header SetSideBar={() => setOpen(!SideBarOpen)} goToFolders={true} loadingHeader={QuestionnaireQuery?.isLoading}
+      Questionnaire={QuestionnaireQuery?.data?.data}/>
       <PanelInnerContainer>
         <ChartsHeader QuestionnaireQuery={QuestionnaireQuery}/>
         <ChartsBody ChartQuery={ChartQuery} QuestionnaireQuery={QuestionnaireQuery}/>

@@ -1,3 +1,4 @@
+import { Input } from "antd";
 import { styled } from "styled-components";
 
 export const Button = styled.button`
@@ -167,7 +168,7 @@ export const LoginHeaderText = styled.h2`
     }
 `
 export const LoginInput = styled.input`
-    width: 100%;
+    width: 92%;
     border : none;
     background: var(--login-input-bg-color);
     padding: 8px 12px 8px 12px;
@@ -184,6 +185,12 @@ export const LoginInput = styled.input`
     &::-webkit-outer-spin-button
     {
         -webkit-appearance: none;
+    }
+    &:-webkit-autofill {
+       background : red;
+      }
+    &:autofill {
+        background : red;
     }
 `
 export const LoginBox = styled.div`
@@ -217,6 +224,7 @@ export const InputBox = styled.div`
     border: 2px solid ${p => p.focused ? 'var(--login-input-default-border)' : '#7ACCFF'} ;
     transition: 0.3s border;
     margin-bottom: 0;
+    background: white;
 
     .resend_button_container .ant-btn-loading
     {
@@ -235,7 +243,7 @@ export const FormChildDiv = styled.div`
 export const ClearLoginInputButton = styled.span`
     display: flex;
     width: 10%;
-    background: white;
+    // background: white;
     position: absolute;
     height: 100%;
     top: 0;

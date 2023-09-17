@@ -49,7 +49,7 @@ const DropDown = ({ QuestionInfo }) => {
   };
   }
   return (
-    <DropDownContainer>
+    <DropDownContainer style={{ marginTop : 12 }}>
       <Select
         showSearch
         mode={QuestionInfo.max_selected_options && QuestionInfo.max_selected_options > 1 ? 'multiple' : null}

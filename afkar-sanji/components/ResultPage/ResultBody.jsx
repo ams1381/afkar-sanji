@@ -104,19 +104,22 @@ const ExcelExportHandler = (Data,QuestionnaireQuery) => {
     })
     .saveAs(`${QuestionnaireQuery.data?.data?.name}ExcelOutput.xlsx`);
 }
-export const ResultBody = ({ ResultQuery , QuestionnaireQuery }) => {
+export const ResultBody = ({ ResultQuery , QuestionnaireQuery  }) => {
   const [ resultMessage , contextHolder] = message.useMessage();
   const [ deleteRowState , setDeleteRowState ] = useState(false);
   const [ selectedRows , setSelectedRows ] = useState([]);
-  const [ SearchValue , setSearchValue ] = useState('')
-  const [ DateFilterValue , setDateFilterValue ] = useState(null);
-  const [ ClearedFilterState , setClearedFilterValueState ] = useState(false);
+  const [ rowDeleted , setRowDeleted ] = useState(false);
   const tableRef = useRef(null);
-  let ResultData = ResultQuery.data?.data;
+  // let ResultData = ResultQuery.data?.data;
+  let [ ResultData , setResultData ] = useState(null)
+  const regex = /(<([^>]+)>)/gi;
   // let selectedRows = [];
   let columns = [];
   let rows = [];
-
+  useEffect(() => {
+    setResultData(ResultQuery?.data?.data)
+    setRowDeleted(false)
+  },[ResultQuery , rowDeleted])
   ResultData?.forEach((AnswerSet,index) => {
     if(AnswerSet.answers && AnswerSet.answers.length)
     {
@@ -127,7 +130,7 @@ export const ResultBody = ({ ResultQuery , QuestionnaireQuery }) => {
         title={<div className='tooltip_container' onClick={() => navigator.clipboard.writeText(item.question)}>
           {item.question} <Icon name='WDuplicate' />
           </div>}>
-              <p>{item.question}</p>
+              <p>{item.question?.replace(regex,"")}</p>
           
           </Tooltip> , 
         render : (Answer) => (Answer && typeof Answer == 'string' && Answer.includes('/media/'))
@@ -144,30 +147,31 @@ export const ResultBody = ({ ResultQuery , QuestionnaireQuery }) => {
         dataIndex : item.question  , 
         key : item.id ,
         align : 'center' ,
-        children : Array.isArray(item.answer) ? item.answer?.map(optionItem => ({
-          excelTitle : optionItem.text,
+        children : QuestionnaireQuery?.data?.data?.questions.find(QuestionItem => 
+          QuestionItem?.question.id == item.question_id)?.question?.options?.map(optionItem => ({
+          excelTitle : optionItem.text?.replace(regex,""),
           title : <Tooltip title={<div className='tooltip_container' 
           onClick={() => navigator.clipboard.writeText(optionItem.text)}>
-          {optionItem.text} <Icon name='WDuplicate' />
+          {optionItem.text?.replace(regex,"")} <Icon name='WDuplicate' />
           </div>}>
-              <p>{optionItem.text}</p>
+              <p>{optionItem.text?.replace(regex,"")}</p>
           </Tooltip>  ,
           align : 'center' ,
           key : optionItem.key,
           dataIndex : optionItem.text
-        })) : item.answer?.options?.map(optionItem => ({
-          excelTitle : optionItem.text, 
-          title : <Tooltip title={<div className='tooltip_container' 
-          onClick={() => navigator.clipboard.writeText(optionItem.text)}>
-          {optionItem.text} <Icon name='WDuplicate' />
-          </div>}>
-              <p>{optionItem.text}</p>
-          </Tooltip>  ,
-          align : 'center' ,
-          key : optionItem.key,
-          dataIndex : optionItem.text
-        }))
-    
+        })) 
+        // : item.answer?.options?.map(optionItem => ({
+        //   excelTitle : optionItem.text, 
+        //   title : <Tooltip title={<div className='tooltip_container' 
+        //   onClick={() => navigator.clipboard.writeText(optionItem.text)}>
+        //   {optionItem.text} <Icon name='WDuplicate' />
+        //   </div>}>
+        //       <p>{optionItem.text}</p>
+        //   </Tooltip>  ,
+        //   align : 'center' ,
+        //   key : optionItem.key,
+        //   dataIndex : optionItem.text
+        // }))
       }))
        AnswerSet.answers.forEach((item) => {
         if(!item.answer)  
@@ -180,12 +184,23 @@ export const ResultBody = ({ ResultQuery , QuestionnaireQuery }) => {
           {
             if(item.answer.options)
             {
-              
               item.answer.options.forEach(optionItem => {
-                rows[rows.length - 1][optionItem.text] = optionItem.text ? optionItem.text : '';
+                optionItem?.text == '<span>سایر</span>' ? 
+                rows[rows.length - 1][optionItem.text] = item.answer.other_text
+                :
+                rows[rows.length - 1][optionItem.text] = optionItem.text ? optionItem.text?.replace(regex,"") : '';
               })
             }
-              
+              else if (item.question_type == 'drop_down')
+              {
+                item.answer.forEach(optionItem => {
+                  rows[rows.length - 1][optionItem.text] = optionItem.text ? optionItem.text : '';
+                })
+              }
+              else if(item.question_type == 'sort')
+                  item.answer.forEach(optionItem => {
+                    rows[rows.length - 1][optionItem.text] = item.answer?.findIndex(item => item.text == optionItem.text) + 1;
+                  })
           }
            
             rows[rows.length - 1]['key'] = item.id;
@@ -195,22 +210,22 @@ export const ResultBody = ({ ResultQuery , QuestionnaireQuery }) => {
       rows[rows.length - 1]['id'] = AnswerSet.id;
     }
   })
- 
-
+  // console.log(document.querySelector("thead.ant-table-thead tr"),
+  // document.querySelector(".ant-table-container .ant-table-body"))
 const ResultSearchHandler = async (e) => {
   if(!e)
   {
-    ResultData = ResultQuery.data?.data
+    // ResultData = ResultQuery.data?.data
+    setResultData(ResultQuery.data?.data)
     return
   }    
   try 
   {
    let { data } = await axiosInstance.get(`/result-api/${QuestionnaireQuery.data?.data?.uuid}/answer-sets/search/?search=${e}`);
-   ResultData = data;
+   setResultData(data);
   }
   catch(err)
   {
-    console.log(err)
     resultMessage.error({
       content : 'یافت نشد',
       duration : 6,
@@ -221,17 +236,20 @@ const ResultSearchHandler = async (e) => {
     })
   }
 } 
-
+  
   useEffect(() => {
     if(tableRef.current)
-        ScrollByDrag();  
-  }, [tableRef.current]);
+      ScrollByDrag(); 
+  }, [document.querySelector("thead.ant-table-thead tr")]);
   const DeleteRowHandler = async () => {
     try
     {
       if(selectedRows.length)
         selectedRows.forEach(async (row) => {
            await axiosInstance.delete(`/question-api/questionnaires/${QuestionnaireQuery.data?.data?.uuid}/answer-sets/${row}/`)
+          //  setRowDeleted(true)
+            ResultQuery?.refetch()
+            setResultData(ResultQuery?.data?.data)
     }) 
     }
     catch(err)
@@ -247,22 +265,24 @@ const ResultSearchHandler = async (e) => {
         }
       })
     }
+    finally
+    {
+      setDeleteRowState(false);
+    }
   }
 
   const DateFilterHandler = async (_,filterDate) => {
-    // console.log(filterDate)
-    // console.log()
-    // convertDate
-    // return
+    console.log(filterDate.validatedValue)
+    if(!filterDate.validatedValue?.length)
+    {
+      setResultData(ResultQuery?.data?.data)
+      return
+    }
     try {
-      
-      //  else {
         let response =  await axiosInstance.get(`/result-api/${QuestionnaireQuery.data?.data?.uuid}/answer-sets/?answered_at&start_date=
         ${convertDate(digitsFaToEn(filterDate.validatedValue[0]),'gregorian')}
         &end_date=${filterDate.validatedValue[1] ? convertDate(digitsFaToEn(filterDate.validatedValue[1]),'gregorian') : ''}`)
-        ResultData =  response?.data;
-        console.log(ResultData)
-      //  }
+        setResultData(response?.data)
     }
    catch(err)
    {
@@ -273,18 +293,22 @@ const ResultSearchHandler = async (e) => {
     ResultQuery.isLoading ? 
     <ResultTableContainer loading='active'>
         <ResultBodyContainer>
-        <ResultBodyTopPart>
+        <ResultBodyTopPart style={{ flexDirection : 'column' }}>
+            <QuestionSearchContainer style={{ marginBottom : 0 }}>
+                <Skeleton.Input active />
+              </QuestionSearchContainer>
+              <ResultBodyTopPart style={{ marginTop : 0 }}>
             <TableOutPut>
-                <div className='table_control'>   
-                        <Skeleton.Button loading />    
-                        <Skeleton.Button loading /> 
+                <div className='table_control'>
+                    <Skeleton.Button active /> 
+                    <Skeleton.Button active />
                 </div>
-                
             </TableOutPut>
-            <div className='date_filter'>      
-                <Skeleton.Input loading style={{ width : 300 }}/>
-                <Skeleton.Input loading />
+            <div className='date_filter'>         
+              <Skeleton.Button active />
+              <Skeleton.Button active style={{ width : 120 }}/>
             </div>
+        </ResultBodyTopPart>
         </ResultBodyTopPart>
         <ResultTableContainer>
             <SkeletonTable columns={5} rowCount={10}/>
@@ -292,22 +316,20 @@ const ResultSearchHandler = async (e) => {
     </ResultBodyContainer>
     </ResultTableContainer>  :
     <ResultBodyContainer>
-      <QuestionSearchContainer style={{ marginTop : 10 }}>   
-                <Select
-                showSearch
-                defaultActiveFirstOption={false}
-                suffixIcon={<div>
-                  <Icon name='GraySearch' style={{ width : 15 }}/>
-                  </div>}
-                allowClear
-                placeholder="براساس عنوان سوال جست‌وجو کنید"
-                optionFilterProp="children"
-                onSearch={ResultSearchHandler}
-               
-                style={{ width : '100%' , height : '100%' , direction : 'rtl' , fontFamily : 'IRANSans' }}
-                notFoundContent={null}
-                />
-                 
+      <QuestionSearchContainer style={{ marginTop : 10}}>   
+            <Select
+            showSearch
+            defaultActiveFirstOption={false}
+            suffixIcon={<div>
+              <Icon name='GraySearch' style={{ width : 15 }}/>
+              </div>}
+            allowClear
+            placeholder="براساس عنوان سوال جست‌وجو کنید"
+            optionFilterProp="children"
+            onSearch={ResultSearchHandler}
+            style={{ width : '100%' , height : '100%' , direction : 'rtl' , fontFamily : 'IRANSans' }}
+            notFoundContent={null}
+            />
           </QuestionSearchContainer>
       {contextHolder}
         <ResultBodyTopPart>
@@ -322,17 +344,16 @@ const ResultSearchHandler = async (e) => {
                     onClick={() => ExcelExportHandler(ResultData,QuestionnaireQuery)}
                     >دریافت نتایج</ResultButton>    
                 </div>
-                
             </TableOutPut>
             <div className='date_filter'>         
             <DatePicker  format="YYYY-MM-DD"
-            animations={[transition()]}
             onChange={DateFilterHandler}
+            
               render={(value, openCalendar) => {
-             
+                
                 return (
                   <TimePickerContainer active={'active'} style={{ width : '100%' }}>
-                    <input value={value} onClick={openCalendar}  placeholder='انتخاب تاریخ' />
+                    <input value={value} onClick={openCalendar}  placeholder='انتخاب تاریخ' readOnly />
                     <Icon name='Calender' />
                   </TimePickerContainer>
                 )}}
@@ -340,7 +361,6 @@ const ResultSearchHandler = async (e) => {
               plugins={[
                 <DatePanel position="left" />
               ]}
-              // onChange={DateChangeHandler}
               calendar={persian}
               calendarPosition="bottom-left"
               locale={persian_fa}
@@ -352,7 +372,7 @@ const ResultSearchHandler = async (e) => {
             </div>
         </ResultBodyTopPart>
         <ResultTableContainer>
-           { ResultData?.length ?  <Table 
+           { (ResultData?.length && rows?.length) ?  <Table 
               columns={columns}
               dataSource={rows}
               ref={tableRef}
@@ -382,13 +402,21 @@ const ResultSearchHandler = async (e) => {
               size="middle"
               scroll={{  x: 2500, y: "50vh" , draggable : true}}
               scrollableTarget="table-wrapper"
-             /> : <EmptyResultContainer>
+             /> : (!QuestionnaireQuery.data?.data?.questions?.length) ? <EmptyResultContainer>
                 <img src={EmptyImage.src} />
                 <p>هنوز هیچ سوالی نساختید</p>
                 <Link href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/`}>
                   <EmptyButtonPage type='primary'>الان بسازید</EmptyButtonPage>
                 </Link>
-              </EmptyResultContainer>}
+              </EmptyResultContainer>
+              : <EmptyResultContainer>
+              <img src={EmptyImage.src} />
+              <p>نتیجه‌ای جهت نمایش وجود ندارد</p>
+              <Link href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/AnswerPage`} target='_blank'>
+                <EmptyButtonPage type='primary'>به پرسشنامه پاسخ دهید</EmptyButtonPage>
+              </Link>
+            </EmptyResultContainer> 
+              }
         </ResultTableContainer>
     </ResultBodyContainer>
   )

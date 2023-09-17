@@ -39,12 +39,12 @@ const SettingPanel = ({ Questionnaire }) => {
   const [QuestionnaireData, Dispatcher] = useReducer(QuestionnaireReducerFunction, Questionnaire);
   const [messageApi, contextHolder] = message.useMessage()
   const [DateActive, SetDateActive] = useState(false);
-  const [TimerActive, SetTimerActive] = useState(QuestionnaireData.timer ? true : false);
+  const [TimerActive, SetTimerActive] = useState(QuestionnaireData?.timer ? true : false);
   const [TimerOpen, setTimerOpen] = useState(false);
   const [SettingChanged, SetSettingChanged] = useState(false);
   const [SettingLoading, SetSettingLoading] = useState(false);
   const [ErrorType, SetErrorType] = useState(null);
-  const [TimerValue, setTimerValue] = useState(Questionnaire.timer);
+  const [TimerValue, setTimerValue] = useState(Questionnaire?.timer);
   let end_date;
   let pub_date;
   const [ DatePickerValue , setDatePickerValue ] = useState(null);
@@ -156,7 +156,6 @@ const SettingPanel = ({ Questionnaire }) => {
           </div>
           <div className='picker_container date_picker' >
             <DatePicker  format="YYYY-MM-DD HH:mm:ss"
-            animations={[transition()]}
               disabled={!DateActive}
               render={(value, openCalendar) => {
                 return (
@@ -169,7 +168,6 @@ const SettingPanel = ({ Questionnaire }) => {
               plugins={[
                 <TimePicker position="bottom" />
               ]} 
-              
               onChange={DateChangeHandler}
               calendar={persian}
               calendarPosition="bottom-left"
@@ -189,7 +187,15 @@ const SettingPanel = ({ Questionnaire }) => {
             
             onChange={TimerChangeHandler}
             render={(value, openCalendar) => {
-                let timerValue = value && value.length ? value : QuestionnaireData.timer ? digitsEnToFa(QuestionnaireData.timer) : null
+                let timerValue;
+                if(QuestionnaireData.timer)
+                {
+                  timerValue = digitsEnToFa(QuestionnaireData.timer);
+                }
+                else if(value && value.length)
+                {
+                  timerValue = value
+                }
               return (
                 <TimePickerContainer active={TimerActive ? 'active' : null} onClick={e => TimerActive ?  openCalendar() : e.preventDefault()}>
                   <input value={timerValue}

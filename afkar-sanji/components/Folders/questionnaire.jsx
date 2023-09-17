@@ -18,7 +18,7 @@ const convertToJalaliDate = (inputDate) => {
     const jDate = jalaali.toJalaali(parseInt(year), parseInt(month), parseInt(day));
     return `${jDate.jy}/${jDate.jm}/${jDate.jd}`;
 }
-const QuestionnaireBox = ({Questionnaire , FolderReload}) => {
+const QuestionnaireBox = ({Questionnaire , FolderReload , folderNumber}) => {
     const [ ChangeNameActive , setChangeNameState ] = useState(false);
     const [ QuestionnaireName , setQuestionnaireName ] = useState(Questionnaire.name);
     const [ NameInputWidth , SetInputWidth ] = useState(null);
@@ -36,8 +36,6 @@ const QuestionnaireBox = ({Questionnaire , FolderReload}) => {
         }, 100)
         if(ChangeNameActive)
            RenameQuestionnaire();
-        
-            
 
     }
     const RenameQuestionnaire = async () => {
@@ -125,7 +123,7 @@ const QuestionnaireBox = ({Questionnaire , FolderReload}) => {
                      
              </div>
          </div>
-         <QuestionnaireFooterPart FolderReload={FolderReload} questionnaire={Questionnaire} />
+         <QuestionnaireFooterPart FolderReload={FolderReload} questionnaire={Questionnaire} folderNumber={folderNumber} />
          </Badge.Ribbon> 
      </QuestionnaireDiv>
   )

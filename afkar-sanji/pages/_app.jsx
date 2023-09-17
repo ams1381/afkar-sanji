@@ -5,6 +5,7 @@ import { useLocalStorage } from '@/utilities/useLocalStorage'
 import { useRouter } from 'next/router'
 import { useContext, useEffect, useState } from 'react'
 import { QueryClientProvider , QueryClient} from '@tanstack/react-query'
+import axios from 'axios'
 
 
 const queryClient = new QueryClient()

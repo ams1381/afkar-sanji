@@ -23,29 +23,7 @@ const QuestionnairePanel = () => {
     const [ QuestionnaireReloader , SetQuestionnaireReloader ] = useState(false);
     const { data , isLoading , refetch , error , isFetched} = useQuery(['QuestionnaireRetrieve'],
     async () => await axiosInstance.get(`/question-api/questionnaires/${router?.query?.QuestionnaireID}/`))
-    // useEffect(() => {
-    //   try 
-    //   {
-    //     const QuestionnaireRetriever = async () => {
-    //       let  { data } =  await axiosInstance.get(`/question-api/questionnaires/${router.query.QuestionnaireID}/`);
-    //       SetQuestionnaireInfo(data);
-    //       // SetQuestionnaireReloader(false);
-    //    }
-    //    if(router.query.QuestionnaireID)
-    //      QuestionnaireRetriever();
-    //   }
-    //   catch(err)
-    //   {
-    //     messageApi.error({
-    //       content : err.response.data,
-    //       duration : 6,
-    //       style : {
-    //         fontFamily : 'IRANSans',
-    //         direction : 'rtl'
-    //       }
-    //     })
-    //   }
-    // },[])
+
     if(error && error?.response)
     {
       if(error?.response.status == 404)
@@ -70,20 +48,27 @@ const QuestionnairePanel = () => {
 
   return (
     <>
+     <style global jsx>{`
+            html,
+            body {
+              overflow: hidden;
+            }
+    `}</style>
     <Head>
       <title> Afkar Sanji | Questionnaire</title>
     </Head>
     <Provider store={QuestionStore}>
     <ProgressBarLoading />
     {messageContext}
-    <Header SetSideBar={() => setOpen(!SideBarOpen)} goToFolders={true}/>
+    <Header SetSideBar={() => setOpen(!SideBarOpen)} goToFolders={true} loadingHeader={isLoading}
+    Questionnaire={data?.data}/>
       <QuestionnairePanelContainer>
         <PanelInnerContainer> 
           {  <QuestionnairePanelHeader SideState={SideState} isFetched={isFetched}
            ChangeSide={SetSideState} Questionnaire={data?.data}/>}
           {
             SideState == 'question_design' ? <QuestionDesignPanel QuestionnaireReloader={refetch} Questionnaire={data?.data}/> 
-            : <SettingPanel Questionnaire={data?.data}/>
+            : data?.data && <SettingPanel Questionnaire={data?.data}/>
             }
           </PanelInnerContainer>
       </QuestionnairePanelContainer>

@@ -43,7 +43,6 @@ export const options = {
 };
 
 
-
 const ChartsBody = ({ ChartQuery , QuestionnaireQuery }) => {
   const [ filterPopover , setFilterPopover ] = useState(false);
   const [ totalChartType , setTotalChartType ] = useState(null);
@@ -52,6 +51,9 @@ const ChartsBody = ({ ChartQuery , QuestionnaireQuery }) => {
   const DownloadAllCharts = async () => {
     let ChartArrayHTML = '';
     let ChartsArray = document.querySelectorAll('canvas');
+    if(!ChartQuery?.data?.data?.length)
+      return
+
     try 
     {
       ChartsArray.forEach(async (item) => {
@@ -88,7 +90,6 @@ const ChartsBody = ({ ChartQuery , QuestionnaireQuery }) => {
     </TopBarButtonsContainer>
   </TopBar>
   <QuestionChartBodyContainer>  
-        {/* <QuestionChart totalChartType={totalChartType} key={item.question_id} PlotDetail={item} /> */}
         <QuestionChartContainer loading={true}>
           <QuestionChartContainerHeader>
           <div className='question_chart_title'>
@@ -180,8 +181,6 @@ const ChartsBody = ({ ChartQuery , QuestionnaireQuery }) => {
               <Icon name='Filter' />
             </ResultButton>
             </Popover>
-            
-
           </TopBarButtonsContainer>
         </TopBar>
         <QuestionChartBodyContainer>
@@ -189,14 +188,20 @@ const ChartsBody = ({ ChartQuery , QuestionnaireQuery }) => {
             ChartQuery.data?.data?.length ?
             ChartQuery.data?.data?.map(item => <QuestionChart totalChartType={totalChartType} totalChartSort={totalChartSort}
                key={item.question_id} PlotDetail={item} />)
-            :
-            <EmptyResultContainer>
-                <img src={EmptyImage.src} />
-                <p>هنوز هیچ سوالی نساختید</p>
-                <Link href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/`}>
-                  <EmptyButtonPage type='primary'>الان بسازید</EmptyButtonPage>
-                </Link>
-              </EmptyResultContainer>
+              : (!QuestionnaireQuery.data?.data?.questions?.length) ? <EmptyResultContainer>
+              <img src={EmptyImage.src} />
+              <p>هنوز هیچ سوالی نساختید</p>
+              <Link href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/`}>
+                <EmptyButtonPage type='primary'>الان بسازید</EmptyButtonPage>
+              </Link>
+            </EmptyResultContainer>
+            : <EmptyResultContainer>
+            <img src={EmptyImage.src} />
+            <p>نتیجه‌ای جهت نمایش وجود ندارد</p>
+            <Link href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/AnswerPage`} target='_blank'>
+              <EmptyButtonPage type='primary'>به پرسشنامه پاسخ دهید</EmptyButtonPage>
+            </Link>
+          </EmptyResultContainer> 
           }
         </QuestionChartBodyContainer>
      </div>

@@ -1,5 +1,6 @@
 import { NumberInputContainer } from '@/styles/questionnairePanel/QuestionComponent'
 import { ChangeInputAnswer } from '@/utilities/AnswerStore'
+import { digitsEnToFa } from '@persian-tools/persian-tools'
 import { Input, InputNumber } from 'antd'
 import React, { useEffect } from 'react'
 import { useState } from 'react'
@@ -38,7 +39,7 @@ export const Number = ({ QuestionInfo }) => {
         <InputNumber type='number' value={NumberAnswer}
         onChange={NumberAnswerHandler}
          style={{ fontFamily : 'IRANSans' , direction : 'ltr' , textAlign : 'left' }}
-         placeholder={!(QuestionInfo.min == 0 && QuestionInfo.max == 0) ? `از ${QuestionInfo.min ? QuestionInfo.min : 'فلان'} تا ${QuestionInfo.max ? QuestionInfo.max : 'بیسار'}` : 'یک عدد وارد کنید'} />
+         placeholder={!(QuestionInfo.min == 0 && QuestionInfo.max == 0) ? `از ${QuestionInfo.min ? digitsEnToFa(QuestionInfo.min) : 'فلان'} تا ${QuestionInfo.max ? digitsEnToFa(QuestionInfo.max) : 'بیسار'}` : 'یک عدد وارد کنید'} />
     </NumberInputContainer>
   )
 }

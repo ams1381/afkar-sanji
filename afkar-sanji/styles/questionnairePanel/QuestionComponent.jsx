@@ -217,6 +217,12 @@ export const DropDownContainer = styled.div`
     .ant-select-selector
     {
         border-radius : 2px;
+        height : 40px !important;
+    }
+    .ant-select-selection-placeholder
+    {
+        display : flex;
+        align-items : center;
     }
 `
 export const EmailInputContainer = styled.div`
@@ -408,7 +414,7 @@ export const RateContainer = styled.div`
     gap: 20px;
     width: fit-content;
     margin: 0 auto;
-
+    margin-top: 20px;
 
     .rate_selector {
         display: flex;
@@ -467,6 +473,14 @@ export const FileQuestionContainer = styled.div`
     .ant-upload-list-item.ant-upload-list-item-error
     {
         border-radius : 2px !important;
+    }
+    .ant-upload ant-upload-select
+    {
+        margin-top : 24px !important;
+    }
+    & .ant-tooltip
+    {
+        display : none;
     }
 `
 export const NumberInputContainer = styled.div`
