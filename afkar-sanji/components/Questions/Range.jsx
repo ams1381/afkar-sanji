@@ -20,6 +20,16 @@ export const RangeQuestionComponent = ({ QuestionInfo }) => {
     if(QuestionsAnswerSet && QuestionsAnswerSet.length)
       setRangeAnswerValue(QuestionsAnswerSet.find(item => item.question == QuestionInfo.id).answer?.integer_range);
 
+      window.addEventListener('resize',() => {
+        const labelRefs = [leftLabelRef, midLabelRef, rightLabelRef];
+        const labelsHeightArray = labelRefs
+          .map(ref => (ref && ref.current ? ref.current.offsetHeight : null))
+          .filter(height => height !== null);
+  
+      const longestlabelheight = labelsHeightArray.reduce((a, b) => Math.max(a, b), -Infinity);
+  
+      setlongestlabelheight(longestlabelheight);
+      })
   },[])
   useEffect(() => {
       const labelRefs = [leftLabelRef, midLabelRef, rightLabelRef];

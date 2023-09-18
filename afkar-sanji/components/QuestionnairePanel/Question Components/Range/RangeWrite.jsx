@@ -21,7 +21,7 @@ export const RangeWrite = ({ QuestionInfo }) => {
     <SliderContainer>
         <Slider
           min={3}
-          max={12}
+          max={11}
           step={1}
           marks={SlideMarkGenerator(3,12)}
           trackStyle={{ background : '#A4ABFF' }}

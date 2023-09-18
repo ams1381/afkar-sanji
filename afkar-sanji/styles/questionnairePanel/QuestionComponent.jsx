@@ -135,6 +135,13 @@ export const OptionalAnswerBlockContainer = styled.div`
     direction: rtl;
     gap: 16px;
     margin-top: 20px;
+    max-height : 250px;
+    overflow : scroll;
+
+    &::-webkit-scrollbar
+    {
+        width : 0;
+    }
    
     &  .OptionalAnswerItemContainer
     {
@@ -168,6 +175,15 @@ export const OptionalAnswerBlockContainer = styled.div`
         font-family: 'IRANSANS';
     }
    
+`
+export const OptionsContainer = styled.div`
+    max-height : 250px;
+    overflow : scroll;
+
+    &::-webkit-scrollbar
+    {
+        width : 0;
+    }
 `
 export const QuestionWithAnswerContainer = styled.div`
     position : relative;
@@ -261,7 +277,7 @@ export const RangeQuestion = styled.div`
     margin: 20px auto;
     margin-bottom: ${p => p.longestlabelheight ? p.longestlabelheight + 30 + 'px' : '0'};
 
-    @media screen and (max-width : 480px)
+    @media screen and (max-width : 768px)
     {
         width: 80%;
     }
@@ -269,7 +285,9 @@ export const RangeQuestion = styled.div`
 export const RangeQuestionContainer = styled.div`
     display: flex;
     border: 3px solid #7C86FA;
-    width: fit-content;
+    // width: fit-content;
+    min-width: 125px;
+    max-width: fit-content;
     margin: 1rem auto 0 auto;
     border-radius: 2px;
     justify-content: space-around;
@@ -278,6 +296,8 @@ export const RangeQuestionContainer = styled.div`
     @media screen and (max-width : 768px)
     {
         width : auto;
+        // min-width : auto !important;
+        max-width : none !important;
     }
 `
 export const RangeQuestionAnswerItem = styled.div`
@@ -289,7 +309,8 @@ export const RangeQuestionAnswerItem = styled.div`
     position: ${p => p.haslabel ? 'relative' : 'initial'};
     justify-content: center;
     // max-width: 40px;
-    width: calc(1.6vw + 0.8rem);
+    // width: calc(1.6vw + 0.8rem);
+    width: calc(1.6vw + 1.4rem);
     & input 
     {
         display : none;
@@ -347,7 +368,8 @@ export const RangeQuestionLabelContainer = styled.div`
 export const QuestionRangeLabel = styled.div`
     position: absolute;
     // width: 53px;
-    width: calc(1.6vw + 0.99rem);
+    // width: calc(1.6vw + 0.99rem);
+    width: calc(1.6vw + 1.3rem);
     text-align: center;
     padding-top: 1.5rem;
     top: 48px;

@@ -1,5 +1,5 @@
 import { Icon } from '@/styles/icons';
-import { OptionalAnswerBlockContainer } from '@/styles/questionnairePanel/QuestionComponent';
+import { OptionalAnswerBlockContainer , OptionsContainer} from '@/styles/questionnairePanel/QuestionComponent';
 import React, { useEffect, useState } from 'react'
 import { DragDropContext , Droppable , Draggable } from '@hello-pangea/dnd';
 import { useDrag } from 'react-dnd'
@@ -46,15 +46,9 @@ const Prioritize = ({ QuestionInfo }) => {
       dispatcher(SortOptions({ QuestionID : QuestionInfo.id , NewOptionsArray : reorderedItems.map((item,index) => ({ id : item.id , placement : index + 1 })) }))
   };
   const onDragStartHandler = (E) => {
-   
-    // if(document.querySelector('.swiper-wrapper'))
-    // {
-    //   document.querySelector('.swiper-wrapper').setAttribute('style','pointer-events : none');
-    //   document.getElementById('prioritize_droppable')?.setAttribute('style','pointer-events : all');
-
-    // }
   } 
   return (
+    <OptionsContainer>
     <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStartHandler}>
       <Droppable droppableId='prioritize_droppable'>
         {(droppableProvided, droppableSnapshot) => (
@@ -91,6 +85,7 @@ const Prioritize = ({ QuestionInfo }) => {
         )}
       </Droppable>
     </DragDropContext>
+    </OptionsContainer>
   );
 };
 

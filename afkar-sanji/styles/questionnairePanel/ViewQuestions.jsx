@@ -201,7 +201,7 @@ export const PreviewPageContainer = styled.div`
      }
      .swiper-slide.swiper-slide-next .question_component
      {
-        margin-top : -120px;
+        margin-top : -85px;
         opacity : 0.6;
      }
      .swiper-slide.swiper-slide-prev .question_component
@@ -233,7 +233,7 @@ export const PreviewPageHeader = styled.div`
 `
 export const PreviewQuestionsContainer = styled.div`
     width : ${p => p.slidemode ? '50%' : '30%'};
-    max-height: 649px;
+    max-height: ${p => p.slidemode ? 'auto' : '649px'};
     overflow: ${p => p.slidemode ? 'hidden' : 'scroll'};
 
     &::-webkit-scrollbar 
