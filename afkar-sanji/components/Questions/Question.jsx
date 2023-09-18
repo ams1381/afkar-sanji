@@ -44,7 +44,7 @@ const QuestionComponentBodyProvider = (QuestionType,QuestionInfo) => {
             return <InputAnswer InputPlaceholder={QuestionInfo.answer_template} QuestionInfo={QuestionInfo}/>
   }
 }
-const QuestionComponent = ({ QuestionInfo , ChildQuestion , mobilepreview }) => {
+const QuestionComponent = ({ QuestionInfo , ChildQuestion , mobilepreview , errorMessage }) => {
   const QuestionBodyComponent = QuestionComponentBodyProvider(QuestionInfo.question_type,QuestionInfo);
   const regex = /(<([^>]+)>)/gi;
 
@@ -88,6 +88,7 @@ const QuestionComponent = ({ QuestionInfo , ChildQuestion , mobilepreview }) => 
          QuestionInfo.child_questions.map(item => 
             <QuestionComponent QuestionInfo={item.question}/>)
         : QuestionBodyComponent}
+       { errorMessage ?  <p className='answer_error_message'>{errorMessage}</p> : ''}
     </QuestionComponentContainer> 
       : <ThankComponent ThanksInfo={QuestionInfo}/>
   )

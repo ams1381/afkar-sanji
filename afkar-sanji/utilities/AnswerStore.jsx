@@ -64,9 +64,11 @@ const AnswerSetSlice =  createSlice({
             }
             else if(typeof ChoseOptionsArray == 'object')
             { 
-                state.AnswerSet.find(item => item.question == QuestionID).answer = {
-                    'selected_options' : [ChoseOptionsArray.id]
-                }
+                if(ChoseOptionsArray.id)
+                    state.AnswerSet.find(item => item.question == QuestionID).answer = {
+                        'selected_options' : [ChoseOptionsArray.id]
+                    }
+                
             }
             else if(Array.isArray(ChoseOptionsArray) && !ChoseOptionsArray.length)
             {

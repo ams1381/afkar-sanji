@@ -45,15 +45,22 @@ const Prioritize = ({ QuestionInfo }) => {
     if(QuestionsAnswerSet && QuestionsAnswerSet.length)
       dispatcher(SortOptions({ QuestionID : QuestionInfo.id , NewOptionsArray : reorderedItems.map((item,index) => ({ id : item.id , placement : index + 1 })) }))
   };
+  const onDragStartHandler = (E) => {
+   
+    // if(document.querySelector('.swiper-wrapper'))
+    // {
+    //   document.querySelector('.swiper-wrapper').setAttribute('style','pointer-events : none');
+    //   document.getElementById('prioritize_droppable')?.setAttribute('style','pointer-events : all');
 
+    // }
+  } 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
+    <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStartHandler}>
       <Droppable droppableId='prioritize_droppable'>
         {(droppableProvided, droppableSnapshot) => (
           <OptionalAnswerBlockContainer
             vertical='true'
             ref={droppableProvided.innerRef}
-            
             {...droppableProvided.droppableProps}
           >
             {sortedOptionArray.map((item, index) => (

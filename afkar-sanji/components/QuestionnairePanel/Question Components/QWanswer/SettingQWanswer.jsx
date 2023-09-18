@@ -79,17 +79,17 @@ const PatternGenerator = (Type) => {
     case 'jalali_date':
         return { "label" : 'تاریخ شمسی' , "value"  : 'jalali_date' , answer_template : 'تاریخ شمسی' }
     case 'free':
-        return { "label" : 'متن آزاد' , "value"  : 'free'  , answer_template : 'متن آزاد'}
+        return { "label" : 'متن آزاد' , "value"  : 'free'  , answer_template : 'چیزی بنویسید'}
     case 'phone_number':
-        return { "label" : 'شماره تلفن' , "value" : 'phone_number' , answer_template : 'شماره تلفن '}
+        return { "label" : 'شماره تلفن' , "value" : 'phone_number' , answer_template : 'شماره‌ی تلفن ثابت را وارد کنید'}
     case 'mobile_number':
-        return { "label" : 'شماره موبایل ' , "value" : 'mobile_number' , answer_template : 'شماره موبایل' }
+        return { "label" : 'شماره موبایل ' , "value" : 'mobile_number' , answer_template : 'شماره‌ی موبایل را وارد کنید' }
     case 'number_character':
-          return { "label" : ' کارکتر عددی' , "value" : 'number_character' , answer_template : 'کاراکتر عددی'}
+          return { "label" : ' کارکتر عددی' , "value" : 'number_character' , answer_template : 'عددی را وارد کنید'}
     case 'persian_letters':
           return { "label" : 'حروف فارسی' , "value" : 'persian_letters' , answer_template : 'حروف فارسی' }
     case 'english_letters' :
-          return { "label" : 'حروف انگلیسی' , "value" : 'english_letters' , answer_template : 'حروف انگلیسی'}
+          return { "label" : 'حروف انگلیسی' , "value" : 'english_letters' , answer_template : 'Enter something'}
   }
 }
 

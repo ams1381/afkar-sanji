@@ -54,7 +54,6 @@ const QuestionnairePanelHeader = ({ FolderName , isFetched , Questionnaire , Sid
   ]
    if(getItem('tabType'))
     {
-      console.log(getItem('tabType'))
       ChangeSide(getItem('tabType'))
       // getItem('tabType') == 'questionnaire_setting' ? TabIndex = 2 : TabIndex = 1;
     

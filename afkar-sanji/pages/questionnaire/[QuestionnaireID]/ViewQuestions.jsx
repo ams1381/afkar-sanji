@@ -22,6 +22,7 @@ import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { AnswerSetFormDataConverter } from '@/utilities/FormData';
 import { digitsEnToFa } from '@persian-tools/persian-tools';
+// import { NullifiedContextProvider } from '@dnd-kit/core/dist/components/DragOverlay/components';
 
 
 SwiperCore.use([Navigation]);
@@ -33,7 +34,10 @@ const ViewQuestions = ({ answerSetID }) => {
   const [ messageApi , messageContext ] = message.useMessage();
   const [isScrollDisabled, setIsScrollDisabled] = useState(false);
   const [ CurrentIndex , SetCurrentIndex ] = useState('Welcome');
-  const [ swiperInstance , setSwiperInstance ] = useState(null)
+  const [ swiperInstance , setSwiperInstance ] = useState(null);
+  const [ nextQuestionError , setNextQuestionError ] = useState(null);
+  // const [ notAnsweredQuestions , setNotAnsweredQuestions ] = useState([]);
+  let notAnsweredQuestions = []
   let QuestionsAnswerSet;
   let dispatcher;
   if(answerSetID)
@@ -93,35 +97,66 @@ const ViewQuestions = ({ answerSetID }) => {
     }
   },[])
   const saveSwiperInstance = (swiper) => {
+    
     setSwiperInstance(swiper); // Store the Swiper instance
   };
+  
   const NextQuestionHandler = () => {
+    // console.log(QuestionsData[CurrentIndex])
+    // if(QuestionsAnswerSet && !Object.values(QuestionsAnswerSet[CurrentIndex]?.answer)?.length && 
+    //   QuestionsData[CurrentIndex]?.question?.is_required)
+    //   {
+    //     setNextQuestionError('لطفا به سوال اجباری پاسخ دهید');
+    //     return
+    //   }
     if(CurrentIndex == QuestionsData.length - 1)
       SetCurrentIndex('Thanks')
     else
       SetCurrentIndex(CurrentIndex + 1)
   } 
-
+  const ChangeSwiperSlideHandler = (E) => {
+    // console.log(E)
+    SetCurrentIndex(E.activeIndex)
+    // if(QuestionsAnswerSet && !Object.values(QuestionsAnswerSet[E.activeIndex - 1]?.answer)?.length && 
+    //   QuestionsData[E.activeIndex - 1]?.question?.is_required)
+    //   {
+    //     setNextQuestionError('لطفا به سوال پاسخ دهید');
+    //     return
+    //   }
+    // else
+    //   setNextQuestionError(null)
+  }
   const PrevQuestionHandler = () => {
+    setNextQuestionError(null)
     if(CurrentIndex == 0)
       SetCurrentIndex('welcome_page')
     else
       SetCurrentIndex(CurrentIndex - 1)
   }
-
   const ConfirmAnswersHandler = async () => {
 
     let FileQuestionQuestions = QuestionsAnswerSet.map(item => {
       if(item.file)
         return item
     }) 
-    // .find((item,index) => item.file !== null);
+    QuestionsAnswerSet.forEach((item,index) => {
+      if(item.answer && !Object.values(item.answer)?.length && 
+      QuestionsData[index]?.question?.is_required)
+      {
+        notAnsweredQuestions.push((QuestionsData?.find(QuestionItem => QuestionItem.question.id == item?.question))?.question?.placement)
+      }
+   
+    })
+    console.log(notAnsweredQuestions)
+    if(notAnsweredQuestions?.length)
+      setNextQuestionError(notAnsweredQuestions)
     FileQuestionQuestions = FileQuestionQuestions.filter(item => item != undefined);
     QuestionsAnswerSet = QuestionsAnswerSet.filter(item => item.file == null);
 
     console.log(FileQuestionQuestions)
     try
     {
+      
       if(FileQuestionQuestions && FileQuestionQuestions.length)
       await axios.post(baseURL + `/question-api/questionnaires/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,AnswerSetFormDataConverter(FileQuestionQuestions),{
         'Content-Type' : 'multipart/form-data'
@@ -132,7 +167,7 @@ const ViewQuestions = ({ answerSetID }) => {
   }
   catch(err)
   {
-   
+    console.log(err)
         messageApi.error({
           content : 'به سوالات درست پاسخ دهید',
           style : {
@@ -176,7 +211,7 @@ const ViewQuestions = ({ answerSetID }) => {
               onSwiper={saveSwiperInstance}
               allowSlidePrev={true}
               slidesPerView={1}
-              onSlideChange={(E) => SetCurrentIndex(E.activeIndex)}
+              onSlideChange={ChangeSwiperSlideHandler}
             >
              { QuestionnaireInfo.welcome_page && <SwiperSlide>
               <WelcomeComponent mobilepreview={true} swiperMode={true}
@@ -185,8 +220,15 @@ const ViewQuestions = ({ answerSetID }) => {
               </SwiperSlide>}
               {QuestionsData.map((item, index) => (
                 item && <SwiperSlide key={item.question.id}>
-                    <QuestionComponent mobilepreview={true} QuestionInfo={item.question} />
-                    { index == QuestionsData.length - 1 &&   <ControlButtonsContainer style={{ width : '90%' }}>
+                  
+                     <QuestionComponent mobilepreview={true} QuestionInfo={item.question} 
+                     errorMessage={ nextQuestionError && CurrentIndex == index + 1 ? nextQuestionError : null} />
+                    
+                    { index == QuestionsData.length - 1 &&   <ControlButtonsContainer style={{ width : '90%' , flexDirection : 'column' , alignItems : 'center' }}>
+                      {/* { Array.isArray(nextQuestionError) &&  nextQuestionError ?
+                       <p className='answer_error_message'>پاسخ به این سوالات {
+                      nextQuestionError?.map(item => ` ${digitsEnToFa(item)} , `)
+                      } اجباری است </p>  : '' } */}
                       <Button type='primary' onClick={answerSetID ? ConfirmAnswersHandler : () => {
                        SetCurrentIndex('Thanks')
                        enableScroll();
@@ -196,7 +238,11 @@ const ViewQuestions = ({ answerSetID }) => {
               ))}
             </Swiper>
           </div>
-      : (QuestionsData[CurrentIndex] && <QuestionComponent mobilepreview={true} QuestionInfo={QuestionsData[CurrentIndex].question} /> ): ''}   
+      : (QuestionsData[CurrentIndex] && 
+      <>
+        <QuestionComponent mobilepreview={true} QuestionInfo={QuestionsData[CurrentIndex].question} />
+        { nextQuestionError ? <p className='answer_error_message'>{nextQuestionError}</p> : '' }
+      </>  ): ''}   
 
       { CurrentIndex == 'Thanks'
       ? QuestionnaireInfo.thanks_page ? <ThankComponent ThanksInfo={QuestionnaireInfo.thanks_page} mobilepreview={true}/> : 

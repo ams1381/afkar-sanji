@@ -5,6 +5,13 @@ export const PreviewPage = styled.div`
     width : 100%;
     height : 100vh;
     font-family : IRANSans;
+
+    .answer_error_message
+    {
+        font-size: 14px;
+        color: var(--Error-color);
+        text-align: right;
+    }
 `
 export const ControlButtonsContainer = styled.div`
     display: flex;
@@ -227,7 +234,7 @@ export const PreviewPageHeader = styled.div`
 export const PreviewQuestionsContainer = styled.div`
     width : ${p => p.slidemode ? '50%' : '30%'};
     max-height: 649px;
-    overflow: scroll;
+    overflow: ${p => p.slidemode ? 'hidden' : 'scroll'};
 
     &::-webkit-scrollbar 
     {

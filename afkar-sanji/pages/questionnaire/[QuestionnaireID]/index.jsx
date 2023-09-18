@@ -27,14 +27,15 @@ const QuestionnairePanel = () => {
     if(error && error?.response)
     {
       if(error?.response.status == 404)
-        messageApi.error({
-                content : 'یافت نشد',
-                duration : 6,
-                style : {
-                  fontFamily : 'IRANSans',
-                  direction : 'rtl'
-                }
-              })
+          router.push('/404')
+        // messageApi.error({
+        //         content : 'یافت نشد',
+        //         duration : 6,
+        //         style : {
+        //           fontFamily : 'IRANSans',
+        //           direction : 'rtl'
+        //         }
+        //       })
         else
           messageApi.error({
             content : error.response.data,
@@ -52,6 +53,13 @@ const QuestionnairePanel = () => {
             html,
             body {
               overflow: hidden;
+            }
+            @media screen and (max-width : 768px)
+            {
+              html,
+              body {
+                overflow: scroll;
+              }
             }
     `}</style>
     <Head>

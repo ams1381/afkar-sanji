@@ -119,40 +119,65 @@ export const QuestionChart = ({ PlotDetail , totalChartType , totalChartSort}) =
               font : {
                 family : 'IRANSans'
             },
-          //   callback: function(value, index, ticks) {
-          //     if(currentChartType != 'HorizontalBar')
-          //     {
-          //       if(PlotDetail.question_type == 'optional' ||
-          //       PlotDetail.question_type == 'drop_down')
-          //        return digitsEnToFa(PlotDetail.options[index]?.text?.replace(regex,""));
-          //      else 
-          //      {
-          //        let dataArray = objectToSparseArray(PlotDetail.counts , PlotDetail.max).map((item,index) => [ PlotDetail.min == 0 ? index : index + 1 , item ]);
-          //        let SortArray = currentSort == 'increase' ? Object.values(PlotDetail.counts).sort((a,b) => a - b) :
-          //          currentSort == 'decrease' ? Object.values(PlotDetail.counts).sort((a,b) => a - b).reverse() : ''
+            callback: function(value, index, ticks) {
+              if(currentChartType != 'HorizontalBar')
+              {
+                if(PlotDetail.question_type == 'optional' ||
+                PlotDetail.question_type == 'drop_down')
+                {
+                  let dataArray = PlotDetail.options.map((item,index) => [ item?.text , Object.values(PlotDetail.counts)[index] ]);
+                 let SortArray = currentSort == 'increase' ? Object.values(PlotDetail.counts).sort((a,b) => a - b) :
+                   currentSort == 'decrease' ? Object.values(PlotDetail.counts).sort((a,b) => a - b).reverse() : ''
                  
-          //        if(currentSort != 'default')
-          //          dataArray = dataArray.map(function(item) {
-          //            var n = SortArray.indexOf(item[1]);
-          //            SortArray[n] = '';
-          //            return [n, item]
-          //        }).sort().map(function(j) { return j[1] }).map(item => item[0])
+                 if(currentSort != 'default')
+                   dataArray = dataArray.map(function(item) {
+                     var n = SortArray.indexOf(item[1]);
+                     SortArray[n] = '';
+                     return [n, item]
+                 }).sort().map(function(j) { return j[1] })
+
+                 console.log(dataArray)
+                 if(currentSort != 'default' && dataArray[index][0])
+                    return digitsEnToFa(dataArray[index][0]?.replace(regex,""))
+                  else
+                    return digitsEnToFa(PlotDetail.options[index]?.text?.replace(regex,""));
+                }
+                 
+               else 
+               {
+                // console.log(PlotDetail)
+                 let dataArray = objectToSparseArray(PlotDetail.counts , PlotDetail.max).map((item,index) => [ PlotDetail.minimum_answer == 0 ? index : index + 1 , item ]);
+                 let SortArray = currentSort == 'increase' ? Object.values(PlotDetail.counts).sort((a,b) => a - b) :
+                   currentSort == 'decrease' ? Object.values(PlotDetail.counts).sort((a,b) => a - b).reverse() : ''
+                 
+                 if(currentSort != 'default')
+                   dataArray = dataArray.map(function(item) {
+                     var n = SortArray.indexOf(item[1]);
+                     SortArray[n] = '';
+                     return [n, item]
+                 }).sort().map(function(j) { return j[1] })
  
-             
-          //        if(dataArray[index] && dataArray[index][0] && currentSort != 'default')
-          //          return digitsEnToFa(dataArray[index][0]?.toString())
-          //         else
-          //         return digitsEnToFa(value)
-          //      } 
-          //     }
-          //     else
-          //     {
-          //       return digitsEnToFa(value)
+                 console.log(dataArray)
+                 if(dataArray[index] && dataArray[index][0] && currentSort != 'default')
+                   return digitsEnToFa(dataArray[index][0]?.toString())
+                  else
+                  {
+                    if(PlotDetail.minimum_answer == 0) 
+                      return digitsEnToFa(value)
+                    else
+                      return digitsEnToFa(value + 1)
+                  }
+                  
+               } 
+              }
+              else
+              {
+                return digitsEnToFa(value)
             
                   
-          //       //  return digitsEnToFa(Object.values(PlotDetail.counts)[index][0]);
-          //     }
-          // }
+                //  return digitsEnToFa(Object.values(PlotDetail.counts)[index][0]);
+              }
+          }
           }
         } , 
         y : {
