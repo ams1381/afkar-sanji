@@ -131,17 +131,17 @@ export const ResultBody = ({ ResultQuery , QuestionnaireQuery  }) => {
     if(ColumnsRef.current)
       columns = ColumnsRef.current; 
     ResultData?.forEach((AnswerSet,index) => {
-    // console.log(ColumnsRef.current)
+
     console.log(AnswerSet.answers)
-    if(!AnswerSet.answers.length)
-    {
-      rows.push({});
-    }
-    else if(AnswerSet.answers && AnswerSet.answers.length)
+    // if(!AnswerSet.answers.length)
+    // {
+    //   rows.push({});
+    // }
+     if(AnswerSet.answers && AnswerSet.answers.length)
     {
      
       rows.push({});
-      if(!ColumnsRef.current)
+      // if(!ColumnsRef.current)
       columns = AnswerSet.answers.map(item => ({ 
         excelTitle : item.question, 
         title : <Tooltip 
@@ -234,7 +234,7 @@ export const ResultBody = ({ ResultQuery , QuestionnaireQuery  }) => {
     // }
   })
   }
-  
+  console.log(ResultData)
   useEffect(() => {
     if(columns.length)
     {
@@ -368,19 +368,6 @@ const ResultSearchHandler = async (e) => {
             <div className='search_icon_box'>
               <Icon name='GraySearch' style={{ width : 15 }}/>
             </div>
-            {/* <Select
-            showSearch
-            defaultActiveFirstOption={false}
-            suffixIcon={<div>
-              <Icon name='GraySearch' style={{ width : 15 }}/>
-              </div>}
-            allowClear
-            placeholder="براساس عنوان سوال جست‌وجو کنید"
-            optionFilterProp="children"
-            onSearch={ResultSearchHandler}
-            style={{ width : '100%' , height : '100%' , direction : 'rtl' , fontFamily : 'IRANSans' }}
-            notFoundContent={null}
-            /> */}
           </QuestionSearchContainer>
       {contextHolder}
         <ResultBodyTopPart>
@@ -525,8 +512,6 @@ const ScrollByDrag = () => {
       slider.scrollLeft = scrollLeft - walk;
       slider.scrollTop = scrollTop - yWalk;
     });
-
-
     body.addEventListener("mousedown", (e) => {
       isDown = true;
       body.classList.add("active");

@@ -41,11 +41,11 @@ axiosInstance.interceptors.response.use(function (response) {
             catch(err)
             {
                 console.log(err)
-                window.location.pathname = '/auth'
+                // window.location.pathname = '/auth'
             }
             break;
         case 403:
-            window.location.pathname = '/auth'
+            // window.location.pathname = '/auth'
             break;
         case 404:
             break;

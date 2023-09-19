@@ -18,6 +18,7 @@ import Skeleton from 'react-loading-skeleton';
 import { Image } from 'antd';
 import { detectFileFormat } from '@/utilities/FormData';
 import persianNumberMin from 'persian-number';
+import { useRef } from 'react';
 
 const QuestionComponentBodyProvider = (QuestionType,QuestionInfo) => {
   switch(QuestionType)
@@ -46,11 +47,12 @@ const QuestionComponentBodyProvider = (QuestionType,QuestionInfo) => {
 }
 const QuestionComponent = ({ QuestionInfo , ChildQuestion , mobilepreview , errorMessage }) => {
   const QuestionBodyComponent = QuestionComponentBodyProvider(QuestionInfo.question_type,QuestionInfo);
+
   const regex = /(<([^>]+)>)/gi;
 
   return (
     QuestionInfo.question_type == 'welcome_page' ? <WelcomeComponent WelcomeInfo={QuestionInfo} mobilepreview={mobilepreview} /> 
-    : QuestionInfo.question_type != 'thanks_page' ? <QuestionComponentContainer 
+    : QuestionInfo.question_type != 'thanks_page' ? <QuestionComponentContainer  
     className={`question_component  ${QuestionInfo.group ? 'group_question' : ''} `}
     childq={ChildQuestion ? 'true' : null} mobilepreview={mobilepreview}>
         <div className='question_header' >

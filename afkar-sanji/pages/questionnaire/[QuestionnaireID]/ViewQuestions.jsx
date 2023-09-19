@@ -68,7 +68,17 @@ const ViewQuestions = ({ answerSetID , Questionnaire }) => {
     try 
     {
       const QuestionnaireRetriever = async () => {
-        let  { data } =  await axiosInstance.get(`/question-api/${router.query.QuestionnaireID}/`);
+        let data;
+        if(answerSetID)
+        {
+          let  response =  await axios.get(`/question-api/${router.query.QuestionnaireID}/`);
+          data = response.data;
+        }
+        else
+        {
+          let  response =  await axiosInstance.get(`/question-api/questionnaires/${router?.query?.QuestionnaireID}/`);
+          data = response.data;
+        }          
         let QuestionsArray =  data.questions.map((item,index) => { 
           if(item.question)
             return { question: item.question}
@@ -333,7 +343,12 @@ const ViewQuestions = ({ answerSetID , Questionnaire }) => {
           </ControlButtonsContainer>
           }
         {
-          (QuestionnaireInfo.show_question_in_pages && CurrentIndex =='Thanks') && <ControlButtonsContainer>
+          (CurrentIndex =='Thanks') && <ControlButtonsContainer>
+               <div className='brand_button' >
+                <Button type='primary'>
+                  <p>ساخته شده با <span>ماح</span></p>
+                </Button>
+            </div>
           </ControlButtonsContainer>
         }
         </>

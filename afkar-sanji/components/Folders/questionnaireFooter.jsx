@@ -11,6 +11,7 @@ import RemovePopup from '../common/RemovePopup';
 import { axiosInstance } from '@/utilities/axios';
 import { PdfGenerator } from './pdfExport';
 import { useLocalStorage } from '@/utilities/useLocalStorage';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 
 
 const QuestionnaireFooterPart = ({ questionnaire , FolderReload , folderNumber}) => {
@@ -20,7 +21,7 @@ const QuestionnaireFooterPart = ({ questionnaire , FolderReload , folderNumber})
     const [ SavedMessage , contextHolder] = message.useMessage();
     const { setItem } = useLocalStorage();
     const router = useRouter();
-
+    const [ RetrievedQuestionnaire , setRetrievedQuestionnaire ] = useState(null);
     const RemoveQuestionnaireHandler = async () => {
         // SetOperatingState(true)
         try
@@ -42,6 +43,18 @@ const QuestionnaireFooterPart = ({ questionnaire , FolderReload , folderNumber})
         // setDeletePopoverState(false)
         }
       }
+    const RetrieveQuestionnaire = async () => {
+        try 
+        {
+         let { data } = await axiosInstance.get(`/question-api/questionnaires/${questionnaire.uuid}/`)
+         console.log(data)
+         setRetrievedQuestionnaire(data)
+        }
+        catch(err)
+        {
+    
+        }
+    }
   return (
     <QuestionnaireFooter>
         {contextHolder}
@@ -86,10 +99,14 @@ const QuestionnaireFooterPart = ({ questionnaire , FolderReload , folderNumber})
             </QuestionnaireFooterButton>
         </Link>
         </QuestionnaireFooterItem>
-        <QuestionnaireFooterItem style={{ borderRight : 0 }} onClick={PdfGenerator}>
-            <QuestionnaireFooterButton>
-            <Icon name='pdf' />
-            </QuestionnaireFooterButton>
+        <QuestionnaireFooterItem style={{ borderRight : 0 }}>
+            
+         <QuestionnaireFooterButton onClick={() => PdfGenerator(questionnaire)}>
+            {/* <PDFDownloadLink document={<PdfGenerator />} > */}
+                    <Icon name='pdf' />
+             {/* </PDFDownloadLink> */}
+        </QuestionnaireFooterButton>
+       
         </QuestionnaireFooterItem>
     </QuestionnaireFooter>
   )

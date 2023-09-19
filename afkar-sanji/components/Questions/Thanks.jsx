@@ -43,19 +43,15 @@ const ThankComponent = ({ ThanksInfo , mobilepreview }) => {
                 <Icon name='Share' />
               </button>
             </div> */}
-              <div className='default_thanks_button_container' style={{ marginTop : 20 }}>
+              { ThanksInfo?.share_link && <div className='default_thanks_button_container' style={{ marginTop : 20 }}>
                   <button>
                     <p>کپی لینک</p>
                   </button>
                   <button>
                     <Icon name='Share' />
                   </button>
-              </div>
-            <div className='brand_button' >
-                <Button type='primary'>
-                  <p>ساخته شده با <span>ماح</span></p>
-                </Button>
-            </div>
+              </div>}
+            
     </QuestionComponentContainer>
   )
 }

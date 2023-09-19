@@ -197,11 +197,11 @@ export const QuestionItem = ({  ActiveQuestion, provided ,setActiveQuestion , Qu
     let QDataInstance = JSON.parse(JSON.stringify(questionsData))
     QDataInstance.question.media = questionsData.question.media;
 
-    if(!questionsData?.question.media?.length)
-    {
-      QDataInstance.question.media = '';
-    }
-    else if(typeof questionsData?.question?.media == 'string')
+    // if(!questionsData?.question.media?.length)
+    // {
+    //   QDataInstance.question.media = '';
+    // }
+    if(typeof questionsData?.question?.media == 'string')
     {
       delete QDataInstance.question['media'];
     }

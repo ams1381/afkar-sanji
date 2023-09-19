@@ -121,6 +121,10 @@ export const QuestionnaireSettingContainer = styled.div`
     {
         font-family : IRANSans;
     }
+    .picker_container  .rmdp-panel-body li .b-deselect
+    {
+        padding-right : 10px;
+    }
    .ant-picker.ant-picker-range
    {
         direction : rtl;

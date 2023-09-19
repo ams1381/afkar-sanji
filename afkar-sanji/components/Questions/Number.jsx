@@ -39,7 +39,7 @@ export const Number = ({ QuestionInfo }) => {
         <InputNumber type='number' value={NumberAnswer}
         onChange={NumberAnswerHandler}
          style={{ fontFamily : 'IRANSans' , direction : 'ltr' , textAlign : 'left' }}
-         placeholder={!(QuestionInfo.min == 0 && QuestionInfo.max == 0) ? `از ${QuestionInfo.min ? digitsEnToFa(QuestionInfo.min) : 'فلان'} تا ${QuestionInfo.max ? digitsEnToFa(QuestionInfo.max) : 'بیسار'}` : 'یک عدد وارد کنید'} />
+         placeholder={!(QuestionInfo.min == 0 && QuestionInfo.max == 0) ? `از ${QuestionInfo.min ? digitsEnToFa(QuestionInfo.min) : digitsEnToFa(10000)} تا ${QuestionInfo.max ? digitsEnToFa(QuestionInfo.max) : digitsEnToFa(30000)}` : 'یک عدد وارد کنید'} />
     </NumberInputContainer>
   )
 }

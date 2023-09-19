@@ -9,28 +9,43 @@ import { QuestionnaireDatePickerContainer, QuestionnaireSettingContainer , TimeP
 import { Icon } from '@/styles/icons';
 import { axiosInstance } from '@/utilities/axios';
 import jalaali from 'jalaali-js';
+import jalaliMoment from 'jalali-moment';
 import { NumberFormat } from 'react-hichestan-numberinput';
 import TimePicker from "react-multi-date-picker/plugins/time_picker";
 import transition from "react-element-popper/animations/transition"
 import { digitsEnToFa, digitsFaToEn } from '@persian-tools/persian-tools';
-import DatePicker from 'react-multi-date-picker';
+import DatePicker, { DateObject } from 'react-multi-date-picker';
 import persian from "react-date-object/calendars/persian"
 import persian_fa from "react-date-object/locales/persian_fa"
 import moment from 'moment-jalaali';
+import DatePanel from 'react-multi-date-picker/plugins/date_panel';
 
 export const convertStringToDate = str => {
   const [datePart, timezonePart] = str.split(/[T+]/);
   const [timezoneHours, timezoneMinutes] = timezonePart.split(":").map(Number);
 
   const date = new Date(datePart);
-  date.setUTCHours(date.getUTCHours() - timezoneHours, date.getUTCMinutes() - timezoneMinutes);
+  date.setUTCHours(date.getUTCHours() + timezoneHours);
+  date.setUTCMinutes(date.getUTCMinutes() + timezoneMinutes);
 
-  const formattedDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-  const formattedTime = `${date.getUTCHours()}:${date.getUTCMinutes()}:${date.getUTCSeconds()}`;
+  const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+  const formattedTime = `${date.getUTCHours().toString().padStart(2, '0')}:${date.getUTCMinutes().toString().padStart(2, '0')}:${date.getUTCSeconds().toString().padStart(2, '0')}`;
 
   return [formattedDate, formattedTime];
 };
+function convertToRegularTime(dateTimeString) {
+  const dateObj = new Date(dateTimeString);
 
+  const year = dateObj.getFullYear();
+  const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+  const day = dateObj.getDate().toString().padStart(2, '0');
+
+  const hours = dateObj.getHours().toString().padStart(2, '0');
+  const minutes = dateObj.getMinutes().toString().padStart(2, '0');
+  const seconds = dateObj.getSeconds().toString().padStart(2, '0');
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
 const convertToISOString = (datePart, timePart) =>
   new Date(`${datePart}T${timePart}`).toISOString().replace('Z', `+${(new Date().getTimezoneOffset() / -60).toFixed(0).padStart(2, '0')}:${(Math.abs(new Date().getTimezoneOffset()) % 60).toString().padStart(2, '0')}`);
 
@@ -51,24 +66,20 @@ const SettingPanel = ({ Questionnaire , refetch }) => {
   // useEffect(() => {
     if(QuestionnaireData.pub_date)
     {
-       pub_date = digitsEnToFa((convertDate(convertStringToDate(QuestionnaireData.pub_date)[0], 'jalali'))) +
-    ' ' + digitsEnToFa(Math.abs(parseInt(convertStringToDate(QuestionnaireData.pub_date)[1].split(':')[0]) - 23)  + ':' +
-    digitsEnToFa(Math.abs(parseInt(convertStringToDate(QuestionnaireData.pub_date)[1].split(':')[1]) - 60))
-    + ':' + digitsEnToFa(convertStringToDate(QuestionnaireData.pub_date)[1].split(':')[2])
-    )
-      console.log(convertStringToDate(QuestionnaireData.pub_date)[1],QuestionnaireData.pub_date)
-    // console.log(digitsEnToFa((convertDate(convertStringToDate(QuestionnaireData.pub_date)[0], 'jalali'))) +
-    // ' ' + digitsEnToFa(convertStringToDate(QuestionnaireData.pub_date)[1]))
+   
+      pub_date = digitsEnToFa(convertDate((convertToRegularTime(QuestionnaireData.pub_date).split(" ")[0]),'jalali') + ' ' +
+      convertToRegularTime(QuestionnaireData.pub_date).split(" ")[1])
     }
       
     let date_picker = pub_date;
     // setDatePickerValue(pub_date)
     if(QuestionnaireData.end_date)
     {
-     end_date = digitsEnToFa((convertDate(convertStringToDate(QuestionnaireData.end_date)[0], 'jalali'))) +
-     ' ' + digitsEnToFa(convertStringToDate(QuestionnaireData.end_date)[1]);
+      end_date = digitsEnToFa(convertDate((convertToRegularTime(QuestionnaireData.end_date).split(" ")[0]),'jalali') + ' ' +
+      convertToRegularTime(QuestionnaireData.end_date).split(" ")[1])
+     
  
-     date_picker += ' ~ ' + end_date;
+     date_picker += '  ' + end_date;
     }
  
   const DateToggleHandler = (E) => {
@@ -83,15 +94,22 @@ const SettingPanel = ({ Questionnaire , refetch }) => {
       Dispatcher({ ACTION: 'Timer Cleared' });
     SetSettingChanged(true)
   }
+  //  console.log(new DateObject({ calendar: persian }).)
   const DateChangeHandler = (ali, NewDate) => {
     SetErrorType(null)
+    
+    // console.log(NewDate)
+    // console.log(convertPersianDateTimeToISO(NewDate.validatedValue[0]))
     // console.log((digitsFaToEn(NewDate.validatedValue[0])),
     // convertPersianDateTimeToISO(digitsFaToEn(NewDate.validatedValue[0])))
     if(NewDate.validatedValue && NewDate.validatedValue.length == 1)
     {
-      pub_date = NewDate.validatedValue[0];
+      console.log(digitsFaToEn(NewDate.validatedValue[0])
+        ,convertPersianDateTimeToISO(digitsFaToEn(NewDate.validatedValue[0])) ,
+      convertStringToDate(convertPersianDateTimeToISO(digitsFaToEn(NewDate.validatedValue[0]))))
+      // pub_date = NewDate.validatedValue[0];
       Dispatcher({ 
-        ACTION : 'Pub date set' , NewDate : convertPersianDateTimeToISO(NewDate.validatedValue[0])
+        ACTION : 'Pub date set' , NewDate : convertPersianDateTimeToISO(digitsFaToEn(NewDate.validatedValue[0]))
       })
       Dispatcher({ 
         ACTION : 'End date set' , NewDate : null
@@ -101,7 +119,7 @@ const SettingPanel = ({ Questionnaire , refetch }) => {
     {
       end_date = NewDate.validatedValue[1];
       Dispatcher({ 
-        ACTION : 'End date set' , NewDate : convertPersianDateTimeToISO(NewDate.validatedValue[1])
+        ACTION : 'End date set' , NewDate : convertPersianDateTimeToISO(digitsFaToEn(NewDate.validatedValue[1]))
       })
     }
     SetSettingChanged(true)
@@ -171,18 +189,32 @@ const SettingPanel = ({ Questionnaire , refetch }) => {
             <Switch checked={DateActive} />
           </div>
           <div className='picker_container date_picker' >
-            <DatePicker  format="YYYY/MM/DD HH:mm:ss"
+            <DatePicker  format="YYYY/MM/DDHH:mm:ss"
+              // value={[
+              //   new DateObject({ calendar: persian })
+              //   .setDate(
+              //     (convertDate(convertStringToDate(QuestionnaireData.pub_date)[0],'jalali') + ' ' +
+              //      convertStringToDate(QuestionnaireData.pub_date)[1]))
+              // ]}
               disabled={!DateActive}
+              rangeHover
+              dateSeparator="تا" 
+              // minDate="1402/6/18"
+              // minDate={new DateObject({ calendar: persian })}
+              minDate={new DateObject({ calendar: persian })}
+              // maxDate={new DateObject({ calendar: persian }).add(3, "days")}
               render={(value, openCalendar) => {
                 return (
                   <TimePickerContainer Error={ErrorType == 'date_error' ? 'active' : false} active={DateActive ? 'active' : null}>
-                    <input value={date_picker} onClick={openCalendar}  placeholder='انتخاب تاریخ' />
+                    <input value={date_picker} onClick={openCalendar}
+                      placeholder='انتخاب تاریخ' />
                     <Icon name='Calender' />
                   </TimePickerContainer>
                 )}}
               range
               plugins={[
-                <TimePicker position="bottom" />
+                <TimePicker position="bottom" />,
+                // <DatePanel position="left" />
               ]}
               onChange={DateChangeHandler}
               calendar={persian}
@@ -351,7 +383,31 @@ function convertPersianDateTimeToISO(persianDateTime) {
   const englishDateTime = persianDateTime.replace(/[۰-۹]/g, (d) => String.fromCharCode(d.charCodeAt(0) - '۰'.charCodeAt(0) + '0'.charCodeAt(0)));
 
   // Parse the Persian date and time using jalali-moment
-  const gregorianDateTime = moment(englishDateTime, 'jYYYY/jMM/jDD HH:mm:ss').locale('en').format('YYYY-MM-DDTHH:mm:ss');
+  const gregorianDateTime = moment(englishDateTime, 'jYYYY/jMM/jDD HH:mm:ss').locale('en').format('YYYY-MM-DD HH:mm:ss');
 
   return `${gregorianDateTime}+04:30`;
+}
+function convertPersianDateToMultiTimerPickerDateObject(persianDate) {
+  // Convert Persian digits to Western Arabic digits
+  const westernDigits = persianDate.replace(/[۰-۹]/g, (d) => String.fromCharCode(d.charCodeAt(0) - 1728));
+
+  // Split the date and time components
+  const [dateStr, timeStr] = westernDigits.split(' ');
+
+  // Extract year, month, and day components
+  const [year, month, day] = dateStr.split('/').map(Number);
+
+  // Extract hour and minute components
+  const [hour, minute] = timeStr.split(':').map(Number);
+
+  // Create the date object for the multi-timer picker format
+  const dateObject = {
+    year,
+    month,
+    day,
+    hour,
+    minute,
+  };
+
+  return dateObject;
 }

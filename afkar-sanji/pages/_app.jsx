@@ -24,16 +24,18 @@ export default function App({ Component, pageProps }) {
         let { data } = await axiosInstance.get('/user-api/users/me/');
         setItem('phoneNumber',data.phone_number)
         setReadyToRender(true)
-        // return
+        return
       }
       catch(err)
       {
+        console.log(err)
          router.push('/auth');
           return
       }
       
     }
     else
+      console.log(err)
       router.push('/auth');
   }
   // if(typeof)

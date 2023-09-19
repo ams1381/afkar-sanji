@@ -529,6 +529,7 @@ export const FileQuestionContainer = styled.div`
     }
 `
 export const NumberInputContainer = styled.div`
+    margin-top: 12px;
     & .ant-input-number
     {
         font-family: IRANSans;

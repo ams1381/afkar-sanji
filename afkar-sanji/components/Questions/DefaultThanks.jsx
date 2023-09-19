@@ -2,6 +2,7 @@ import { Icon } from '@/styles/icons'
 import { QuestionComponentContainer, QuestionDescription ,
      QuestionTitle } from '@/styles/questionnairePanel/QuestionComponent'
 import { Button, Image } from 'antd'
+import DefaultImage from '../../public/Images/DefaultThanks.png'
 import React from 'react'
 
 export const DefaultThanks = ({ mobilepreview }) => {
@@ -14,6 +15,7 @@ export const DefaultThanks = ({ mobilepreview }) => {
             <p>متن ساختگی برای صفحه‌ی تشکر رابط کاربری افکار سنجی</p>
         </div>
         <div className='uploaded_file_preview' style={{ margin : '1.5rem 0' }}>
+            <Image width='100%' src={DefaultImage.src} />
             </div> 
             <div className='default_thanks_button_container'>
               <button>
@@ -23,11 +25,7 @@ export const DefaultThanks = ({ mobilepreview }) => {
                 <Icon name='Share' />
               </button>
             </div>
-            <div className='brand_button' >
-                <Button type='primary'>
-                  <p>ساخته شده با <span>ماح</span></p>
-                </Button>
-            </div>
+           
     </QuestionComponentContainer>
   )
 }
