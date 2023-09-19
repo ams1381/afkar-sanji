@@ -16,7 +16,7 @@ import { useEffect } from 'react'
 import { useRef } from 'react'
 import html2canvas from 'html2canvas'
 // import { objectTraps } from 'immer/dist/internal'
-
+const regex = /(<([^>]+)>)/gi;
 
 const exportChart = async (ChartID,ChartType) => {
   if(!ChartID)
@@ -42,16 +42,140 @@ const exportChart = async (ChartID,ChartType) => {
       console.log(err)
     }
 }
+const ChartDataGenerator = (PlotDetail,currentSort,currentChartType,backgroundColors,borderColors) => {
+  // console.log(backgr/oundColors)
+  let data; 
+  // console.log(currentChartType)
+  if(PlotDetail.options)
+    {
+     let dataArray =  Object.values(PlotDetail.counts).map((item,index) => [ PlotDetail.options[index].text  , item ])
+     let SortArray = currentSort == 'increase' ? Object.values(PlotDetail.counts).sort((a,b) => a - b) :
+      currentSort == 'decrease' ? Object.values(PlotDetail.counts).sort((a,b) => a - b).reverse() : ''
+    
+    if(currentSort != 'default')
+      dataArray = dataArray.map(function(item) {
+        var n = SortArray.indexOf(item[1]);
+        SortArray[n] = '';
+        return [n, item]
+    }).sort().map(function(j) { return j[1] }).map(item => item[0])
+
+     return data = {
+        type : currentChartType == 'Line' ? 'line' : (currentChartType == 'Bar' ||  currentChartType == 'HorizontalBar') ? 'bar' :'pie',
+        labels: Object.values(PlotDetail.counts).every(item => item == 0) ? [] :
+        currentSort == 'default' ? PlotDetail.options?.map(item => item.text?.replace(regex,"")) :
+        dataArray.map(item => item.replace(regex,"")) 
+        ,
+        datasets: [
+          {
+            data: PlotDetail.counts ?  
+            currentSort == 'default' ?  Object.values(PlotDetail.counts) : currentSort == 'increase' ?
+            Object.values(PlotDetail.counts).sort((a,b) => a - b) : currentSort == 'decrease' ?
+             Object.values(PlotDetail.counts).sort((a,b) => a - b).reverse() : ''
+            : [],
+            // fill: true,
+            backgroundColor: backgroundColors ? backgroundColors : currentChartType != 'Line' ? generateRandomColors(PlotDetail.options?.length) : null ,
+            borderColor: (borderColors == 'transparent' && currentChartType == 'Line') ? generateRandomColors(1)
+             : currentChartType == 'Line' ? generateRandomColors(1) : 'transparent',
+            fontFamily : 'IRANSans',
+            yAxisID : 'y'
+          },
+        ],
+      };
+    }
+     else if(PlotDetail.question_type == 'integer_range' || PlotDetail.question_type == 'integer_selective')
+    {
+
+     let dataArray = objectToSparseArray(PlotDetail.counts , PlotDetail.max).map((item,index) => [ PlotDetail.min == 0 ? index : index + 1 , item ]);
+     let SortArray = currentSort == 'increase' ? objectToSparseArray(PlotDetail.counts , PlotDetail.max).sort((a,b) => a - b) :
+      currentSort == 'decrease' ? objectToSparseArray(PlotDetail.counts , PlotDetail.max).sort((a,b) => a - b).reverse() : ''
+    
+    if(currentSort != 'default')
+    {
+      dataArray = dataArray.map(function(item) {
+        var n = SortArray.indexOf(item[1]);
+        SortArray[n] = '';
+        return [n, item]
+    }).sort().map(function(j) { return j[1] }).map(item => item[0]);
+    }   
+      return  data = { 
+            type : currentChartType == 'Line' ? 'line' : (currentChartType == 'Bar' ||  currentChartType == 'HorizontalBar') ? 'bar' :'pie',
+            labels: (currentSort == 'default') ? Array.from({ length : PlotDetail.max }).map((_,index) =>
+               (PlotDetail.max == 0 ? index : index + 1)) : 
+               dataArray
+               ,
+            datasets: [
+              {
+                data: currentSort == 'default' ? objectToSparseArray(PlotDetail.counts , PlotDetail.max) :
+                currentSort == 'increase' ? objectToSparseArray(PlotDetail.counts , PlotDetail.max).sort((a,b) => a - b) :
+                currentSort == 'decrease' ? objectToSparseArray(PlotDetail.counts , PlotDetail.max).sort((a,b) => a - b).reverse() : []
+                ,
+                // fill: true,
+                backgroundColor: backgroundColors ? backgroundColors : currentChartType != 'Line' ? generateRandomColors(PlotDetail.max) : null ,
+                borderColor: (borderColors == 'transparent' && currentChartType == 'Line') ? generateRandomColors(1)
+                 : currentChartType == 'Line' ? generateRandomColors(1) : 'transparent',
+                fontFamily : 'IRANSans',
+                yAxisID : 'y'
+              },
+            ],
+          };
+    }
+    else if(PlotDetail.question_type == 'number_answer')
+    {
+      let dataArray = Object.keys(PlotDetail.counts).map((item,index) => [ item , Object.values(PlotDetail.counts)[index] ]);
+      let SortArray = currentSort == 'increase' ? Object.values(PlotDetail.counts).sort((a,b) => a - b) :
+      currentSort == 'decrease' ? Object.values(PlotDetail.counts).sort((a,b) => a - b).reverse() : ''
+
+      if(currentSort != 'default')
+      {
+        dataArray = dataArray.map(function(item) {
+          var n = SortArray.indexOf(item[1]);
+          SortArray[n] = '';
+          return [n, item]
+      }).sort().map(function(j) { return j[1] }).map(item => item[0]);
+      }  
+
+    return  data = {
+        type : currentChartType == 'Line' ? 'line' : (currentChartType == 'Bar' ||  currentChartType == 'HorizontalBar') ? 'bar' :'pie',
+        labels: (currentSort == 'default') ? Object.keys(PlotDetail.counts).map((item,index) =>
+               digitsEnToFa(item)) : 
+               dataArray.map(item => digitsEnToFa(item))
+               ,
+        datasets: [
+          {
+            data: Object.values(PlotDetail.counts).length == 1 ? [(Object.values(PlotDetail.counts)[0])]
+            : currentSort == 'default' ? Object.values(PlotDetail.counts).map(item => (item)) :
+            currentSort == 'increase' ? Object.values(PlotDetail.counts).map(item => (item)).sort((a,b) => a - b) :
+            currentSort == 'decrease' ? Object.values(PlotDetail.counts).map(item => (item)).sort((a,b) => a - b).reverse() : []
+            ,
+            // fill: true,
+            backgroundColor: backgroundColors ? backgroundColors :  currentChartType != 'Line' ? generateRandomColors(PlotDetail.max) : null ,
+            borderColor: (borderColors == 'transparent' && currentChartType == 'Line') ? generateRandomColors(1)
+             : currentChartType == 'Line' ? generateRandomColors(1) : 'transparent',
+            fontFamily : 'IRANSans',
+            yAxisID : 'y',
+           
+          },
+        ],
+      };
+    }
+}
 export const QuestionChart = ({ PlotDetail , totalChartType , totalChartSort}) => {
     const [ FilterPopover , setFilterPopover ] = useState(false);
     const [ ChangeChartTypePopover , setChangeChartTypePopover ] = useState(false);
     const [ currentChartType , setCurrentChartType ] = useState(totalChartType ? totalChartType :'Pie');
     const [ currentSort , setCurrentSort ] = useState(totalChartSort ? totalChartSort : 'default');
     const indexAxis = (currentChartType == 'HorizontalBar' ? 'y' : 'x');
-    const regex = /(<([^>]+)>)/gi;
+    const [ ChartData , setChartData ] = useState(null);
     const chartRef = useRef(null);
     let data;
     
+    useEffect(() => {
+      setChartData(ChartDataGenerator(PlotDetail,currentSort,currentChartType,
+        ChartData?.datasets[0]?.backgroundColor,
+        ChartData?.datasets[0]?.borderColor))
+      // ,PlotDetail.datasets[0]?.backgroundColor
+      console.log(ChartData)
+    },[currentChartType, currentSort])
     useEffect(() => {
         if(totalChartType)
             setCurrentChartType(totalChartType)
@@ -60,6 +184,7 @@ export const QuestionChart = ({ PlotDetail , totalChartType , totalChartSort}) =
         if(totalChartSort)
           setCurrentSort(totalChartSort)
     },[totalChartSort])
+    
     const options = {
         // responsive: true,
         aspectRatio: 1,
@@ -102,8 +227,7 @@ export const QuestionChart = ({ PlotDetail , totalChartType , totalChartSort}) =
                   return digitsEnToFa(TitleValue[0].formattedValue)
                 }
             }
-        },
-        
+        }, 
       }  ,
       scales : {
         x : {
@@ -136,7 +260,6 @@ export const QuestionChart = ({ PlotDetail , totalChartType , totalChartSort}) =
                      return [n, item]
                  }).sort().map(function(j) { return j[1] })
 
-                 console.log(dataArray)
                  if(currentSort != 'default' && dataArray[index][0])
                     return digitsEnToFa(dataArray[index][0]?.replace(regex,""))
                   else
@@ -157,7 +280,6 @@ export const QuestionChart = ({ PlotDetail , totalChartType , totalChartSort}) =
                      return [n, item]
                  }).sort().map(function(j) { return j[1] })
  
-                 console.log(dataArray)
                  if(dataArray[index] && dataArray[index][0] && currentSort != 'default')
                    return digitsEnToFa(dataArray[index][0]?.toString())
                   else
@@ -173,8 +295,6 @@ export const QuestionChart = ({ PlotDetail , totalChartType , totalChartSort}) =
               else
               {
                 return digitsEnToFa(value)
-            
-                  
                 //  return digitsEnToFa(Object.values(PlotDetail.counts)[index][0]);
               }
           }
@@ -217,8 +337,8 @@ export const QuestionChart = ({ PlotDetail , totalChartType , totalChartSort}) =
               else
               {
                 let dataArray = objectToSparseArray(PlotDetail.counts , PlotDetail.max).map((item,index) => [ PlotDetail.min == 0 ? index : index + 1 , item ]);
-                 let SortArray = currentSort == 'increase' ? Object.values(PlotDetail.counts).sort((a,b) => a - b) :
-                   currentSort == 'decrease' ? Object.values(PlotDetail.counts).sort((a,b) => a - b).reverse() : ''
+                 let SortArray = currentSort == 'increase' ? dataArray.map(item => item[1]).sort((a,b) => a - b) :
+                   currentSort == 'decrease' ? dataArray.map(item => item[1]).sort((a,b) => a - b).reverse() : ''
                  
                  if(currentSort != 'default')
                    dataArray = dataArray.map(function(item) {
@@ -227,9 +347,11 @@ export const QuestionChart = ({ PlotDetail , totalChartType , totalChartSort}) =
                      return [n, item]
                  }).sort().map(function(j) { return j[1] })
  
-                //  console.log(Array.isArray(dataArray[index]))
+                //  console.log(dataArray.map(item => item[1]),currentSort)
                  if(dataArray[index] && dataArray[index][0])
                    return digitsEnToFa(dataArray[index][0])
+                //   else
+                //    return digitsEnToFa(objectToSparseArray(PlotDetail.counts , PlotDetail.max)[index])
               }
             }
         }
@@ -242,117 +364,115 @@ export const QuestionChart = ({ PlotDetail , totalChartType , totalChartSort}) =
       }
       }
     };
-
-    if(PlotDetail.options)
-    {
-     let dataArray =  Object.values(PlotDetail.counts).map((item,index) => [ PlotDetail.options[index].text  , item ])
-     let SortArray = currentSort == 'increase' ? Object.values(PlotDetail.counts).sort((a,b) => a - b) :
-      currentSort == 'decrease' ? Object.values(PlotDetail.counts).sort((a,b) => a - b).reverse() : ''
+    // if(PlotDetail.options)
+    // {
+    //  let dataArray =  Object.values(PlotDetail.counts).map((item,index) => [ PlotDetail.options[index].text  , item ])
+    //  let SortArray = currentSort == 'increase' ? Object.values(PlotDetail.counts).sort((a,b) => a - b) :
+    //   currentSort == 'decrease' ? Object.values(PlotDetail.counts).sort((a,b) => a - b).reverse() : ''
     
-    if(currentSort != 'default')
-      dataArray = dataArray.map(function(item) {
-        var n = SortArray.indexOf(item[1]);
-        SortArray[n] = '';
-        return [n, item]
-    }).sort().map(function(j) { return j[1] }).map(item => item[0])
+    // if(currentSort != 'default')
+    //   dataArray = dataArray.map(function(item) {
+    //     var n = SortArray.indexOf(item[1]);
+    //     SortArray[n] = '';
+    //     return [n, item]
+    // }).sort().map(function(j) { return j[1] }).map(item => item[0])
 
-      data = {
-        type : currentChartType == 'Line' ? 'line' : (currentChartType == 'Bar' ||  currentChartType == 'HorizontalBar') ? 'bar' :'pie',
-        labels: Object.values(PlotDetail.counts).every(item => item == 0) ? [] :
-        currentSort == 'default' ? PlotDetail.options?.map(item => item.text?.replace(regex,"")) :
-        dataArray.map(item => item.replace(regex,"")) 
-        ,
-        datasets: [
-          {
-            data: PlotDetail.counts ?  
-            currentSort == 'default' ?  Object.values(PlotDetail.counts) : currentSort == 'increase' ?
-            Object.values(PlotDetail.counts).sort((a,b) => a - b) : currentSort == 'decrease' ?
-             Object.values(PlotDetail.counts).sort((a,b) => a - b).reverse() : ''
-            : [],
-            // fill: true,
-            backgroundColor: currentChartType != 'Line' ? generateRandomColors(PlotDetail.options?.length) : null ,
-            borderColor: currentChartType == 'Line' ? generateRandomColors(1) : 'transparent',
-            fontFamily : 'IRANSans',
-            yAxisID : 'y'
-          },
-        ],
-      };
-    }
-     
-    else if(PlotDetail.question_type == 'integer_range' || PlotDetail.question_type == 'integer_selective')
-    {
+    //   data = {
+    //     type : currentChartType == 'Line' ? 'line' : (currentChartType == 'Bar' ||  currentChartType == 'HorizontalBar') ? 'bar' :'pie',
+    //     labels: Object.values(PlotDetail.counts).every(item => item == 0) ? [] :
+    //     currentSort == 'default' ? PlotDetail.options?.map(item => item.text?.replace(regex,"")) :
+    //     dataArray.map(item => item.replace(regex,"")) 
+    //     ,
+    //     datasets: [
+    //       {
+    //         data: PlotDetail.counts ?  
+    //         currentSort == 'default' ?  Object.values(PlotDetail.counts) : currentSort == 'increase' ?
+    //         Object.values(PlotDetail.counts).sort((a,b) => a - b) : currentSort == 'decrease' ?
+    //          Object.values(PlotDetail.counts).sort((a,b) => a - b).reverse() : ''
+    //         : [],
+    //         // fill: true,
+    //         backgroundColor: currentChartType != 'Line' ? generateRandomColors(PlotDetail.options?.length) : null ,
+    //         borderColor: currentChartType == 'Line' ? generateRandomColors(1) : 'transparent',
+    //         fontFamily : 'IRANSans',
+    //         yAxisID : 'y'
+    //       },
+    //     ],
+    //   };
+    // }
+    // else if(PlotDetail.question_type == 'integer_range' || PlotDetail.question_type == 'integer_selective')
+    // {
 
-     let dataArray = objectToSparseArray(PlotDetail.counts , PlotDetail.max).map((item,index) => [ PlotDetail.min == 0 ? index : index + 1 , item ]);
-     let SortArray = currentSort == 'increase' ? objectToSparseArray(PlotDetail.counts , PlotDetail.max).sort((a,b) => a - b) :
-      currentSort == 'decrease' ? objectToSparseArray(PlotDetail.counts , PlotDetail.max).sort((a,b) => a - b).reverse() : ''
+    //  let dataArray = objectToSparseArray(PlotDetail.counts , PlotDetail.max).map((item,index) => [ PlotDetail.min == 0 ? index : index + 1 , item ]);
+    //  let SortArray = currentSort == 'increase' ? objectToSparseArray(PlotDetail.counts , PlotDetail.max).sort((a,b) => a - b) :
+    //   currentSort == 'decrease' ? objectToSparseArray(PlotDetail.counts , PlotDetail.max).sort((a,b) => a - b).reverse() : ''
     
-    if(currentSort != 'default')
-    {
-      dataArray = dataArray.map(function(item) {
-        var n = SortArray.indexOf(item[1]);
-        SortArray[n] = '';
-        return [n, item]
-    }).sort().map(function(j) { return j[1] }).map(item => item[0]);
-    }   
-        data = { 
-            type : currentChartType == 'Line' ? 'line' : (currentChartType == 'Bar' ||  currentChartType == 'HorizontalBar') ? 'bar' :'pie',
-            labels: (currentSort == 'default') ? Array.from({ length : PlotDetail.max }).map((_,index) =>
-               (PlotDetail.max == 0 ? index : index + 1)) : 
-               dataArray
-               ,
-            datasets: [
-              {
-                data: currentSort == 'default' ? objectToSparseArray(PlotDetail.counts , PlotDetail.max) :
-                currentSort == 'increase' ? objectToSparseArray(PlotDetail.counts , PlotDetail.max).sort((a,b) => a - b) :
-                currentSort == 'decrease' ? objectToSparseArray(PlotDetail.counts , PlotDetail.max).sort((a,b) => a - b).reverse() : []
-                ,
-                // fill: true,
-                backgroundColor: currentChartType != 'Line' ? generateRandomColors(PlotDetail.max) : null ,
-                borderColor: currentChartType == 'Line' ? generateRandomColors(1) : 'transparent',
-                fontFamily : 'IRANSans',
-                yAxisID : 'y'
-              },
-            ],
-          };
-    }
-    else if(PlotDetail.question_type == 'number_answer')
-    {
-      let dataArray = Object.keys(PlotDetail.counts).map((item,index) => [ item , Object.values(PlotDetail.counts)[index] ]);
-      let SortArray = currentSort == 'increase' ? Object.values(PlotDetail.counts).sort((a,b) => a - b) :
-      currentSort == 'decrease' ? Object.values(PlotDetail.counts).sort((a,b) => a - b).reverse() : ''
+    // if(currentSort != 'default')
+    // {
+    //   dataArray = dataArray.map(function(item) {
+    //     var n = SortArray.indexOf(item[1]);
+    //     SortArray[n] = '';
+    //     return [n, item]
+    // }).sort().map(function(j) { return j[1] }).map(item => item[0]);
+    // }   
+    //     data = { 
+    //         type : currentChartType == 'Line' ? 'line' : (currentChartType == 'Bar' ||  currentChartType == 'HorizontalBar') ? 'bar' :'pie',
+    //         labels: (currentSort == 'default') ? Array.from({ length : PlotDetail.max }).map((_,index) =>
+    //            (PlotDetail.max == 0 ? index : index + 1)) : 
+    //            dataArray
+    //            ,
+    //         datasets: [
+    //           {
+    //             data: currentSort == 'default' ? objectToSparseArray(PlotDetail.counts , PlotDetail.max) :
+    //             currentSort == 'increase' ? objectToSparseArray(PlotDetail.counts , PlotDetail.max).sort((a,b) => a - b) :
+    //             currentSort == 'decrease' ? objectToSparseArray(PlotDetail.counts , PlotDetail.max).sort((a,b) => a - b).reverse() : []
+    //             ,
+    //             // fill: true,
+    //             backgroundColor: currentChartType != 'Line' ? generateRandomColors(PlotDetail.max) : null ,
+    //             borderColor: currentChartType == 'Line' ? generateRandomColors(1) : 'transparent',
+    //             fontFamily : 'IRANSans',
+    //             yAxisID : 'y'
+    //           },
+    //         ],
+    //       };
+    // }
+    // else if(PlotDetail.question_type == 'number_answer')
+    // {
+    //   let dataArray = Object.keys(PlotDetail.counts).map((item,index) => [ item , Object.values(PlotDetail.counts)[index] ]);
+    //   let SortArray = currentSort == 'increase' ? Object.values(PlotDetail.counts).sort((a,b) => a - b) :
+    //   currentSort == 'decrease' ? Object.values(PlotDetail.counts).sort((a,b) => a - b).reverse() : ''
 
-      if(currentSort != 'default')
-      {
-        dataArray = dataArray.map(function(item) {
-          var n = SortArray.indexOf(item[1]);
-          SortArray[n] = '';
-          return [n, item]
-      }).sort().map(function(j) { return j[1] }).map(item => item[0]);
-      }  
+    //   if(currentSort != 'default')
+    //   {
+    //     dataArray = dataArray.map(function(item) {
+    //       var n = SortArray.indexOf(item[1]);
+    //       SortArray[n] = '';
+    //       return [n, item]
+    //   }).sort().map(function(j) { return j[1] }).map(item => item[0]);
+    //   }  
 
-      data = {
-        type : currentChartType == 'Line' ? 'line' : (currentChartType == 'Bar' ||  currentChartType == 'HorizontalBar') ? 'bar' :'pie',
-        labels: (currentSort == 'default') ? Object.keys(PlotDetail.counts).map((item,index) =>
-               digitsEnToFa(item)) : 
-               dataArray.map(item => digitsEnToFa(item))
-               ,
-        datasets: [
-          {
-            data: Object.values(PlotDetail.counts).length == 1 ? [(Object.values(PlotDetail.counts)[0])]
-            : currentSort == 'default' ? Object.values(PlotDetail.counts).map(item => (item)) :
-            currentSort == 'increase' ? Object.values(PlotDetail.counts).map(item => (item)).sort((a,b) => a - b) :
-            currentSort == 'decrease' ? Object.values(PlotDetail.counts).map(item => (item)).sort((a,b) => a - b).reverse() : []
-            ,
-            // fill: true,
-            backgroundColor: currentChartType != 'Line' ? generateRandomColors(PlotDetail.max) : null ,
-            borderColor: currentChartType == 'Line' ? generateRandomColors(1) : 'transparent',
-            fontFamily : 'IRANSans',
-            yAxisID : 'y',
+    //   data = {
+    //     type : currentChartType == 'Line' ? 'line' : (currentChartType == 'Bar' ||  currentChartType == 'HorizontalBar') ? 'bar' :'pie',
+    //     labels: (currentSort == 'default') ? Object.keys(PlotDetail.counts).map((item,index) =>
+    //            digitsEnToFa(item)) : 
+    //            dataArray.map(item => digitsEnToFa(item))
+    //            ,
+    //     datasets: [
+    //       {
+    //         data: Object.values(PlotDetail.counts).length == 1 ? [(Object.values(PlotDetail.counts)[0])]
+    //         : currentSort == 'default' ? Object.values(PlotDetail.counts).map(item => (item)) :
+    //         currentSort == 'increase' ? Object.values(PlotDetail.counts).map(item => (item)).sort((a,b) => a - b) :
+    //         currentSort == 'decrease' ? Object.values(PlotDetail.counts).map(item => (item)).sort((a,b) => a - b).reverse() : []
+    //         ,
+    //         // fill: true,
+    //         backgroundColor: currentChartType != 'Line' ? generateRandomColors(PlotDetail.max) : null ,
+    //         borderColor: currentChartType == 'Line' ? generateRandomColors(1) : 'transparent',
+    //         fontFamily : 'IRANSans',
+    //         yAxisID : 'y',
            
-          },
-        ],
-      };
-    }
+    //       },
+    //     ],
+    //   };
+    // }
   return (
     <QuestionChartContainer>
         <QuestionChartContainerHeader>
@@ -388,7 +508,7 @@ export const QuestionChart = ({ PlotDetail , totalChartType , totalChartSort}) =
         </QuestionChartContainerHeader>
         <div>
             <div style={{ width : 'fit-content' , margin : '0 auto' }}>
-            { data && ChartGenerator(currentChartType,data,PlotDetail,options,chartRef) }
+            { ChartData && ChartGenerator(currentChartType,ChartData,PlotDetail,options,chartRef) }
             </div>
         </div>
     </QuestionChartContainer>

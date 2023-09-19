@@ -24,21 +24,21 @@ export const ChartsHeader = ({ QuestionnaireQuery }) => {
     {
       key: '3',
       label: <div className='header_tab_item'>
-        <Icon name='tabArrow' />
+        <Icon name='TabArrow' />
       <p>نتایج</p> 
       </div>,
     },
     {
       key: '2',
       label: <div className='header_tab_item'>
-        <Icon name='tabArrow' />
+        <Icon name='TabArrow' />
       <p>تنظیمات پرسشنامه </p>
       </div>,
     },
     {
       key: '1',
       label: <div className='header_tab_item'>
-        <Icon name='tabArrow' />
+        <Icon name='TabArrow' />
         <p>طراحی سوال</p>
       </div>,
     },

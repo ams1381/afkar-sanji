@@ -67,6 +67,16 @@ export const QuestionComponentContainer = styled.div`
         display : flex;
         // width : auto !important;
     }
+    .video-react-controls-enabled
+    {
+        padding-top: 100.778% !important;
+    }
+    .ant-image-img
+    {
+        max-height: 200px;
+        background: none;
+        object-fit : contain;
+    }
 `
 export const QuestionTitle = styled.div`
     display: flex;
@@ -135,7 +145,7 @@ export const OptionalAnswerBlockContainer = styled.div`
     direction: rtl;
     gap: 16px;
     margin-top: 20px;
-    max-height : 250px;
+    max-height: 506px;
     overflow : scroll;
 
     &::-webkit-scrollbar
@@ -177,7 +187,7 @@ export const OptionalAnswerBlockContainer = styled.div`
    
 `
 export const OptionsContainer = styled.div`
-    max-height : 250px;
+    max-height: 506px;
     overflow : scroll;
 
     &::-webkit-scrollbar
@@ -369,7 +379,7 @@ export const QuestionRangeLabel = styled.div`
     position: absolute;
     // width: 53px;
     // width: calc(1.6vw + 0.99rem);
-    width: calc(1.6vw + 1.3rem);
+    width: calc(1.6vw + 1.6rem);
     text-align: center;
     padding-top: 1.5rem;
     top: 48px;
@@ -504,6 +514,18 @@ export const FileQuestionContainer = styled.div`
     & .ant-tooltip
     {
         display : none;
+    }
+    & .ant-upload .ant-btn 
+    {
+        display : ${p => p.fileUploaded ? 'none' : 'flex '} !important;
+    }
+    .ant-upload .ant-btn .ant-btn-icon i
+    {
+        transition : 0.2s;
+    }
+    & .ant-upload .ant-btn:hover .ant-btn-icon i
+    {
+        filter: invert(37%) sepia(74%) saturate(1045%) hue-rotate(210deg) brightness(91%) contrast(105%);
     }
 `
 export const NumberInputContainer = styled.div`

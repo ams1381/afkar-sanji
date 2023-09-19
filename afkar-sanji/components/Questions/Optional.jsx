@@ -56,7 +56,7 @@ const OptionalComponent = ({ QuestionInfo }) => {
       setSelectedValues(QuestionInfo.options.filter(OptionItem => selected_options_array?.includes(OptionItem.id)));
       if(QuestionsAnswerSet.find(item => item.question == QuestionInfo.id).answer?.other_text)
       {
-        console.log(QuestionsAnswerSet.find(item => item.question == QuestionInfo.id).answer?.other_text)
+
         setShowInput(true);
         setOtherInputValue(QuestionsAnswerSet.find(item => item.question == QuestionInfo.id).answer?.other_text)
       }
@@ -82,7 +82,7 @@ const OptionalComponent = ({ QuestionInfo }) => {
     } else {
       setSelectedValues(prevSelected => {
         let updatedSelected;
-        console.log(prevSelected,item)
+
         if (max_selected_options === 1) {
           updatedSelected = prevSelected[0]?.id === item.id ? [] : [item];
         } else {

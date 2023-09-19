@@ -1,7 +1,7 @@
 import { ResultBodyContainer , ResultButton , DeleteRowButton , EmptyButtonPage ,
       ResultTableContainer , EmptyResultContainer , ResultBodyTopPart , TableOutPut } from '@/styles/Result/ResultPage';
 import { Icon } from '@/styles/icons';
-import { Skeleton , Table , ConfigProvider, Upload, message, Tooltip, Button, Modal, Select } from 'antd';
+import { Skeleton , Table , ConfigProvider, Upload, message, Tooltip, Button, Modal, Select, Input } from 'antd';
 import fa_IR from "antd/lib/locale/fa_IR";
 import dayjs from 'dayjs';
 import React, { useEffect } from 'react'
@@ -109,27 +109,46 @@ export const ResultBody = ({ ResultQuery , QuestionnaireQuery  }) => {
   const [ selectedRows , setSelectedRows ] = useState([]);
   const [ rowDeleted , setRowDeleted ] = useState(false);
   const tableRef = useRef(null);
+  const ColumnsRef = useRef(null);
   // let ResultData = ResultQuery.data?.data;
   let [ ResultData , setResultData ] = useState(null)
   const regex = /(<([^>]+)>)/gi;
   // let selectedRows = [];
+  useEffect(() => {
+
+  },[])
   let columns = [];
   let rows = [];
   useEffect(() => {
-    setResultData(ResultQuery?.data?.data)
+    setResultData(ResultQuery?.data?.data.results)
     setRowDeleted(false)
+    if(ColumnsRef.current?.length && !columns.length)
+        columns = ColumnsRef.current;
   },[ResultQuery , rowDeleted])
-  ResultData?.forEach((AnswerSet,index) => {
-    if(AnswerSet.answers && AnswerSet.answers.length)
+
+  if(ResultData)
+  {
+    if(ColumnsRef.current)
+      columns = ColumnsRef.current; 
+    ResultData?.forEach((AnswerSet,index) => {
+    // console.log(ColumnsRef.current)
+    console.log(AnswerSet.answers)
+    if(!AnswerSet.answers.length)
     {
       rows.push({});
+    }
+    else if(AnswerSet.answers && AnswerSet.answers.length)
+    {
+     
+      rows.push({});
+      if(!ColumnsRef.current)
       columns = AnswerSet.answers.map(item => ({ 
         excelTitle : item.question, 
         title : <Tooltip 
         title={<div className='tooltip_container' onClick={() => navigator.clipboard.writeText(item.question)}>
           {item.question} <Icon name='WDuplicate' />
           </div>}>
-              <p>{item.question?.replace(regex,"")}</p>
+              <p>{item.question ? item.question?.replace(regex,"") : ' '}</p>
           
           </Tooltip> , 
         render : (Answer) => (Answer && typeof Answer == 'string' && Answer.includes('/media/'))
@@ -148,12 +167,12 @@ export const ResultBody = ({ ResultQuery , QuestionnaireQuery  }) => {
         align : 'center' ,
         children : QuestionnaireQuery?.data?.data?.questions.find(QuestionItem => 
           QuestionItem?.question.id == item.question_id)?.question?.options?.map(optionItem => ({
-          excelTitle : optionItem.text?.replace(regex,""),
+          excelTitle : optionItem.text ? optionItem.text?.replace(regex,"") : ' ',
           title : <Tooltip title={<div className='tooltip_container' 
           onClick={() => navigator.clipboard.writeText(optionItem.text)}>
-          {optionItem.text?.replace(regex,"")} <Icon name='WDuplicate' />
+          {optionItem.text ? optionItem.text?.replace(regex,"") : ' '} <Icon name='WDuplicate' />
           </div>}>
-              <p>{optionItem.text?.replace(regex,"")}</p>
+              <p>{optionItem.text != 'null' ? optionItem.text.replace(regex,"") : ' '}</p>
           </Tooltip>  ,
           align : 'center' ,
           key : optionItem.key,
@@ -171,7 +190,7 @@ export const ResultBody = ({ ResultQuery , QuestionnaireQuery  }) => {
         //   key : optionItem.key,
         //   dataIndex : optionItem.text
         // }))
-      }))
+      }));
        AnswerSet.answers.forEach((item) => {
         if(!item.answer)  
           return
@@ -187,13 +206,13 @@ export const ResultBody = ({ ResultQuery , QuestionnaireQuery  }) => {
                 optionItem?.text == '<span>سایر</span>' ? 
                 rows[rows.length - 1][optionItem.text] = item.answer.other_text
                 :
-                rows[rows.length - 1][optionItem.text] = optionItem.text ? optionItem.text?.replace(regex,"") : '';
+                rows[rows.length - 1][optionItem.text] = optionItem.text != 'null' ? optionItem.text?.replace(regex,"") : ' ';
               })
             }
               else if (item.question_type == 'drop_down')
               {
                 item.answer.forEach(optionItem => {
-                  rows[rows.length - 1][optionItem.text] = optionItem.text ? optionItem.text : '';
+                  rows[rows.length - 1][optionItem.text] = optionItem.text != 'null' ? optionItem.text : ' ';
                 })
               }
               else if(item.question_type == 'sort')
@@ -208,20 +227,34 @@ export const ResultBody = ({ ResultQuery , QuestionnaireQuery  }) => {
       })
       rows[rows.length - 1]['id'] = AnswerSet.id;
     }
+    // else if(!AnswerSet.answers.length)
+    // {
+      
+      // rows.push({});
+    // }
   })
+  }
+  
+  useEffect(() => {
+    if(columns.length)
+    {
+      ColumnsRef.current = columns;
+    }
+  },[columns])
   // console.log(document.querySelector("thead.ant-table-thead tr"),
   // document.querySelector(".ant-table-container .ant-table-body"))
 const ResultSearchHandler = async (e) => {
-  if(!e)
+  // console.log(e.target.value?.length)
+  if(!e.target.value?.length)
   {
     // ResultData = ResultQuery.data?.data
-    setResultData(ResultQuery.data?.data)
+    setResultData(ResultQuery.data?.data?.results)
     return
   }    
   try 
   {
-   let { data } = await axiosInstance.get(`/result-api/${QuestionnaireQuery.data?.data?.uuid}/answer-sets/search/?search=${e}`);
-   setResultData(data);
+   let { data } = await axiosInstance.get(`/result-api/${QuestionnaireQuery.data?.data?.uuid}/answer-sets/search/?search=${e.target.value}`);
+   setResultData(data?.results);
   }
   catch(err)
   {
@@ -248,7 +281,7 @@ const ResultSearchHandler = async (e) => {
            await axiosInstance.delete(`/question-api/questionnaires/${QuestionnaireQuery.data?.data?.uuid}/answer-sets/${row}/`)
           //  setRowDeleted(true)
             ResultQuery?.refetch()
-            setResultData(ResultQuery?.data?.data)
+            setResultData(ResultQuery?.data?.data.results)
     }) 
     }
     catch(err)
@@ -274,19 +307,30 @@ const ResultSearchHandler = async (e) => {
     console.log(filterDate.validatedValue)
     if(!filterDate.validatedValue?.length)
     {
-      setResultData(ResultQuery?.data?.data)
+      setResultData(ResultQuery?.data?.data.results)
       return
     }
     try {
         let response =  await axiosInstance.get(`/result-api/${QuestionnaireQuery.data?.data?.uuid}/answer-sets/?answered_at&start_date=
         ${convertDate(digitsFaToEn(filterDate.validatedValue[0]),'gregorian')}
         &end_date=${filterDate.validatedValue[1] ? convertDate(digitsFaToEn(filterDate.validatedValue[1]),'gregorian') : ''}`)
-        setResultData(response?.data)
+        setResultData(response?.data?.results)
     }
    catch(err)
    {
     console.log(err)
    }
+  }
+  const TablePaginationHandler = async (Page) => {
+    try 
+    {
+     let { data } = await axiosInstance.get(`result-api/${QuestionnaireQuery.data?.data?.uuid}/answer-sets/?answered_at=&end_date=&page=${Page}&start_date=`)
+     setResultData(data?.results)
+    }
+    catch(err)
+    {
+
+    }
   }
   return (
     ResultQuery.isLoading ? 
@@ -316,7 +360,15 @@ const ResultSearchHandler = async (e) => {
     </ResultTableContainer>  :
     <ResultBodyContainer>
       <QuestionSearchContainer style={{ marginTop : 10}}>   
-            <Select
+            <Input 
+            placeholder="براساس عنوان سوال جست‌وجو کنید"
+            allowClear
+            onChange={ResultSearchHandler}
+            />
+            <div className='search_icon_box'>
+              <Icon name='GraySearch' style={{ width : 15 }}/>
+            </div>
+            {/* <Select
             showSearch
             defaultActiveFirstOption={false}
             suffixIcon={<div>
@@ -328,7 +380,7 @@ const ResultSearchHandler = async (e) => {
             onSearch={ResultSearchHandler}
             style={{ width : '100%' , height : '100%' , direction : 'rtl' , fontFamily : 'IRANSans' }}
             notFoundContent={null}
-            />
+            /> */}
           </QuestionSearchContainer>
       {contextHolder}
         <ResultBodyTopPart>
@@ -380,12 +432,20 @@ const ResultSearchHandler = async (e) => {
               bordered
               direction='ltr'
               pagination={{
-                total : 15,
-                defaultCurrent : 7,
+                total : ResultQuery?.data?.data.count,
+                pageSize : 6,
+                // defaultCurrent : 7,
                 defaultPageSize : 4,
-                onShowSizeChange : (asaf) => {
-                  console.log(asaf)
-                }
+                itemRender : (page,ItemName,ItemNode) => {
+                  // console.log(page,fdhdfh,mhgmjg)
+                  if(ItemName != 'page')
+                    return ItemNode
+                  return  digitsEnToFa(page)
+                },
+                // onShowSizeChange : (asaf) => {
+                //   console.log(asaf)
+                // },
+                onChange : TablePaginationHandler
               }}
               components={(fd) => console.log(fd)}
               rowSelection={{

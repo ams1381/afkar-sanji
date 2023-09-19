@@ -23,6 +23,7 @@ export const RateQuestionWrite = ({ QuestionInfo }) => {
           marks={generateObject(1,7)}
           trackStyle={{ background : '#A4ABFF' }}
           draggableTrack={true}
+          tipFormatter={(e) => <span style={{ width : '100%'}}>{digitsEnToFa(e)}</span>}
           dots={true}
           onChange={DegreeChangeHandler}
           value={QuestionInfo.max}

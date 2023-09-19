@@ -15,11 +15,13 @@ import QuestionStore from '@/utilities/QuestionStore'
 const AnswerPage = () => {
   const router = useRouter();
   const [ AnswerSetID , setAnswerSetID ] = useState(null)
+  // console.log(data)
   useEffect(() => {
     const answerSetCreator = async () => {
       try
       {
-        let { data } = await axios.post(`${baseURL}question-api/questionnaires/${router.query.QuestionnaireID}/answer-sets/`);
+       
+        let { data } = await axios.post(`question-api/questionnaires/${router.query.QuestionnaireID}/answer-sets/`);
         setAnswerSetID(data.id)
       }
       catch(err)
@@ -27,9 +29,10 @@ const AnswerPage = () => {
 
       }
     }
-    answerSetCreator();
+    if(router.query.QuestionnaireID)
+      answerSetCreator();
     
-  },[])
+  },[router.query.QuestionnaireID])
   return (
     <>
     <Head>
@@ -43,4 +46,18 @@ const AnswerPage = () => {
     
   )
 }
+// export const getServerSideProps = async (context) => {
+//   const { QuestionnaireID } = context.query;
+//   try {
+//     const { data } = await axios.post(`${baseURL}question-api/questionnaires/${QuestionnaireID}/answer-sets/`);
+//     return {
+//       props: { data },
+//     };
+//   } catch (error) {
+//     console.error('Error creating answer set:', error);
+//     return {
+//       props: { data: null },
+//     };
+//   }
+// }
 export default AnswerPage;

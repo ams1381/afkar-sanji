@@ -3,7 +3,8 @@ import { QuestionDesignItem , QuestionItemSurface ,DropDownQuestionButton , Ques
   QuestionItemButtonContainer, QuestionItemSettingContainer, QuestionItemTitleContainer ,
   QuestionItemTitleInput , QuestionItemFooter , QuestionItemWriteContainer ,
   QuestionItemActionButton, PreviewMobileSizeComponent ,
-  QuestionItemRow} from '@/styles/questionnairePanel/QuestionDesignPanel'
+  QuestionItemRow,
+  PreviewContainer} from '@/styles/questionnairePanel/QuestionDesignPanel'
 import Dropdown from 'react-dropdown';
 import { QuestionTypeComponentGenerator, Question_types } from '@/utilities/QuestionTypes';
 import 'react-dropdown/style.css';
@@ -71,6 +72,7 @@ export const QuestionItem = ({  ActiveQuestion, provided ,setActiveQuestion , Qu
   const [maxheight, setMaxHeight] = useState(null);
   const [ titleError , setTitleError ] = useState(false);
   const OcurredError = useSelector(state => state.reducer.Error);
+  let QuestionTopDis = 137;
   // const InitialQuestionData = IsQuestion ? : useSelector(s => s.reducer.nonQuestionData.find(item => item.question && item.question.id == question.id));
   const regex = /(<([^>]+)>)/gi;
   // const [ questionsData , setQuestionData ] = useState(null)
@@ -160,6 +162,10 @@ export const QuestionItem = ({  ActiveQuestion, provided ,setActiveQuestion , Qu
         'QuestionID' : questionsData.question.id , 
         'QuestionType' : questionsData.question.question_type
       })
+      // console.log(document.querySelector('.search_box_container').getBoundingClientRect().top - 8.8);
+      QuestionTopDis = document.querySelector('.search_box_container').getBoundingClientRect().top - 8.8
+      // console.log(document.querySelector('.search_box_container').getBoundingClientRect().top - 8.8 + 'px',document.querySelector('.question_preview'))
+      // document.querySelector('.question_preview').style.top = document.querySelector('.search_box_container').getBoundingClientRect().top - 8.8 + 'px'
       document.querySelector(`.QuestionItem${questionsData.question.id}`)?.scrollIntoView({ behavior : 'smooth' });
     }
     
@@ -190,10 +196,16 @@ export const QuestionItem = ({  ActiveQuestion, provided ,setActiveQuestion , Qu
     SetSaveButtonLoadingState(true);
     let QDataInstance = JSON.parse(JSON.stringify(questionsData))
     QDataInstance.question.media = questionsData.question.media;
-    if(questionsData.question.media != null && typeof questionsData.question.media == 'string')
+
+    if(!questionsData?.question.media?.length)
+    {
+      QDataInstance.question.media = '';
+    }
+    else if(typeof questionsData?.question?.media == 'string')
     {
       delete QDataInstance.question['media'];
     }
+
      axiosInstance.defaults.headers['Content-Type'] = 'multipart/form-data';
     try
     { 
@@ -324,7 +336,8 @@ export const QuestionItem = ({  ActiveQuestion, provided ,setActiveQuestion , Qu
     <QuestionDesignItem className='question_design_item' saved={!QuestionChanged ? 'active' : null} 
     style={{ marginTop : questionsData.question.question_type == 'welcome_page' ? 0 : '10px' }}
      errorocurr={OcurredError ? Object.keys(OcurredError).includes('title') ? 'active' : null : null}
-     isopen={QuestionRootOpenState ? 'true' : null} ref={QuestionDesignElement}
+     isopen={QuestionRootOpenState ? 'true' : null} 
+     ref={QuestionDesignElement}
     childq={questionsData.question.group ? 'true' : null}>     
           <QuestionItemSurface >
               <div className="question_item_info" onClick={QuestionOpenHandler} 
@@ -476,11 +489,11 @@ export const QuestionItem = ({  ActiveQuestion, provided ,setActiveQuestion , Qu
       //  </DragDropContext>
           }
            </div>
-       { !GroupID ?  <div className='question_preview'> 
+       { !GroupID ?  <PreviewContainer QuestionTopDis={QuestionTopDis}> 
               {QuestionRootOpenState ? <QuestionComponent QuestionInfo={questionsData.question} 
               ChildQuestion={questionsData.question.group ? 'true' : null} />
                : ''}
-        </div>: ''}
+        </PreviewContainer>: ''}
     </QuestionItemRow> : ''
   )
 }

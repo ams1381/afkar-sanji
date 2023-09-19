@@ -59,7 +59,7 @@ export const AnimLightOne = styled(AnimLight)`
 
     animation : LightOneAnim 3s infinite;
     animation-timing-function: ease-in-out;
-    animation-duration: 4800ms;
+    animation-duration: 5200ms;
     animation-delay: 100ms;
     
     @keyframes LightOneAnim 
@@ -80,7 +80,7 @@ export const AnimLightTwo = styled(AnimLight)`
     top: 50%;
     animation : LightTwoAnim 3s infinite;
     animation-timing-function: ease-in-out;
-    animation-duration: 4800ms;
+    animation-duration: 5200ms;
     animation-delay: 100ms;
 
     @keyframes LightTwoAnim 
@@ -103,7 +103,7 @@ export const AnimLightThree = styled(AnimLight)`
 
     animation : LightThreeAnim 3s infinite;
     animation-timing-function: ease-in-out;
-    animation-duration: 4800ms;
+    animation-duration: 5200ms;
     animation-delay: 100ms;
     
     @keyframes LightThreeAnim 

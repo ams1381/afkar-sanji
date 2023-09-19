@@ -27,16 +27,20 @@ import { digitsEnToFa } from '@persian-tools/persian-tools';
 
 SwiperCore.use([Navigation]);
 
-const ViewQuestions = ({ answerSetID }) => {
+const ViewQuestions = ({ answerSetID , Questionnaire }) => {
   const router = useRouter();
-  const [ QuestionnaireInfo , SetQuestionnaireInfo ] = useState(null);
-  const [ QuestionsData , SetQuestionsData ] = useState(null);
+  const [ QuestionnaireInfo , SetQuestionnaireInfo ] = useState(Questionnaire);
+  const [ QuestionsData , SetQuestionsData ] = useState(Questionnaire?.questions);
   const [ messageApi , messageContext ] = message.useMessage();
   const [isScrollDisabled, setIsScrollDisabled] = useState(false);
   const [ CurrentIndex , SetCurrentIndex ] = useState('Welcome');
   const [ swiperInstance , setSwiperInstance ] = useState(null);
   const [ nextQuestionError , setNextQuestionError ] = useState(null);
+  const [ nextQuestionLoading , setNextQuestionLoading ] = useState(false);
+  let scroll_position = 0;
+  let scroll_direction;
   // const [ notAnsweredQuestions , setNotAnsweredQuestions ] = useState([]);
+
   let notAnsweredQuestions = []
   let QuestionsAnswerSet;
   let dispatcher;
@@ -64,7 +68,7 @@ const ViewQuestions = ({ answerSetID }) => {
     try 
     {
       const QuestionnaireRetriever = async () => {
-        let  { data } =  await axiosInstance.get(`/question-api/questionnaires/${router.query.QuestionnaireID}/`);
+        let  { data } =  await axiosInstance.get(`/question-api/${router.query.QuestionnaireID}/`);
         let QuestionsArray =  data.questions.map((item,index) => { 
           if(item.question)
             return { question: item.question}
@@ -96,19 +100,74 @@ const ViewQuestions = ({ answerSetID }) => {
       disableScroll();
     }
   },[])
-  const saveSwiperInstance = (swiper) => {
-    
+  useEffect(() => {
+    window.addEventListener('scroll', function(e){
+      scroll_direction = (document.body.getBoundingClientRect()).top > scroll_position ? 'up' : 'down';
+      scroll_position = (document.body.getBoundingClientRect()).top;
+      
+      if(swiperInstance && swiperInstance?.__swiper__)
+      {
+        console.log(swiperInstance)
+        if(scroll_direction == 'down') 
+        {
+          // CurrentIndex != QuestionsData.length - 1
+          if(CurrentIndex != QuestionsData.length - 1)
+            swiperInstance?.slideTo(CurrentIndex + 2);
+          // CornerButton.current.setAttribute('style',' right : -30%;')
+        }   
+        else 
+        {
+          if(CurrentIndex != 0)
+            swiperInstance?.slideTo(CurrentIndex + 2);
+        }
+      }
+  });
+  },[swiperInstance])
+  useEffect(() => {
+      setNextQuestionError(null)
+  },[QuestionsAnswerSet])
+
+  const saveSwiperInstance = (swiper) => { 
     setSwiperInstance(swiper); // Store the Swiper instance
   };
   
-  const NextQuestionHandler = () => {
-    // console.log(QuestionsData[CurrentIndex])
-    // if(QuestionsAnswerSet && !Object.values(QuestionsAnswerSet[CurrentIndex]?.answer)?.length && 
-    //   QuestionsData[CurrentIndex]?.question?.is_required)
-    //   {
-    //     setNextQuestionError('لطفا به سوال اجباری پاسخ دهید');
-    //     return
-    //   }
+  const NextQuestionHandler = async () => {
+    // console.log(QuestionsData[CurrentIndex].question , QuestionsAnswerSet)
+    if(QuestionsData[CurrentIndex]?.question?.question_type != 'group' && QuestionsAnswerSet)
+    {
+      let AnswerItem = QuestionsAnswerSet.find((item => item.question ==  QuestionsData[CurrentIndex]?.question?.id));
+      let CopiedAnswerItem = JSON.parse(JSON.stringify(AnswerItem))
+      // console.log(!Object.values(AnswerItem.answer).length)
+      if(!Object.values(AnswerItem.answer).length)
+        delete CopiedAnswerItem.answer;
+      try 
+      {
+        setNextQuestionLoading(true)
+
+          if(AnswerItem?.file)
+          {
+
+            await axios.post(`/question-api/questionnaires/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,AnswerSetFormDataConverter([AnswerItem]),{
+              'Content-Type' : 'multipart/form-data'
+            });
+        // .
+          }
+        else
+          await axios.post(`/question-api/questionnaires/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,[CopiedAnswerItem]);
+        setNextQuestionLoading(false)
+      }
+      catch(err)
+      {
+        setNextQuestionLoading(false)
+
+        // console.log(Object.values(err?.response?.data[0]))
+        if(err?.response?.data)
+          setNextQuestionError(Object.values(err?.response?.data[0])[0])
+        return
+      }
+      // QuestionsData[CurrentIndex].quetion.id
+    }
+    
     if(CurrentIndex == QuestionsData.length - 1)
       SetCurrentIndex('Thanks')
     else
@@ -193,7 +252,7 @@ const ViewQuestions = ({ answerSetID }) => {
    <Provider store={AnswerStore}>
     <PreviewPageContainer >  
       <PreviewPageHeader>
-          {QuestionnaireInfo.progress_bar ? 
+          {(QuestionnaireInfo.progress_bar &&  CurrentIndex != 'welcome_page') ? 
           <Progress  format={(percent) => `${digitsEnToFa(percent)}%`}
           percent={CurrentIndex == 'Thanks' ? 100
           : Math.floor((CurrentIndex / QuestionsData.length) * 100)}  steps={QuestionsData.length} /> : ''}
@@ -220,7 +279,6 @@ const ViewQuestions = ({ answerSetID }) => {
               </SwiperSlide>}
               {QuestionsData.map((item, index) => (
                 item && <SwiperSlide key={item.question.id}>
-                  
                      <QuestionComponent mobilepreview={true} QuestionInfo={item.question} 
                      errorMessage={ nextQuestionError && CurrentIndex == index + 1 ? nextQuestionError : null} />
                     
@@ -257,9 +315,9 @@ const ViewQuestions = ({ answerSetID }) => {
           {
             ((CurrentIndex !='welcome_page')) &&
             <>
-            <Button type='primary'
+            <Button type='primary' loading={nextQuestionLoading}
              icon={<Icon name='WhiteArrow' style={{ transform : 'rotate(-90deg)' }}/>}
-              onClick={(CurrentIndex == QuestionsData.length - 1 && answerSetID) ? ConfirmAnswersHandler :  NextQuestionHandler}>
+              onClick={NextQuestionHandler}>
                { CurrentIndex == QuestionsData.length - 1 ? 'ارسال' : 'بعدی' }
             </Button> 
            { (CurrentIndex == 0 && !QuestionnaireInfo.welcome_page || !QuestionnaireInfo.previous_button ) ? '' 
@@ -287,4 +345,21 @@ const ViewQuestions = ({ answerSetID }) => {
     </>
   )
 }
+// export const getServerSideProps = async (context) => {
+//   const { QuestionnaireID } = context.query;
+//   try {
+//     const { data } = await axiosInstance.get(`/question-api/questionnaires/${QuestionnaireID}/`);
+//     return {
+//       props:
+//        { Questionnaire : {
+//         data
+//       } },
+//     };
+//   } catch (error) {
+//     console.error('Error creating answer set:', error);
+//     return {
+//       props: { data: null },
+//     };
+//   }
+// }
 export default ViewQuestions;

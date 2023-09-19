@@ -128,7 +128,7 @@ export default function Home() {
             setAddPopover={() => setAddPopover(!addPopOver)}/>}
             trigger="click"
             open={addPopOver}
-            overlayInnerStyle={{ boxShadow : 'none' , marginRight : '6.5vw' , background : 'transparent'}}
+            overlayInnerStyle={{ boxShadow : 'none' , marginRight : '6.9vw' , background : 'transparent'}}
             onOpenChange={() => setAddPopover(false)}
             style={{marginRight : 15}}>
                 <CornerAddButton ref={CornerButton} clicked={addPopOver ? 'true' : null} onClick={() => setAddPopover(!addPopOver)}>

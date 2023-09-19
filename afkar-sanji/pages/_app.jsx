@@ -36,9 +36,12 @@ export default function App({ Component, pageProps }) {
     else
       router.push('/auth');
   }
-
+  // if(typeof)
+  // questionnaire
+    // return
+  // console.log(router.query , router.pathname.includes('AnswerPage'))
     useEffect(() => {
-      if(router.pathname !== '/auth' && router.pathname !== '/auth/otpSms')
+      if(router.pathname !== '/auth' && router.pathname !== '/auth/otpSms' && !router.pathname.includes('AnswerPage'))
           authentication();
       else
         setReadyToRender(true)

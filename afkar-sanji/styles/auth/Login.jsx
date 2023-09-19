@@ -17,6 +17,13 @@ export const LoginContainer = styled.div`
     width: 100%;
     position: relative;
     height: 100vh;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    overflow: hidden;
+    &::-webkit-scrollbar {
+        width: 0;
+        background: transparent; /* Optional: This will hide the scrollbar in WebKit browsers */
+    }
 `
 export const LeftLight = styled.span`
     width: 30%;

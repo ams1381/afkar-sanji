@@ -16,7 +16,11 @@ export const Link = ({ QuestionInfo }) => {
     }
   },[QuestionInfo.id])
   const LinkAnswerHandler = (Value) => {
-    setLinkAnswer(Value.target.value)
+    const inputValue = event.target.value;
+    const cleanedValue = inputValue.replace(/[^a-zA-Z@._\-]/g, '');
+
+    setLinkAnswer(cleanedValue)  
+
     if(QuestionsAnswerSet && QuestionsAnswerSet.length)
     {
       dispatcher(ChangeInputAnswer({

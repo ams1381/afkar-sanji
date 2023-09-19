@@ -183,6 +183,10 @@ export const ResultTableContainer = styled.div`
         border-top : none !important;
         padding : 0 !important;
     }
+    .ant-pagination *
+    {
+        font-family : IRANSans !important;
+    }
 `
 export const EmptyResultContainer = styled.div`
     height: 70vh;
@@ -196,6 +200,10 @@ export const EmptyResultContainer = styled.div`
     & p 
     {
         margin-top : 8px;
+    }
+    & button 
+    {
+        background : var(--primary-color);
     }
 `
 export const ResultButton = styled.button`

@@ -32,6 +32,14 @@ export const QuestionSearchContainer = styled.div`
         padding: 0.6rem 0.9rem 0.6rem 0.9rem;
         cursor : pointer;
     }
+    .ant-input-affix-wrapper
+    {
+        width: 100%;
+        height: 100%;
+        direction: rtl;
+        border-radius: 2px;
+        font-family: IRANSans;
+    }
     & .ant-select-selection-search-input
     {
         font-family : IRANSans;
@@ -48,7 +56,7 @@ export const QuestionSearchContainer = styled.div`
         align-items : center;
         border-radius : 2px;
     }
-    .ant-select-selection-placeholder
+    .ant-select-selection-placeholder , input
     {
         font-family : IRANSans;
     }
@@ -60,6 +68,24 @@ export const QuestionSearchContainer = styled.div`
     {
         display : flex;
         align-items : center;
+    }
+    ant-input-suffix
+    {
+        margin-left: 52px;
+    }
+    .search_icon_box
+    {
+        height: 100%;
+        width: 50px;
+        left: 0;
+        border-radius: 0px 2px 2px 0px;
+        border-right: 1px solid #D9D9D9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        z-index: 33;
+        top: 0;
     }
     .ant-select-arrow
     {
@@ -131,11 +157,14 @@ export const QuestionDesignBox = styled.div`
     align-items: flex-end;
     // overflow : scroll;
     flex-direction : column;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent; 
 
     &::-webkit-scrollbar
     {
         width : 0;
         scroll-behavior: smooth;
+        background: transparent;
     }
 
     & > div
@@ -227,6 +256,7 @@ export const QuestionDesignItem = styled.div`
     }
     .question_bold_info .ant-select-selection-item
     {
+        display: flex;
         padding : 0;
     }
     .question_type_selector > div {
@@ -271,6 +301,29 @@ export const LoadingQuestionItem = styled(QuestionDesignItem)`
             }
         }
 `
+export const PreviewContainer = styled.div`
+    
+        width : 50%;
+        position: fixed;
+        width: 44%;
+        left: 6%;
+        max-height: 591px;
+        overflow: scroll;
+        top: ${p => p.QuestionTopDis ? p.QuestionTopDis + 'px' : '138px'};
+    
+    &::-webkit-scrollbar
+    {
+        width : 0;
+    }
+    @media screen and (max-width : 768px)
+    {
+        &
+        {
+            display : none;
+            position : unset;
+        }
+    }
+`
 export const QuestionItemRow = styled.div`
     width: 100%;
     display: flex;
@@ -283,20 +336,7 @@ export const QuestionItemRow = styled.div`
         overflow: hidden;
     }
 
-    & .question_preview
-    {
-        width : 50%;
-        position: fixed;
-        width: 44%;
-        left: 6%;
-        max-height: 591px;
-        overflow: scroll;
-        top: 138px;
-    }
-    & .question_preview::-webkit-scrollbar
-    {
-        width : 0;
-    }
+    
     @media screen and (max-width : 768px)
     {
         max-height : fit-content !important;

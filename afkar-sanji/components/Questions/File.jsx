@@ -18,17 +18,20 @@ export const FileQuestionComponent = ({ QuestionInfo }) => {
   const [messageApi, contextHolder] = message.useMessage();
   const [ uploadError , setUploadError ] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
+  const [ fileUploadedState , setFileUploadedState ] = useState(false);
 
   const FileAnswerHandler = (info) => {
     if(info.file.percent == 0 || info.file.status == 'removed')
     {
       setFileAnswer(null)
       setUploadError(false);
+      setFileUploadedState(false);
       return
     }
     if(QuestionInfo.volume_unit == 'mb' && (info.file.size / 1024000 > QuestionInfo.max_volume)
     || QuestionInfo.volume_unit == 'kb' && (info.file.size / 1024 > QuestionInfo.max_volume))
     {
+      setFileUploadedState(false)
       messageApi.error({
         content :
          `فایل آپلود شده بیشتر از ${digitsEnToFa(QuestionInfo.max_volume)} ${QuestionInfo.volume_unit == 'mb' ? 'مگابایت' : 'کیلوبایت'} است`,
@@ -57,7 +60,7 @@ export const FileQuestionComponent = ({ QuestionInfo }) => {
     if (QuestionsAnswerSet && QuestionsAnswerSet.length) {
       dispatcher(FileUploadHandler({ QuestionID: QuestionInfo.id, file: info.file}));
     }
-
+    setFileUploadedState(true)
     setFileAnswer([newFile]);
   }
 
@@ -75,8 +78,13 @@ export const FileQuestionComponent = ({ QuestionInfo }) => {
         };
         setFileAnswer([initialFile]);
       }
+      else
+      {
+        setFileAnswer(null)
+        setFileUploadedState(false)
+      }
     }
-  }, [])
+  }, [QuestionInfo?.id])
 
 
   const handleCancel = () => {
@@ -84,13 +92,12 @@ export const FileQuestionComponent = ({ QuestionInfo }) => {
   };
 
   return (
-    <FileQuestionContainer uploaderror={uploadError ? 'occur' : null}>
+    <FileQuestionContainer uploaderror={uploadError ? 'occur' : null} fileUploaded={fileUploadedState  ? 'active' : null}>
       {contextHolder}
       <Upload
         listType="picture"
         multiple={false}
         method={null}
-        
         response={false}
         fileList={FileAnswer}
         showUploadList={{

@@ -34,7 +34,7 @@ export const convertStringToDate = str => {
 const convertToISOString = (datePart, timePart) =>
   new Date(`${datePart}T${timePart}`).toISOString().replace('Z', `+${(new Date().getTimezoneOffset() / -60).toFixed(0).padStart(2, '0')}:${(Math.abs(new Date().getTimezoneOffset()) % 60).toString().padStart(2, '0')}`);
 
-const SettingPanel = ({ Questionnaire }) => {
+const SettingPanel = ({ Questionnaire , refetch }) => {
   const [DateValue, SetDateValue] = useState(null);
   const [QuestionnaireData, Dispatcher] = useReducer(QuestionnaireReducerFunction, Questionnaire);
   const [messageApi, contextHolder] = message.useMessage()
@@ -50,8 +50,17 @@ const SettingPanel = ({ Questionnaire }) => {
   const [ DatePickerValue , setDatePickerValue ] = useState(null);
   // useEffect(() => {
     if(QuestionnaireData.pub_date)
+    {
        pub_date = digitsEnToFa((convertDate(convertStringToDate(QuestionnaireData.pub_date)[0], 'jalali'))) +
-    ' ' + digitsEnToFa(convertStringToDate(QuestionnaireData.pub_date)[1])
+    ' ' + digitsEnToFa(Math.abs(parseInt(convertStringToDate(QuestionnaireData.pub_date)[1].split(':')[0]) - 23)  + ':' +
+    digitsEnToFa(Math.abs(parseInt(convertStringToDate(QuestionnaireData.pub_date)[1].split(':')[1]) - 60))
+    + ':' + digitsEnToFa(convertStringToDate(QuestionnaireData.pub_date)[1].split(':')[2])
+    )
+      console.log(convertStringToDate(QuestionnaireData.pub_date)[1],QuestionnaireData.pub_date)
+    // console.log(digitsEnToFa((convertDate(convertStringToDate(QuestionnaireData.pub_date)[0], 'jalali'))) +
+    // ' ' + digitsEnToFa(convertStringToDate(QuestionnaireData.pub_date)[1]))
+    }
+      
     let date_picker = pub_date;
     // setDatePickerValue(pub_date)
     if(QuestionnaireData.end_date)
@@ -76,7 +85,8 @@ const SettingPanel = ({ Questionnaire }) => {
   }
   const DateChangeHandler = (ali, NewDate) => {
     SetErrorType(null)
-    console.log(NewDate)
+    // console.log((digitsFaToEn(NewDate.validatedValue[0])),
+    // convertPersianDateTimeToISO(digitsFaToEn(NewDate.validatedValue[0])))
     if(NewDate.validatedValue && NewDate.validatedValue.length == 1)
     {
       pub_date = NewDate.validatedValue[0];
@@ -126,7 +136,13 @@ const SettingPanel = ({ Questionnaire }) => {
       delete QuestionnaireData.thanks_page;
      let { data } = await axiosInstance.patch(`/question-api/questionnaires/${Questionnaire.uuid}/`, QuestionnaireData);
      if(data)
+     {
       SetSettingChanged(false)
+      refetch()
+      // Dispatcher({ ACTION : 'Data Replacement' , newData : data })
+      // console.log(data,QuestionnaireData)
+     }
+      
     }
     catch (err) {
       SetSettingChanged(true)
@@ -155,7 +171,7 @@ const SettingPanel = ({ Questionnaire }) => {
             <Switch checked={DateActive} />
           </div>
           <div className='picker_container date_picker' >
-            <DatePicker  format="YYYY-MM-DD HH:mm:ss"
+            <DatePicker  format="YYYY/MM/DD HH:mm:ss"
               disabled={!DateActive}
               render={(value, openCalendar) => {
                 return (
@@ -167,7 +183,7 @@ const SettingPanel = ({ Questionnaire }) => {
               range
               plugins={[
                 <TimePicker position="bottom" />
-              ]} 
+              ]}
               onChange={DateChangeHandler}
               calendar={persian}
               calendarPosition="bottom-left"
@@ -286,6 +302,8 @@ const QuestionnaireReducerFunction = (State,ACTION) => {
         pub_date : null,
         end_date : null
       }
+    case 'Data Replacement' :
+      return ACTION.newData;
     case 'Timer Cleared' :
       return {
         ...State,

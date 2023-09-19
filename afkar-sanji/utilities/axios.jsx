@@ -2,9 +2,9 @@ import axios from "axios";
 import { AuthContext } from "./AuthContext";
 import { useLocalStorage } from "./useLocalStorage";
 // export const baseURL = 'http://mah-api.ariomotion.com/';
-export const baseURL = 'https://mostafarm7.pythonanywhere.com/'
-axios.defaults.baseURL = 'https://mostafarm7.pythonanywhere.com/';
-// axios.defaults.baseURL = '/api/'
+// export const baseURL = 'https://mostafarm7.pythonanywhere.com/'
+// axios.defaults.baseURL = 'https://mostafarm7.pythonanywhere.com/';
+axios.defaults.baseURL = '/api'
 
 const { getItem , setItem } = useLocalStorage();
 

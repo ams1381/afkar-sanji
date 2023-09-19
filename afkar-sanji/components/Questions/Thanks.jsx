@@ -1,7 +1,7 @@
 import { Icon } from '@/styles/icons';
 import { QuestionComponentContainer, QuestionDescription, QuestionTitle } from '@/styles/questionnairePanel/QuestionComponent';
 import { detectFileFormat } from '@/utilities/FormData';
-import { Image } from 'antd';
+import { Button, Image } from 'antd';
 import React from 'react'
 import { Player } from 'video-react';
 
@@ -43,6 +43,19 @@ const ThankComponent = ({ ThanksInfo , mobilepreview }) => {
                 <Icon name='Share' />
               </button>
             </div> */}
+              <div className='default_thanks_button_container' style={{ marginTop : 20 }}>
+                  <button>
+                    <p>کپی لینک</p>
+                  </button>
+                  <button>
+                    <Icon name='Share' />
+                  </button>
+              </div>
+            <div className='brand_button' >
+                <Button type='primary'>
+                  <p>ساخته شده با <span>ماح</span></p>
+                </Button>
+            </div>
     </QuestionComponentContainer>
   )
 }

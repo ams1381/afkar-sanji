@@ -21,8 +21,30 @@ const InputAnswer = ({ InputPlaceholder , QuestionInfo }) => {
   },[QuestionInfo.id])
 
   const ChangeInputHandler = (e) => {
+    if(QuestionInfo.pattern.includes('english_letters'))
+    {
+      const inputValue = event.target.value;
+      const cleanedValue = inputValue.replace(/[^a-zA-Z]/g, '');
+
+      setTextAnswer(cleanedValue)      
+    }
+    else if(QuestionInfo.pattern.includes('number_character'))
+    {
+      const inputValue = event.target.value;
+      const cleanedValue = inputValue.replace(/[^0-9]/g, '');
+      setTextAnswer(cleanedValue) 
+    }
+    else if(QuestionInfo.pattern.includes('mobile_number') || QuestionInfo.pattern.includes('phone_number'))
+    {
+      const inputValue = event.target.value;
+
+    }
+    else 
+    {
       e.target.value ? SetShowClearButtonState(true) : false ;
       setTextAnswer(e.target.value)
+    }
+      
 
     if(QuestionsAnswerSet && QuestionsAnswerSet.length)
       dispatcher(ChangeInputAnswer({

@@ -44,6 +44,7 @@ export const PopoverButtonHolder = styled.div`
     {
         margin-right : 0.6rem;
         background: #EEF0FF;
+        padding : 4px;
     }
 `
 export const PopOverButton = styled.button`

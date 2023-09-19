@@ -36,13 +36,11 @@ const AnswerSetSlice =  createSlice({
             const { QuestionID , InputName , InputValue } = action.payload;
 
             state.AnswerSet.find(item => item.question == QuestionID).answer[InputName] = InputValue;
-            console.log(JSON.parse(JSON.stringify(state.AnswerSet.find(item => item.question == QuestionID))),
-            InputName,InputValue,
-            JSON.parse(JSON.stringify(state.AnswerSet)))
+
         },
         SortOptions : (state , action) => {
             const { QuestionID , NewOptionsArray } = action.payload;
-            console.log(NewOptionsArray)
+
             if(state.AnswerSet.find(item => item.question == QuestionID))
                 state.AnswerSet.find(item => item.question == QuestionID).answer.sorted_options = NewOptionsArray;
         },

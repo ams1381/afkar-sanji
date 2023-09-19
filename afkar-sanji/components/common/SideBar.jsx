@@ -134,6 +134,7 @@ const SideBar = ({ isopen , SetSideBar , folders , SelectedFolder  , ReadyToCrea
                 ChangeFolder(index)
                 setItem('SelectedFolder',index)
                 ChangeFolderName(folders[index].name)
+                SetSideBar()
                 }} >
                 <p>{item.questionnaires ?  digitsEnToFa(item.questionnaires.length) : digitsEnToFa(index + 1)}</p>
                 <p className='folder_name'>{item.name}</p>

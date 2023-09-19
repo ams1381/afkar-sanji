@@ -4,6 +4,7 @@ import ToggleCheckBoxItem from '../Common/Toggle';
 import { Checkbox, Switch } from 'antd';
 import { useDispatch } from 'react-redux';
 import { ChangeToggleHandler } from '@/utilities/QuestionStore';
+import { CommonSetting } from '../Common/CommonSetting';
 
 export const SettingPrioritize = ({ QuestionInfo }) => {
     const [ AdditionalOptionState , SetAdditionalOptionState ] = useState(false);
@@ -18,6 +19,7 @@ export const SettingPrioritize = ({ QuestionInfo }) => {
             <p>تصادفی سازی ترتیب گزینه ها</p>
             <Switch checked={QuestionInfo.is_random_options}/>
         </div>
+        <CommonSetting QuestionInfo={QuestionInfo}/>
     </ToggleContainer>
   )
 }

@@ -8,6 +8,7 @@ import { SettingNumberAnswer } from './Number Answer/SettingNumberAnswer'
 import { CommonSetting } from './Common/CommonSetting'
 import { FileQuestionSetting } from './file/FileQuestionSetting'
 import { RangeSetting } from './Range/RangeSetting'
+import { ThanksSetting } from './Thanks/ThanksSetting'
 
 export const SettingSectionProvider = (Type , QuestionInfo) => {
     switch(Type)
@@ -34,7 +35,7 @@ export const SettingSectionProvider = (Type , QuestionInfo) => {
             return <SettingQWanswer QuestionInfo={QuestionInfo}/>
         case 'welcome':
             return <></>
-        case 'thank':
-            return <></>
+        case 'thanks_page':
+            return <ThanksSetting QuestionInfo={QuestionInfo}/>
     }
 }

@@ -10,6 +10,7 @@ import { AuthContext } from '@/utilities/AuthContext';
 import { NumberFormat } from 'react-hichestan-numberinput';
 import * as persianTools from "@persian-tools/persian-tools";
 import { digitsEnToFa } from "@persian-tools/persian-tools";
+import { useEffect } from 'react';
 
 const LoginFormInput = ({ ErrorHandler , authentication}) => {
   const LoginContext = useContext(AuthContext);
@@ -17,6 +18,9 @@ const LoginFormInput = ({ ErrorHandler , authentication}) => {
   const [showClearState, SetClearState] = useState(false);
 
   const handleInputChange = (e) => {
+    if(e?.target?.value?.length > 11)
+      return
+    
     if(!e.target.value)
       SetClearState(false)
     else
@@ -35,7 +39,12 @@ const LoginFormInput = ({ ErrorHandler , authentication}) => {
       e.preventDefault(); // Prevent entering non-numeric characters
     }
   };
-
+  useEffect(() => {
+    if(LoginContext.PhoneNumber)
+    {
+      LoginContext.changePhone(digitsEnToFa(LoginContext.PhoneNumber));
+    }
+  },[])
   return (
     <>
       <InputBox

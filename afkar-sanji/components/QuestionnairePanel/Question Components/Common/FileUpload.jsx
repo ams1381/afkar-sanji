@@ -80,7 +80,7 @@ const FileUpload = ({ QuestionInfo }) => {
   // ant-upload ant-upload-select
   return (
     <QuestionFileUploadContainer uploaderror={uploadError ? 'occur' : null}
-    fileuploaded={fileUploaded ? 'true' : null}>
+    fileuploaded={(fileUploaded || QuestionInfo.media) ? 'true' : null}>
       {contextHolder}
       <p className='file_upload_title'> آپلود عکس یا فیلم </p>
       <div>

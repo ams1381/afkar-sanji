@@ -76,7 +76,7 @@ const QuestionnairePanel = () => {
            ChangeSide={SetSideState} Questionnaire={data?.data}/>}
           {
             SideState == 'question_design' ? <QuestionDesignPanel QuestionnaireReloader={refetch} Questionnaire={data?.data}/> 
-            : data?.data && <SettingPanel Questionnaire={data?.data}/>
+            : data?.data && <SettingPanel Questionnaire={data?.data} refetch={refetch}/>
             }
           </PanelInnerContainer>
       </QuestionnairePanelContainer>

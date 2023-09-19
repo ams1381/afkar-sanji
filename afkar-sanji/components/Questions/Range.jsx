@@ -42,13 +42,18 @@ export const RangeQuestionComponent = ({ QuestionInfo }) => {
     setlongestlabelheight(longestlabelheight);
   },[QuestionInfo , leftLabelRef.current , midLabelRef.current , rightLabelRef.current])
   const RangeAnswerHandler = (RangeNumber) => {
-    setRangeAnswerValue(RangeNumber)
-    if(QuestionsAnswerSet && QuestionsAnswerSet.length)
-    {
-      dispatcher(NumberSelect({
-         QuestionID : QuestionInfo.id , NumberValue : RangeNumber , NumberName : 'integer_range' 
-        }))
-    }
+    if(QuestionInfo.min == 0)
+      setRangeAnswerValue(RangeNumber)
+    else
+      setRangeAnswerValue(RangeNumber + 1)
+      if(QuestionsAnswerSet && QuestionsAnswerSet.length)
+      {
+        dispatcher(NumberSelect({
+          QuestionID : QuestionInfo.id ,
+           NumberValue : QuestionInfo.min == 0 ? RangeNumber : RangeNumber + 1 ,
+            NumberName : 'integer_range' 
+          }))
+      }
   }
   return (
     <RangeQuestion longestlabelheight={longestlabelheight}>
@@ -58,7 +63,7 @@ export const RangeQuestionComponent = ({ QuestionInfo }) => {
         {/* { console.log((index == 0 || index == QuestionInfo.max || index == QuestionInfo.max / 2) ||index ==  QuestionInfo.max - 1) } */}
         <RangeQuestionAnswerItem key={index}
          haslabel={(index == 0 || index == QuestionInfo.max || index == Math.floor(QuestionInfo.max / 2) ||index ==  QuestionInfo.max - 1) ? true : null}>
-            <input name='range_item' checked={index == RangeAnswerValue} readOnly
+            <input name='range_item' checked={QuestionInfo.min == 0 ? index == RangeAnswerValue : index + 1 == RangeAnswerValue } readOnly
             type='radio' id={'range_answer_option' + index}/>
             <label htmlFor={'range_answer_option' + index} onClick={() => RangeAnswerHandler(index)}>
               {digitsEnToFa(QuestionInfo.min == 0 ? index : index + 1)}

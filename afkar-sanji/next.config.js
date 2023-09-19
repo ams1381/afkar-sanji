@@ -8,13 +8,18 @@ const nextConfig = {
       ssr : true
     }
   },
-  // rewrites : async () => [
-  //   {
-  //     source: '/api/:path*',
-  //     destination: 'https://mah-api.ariomotion.com/:path*',
-  //     basePath: false,
-  //   }
-  // ]
+  rewrites : async () => [
+    // {
+    //   source: '/api/user-api/auth/gateway',
+    //   destination: 'https://mah-api.ariomotion.com/user-api/auth/gateway/',
+    //   basePath: false,
+    // },
+     {
+        source: '/api/:path*',
+        destination: 'https://mah-api.ariomotion.com/:path*/',
+        basePath: false,
+      },
+  ]
 }
 
 module.exports = nextConfig

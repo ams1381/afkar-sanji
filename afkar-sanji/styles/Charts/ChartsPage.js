@@ -201,6 +201,8 @@ export const QuestionChartBodyContainer = styled.div`
     flex-direction: column;
     display: flex;
     overflow: scroll;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent; 
 
     & canvas 
     {
@@ -209,6 +211,7 @@ export const QuestionChartBodyContainer = styled.div`
     &::-webkit-scrollbar
     {
         width : 0;
+        background: transparent;
     }
 `
 export const TableChart = styled.table`

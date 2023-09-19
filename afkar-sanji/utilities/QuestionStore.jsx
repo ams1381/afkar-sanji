@@ -146,13 +146,21 @@ const QuestionSlice =  createSlice({
             state.nonQuestionData.find(item => (item.question && item.question.id == QuestionID)).question.description = NewDesc
         },
         ChangeToggleHandler : (state, action) => {
-            const  { QuestionID , ToggleName , ToggleValue } = action.payload;
-            state.data.find(item => item.question.id == QuestionID) ?
-            state.data.find(item => item.question.id == QuestionID).question[ToggleName] = ToggleValue
-            : 
-            state.data.forEach(item => item.question.child_questions ?
-                item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                .question[ToggleName] = ToggleValue : '')
+            const  { QuestionID , ToggleName , ToggleValue , notQuestion } = action.payload;
+            if(notQuestion)
+            {
+                state.nonQuestionData.find(item => item?.question?.id == QuestionID).question[ToggleName] = ToggleValue;
+            }
+            else
+            {
+                state.data.find(item => item.question.id == QuestionID) ?
+                state.data.find(item => item.question.id == QuestionID).question[ToggleName] = ToggleValue
+                : 
+                state.data.forEach(item => item.question.child_questions ?
+                    item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
+                    .question[ToggleName] = ToggleValue : '')
+            }
+            
         },
         ChangeMinOrMaxAnswerHandler : (state, action) => {
             const  { QuestionID , MinMaxName , MinMaxValue} = action.payload;

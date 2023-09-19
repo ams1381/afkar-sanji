@@ -12,7 +12,6 @@ export const RateQuestionSetting = ({ QuestionInfo }) => {
     }
   return (
     <>
-   
     <DegreeShapeContainer>
         <p>سفارشی کردن آیکون</p>
         <ShapeSelectorContainer>

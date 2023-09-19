@@ -41,7 +41,7 @@ const Prioritize = ({ QuestionInfo }) => {
       result.destination.index
     );
     setSortedOptionArray(reorderedItems);
-    console.log(reorderedItems)
+    // console.log(reorderedItems)
     if(QuestionsAnswerSet && QuestionsAnswerSet.length)
       dispatcher(SortOptions({ QuestionID : QuestionInfo.id , NewOptionsArray : reorderedItems.map((item,index) => ({ id : item.id , placement : index + 1 })) }))
   };

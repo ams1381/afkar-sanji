@@ -8,15 +8,21 @@ import { ChangeUploadSizeHandler, FileVolumeTypeHandler } from '@/utilities/Ques
 export const FileQuestionSetting = ({ QuestionInfo }) => {
   const dispatcher = useDispatch();
   const ChangeFileSizeHandler = (e) => {
-    dispatcher(ChangeUploadSizeHandler({ QuestionID : QuestionInfo.id , uploadSize : e }))
+    //  ? 100 : 1024000
+    if(QuestionInfo.volume_unit == 'mb' && e <= 100)
+      dispatcher(ChangeUploadSizeHandler({ QuestionID : QuestionInfo.id , uploadSize : e }))
+    else if(QuestionInfo.volume_unit == 'kb' && e >= 1024000)
+      dispatcher(ChangeUploadSizeHandler({ QuestionID : QuestionInfo.id , uploadSize : e }))
   }
+
   return (
     <>
       <FileSizeContainer>
         <p>حجم فایل</p>
       <div className='file_size_selector'>
           <div className='file_size_input'>
-              <InputNumber type='number' min={1} onChange={ChangeFileSizeHandler} 
+              <InputNumber type='number' min={1} onChange={ChangeFileSizeHandler}
+              
               value={QuestionInfo.max_volume}/>
           </div>
           <FileSizeTypeSelector>

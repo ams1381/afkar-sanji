@@ -21,8 +21,11 @@ const Email = ({ QuestionInfo }) => {
 
   },[QuestionInfo.id])
   const changeEmailAnswerHandler = (e) => {
+      const inputValue = event.target.value;
+      const cleanedValue = inputValue.replace(/[^a-zA-Z@._\-]/g, '');
 
-    setEmailAnswer(e.target.value);
+      setEmailAnswer(cleanedValue)      
+    
     if(QuestionsAnswerSet && QuestionsAnswerSet.length)
       dispatcher(ChangeInputAnswer({
         QuestionID : QuestionInfo.id , InputName : 'email_field' , InputValue : e.target.value

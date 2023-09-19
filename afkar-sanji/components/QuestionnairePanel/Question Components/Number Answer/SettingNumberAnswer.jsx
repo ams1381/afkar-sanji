@@ -30,6 +30,10 @@ export const SettingNumberAnswer = ({ QuestionInfo }) => {
     },[OcurredError])
     const ChangeMinMaxHandler = (event,InputName) => {
         console.log(event,InputName)
+        if(InputName == 'min' && event < 0)
+            RegularToggleHandler(true,'accept_negative')
+        else if(InputName == 'min' && event >= 0)
+                RegularToggleHandler(false,'accept_negative')
         dispatcher(ChangeMinOrMaxAnswerHandler({
              QuestionID : QuestionInfo.id , MinMaxName : InputName , MinMaxValue : event
          }))
@@ -39,11 +43,11 @@ export const SettingNumberAnswer = ({ QuestionInfo }) => {
     <AlphabetNumberContainer  inputerror={inputError} ref={LimitContainerRef}>
           <p>محدودیت اعداد وارد شده</p>
           <label>
-              <InputNumber min={0} value={QuestionInfo.min}  onChange={(e) => ChangeMinMaxHandler(e,'min')}/>
+              <InputNumber value={QuestionInfo.min}  onChange={(e) => ChangeMinMaxHandler(e,'min')}/>
               <p>حداقل</p>
           </label>
           <label>
-              <InputNumber min={0} value={QuestionInfo.max} onChange={(e) => ChangeMinMaxHandler(e,'max')}/>
+              <InputNumber value={QuestionInfo.max} onChange={(e) => ChangeMinMaxHandler(e,'max')}/>
               <p>حداکثر</p>
           </label>
     </AlphabetNumberContainer>

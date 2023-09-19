@@ -38,10 +38,10 @@ export const PanelHeader = styled.div`
         background : white;
     }
     .hDFXPt .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
-        color: #A4ABFF!important;
+        color: var(--primary-color) !important;
     }
     .ebxDTv .ant-tabs-ink-bar.ant-tabs-ink-bar-animated {
-        background: #A4ABFF!important;
+        background: var(--primary-color) !important;
         bottom: 5px;
     }
     @media screen and (max-width : 480px)
@@ -197,11 +197,11 @@ export const QuestionnaireEditItemsInnerContainer = styled.div`
     }
     .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn
     {
-        color: #A4ABFF !important;  
+        color: var(--primary-color) !important;  
     }
     .ant-tabs-ink-bar.ant-tabs-ink-bar-animated
     {
-        background : #A4ABFF !important;
+        background: var(--primary-color) !important;
         bottom: 5px;
     }
     @media screen and (max-width : 768px)

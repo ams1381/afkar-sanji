@@ -10,8 +10,6 @@ import { useRouter } from 'next/router';
 import { ResultBody } from '@/components/ResultPage/ResultBody';
 import ProgressBarLoading from '@/styles/ProgressBarLoading';
 
-
-
 const ResultsPage = () => {
   const [ SideBarOpen , setOpen ] = useState(false);
   const router = useRouter();

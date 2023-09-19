@@ -16,8 +16,8 @@ import { initialQuestionsSetter } from '@/utilities/QuestionStore';
 import { useSelector } from 'react-redux';
 import { DragDropContext , Droppable , Draggable } from '@hello-pangea/dnd';
 import { NestedDndItem } from './nestedDndItem';
-import { DndContext, DragOverlay, useDroppable } from '@dnd-kit/core';
-import { SortableContext } from '@dnd-kit/sortable';
+import { DndContext, DragOverlay, KeyboardSensor, PointerSensor, useDroppable, useSensor, useSensors } from '@dnd-kit/core';
+import {  SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import QuestionDraggable from './DND/Draggable';
 import { handleDragStart , handleDragEnd } from './DND/DNDHandler';
 
@@ -55,9 +55,16 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
   const regex = /(<([^>]+)>)/gi;
   const  AllQuestion = useSelector(s => s.reducer.data);
   const NonQuestions = useSelector(s => s.reducer.nonQuestionData);
+  const SearchBoxContainer = useRef();
    const { setNodeRef, isOver } = useDroppable({
     id: 'question-list-droppable',
   });
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
   useEffect(() => {
     if(Questionnaire)
     {
@@ -190,7 +197,7 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
         { Questionnaire &&  <p>سوالی را ایجاد یا ویرایش کنید</p> }
       </QuestionDesignTitle> */}
       <QuestionDesignBox id='characters' className=''>
-      <QuestionSearchContainer questionnairePanel>   
+      <QuestionSearchContainer questionnairePanel className='search_box_container'>   
               { Questionnaire ?  <>
                 <Select
                 showSearch
@@ -237,7 +244,24 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                 { Questionnaire ? AllQuestion.length ?
                 // <NestedDndItem  ListToRender={AllQuestion} Questionnaire={Questionnaire} onDrag={onDragEnd}
                 //  ActiveQuestionId={ActiveQuestionId}
-                //  setActiveQuestion={setActiveQuestion} />                 
+                //  setActiveQuestion={setActiveQuestion} />    
+                // <DndContext sensors={sensors}>
+                //   <SortableContext strategy={verticalListSortingStrategy} items={AllQuestion}>
+                //     {
+                //       AllQuestion.map((item,index) => <QuestionItem
+                //                   IsQuestion={true}
+                //                   UUID={Questionnaire.uuid}
+                //                   key={item.question.id}
+                //                   question={item}
+                //                   // provided={provided}
+                //                   QuestionsList={AllQuestion}
+                //                   ActiveQuestion={ActiveQuestion}
+                //                   setActiveQuestion={setActiveQuestion}
+                //                   // dropboardprovide={provided}
+                //                   /> )       
+                //     }
+                //   </SortableContext>
+                // </DndContext>             
                 <DragDropContext onDragEnd={onDragEnd} >
                   <Droppable droppableId='dropboard'>
                   {(provided, snapshot) => <div  

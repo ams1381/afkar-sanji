@@ -107,7 +107,7 @@ export const ChartGenerator = (chartType,data,PlotData,options,chartRef) =>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{digitsEnToFa(PlotData.average)}</td>
+                        <td>{digitsEnToFa(parseFloat(PlotData.average).toFixed(2))}</td>
                         <td>{digitsEnToFa(PlotData.median)}</td>
                         <td>{digitsEnToFa(PlotData.mode)}</td>
                         <td>{digitsEnToFa(parseFloat(PlotData.standard_deviation).toFixed(2))}</td>
@@ -131,7 +131,7 @@ export const ChartGenerator = (chartType,data,PlotData,options,chartRef) =>
                     <tbody>
                         {PlotData.counts && Object.keys(PlotData.counts)?.map((item,index) => <tr key={index}>
                             <td>{digitsEnToFa(item)}</td>
-                            <td>{digitsEnToFa(PlotData.counts[item] / PlotData.count)}</td>
+                            <td>{digitsEnToFa(parseFloat(PlotData.counts[item] / PlotData.count).toFixed(2))}</td>
                             <td>{digitsEnToFa(parseFloat(PlotData.counts[item] / PlotData.count * 100).toFixed(2))}%</td>
                         </tr>)}
                     </tbody>
@@ -148,7 +148,7 @@ export const ChartGenerator = (chartType,data,PlotData,options,chartRef) =>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{digitsEnToFa(PlotData.average)}</td>
+                            <td>{digitsEnToFa(parseFloat(PlotData.average).toFixed(2))}</td>
                             <td>{digitsEnToFa(PlotData.median)}</td>
                             <td>{digitsEnToFa(PlotData.mode)}</td>
                             <td>{digitsEnToFa(parseFloat(PlotData.standard_deviation).toFixed(2))}</td>
@@ -177,7 +177,7 @@ export const ChartGenerator = (chartType,data,PlotData,options,chartRef) =>
                     <tr key={index}>
                         <td>{digitsEnToFa(index)}</td>
                         <td>{PlotData?.percentages && 
-                        digitsEnToFa(Object.values(PlotData?.counts)[index])}</td>
+                        digitsEnToFa(parseFloat(Object.values(PlotData?.counts)[index]).toFixed(2))}</td>
                         <td>{PlotData?.percentages && 
                         digitsEnToFa(parseFloat(Object.values(PlotData?.percentages)[index]).toFixed(2)) + '%'}</td>
                     </tr>

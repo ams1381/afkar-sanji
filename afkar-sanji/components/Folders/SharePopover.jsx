@@ -17,23 +17,23 @@ export const SharePopOverContent = ({ Questionnaire }) => {
           </a>
         </div >
         <div className='icon_container'>
-          <a>
+          <a href={`https://www.instagram.com/accounts/login/?next=%2CodintoLine%2F`} target='_blank'>
             <Icon name='Instagram' />
           </a>
         </div>
         <div className='icon_container'>
-          <a>
+          <a href='https://api.whatsapp.com/send?text=dsfsdfsdf' target='_blank'>
             <Icon name='Whatsapp'/>
           </a>
         </div>
         <div className='icon_container'>
-          <a>
+          <a href={`https://eitaa.com/share/url?url=http://mah.ariomotion.com/questionnaire/${Questionnaire.uuid}/AnswerPage/&text=لطفا در این پرسشنامه شرکت کنید`} target='_blank'>
             <Icon name='Eaita'/>
           </a>
         </div>
       </div>
     <SharePopoverButton  onClick={() => {
-      navigator.clipboard.writeText(`/questionnaire/${Questionnaire.uuid}/AnswerPage/`)
+      navigator.clipboard.writeText(`http://mah.ariomotion.com/questionnaire/${Questionnaire.uuid}/AnswerPage/`)
       setCopiedState(true);
       }}>
        { CopiedState ? <p>کپی شد</p> : <p>کپی لینک</p> }
