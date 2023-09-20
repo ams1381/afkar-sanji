@@ -10,12 +10,11 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { Font } from '@react-pdf/renderer';
 import DefaultImage from '../../public/Images/DefaultThanks.png'
-import { QuestionComponentContainer, QuestionTitle } from '@/styles/questionnairePanel/QuestionComponent';
+import { QuestionComponentContainer, QuestionTitle , QuestionDescription } from '@/styles/questionnairePanel/QuestionComponent';
 // Font.register({
 //   family: 'IRANSans',
 //   src: '/IRANSansX-Regular',
 // });
-
 
 // Create styles
 const styles = StyleSheet.create({
@@ -42,7 +41,6 @@ const styles = StyleSheet.create({
   }
 });
 
-
 export const PdfGenerator = async (questionnaire) => {
   // let QuestionsComponents = ''
   try 
@@ -50,13 +48,68 @@ export const PdfGenerator = async (questionnaire) => {
    let { data } = await axiosInstance.get(`/question-api/questionnaires/${questionnaire.uuid}/`)
   //  console.log(data)
   data?.questions.forEach(item => {
-    console.log(ReactDOMServer.renderToString(
+    console.log(new DOMParser().parseFromString(ReactDOMServer.renderToString(
     <QuestionComponentContainer >
       <QuestionTitle>
           {item.question.title}
       </QuestionTitle>
+      <QuestionDescription>
+            <p>{item.question.description ? item.question.description.replace(regex,"") :
+             item.question.question_text ? item.question.question_text.replace(regex,"") : ''}</p>
+        </QuestionDescription>
     </QuestionComponentContainer>
-    ))
+    ),'text/html').firstChild.lastChild.firstChild)
+
+
+    const report = new jsPDF('portrait','pt','a4');
+    // report.addFont('IRANSansX-Regular.ttf', 'IRANSans', 'normal')
+    const content = `
+    <html>
+      <head>
+        <style>
+          @font-face {
+            font-family: 'IRANSans';
+            src: url('../public//Fonts/IRANSansX-Regular.ttf);
+          }
+
+          body {
+            font-family: 'IRANSans', sans-serif;
+          }
+        </style>
+      </head>
+      <body>
+        ${ReactDOMServer.renderToString(
+          <QuestionComponentContainer >
+            <QuestionTitle>
+                {item.question.title}
+            </QuestionTitle>
+            <QuestionDescription>
+                  <p>{item.question.description ? item.question.description.replace(regex,"") :
+                   item.question.question_text ? item.question.question_text.replace(regex,"") : ''}</p>
+              </QuestionDescription>
+          </QuestionComponentContainer>
+          )}
+      </body>
+    </html>
+`;
+    // report.html(new DOMParser().parseFromString(ReactDOMServer.renderToString(
+    //   <QuestionComponentContainer >
+    //     <QuestionTitle>
+    //         {item.question.title}
+    //     </QuestionTitle>
+    //     <QuestionDescription>
+    //           <p>{item.question.description ? item.question.description.replace(regex,"") :
+    //            item.question.question_text ? item.question.question_text.replace(regex,"") : ''}</p>
+    //       </QuestionDescription>
+    //   </QuestionComponentContainer>
+    //   ),'text/html').firstChild.lastChild.firstChild).then(() => {
+    //     report.save('report.pdf');
+    // });
+    report.html(content, {
+      callback: () => {
+        report.save('report.pdf');
+      }
+    });
   })
   //  setRetrievedQuestionnaire(data)/
   }
@@ -117,6 +170,5 @@ function convertReactElementToHTML(reactElement) {
     const functionalComponentResult = type(props);
     htmlNode = convertReactElementToHTML(functionalComponentResult);
   }
-
   return htmlNode;
 }

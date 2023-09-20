@@ -166,7 +166,7 @@ export const ResultBody = ({ ResultQuery , QuestionnaireQuery  }) => {
         key : item.id ,
         align : 'center' ,
         children : QuestionnaireQuery?.data?.data?.questions.find(QuestionItem => 
-          QuestionItem?.question.id == item.question_id)?.question?.options?.map(optionItem => ({
+          QuestionItem?.question?.id == item.question_id)?.question?.options?.map(optionItem => ({
           excelTitle : optionItem.text ? optionItem.text?.replace(regex,"") : ' ',
           title : <Tooltip title={<div className='tooltip_container' 
           onClick={() => navigator.clipboard.writeText(optionItem.text)}>
