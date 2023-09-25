@@ -4,16 +4,19 @@ import RemoveFolderPopUpContent from '../Folders/RemoveFolderPopUp';
 import { RemoveModalButtonsContainer } from '@/styles/folders/Popup';
 const RemovePopup = ({ onOkay , DeleteState , setDeleteState , title}) => {
   const [ Loading , SetLoading ] = useState(false);
+  const { confirm } = Modal;
+
   return (
     <Modal open={DeleteState} centered
             closeIcon={false}
-            onCancel={() => setDeleteState(false)} footer={<RemoveModalButtonsContainer>
-            <Button type='primary' onClick={() => {
+            // onCancel={() => setDeleteState(false)} 
+            footer={<RemoveModalButtonsContainer>
+            <Button type='primary' onClick={async () => {
                 SetLoading(true)
                 onOkay();
                 setTimeout(() => {
                   SetLoading(false)
-                },1000)
+                },2000)
                 
             }} danger loading={Loading}>
                 حذف

@@ -78,8 +78,7 @@ const SettingPanel = ({ Questionnaire , refetch }) => {
       end_date = digitsEnToFa(convertDate((convertToRegularTime(QuestionnaireData.end_date).split(" ")[0]),'jalali') + ' ' +
       convertToRegularTime(QuestionnaireData.end_date).split(" ")[1])
      
- 
-     date_picker += '  ' + end_date;
+     date_picker += ' => ' + end_date;
     }
  
   const DateToggleHandler = (E) => {
@@ -98,15 +97,9 @@ const SettingPanel = ({ Questionnaire , refetch }) => {
   const DateChangeHandler = (ali, NewDate) => {
     SetErrorType(null)
     
-    // console.log(NewDate)
-    // console.log(convertPersianDateTimeToISO(NewDate.validatedValue[0]))
-    // console.log((digitsFaToEn(NewDate.validatedValue[0])),
-    // convertPersianDateTimeToISO(digitsFaToEn(NewDate.validatedValue[0])))
     if(NewDate.validatedValue && NewDate.validatedValue.length == 1)
     {
-      console.log(digitsFaToEn(NewDate.validatedValue[0])
-        ,convertPersianDateTimeToISO(digitsFaToEn(NewDate.validatedValue[0])) ,
-      convertStringToDate(convertPersianDateTimeToISO(digitsFaToEn(NewDate.validatedValue[0]))))
+
       // pub_date = NewDate.validatedValue[0];
       Dispatcher({ 
         ACTION : 'Pub date set' , NewDate : convertPersianDateTimeToISO(digitsFaToEn(NewDate.validatedValue[0]))
@@ -214,7 +207,7 @@ const SettingPanel = ({ Questionnaire , refetch }) => {
               range
               plugins={[
                 <TimePicker position="bottom" />,
-                // <DatePanel position="left" />
+                <DatePanel position="right" />
               ]}
               onChange={DateChangeHandler}
               calendar={persian}
@@ -290,11 +283,15 @@ const SettingPanel = ({ Questionnaire , refetch }) => {
             <Switch checked={!QuestionnaireData.progress_bar} />
           </div>
         </QuestionnaireDatePickerContainer>
-        <QuestionnaireDatePickerContainer style={{ borderBottom: 'none', paddingBottom: 0, marginRight: '30px' }}>
+        <QuestionnaireDatePickerContainer disabled={!QuestionnaireData.show_question_in_pages}
+         style={{ borderBottom: 'none', paddingBottom: 0, marginRight: '30px' }}>
           <div className='picker_header' onClick={e => ToggleCheckBoxHandler(QuestionnaireData.previous_button, 'previous_button')}>
             <p>حذف دکمه قبلی</p>
-            <Switch checked={!QuestionnaireData.previous_button} />
+            <Switch disabled={!QuestionnaireData.show_question_in_pages}
+             checked={!QuestionnaireData.previous_button && QuestionnaireData.show_question_in_pages} />
           </div>
+         { !QuestionnaireData.show_question_in_pages &&
+          <p className='disable_warning'>دکمه‌ها فقط در صورتی که در هر صفحه یک سوال نمایش داده‌شود فعال هستند.</p>}
         </QuestionnaireDatePickerContainer>
         <div className='questionnaire_setting_footer'>
           <Button type='primary' icon={SettingChanged ? <Icon name='Check' /> : null} disabled={!SettingChanged}
@@ -360,7 +357,8 @@ const QuestionnaireReducerFunction = (State,ACTION) => {
     case 'show_question_in_pages':
       return {
         ...State,
-        show_question_in_pages : ACTION.NewToggleValue
+        show_question_in_pages : ACTION.NewToggleValue,
+        previous_button : ACTION.NewToggleValue,
       }
     case 'progress_bar':
       return {

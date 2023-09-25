@@ -66,6 +66,10 @@ html::-webkit-scrollbar-thumb
 {
   padding: 0 !important;
 }
+.ant-popover.ant-popover-placement-top .ant-popover-arrow
+{
+  display: none;
+}
 .rmdp-range
 {
   background-color: var(--primary-color) !important;
@@ -194,6 +198,23 @@ input:-webkit-autofill:active  {
   display: flex;
   gap: 12px;
   cursor: pointer;
+  text-align: right;
+}
+/* .sortable
+{
+  transition: 0.3s;;
+} */
+.sortable-chosen.ghost
+{
+  cursor: pointer;
+}
+.child_question.sortable-chosen.ghost  .design_container
+{
+  width : 50%;
+}
+.sortable-chosen
+{
+  user-select: none;
 }
 @media screen and (max-width : 500px)
 {

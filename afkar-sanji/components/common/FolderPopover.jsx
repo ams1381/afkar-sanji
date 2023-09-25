@@ -60,7 +60,9 @@ const FolderPopoverContent = ({ FolderReload , RenameInput , RenameFolderState ,
         <FolderPopoverItem deleteitem={'true'}>
           <RemovePopup 
           title='این پوشه حذف شود؟'
-          onOkay={deleteFolder} DeleteState={deleteFolderState} setDeleteState={setDeleteFolderState}>
+          onOkay={deleteFolder} 
+          DeleteState={deleteFolderState} 
+          setDeleteState={setDeleteFolderState}>
           </RemovePopup>
           <button onClick={RemoveFolderStateHandler}>
               <Icon name='RedTrash' />

@@ -228,7 +228,7 @@ export const QuestionDesignItem = styled.div`
     border-radius: 2px;
     margin-top : 10px;
     background: var(--surface);
-    width: ${p => p.childq ? '95%' : '100%'} !important;
+    width: ${p => p.childq ? '95%' : '100%'};
     // margin-top : ${p => p.childq ? '1rem' : '0'};
     transition : border 0.3s;
     border-right : 2px solid ${p => p.saved ? 'var(--primary-color)' : 'var(--Error-color)'};
@@ -253,6 +253,10 @@ export const QuestionDesignItem = styled.div`
     .question_type_selector .ant-select-selection-item  i 
     {
         filter : invert(37%) sepia(74%) saturate(1045%) hue-rotate(210deg) brightness(91%) contrast(105%);
+    }
+    .question_type_selector .type_select_item
+    {
+        gap : 5px;
     }
     .question_bold_info .ant-select-selection-item
     {
@@ -330,16 +334,34 @@ export const QuestionItemRow = styled.div`
     justify-content: flex-start;
     flex-direction: row-reverse;
     align-items: flex-start;
-    max-height : ${p => (p.isopen != null && p.maxheight && p.maxheight > 200) ? p.maxheight + 10 + 'px'  : 'fit-content'};
+    max-height : ${p => (p.isopen != null && p.maxheight && p.maxheight > 200) ?
+         p.maxheight + 10 + 'px'  : 'fit-content'};
     & .question_design_item
     {
         overflow: hidden;
     }
-
-    
+    .nested_dnd_message
+    {    
+        height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px dotted var(--Neutral-Gray6);
+        color: var(--Neutral-Gray6);
+        margin-top : 10px;
+    }
+    .design_container
+    {
+        width : ${p => p.childq ? '100%' : '50%'};
+    }
+    .child_container
+    {
+        position : relative;
+    }
     @media screen and (max-width : 768px)
     {
         max-height : fit-content !important;
+        justify-content: flex-end;
         & .question_design_item 
         {
             width : 100% !important;
@@ -436,6 +458,10 @@ export const QuestionItemButtonContainer = styled.div`
         min-width : 32px !important;
         width : 32px;
         border-radius: 2px;
+    }
+    .remove_btn:hover , .duplicate_btn:hover
+    {
+        transform : translate(1px , 0)
     }
 `
 export const QuestionItemActionSelector = styled.div`
@@ -579,12 +605,13 @@ export const OptionalInputItem = styled.input`
     {
         border : 1px solid var(--primary-color);
     }
+    
 `
 export const InputOptionsContainer = styled.div`
     display: flex;
-    flex-direction: row-reverse;
+    flex-direction: column;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
     margin-top: 20px;
 
     & button 
@@ -599,12 +626,21 @@ export const InputOptionsContainer = styled.div`
         width : 30px;
         height : 30px;
     }
+    .option_container 
+    {
+        width: 100%;
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        justify-content: space-between;
+    }
     .option_button_container
     {
         display: flex;
         gap: 20px;
         margin-right: 20px;
     }
+   
 `
 export const OptionWritingContainer = styled.div`
     text-align : right;
@@ -612,6 +648,11 @@ export const OptionWritingContainer = styled.div`
     {
         margin : 0.6rem 0;
         color: var(--Neutral-Gray9);
+    }
+    .options_error_message
+    {
+        font-size: 12px;
+        color: var(--Error-color);
     }
 `
 export const AddOptionButton = styled.button`

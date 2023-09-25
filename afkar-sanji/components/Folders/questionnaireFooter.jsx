@@ -27,11 +27,12 @@ const QuestionnaireFooterPart = ({ questionnaire , FolderReload , folderNumber})
         try
         {
           await axiosInstance.delete(`/question-api/questionnaires/${questionnaire.uuid}/`);
-           FolderReload();
+          FolderReload();
+          setDeletePopoverState(false);
         }
         catch(err)
         {
-            console.log(err)
+         
             SavedMessage.error({
                 content : 'در حذف کردن پرسشنامه مشکلی پیش آمد',
                 duration : 5
@@ -72,8 +73,6 @@ const QuestionnaireFooterPart = ({ questionnaire , FolderReload , folderNumber})
         </QuestionnaireFooterItem>
         <QuestionnaireFooterItem onClick={() => setDeletePopoverState(!DeletePopoverState)}>
             <RemovePopup 
-            // content={<RemovePopoverContent FolderReload={FolderReload} questionnairesUUID={questionnaire.uuid}/>}
-            trigger="click"
             DeleteState={DeletePopoverState}
             title='این پرسشنامه حذف شود؟'
             onOkay={RemoveQuestionnaireHandler}

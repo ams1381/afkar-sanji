@@ -187,6 +187,21 @@ export const ResultTableContainer = styled.div`
     {
         font-family : IRANSans !important;
     }
+    .no_data_table .ant-table-wrapper , .no_data_table
+    {
+        width : 100%;
+        height : 100%;
+    }
+    .ant-table-cell .no_result_message
+    {
+        color: var(--Neutral-Gray9) !important;
+        font-size: 20px;
+        line-height: 30px;
+    }
+    .ant-input-suffix
+    {
+        margin-left : 3.5rem;
+    }
 `
 export const EmptyResultContainer = styled.div`
     height: 70vh;
@@ -225,6 +240,10 @@ export const ResultButton = styled.button`
     {
         border : 1px solid var(--primary-color);
         color : var(--primary-color);
+    }
+    &:hover i 
+    {
+        filter: invert(37%) sepia(74%) saturate(1045%) hue-rotate(210deg) brightness(91%) contrast(105%);
     }
     
 `

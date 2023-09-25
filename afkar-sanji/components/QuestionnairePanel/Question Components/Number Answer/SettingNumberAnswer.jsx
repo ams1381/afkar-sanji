@@ -11,7 +11,12 @@ export const SettingNumberAnswer = ({ QuestionInfo }) => {
     const dispatcher = useDispatch();
     const LimitContainerRef = useRef(null);
     const RegularToggleHandler = (Event , TName) => {
-        dispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : TName , ToggleValue : Event}))
+        dispatcher(ChangeToggleHandler({
+             QuestionID : QuestionInfo.id ,
+              ToggleName : TName ,
+               ToggleValue : Event ,
+               group : QuestionInfo.group
+            }))
     }
     useEffect(() => {
         if(OcurredError)
@@ -35,7 +40,10 @@ export const SettingNumberAnswer = ({ QuestionInfo }) => {
         else if(InputName == 'min' && event >= 0)
                 RegularToggleHandler(false,'accept_negative')
         dispatcher(ChangeMinOrMaxAnswerHandler({
-             QuestionID : QuestionInfo.id , MinMaxName : InputName , MinMaxValue : event
+             QuestionID : QuestionInfo.id , 
+             MinMaxName : InputName , 
+             MinMaxValue : event ,
+             group : QuestionInfo.group
          }))
     }
   return (

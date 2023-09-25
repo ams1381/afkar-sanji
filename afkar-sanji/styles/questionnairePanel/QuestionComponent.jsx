@@ -10,8 +10,24 @@ export const QuestionComponentContainer = styled.div`
     box-shadow: ${p => (p.childq || p.mobilepreview) ? 'none' : '0px 2px 8px 0px rgba(0, 0, 0, 0.15)'};
     padding: 1rem;
     border-radius: 2px;
+    // max-height : ${p => p.slidemode ? '500px' : 'auto'};
+    max-height : 500px;
+    // overflow : ${p => p.slidemode ? 'scroll' : 'auto'};
     background: ${p => p.mobilepreview ? 'none' : 'var(--surface)'};
-
+    overflow-y: ${p => p.childq ? 'auto' : 'scroll'};
+    &::-webkit-scrollbar
+    {
+        background : transparent;
+        width : 8px;
+    }
+    // &::-webkit-scrollbar-track {
+    //     box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    //   }
+    &::-webkit-scrollbar-thumb {
+        background: #00000057;
+        width: 2px;
+        border-radius: 10px;
+      }
     .uploaded_file_preview .video-react-button.video-react-big-play-button
     {
         left: 50%;
@@ -187,7 +203,7 @@ export const OptionalAnswerBlockContainer = styled.div`
    
 `
 export const OptionsContainer = styled.div`
-    max-height: 506px;
+    max-height: 406px;
     overflow : scroll;
 
     &::-webkit-scrollbar
@@ -236,7 +252,10 @@ export const DropDownContainer = styled.div`
     & .ant-select-selection-item
     {
         font-family : IRANSans;
+        display : flex;
+        align-items : center;
     }
+    
     .ant-select-selection-item-content
     {
         color : var(--primary-color);

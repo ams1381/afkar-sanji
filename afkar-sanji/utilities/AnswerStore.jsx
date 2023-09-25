@@ -46,6 +46,7 @@ const AnswerSetSlice =  createSlice({
         },
         ChoseOption : (state , action) => {
             const { QuestionID , ChoseOptionsArray , other_text} = action.payload;
+            console.log(QuestionID , ChoseOptionsArray )
             if(ChoseOptionsArray && Array.isArray(ChoseOptionsArray) && ChoseOptionsArray.length)
             {
                 if(other_text)

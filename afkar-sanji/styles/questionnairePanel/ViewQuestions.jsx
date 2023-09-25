@@ -28,6 +28,10 @@ export const ControlButtonsContainer = styled.div`
         border-radius : 2px;
         font-family : IRANSans;
     }
+    .ant-btn
+    {
+        background : var(--primary-color);
+    }
     @media screen and (max-width : 980px)
     {
         width : 50%;
@@ -43,7 +47,7 @@ export const ControlButtonsContainer = styled.div`
     }
 `
 export const AnimLight = styled.div`
-    position : absolute;
+    position : fixed !important;
     z-index : -1;
 `
 export const AnimLightOne = styled(AnimLight)`
@@ -178,19 +182,29 @@ export const PreviewPageContainer = styled.div`
     // }
      .swiper-slide
      {
-        height: 100vh!important;
+        height: 75vh!important;
         display: flex;
         align-items: center;
         width: 70%;
         margin: 0 auto;
         flex-direction: column;
         justify-content: center;
+        
      }
      .swiper-wrapper
      {
         width: 100%;
         height: 100vh;
+        // overflow : scroll;
      }
+    //  .swiper-vertical
+    //  {
+    //     overflow : scroll;
+    //  }
+    //  .swiper-vertical::-webkit-scrollbar 
+    //  {
+    //     width : 0;
+    //  }
      .swiper-slide.swiper-slide-next
      {
         justify-content : flex-start;
@@ -201,13 +215,26 @@ export const PreviewPageContainer = styled.div`
      }
      .swiper-slide.swiper-slide-next .question_component
      {
-        margin-top : -85px;
+        // margin-top : -85px;
+        transform : scale(0.8);
+        // transition : transform;
         opacity : 0.6;
+        // animation : ScaleAnim 1s ease;
      }
      .swiper-slide.swiper-slide-prev .question_component
      {
-        margin-bottom : -120px;
+        // margin-bottom : -120px;
+        transform : scale(0.8);
         opacity : 0.6;
+        // animation : ScaleAnim 1s ease;
+     }
+     @keyframes ScaleAnim {
+        from {
+            transform : scale(1)
+        }
+        to {
+            transform : scale(0.85)
+        }
      }
     @media screen and (max-width : 768px)
     {
@@ -230,11 +257,16 @@ export const PreviewPageHeader = styled.div`
     display : flex;
     justify-content : center;
     padding-top : 1rem;
+
+    .ant-progress-steps-outer .ant-progress-steps-item
+    {
+        width : 8px !important;
+    }
 `
 export const PreviewQuestionsContainer = styled.div`
     width : ${p => p.slidemode ? '50%' : '30%'};
     max-height: ${p => p.slidemode ? 'auto' : '649px'};
-    overflow: ${p => p.slidemode ? 'hidden' : 'scroll'};
+    // overflow: ${p => p.slidemode ? 'hidden' : 'scroll'};
 
     &::-webkit-scrollbar 
     {

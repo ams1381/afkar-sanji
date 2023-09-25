@@ -5,10 +5,19 @@ import { styled } from 'styled-components'
 import { useDispatch , useSelector } from 'react-redux'
 import { ChoseOption } from '@/utilities/AnswerStore'
 
+const shuffleArray = (array) => {
+    const shuffledArray = [...array];
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+    }
+    return shuffledArray;
+  };
+  
 const DropDown = ({ QuestionInfo }) => {
   const dispatcher = useDispatch();
   const QuestionsAnswerSet = useSelector(state => state.reducer.AnswerSet);
-
+  const [ QuestionOptions , setQuestionOptions ] = useState(QuestionInfo.options);
   const [selectedValues, setSelectedValues] = useState([]);
   useEffect(() => {
     if(QuestionsAnswerSet && QuestionsAnswerSet.length)
@@ -18,6 +27,16 @@ const DropDown = ({ QuestionInfo }) => {
       setSelectedValues(QuestionInfo.options.filter(OptionItem => selected_options_array?.includes(OptionItem.id)).map(item => item.text));
     }
   },[])
+  useEffect(() => {
+    if(QuestionInfo.is_random_options)
+    {
+      // setIsRandom(true);
+      setQuestionOptions(shuffleArray(QuestionInfo.options))
+    }
+    else
+      setQuestionOptions((QuestionInfo.options))
+    
+  },[QuestionInfo])
   const DropDownAnswerHandler = (values) => {
     let maxSelected;
     if(QuestionInfo.max_selected_options && QuestionInfo.max_selected_options > 1)
@@ -58,7 +77,7 @@ const DropDown = ({ QuestionInfo }) => {
         placeholder="پاسخ خود را انتخاب کنید"
         style={{ width: '100%', fontFamily: 'IRANSans', direction: 'rtl' }}
         dropdownStyle={{ fontFamily: 'IRANSans' }}
-        options={DropDownOptionsGenerator(QuestionInfo.options)}
+        options={DropDownOptionsGenerator(QuestionOptions)}
         optionLabelProp="label"
       />
     </DropDownContainer>
@@ -66,8 +85,8 @@ const DropDown = ({ QuestionInfo }) => {
 };
 const DropDownOptionsGenerator = (Options) => {
   const OptionsArray = Options
-    .filter(item => item.text && item.text !== 'null')
-    .map(item => ({
+    ?.filter(item => item.text && item.text !== 'null')
+    ?.map(item => ({
       id: item.id,
       label: item.text,
       value: item.text

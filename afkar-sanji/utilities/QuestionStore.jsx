@@ -4,7 +4,7 @@ import { configureStore , createSlice , current, getDefaultMiddleware } from '@r
 var InitialValue = {
     nonQuestionData : [],
     data : [],
-    Error : null
+    Error : []
 }
 const QuestionSlice =  createSlice({
     name : 'QuestionsSlice',
@@ -19,27 +19,73 @@ const QuestionSlice =  createSlice({
             })  
         },
         ChangeErrorData : (state,action) => {
-            const { actionErrorObject } = action.payload;
-            state.Error = actionErrorObject?.data;
-            
+            const { actionErrorObject , questionID } = action.payload;
+            console.log(actionErrorObject , questionID)
+            if(!state.Error.find(item => item.qid == questionID))
+            {
+                state.Error.push({
+                err_object : actionErrorObject?.data , 
+                qid : questionID
+                });
+            }
+            else 
+            {
+                state.Error.find(item => item.qid == questionID).err_object = actionErrorObject?.data;
+                state.Error.find(item => item.qid == questionID).qid = questionID;
+            }
+            // console.log()
         },
         DuplicateQuestionHandler : (state , action) =>{
-            const { QuestionID , CopiedQuestionID} = action.payload;
-            let DuplicatedElement = JSON.parse(JSON.stringify(state.data)).find(item => item.question.id == QuestionID)
-            let DuplicatedIndex = JSON.parse(JSON.stringify(state.data)).findIndex(item => item.question.id == QuestionID);
+            const { QuestionID , CopiedQuestionID, group } = action.payload;
             
-            state.data.splice(DuplicatedIndex + 1, 0, DuplicatedElement);
-            state.data[[DuplicatedIndex + 1]].question.id = CopiedQuestionID;
-            state.data[DuplicatedIndex + 1].question.newFace = true;
-            state.data[DuplicatedIndex + 1].question.duplicated = true;
-            state.data[DuplicatedIndex + 1].question.is_finalized = false;
+            
+            if(group)
+            {
+                let DuplicatedElement = JSON.parse(JSON.stringify(state.data.find(item => item.question.id == group).question.child_questions
+                .find(item => item.question.id == QuestionID)));
+
+                let DuplicatedIndex = state.data.find(item => item.question.id == group).question.child_questions
+                .findIndex(item => item.question.id == QuestionID);
+                DuplicatedElement.question.id = CopiedQuestionID;
+
+                state.data.find(item => item.question.id == group).question.child_questions.splice(DuplicatedIndex + 1, 0, DuplicatedElement);
+                // state.data.find(item => item.question.id == group).question.child_questions[[DuplicatedIndex + 1]].question.id = CopiedQuestionID;
+                state.data.find(item => item.question.id == group).question.child_questions[DuplicatedIndex + 1].question.newFace = true;
+                state.data.find(item => item.question.id == group).question.child_questions[DuplicatedIndex + 1].question.duplicated = true;
+                state.data.find(item => item.question.id == group).question.child_questions[DuplicatedIndex + 1].question.is_finalized = false;
+
+                // console.log(JSON.parse(JSON.stringify(state.data.find(item => item.question.id == group).question.child_questions)))
+            }
+            else 
+            {
+                let DuplicatedElement = JSON.parse(JSON.stringify(state.data)).find(item => item.question.id == QuestionID)
+                let DuplicatedIndex = JSON.parse(JSON.stringify(state.data)).findIndex(item => item.question.id == QuestionID);
+                state.data.splice(DuplicatedIndex + 1, 0, DuplicatedElement);
+                state.data[[DuplicatedIndex + 1]].question.id = CopiedQuestionID;
+                state.data[DuplicatedIndex + 1].question.newFace = true;
+                state.data[DuplicatedIndex + 1].question.duplicated = true;
+                state.data[DuplicatedIndex + 1].question.is_finalized = false;
+            }
+            
         },
         DeleteQuestionHandler : (state , action) => {
-            const { QuestionID , isQuestion } = action.payload;
+            const { QuestionID , isQuestion ,groupID } = action.payload;
             if(isQuestion)
             {
-                let DeletedQuestionIndex = state.data.findIndex(item => item.question.id == QuestionID);
-                state.data.splice(DeletedQuestionIndex , 1);
+                if(groupID)
+                {
+                    let DeletedQuestionIndex = state.data.find(item => item.question.id == groupID)
+                    .question.child_questions.findIndex(item => item.question.id == QuestionID);
+ 
+                     state.data.find(item => item?.question.id == groupID).question.child_questions
+                    .splice(DeletedQuestionIndex , 1)
+
+                }
+                else
+                {
+                    let DeletedQuestionIndex = state.data.findIndex(item => item.question.id == QuestionID);
+                    state.data.splice(DeletedQuestionIndex , 1);
+                }
             }
             else
             {
@@ -54,19 +100,24 @@ const QuestionSlice =  createSlice({
 
         },
         finalizer : (state , action) => {
-            const { isQuestion , QuestionID , Response } = action.payload;
+            const { isQuestion , QuestionID , Response , group } = action.payload;
             
             if(isQuestion)
             {
-                if(state.data.find(item => item.question && item.question.id == QuestionID)){
-                    // console.log(JSON.parse(JSON.stringify(state.data.find(item => item.question.id == QuestionID).question)),Response)
+                if(!group)
                     state.data.find(item => item.question.id == QuestionID).question = Response;
-                }
+                // if(state.data.find(item => item.question && item.question.id == QuestionID)){
+                //     // console.log(JSON.parse(JSON.stringify(state.data.find(item => item.question.id == QuestionID).question)),Response)
+                    
+                // }
                 else
                 {
-                    state.data.forEach(item => item.question.child_questions ?
-                        item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                        .question = Response : '') 
+                    console.log(Response, group)
+                    state.data.find(item => item.question.id == group).question.child_questions
+                        .find(item => item.question.id == QuestionID).question = Response;
+                    // state.data.forEach(item => item.question.child_questions ?
+                    //     item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
+                    //     .question = Response : '') 
                 }
                 
             }
@@ -121,61 +172,81 @@ const QuestionSlice =  createSlice({
             state.nonQuestionData = action.payload
         },
         ChangeNameHandler : (state, action) => {
-            const { QuestionID , NewTitle , QuestionChanged} = action.payload;
-            delete state.Error?.title;
-            QuestionChanged ? 
-            state.data.find(item => item.question.id == QuestionID) ? 
-            state.data.find(item => item.question.id == QuestionID).question.title = NewTitle
-            : 
-            state.data.forEach(item => item.question.child_questions ?
-            item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-            .question.title = NewTitle : '')
-            : 
-            state.nonQuestionData.find(item => (item.question && item.question.id == QuestionID)).question.title = NewTitle
+            const { QuestionID , NewTitle , QuestionChanged , group } = action.payload;
+            // delete state.Error?.title;
+            state.Error = state.Error?.filter(item => item.qid != QuestionID)
+            if(QuestionChanged) 
+            {
+              if(!group)
+                state.data.find(item => item.question.id == QuestionID).question.title = NewTitle
+              else
+              {
+                state.data.find(item => item.question.id == group).question.child_questions
+                .find(item => item.question.id == QuestionID).question.title = NewTitle
+              }
+            }
+            
+            else
+                state.nonQuestionData.find(item => (item.question && item.question.id == QuestionID)).question.title = NewTitle
         },
         ChangeDescriptionHandler : (state , action) => {
-            const { QuestionID , NewDesc , QuestionChanged} = action.payload;
-            QuestionChanged ? 
-            state.data.find(item => item.question.id == QuestionID) ?
-            state.data.find(item => item.question.id == QuestionID).question.description = NewDesc 
-            :
-            state.data.forEach(item => item.question.child_questions ?
-                item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                .question.description = NewDesc : '')
-            :
-            state.nonQuestionData.find(item => (item.question && item.question.id == QuestionID)).question.description = NewDesc
+            const { QuestionID , NewDesc , QuestionChanged , group} = action.payload;
+            if(QuestionChanged) 
+            {
+                if(!group)
+                {
+                   state.data.find(item => item.question.id == QuestionID).question.description = NewDesc 
+                }
+                else
+                    state.data.find(item => item.question.id == group).question.child_questions
+                        .find(item => item.question.id == QuestionID).question.description = NewDesc;
+            }
+            else
+                state.nonQuestionData.find(item => (item.question && item.question.id == QuestionID)).question.description = NewDesc
         },
         ChangeToggleHandler : (state, action) => {
-            const  { QuestionID , ToggleName , ToggleValue , notQuestion } = action.payload;
+            const  { QuestionID , ToggleName , ToggleValue , notQuestion , group } = action.payload;
             if(notQuestion)
             {
                 state.nonQuestionData.find(item => item?.question?.id == QuestionID).question[ToggleName] = ToggleValue;
             }
             else
             {
-                state.data.find(item => item.question.id == QuestionID) ?
-                state.data.find(item => item.question.id == QuestionID).question[ToggleName] = ToggleValue
-                : 
-                state.data.forEach(item => item.question.child_questions ?
-                    item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                    .question[ToggleName] = ToggleValue : '')
+                // state.data.find(item => item.question.id == QuestionID) ?
+                if(!group)
+                    state.data.find(item => item.question.id == QuestionID).question[ToggleName] = ToggleValue
+                else 
+                {
+                    state.data.find(item => item.question.id == group).question
+                    .child_questions.find(item => item.question.id == QuestionID).question[ToggleName] = ToggleValue;
+                }
+                
             }
             
         },
         ChangeMinOrMaxAnswerHandler : (state, action) => {
-            const  { QuestionID , MinMaxName , MinMaxValue} = action.payload;
+            const  { QuestionID , MinMaxName , MinMaxValue , group } = action.payload;
             if(state.Error && state.Error[MinMaxName])
             {
-                delete  state.Error[MinMaxName];
-                console.log(JSON.parse(JSON.stringify(state.Error)))
+                // delete  state.Error[MinMaxName];
+                state.Error = state.Error.filter(item => item.quid != QuestionID);
+                // console.log(JSON.parse(JSON.stringify(state.Error)))
             }
-                
-            state.data.find(item => item.question.id == QuestionID) ? 
-            state.data.find(item => item.question.id == QuestionID).question[MinMaxName] = MinMaxValue 
-            :
-            state.data.forEach(item => item.question.child_questions ?
-                item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                .question[MinMaxName] = MinMaxValue : '')
+            if(!group)
+            {
+               state.data.find(item => item.question.id == QuestionID).question[MinMaxName] = MinMaxValue  
+            }
+            // state.data.find(item => item.question.id == QuestionID) ? 
+            else 
+            {
+                state.data.find(item => item.question.id == group).question.child_questions.
+                find(ChildItem => ChildItem.question.id == QuestionID).question[MinMaxName] = MinMaxValue;
+                // state.data.forEach(item => item.question.child_questions ?
+                // item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
+                // .question[MinMaxName] = MinMaxValue : '')
+            }
+            // :
+            
         },
         ChangeDegreeShapeHandler : (state, action) => {
             const  { QuestionID , NewIconName , NewShape  } = action.payload;
@@ -195,89 +266,147 @@ const QuestionSlice =  createSlice({
             }
         },
         ChangeDegreeHandler : (state, action) => {
-            const  { QuestionID , DegreeValue  } = action.payload;
-            state.data.find(item => item.question.id == QuestionID) ?
-            state.data.find(item => item.question.id == QuestionID).question.max = DegreeValue
-            : state.data.forEach(item => item.question.child_questions ?
-                item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                .question.max = DegreeValue : '')
+            const  { QuestionID , DegreeValue , group } = action.payload;
+            if(!group)
+            {
+                state.data.find(item => item.question.id == QuestionID).question.max = DegreeValue
+            }
+            else 
+            {
+                state.data.find(item => item.question.id == group).question.child_questions
+                .find(item => item.question.id == QuestionID).question.max = DegreeValue;
+            }
+            // state.data.find(item => item.question.id == QuestionID) ?
+            
+            // : state.data.forEach(item => item.question.child_questions ?
+            //     item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
+            //     .question.max = DegreeValue : '')
         },
         OptionModifier : (state, action) => {
-            const  { QuestionID , OptionID , OptionText } = action.payload;
-            state.data.find(questionItem => questionItem.question.id == QuestionID) ? 
-            state.data.find(questionItem => questionItem.question.id == QuestionID).question.options.find
-            (item => item.id == OptionID).text = OptionText
-            : state.data.forEach(item => item.question.child_questions ?
-            item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-            .question.options.find
-            (item => item.id == OptionID).text = OptionText : '')
+            const  { QuestionID , OptionID , OptionText , group } = action.payload;
+
+            if(!group)
+            {
+                state.data.find(questionItem => questionItem.question.id == QuestionID).question.options.find
+                (item => item.id == OptionID).text = OptionText
+            }
+            // state.data.find(questionItem => questionItem.question.id == QuestionID) ? 
+            else
+            {
+                state.data.find(questionItem => questionItem.question.id == group).question.child_questions
+                .find(item => item.question.id == QuestionID).question.options
+                .find(optionItem => optionItem.id == OptionID).text = OptionText;
+            }
+            // : state.data.forEach(item => item.question.child_questions ?
+            // item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
+            // .question.options.find
+            // (item => item.id == OptionID).text = OptionText : '')
         },
         OptionAdder : (state, action) => {
-            const  { QuestionID , OptionID , NewOptionID , OptionText , newOption} = action.payload;
+            const  { QuestionID , OptionID , NewOptionID , group , OptionText , newOption} = action.payload;
             if(OptionID)
             {
-                if(state.data.find(questionItem => questionItem.question.id == QuestionID))
+                // if(state.data.find(questionItem => questionItem.question.id == QuestionID))
+                if(!group)
                 {
-                let DuplicatedOption = JSON.parse(JSON.stringify(state.data)).find(item => item.question.id == QuestionID).question.options.find(OptionItem => OptionItem.id == OptionID)
-                let DuplicatedIndex = JSON.parse(JSON.stringify(state.data)).find(item => item.question.id == QuestionID).question.options.findIndex(OptionItem => OptionItem.id == OptionID)
+                    state.Error
+                    let DuplicatedOption = JSON.parse(JSON.stringify(state.data)).find(item => item.question.id == QuestionID).question.options.find(OptionItem => OptionItem.id == OptionID)
+                    let DuplicatedIndex = JSON.parse(JSON.stringify(state.data)).find(item => item.question.id == QuestionID).question.options.findIndex(OptionItem => OptionItem.id == OptionID)
 
-                state.data.find(questionItem => questionItem.question.id == QuestionID).question.options.splice(DuplicatedIndex + 1, 0, DuplicatedOption);
-                state.data.find(questionItem => questionItem.question.id == QuestionID).question.options[DuplicatedIndex + 1].text = OptionText;
-                state.data.find(questionItem => questionItem.question.id == QuestionID).question.options[DuplicatedIndex + 1].id = NewOptionID;
-                state.data.find(questionItem => questionItem.question.id == QuestionID).question.options[DuplicatedIndex + 1].newOption = newOption;
+                    state.data.find(questionItem => questionItem.question.id == QuestionID).question.options.splice(DuplicatedIndex + 1, 0, DuplicatedOption);
+                    state.data.find(questionItem => questionItem.question.id == QuestionID).question.options[DuplicatedIndex + 1].text = OptionText;
+                    state.data.find(questionItem => questionItem.question.id == QuestionID).question.options[DuplicatedIndex + 1].id = NewOptionID;
+                    state.data.find(questionItem => questionItem.question.id == QuestionID).question.options[DuplicatedIndex + 1].newOption = newOption;
 
                 
                 }
                 else
                 {
-                    let DuplicatedOption = JSON.parse(JSON.stringify(state.data)).forEach(item => item.question.child_questions ?
-                        item.question.child_questions.find(child_item => child_item.question.id == QuestionID).question.options.find(OptionItem => OptionItem.id == OptionID) : '');
+                    // let DuplicatedOption = JSON.parse(JSON.stringify(state.data)).forEach(item => item.question.child_questions ?
+                    //     item.question.child_questions.find(child_item => child_item.question.id == QuestionID).question.options.find(OptionItem => OptionItem.id == OptionID) : '');
+                    let DuplicatedOption = JSON.parse(JSON.stringify(state.data))?.find(item => item.question.id == group).question.child_questions.find(item => item.question.id == QuestionID)
+                    .question.options.find(OptionItem => OptionItem.id == OptionID);
 
-                    let DuplicatedIndex = JSON.parse(JSON.stringify(state.data)).forEach(item => item.question.child_questions ?
-                        item.question.child_questions.find(child_item => child_item.question.id == QuestionID).question.options.findIndex(OptionItem => OptionItem.id == OptionID) : '');
+                    
+                    // // let DuplicatedIndex = JSON.parse(JSON.stringify(state.data)).forEach(item => item.question.child_questions ?
+                    // //     item.question.child_questions.find(child_item => child_item.question.id == QuestionID).question.options.findIndex(OptionItem => OptionItem.id == OptionID) : '');
 
-                    state.data.forEach(item => item.question.child_questions ?
-                        item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                        .question.options.splice(DuplicatedIndex + 1, 0, DuplicatedOption) : '')
-                    state.data.forEach(item => item.question.child_questions ?
-                        item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                        .question.options.text = OptionText : '')
-                    state.data.forEach(item => item.question.child_questions ?
-                        item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                        .question.options.id = NewOptionID : '')
-                    state.data.forEach(item => item.question.child_questions ?
-                        item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                        .question.options.newOption = newOption : '')
+                    let DuplicatedIndex = JSON.parse(JSON.stringify(state.data))?.find(item => item.question.id == group).question.child_questions.find(item => item.question.id == QuestionID)
+                    .question.options.findIndex(OptionItem => OptionItem.id == OptionID)
+
+                    const foundGroup = state.data.find(item => item.question.id === group);
+                    const childQuestions = foundGroup?.question.child_questions;
+                    const foundChildQuestion = childQuestions?.find(item => item?.question?.id);
+
+                    if (foundChildQuestion) {
+
+                    // console.log(DuplicatedOption , DuplicatedIndex)
+                    const options = foundChildQuestion.question.options;
+
+                    // Insert the duplicated option at the specified index
+                    options.splice(DuplicatedIndex + 1, 0, DuplicatedOption);
+
+                    const targetOption = options.find((item, index) => index === DuplicatedIndex + 1);
+                    state.data.find(item => item.question.id == group).question.child_questions
+                    .find(item => item.question.id == QuestionID).question.options.splice(DuplicatedIndex + 1, 0, DuplicatedOption);
+                    // console.log(DuplicatedOption , DuplicatedIndex)
+                    // Update the text and ID for the duplicated option
+                    if (targetOption) {
+                        targetOption.text = '';
+                        targetOption.id = NewOptionID;
+                        targetOption.newOption = newOption;
+                    }
+                    }
+  
                 }
             }
             else
-                state.data.find(questionItem => questionItem.question.id == QuestionID) ?
-                state.data.find(questionItem => questionItem.question.id == QuestionID).question.options.push({
-                    id : NewOptionID ,
-                    text : OptionText , 
-                    newOption : newOption,
-                }) :
-                state.data.forEach(item => item.question.child_questions ?
-                    item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                    .question.options.push({
+            {
+                if(!group)
+                    // console.log(JSON.parse(JSON.stringify(state.data)).find(item => item.question.id ==))
+                    state.data.find(questionItem => questionItem.question.id == QuestionID).question.options.push({
+                        id : NewOptionID ,
+                        text : OptionText , 
+                        newOption : newOption,
+                })
+                else 
+                {
+                    state.data.find(questionItem => questionItem.question.id == group).question.child_questions
+                    .find(item => item.question.id == QuestionID).question.options.push({
                         id : NewOptionID ,
                         text : OptionText,
                         newOption : newOption
-                    })  : '')
+                    })
+                }
+            }
+                
         },
         OptionRemover : (state, action) => {
-            const  { QuestionID , OptionID } = action.payload;
-            if(state.data.find(questionItem => questionItem.question.id == QuestionID))
+            const  { QuestionID , OptionID , group } = action.payload;
+            if(!group)
             {
-              let Option_index = JSON.parse(JSON.stringify(state.data)).find(questionItem => questionItem.question.id == QuestionID).question.options.findIndex(item => item.id == OptionID);
-
-              state.data.find(questionItem => questionItem.question.id == QuestionID).question.options.splice(Option_index,1);
+              let Option_index = JSON.parse(JSON.stringify(state.data))
+              .find(questionItem => questionItem.question.id == QuestionID).question.options
+              .findIndex(item => item.id == OptionID);
+             
+              state.data.find(questionItem => questionItem.question.id == QuestionID).question.options
+              .splice(Option_index,1);
             }
+            else 
+            {
+                let Option_index = JSON.parse(JSON.stringify(state.data))
+                .find(questionItem => questionItem.question.id == group).question.child_questions
+                .find(item => item.question.id == QuestionID).question.options
+                .findIndex(item => item.id == OptionID);
 
+                state.data.find(questionItem => questionItem.question.id == group).question.child_questions.
+                find(item => item.question.id == QuestionID).question.options
+                .splice(Option_index,1);
+            }
         },
         OptionRemoverByText : (state, action) => {
-            const  { QuestionID , OptionText } = action.payload;
-            if(state.data.find(questionItem => questionItem.question.id == QuestionID))
+            const  { QuestionID , OptionText , group} = action.payload;
+            if(!group)
             {
                 let Option_index = JSON.parse(JSON.stringify(state.data)).find(questionItem => questionItem.question.id == QuestionID).question.options.findIndex(item => item.text == OptionText);
                 if(Option_index == -1)
@@ -286,16 +415,17 @@ const QuestionSlice =  createSlice({
             }
             else
             {
-                let Option_index = JSON.parse(JSON.stringify(state.data)).forEach(item => item.question.child_questions ?
-                    item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                    .question.options.findIndex(item => item.text == OptionText) : '')
-                forEach(item => item.question.child_questions ?
-                    item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                    .question.options.splice(Option_index,1) : '')
+                let Option_index = JSON.parse(JSON.stringify(state.data)).find(item => item.question.id == group)
+                .question.child_questions.find(ChildQuestion => ChildQuestion.question.id == QuestionID).question.options
+                .findIndex(item => item.text == OptionText);
+
+                state.data.find(item => item.question.id == group).question.child_questions
+                .find(ChildQuestion => ChildQuestion.question.id == QuestionID).question.options.splice(Option_index , 1);
+
             }
         },
         OptionsAlphaBeticalSorter : (state, action) => {
-            const  { QuestionID } = action.payload;
+            const  { QuestionID , group} = action.payload;
             if(state.data.find(questionItem => questionItem.question.id == QuestionID))
             {
                 let SortedOptions = JSON.parse(JSON.stringify(state.data)).find(questionItem => questionItem.question.id == QuestionID).question.options
@@ -304,23 +434,30 @@ const QuestionSlice =  createSlice({
             }
             else
             {
-                let SortedOptions = JSON.parse(JSON.stringify(state.data)).forEach(item => item.question.child_questions ?
-                    item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                    .question.options.sort((a,b) => a.text.localeCompare(b.text))  : '')
+                // let SortedOptions = JSON.parse(JSON.stringify(state.data)).forEach(item => item.question.child_questions ?
+                //     item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
+                //     .question.options.sort((a,b) => a.text.localeCompare(b.text))  : '')
+                // let SortedOptions = JSON.parse(JSON.stringify(state.data)).find(item = > item.question.id == group).child_questions
+                // .find(item => item.question.id == QuestionID).question.options.sort((a,b) => a.text.lcaleCompare(b.text));
+
+                state.data.find(item => item.question.id == group).question.child_questions
+                .find(item => item.question.id == QuestionID).question.options.sort((a,b) => a.text.localeCompare(b.text));
                 
-                state.data.forEach(item => item.question.child_questions ?
-                    item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                    .question.options = SortedOptions  : '')
+                // state.data.forEach(item => item.question.child_questions ?
+                //     item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
+                //     .question.options = SortedOptions  : '')
             }
         }
         ,ChangeLabelHandler : (state, action) => {
-            const  { QuestionID , Label , LabelValue} = action.payload;
-            state.data.find(questionItem => questionItem.question.id == QuestionID) ?
-            state.data.find(questionItem => questionItem.question.id == QuestionID).question[Label] = LabelValue
-            : 
-            state.data.forEach(item => item.question.child_questions ?
-                item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                .question[Label] = LabelValue  : '')
+            const  { QuestionID , Label , LabelValue , group } = action.payload;
+            if(!group)
+                state.data.find(questionItem => questionItem.question.id == QuestionID).question[Label] = LabelValue
+            else
+                state.data.find(questionItem => questionItem.question.id == group).question.child_questions
+                .find(item => item.question.id == QuestionID).question[Label] = LabelValue
+            // state.data.forEach(item => item.question.child_questions ?
+            //     item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
+            //     .question[Label] = LabelValue  : '')
         },
         AddQuestion : (state, action) => {
             
@@ -368,13 +505,14 @@ const QuestionSlice =  createSlice({
                 }
                 else if(ParentQuestion)
                 {
-                    let TopQuestionIndex = JSON.parse(JSON.stringify(state.data)).
-                    forEach(item => item.question.child_questions ?
-                        item.question.child_questions.findIndex(child_item => child_item.question.id == TopQuestionID) : '');
+                    let TopQuestionIndex = state.data.find(item => item.question.id == ParentQuestion).question.child_questions
+                    .findIndex(item => item.question.id == TopQuestionID);
 
                     initialQuestionData.question.placement = TopQuestionIndex + 1;
+                    initialQuestionData.question.group = ParentQuestion;
                     state.data.find(item => item.question.id == ParentQuestion)
-                    .child_questions.splice(TopQuestionIndex + 1 ,0,initialQuestionData)
+                    .question.child_questions.splice(TopQuestionIndex + 1 ,0,initialQuestionData)
+
                 }
             }
             else
@@ -385,7 +523,7 @@ const QuestionSlice =  createSlice({
             }
         },
         ChangeQuestionType : (state , action) => {
-            const { QuestionID , newType , Prefix_url} = action.payload;
+            const { QuestionID , newType , Prefix_url , group} = action.payload;
             let newMin , newMax;
             switch(newType)
             {
@@ -409,7 +547,7 @@ const QuestionSlice =  createSlice({
                     newMax= 4;
                     break;
             }
-            if(state.data.find(item => item.question.id == QuestionID))
+            if(!group)
             {
                 
                 state.data.find(item => item.question.id == QuestionID).question.question_type = newType;
@@ -445,21 +583,36 @@ const QuestionSlice =  createSlice({
             }
             else
             {
-                state.data.forEach(item => item.question.child_questions ?
-                    item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                    .question.question_type = newType : '')
-                state.data.forEach(item => item.question.child_questions ?
-                    item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                    .question.url_prefix = Prefix_url : '')
-                state.data.forEach(item => item.question.child_questions ?
-                    item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                    .question.min = newMin : '')
-                state.data.forEach(item => item.question.child_questions ?
-                    item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                    .question.max = newMax : '')
+                state.data.find(item => item.question.id == group).question.child_questions
+                .find(ChildItem => ChildItem.question.id == QuestionID).question.question_type = newType;
+
+                state.data.find(item => item.question.id == group).question.child_questions
+                .find(ChildItem => ChildItem.question.id == QuestionID).question.url_prefix = Prefix_url;
+
+                state.data.find(item => item.question.id == group).question.child_questions
+                .find(ChildItem => ChildItem.question.id == QuestionID).question.min = newMin;
+
+                state.data.find(item => item.question.id == group).question.child_questions
+                .find(ChildItem => ChildItem.question.id == QuestionID).question.max = newMax;
+
+
+                console.log(JSON.parse(JSON.stringify(state.data.find(item => item.question.id == group).question.child_questions
+                .find(ChildItem => ChildItem.question.id == QuestionID))))
+                // state.data.forEach(item => item.question.child_questions ?
+                //     item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
+                //     .question.question_type = newType : '')
+                // state.data.forEach(item => item.question.child_questions ?
+                //     item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
+                //     .question.url_prefix = Prefix_url : '')
+                // state.data.forEach(item => item.question.child_questions ?
+                //     item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
+                //     .question.min = newMin : '')
+                // state.data.forEach(item => item.question.child_questions ?
+                //     item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
+                //     .question.max = newMax : '')
             }
 
-            console.log(state.data.find(item => item.question.id == QuestionID).question.question_type)
+            // console.log(state.data.find(item => item.question.id == QuestionID).question.question_type)
         },
         ChangeAnswerPattern : (state, action) => {
             const { QuestionID , NewPattern , answer_template} = action.payload;
@@ -480,30 +633,48 @@ const QuestionSlice =  createSlice({
             
         },
         UploadFileHandler : (state, action) => {
-            const { QuestionID , FileObject , IsQuestion } = action.payload;
+            const { QuestionID , FileObject , IsQuestion , group } = action.payload;
             delete FileObject.uid;
             if(IsQuestion)
             {
-               state.data.find(questionItem => questionItem.question.id == QuestionID).question.media = FileObject; 
+                if(!group)
+                    state.data.find(questionItem => questionItem.question.id == QuestionID).question.media = FileObject;
+                else 
+                    state.data.find(questionItem => questionItem.question.id == group).question.child_questions
+                    .find(item => item.question.id == QuestionID).question.media = FileObject;
             }
             else
                 state.nonQuestionData.find(questionItem => questionItem.question && questionItem.question.id == QuestionID)
             .question.media = FileObject;
             if(FileObject.status && FileObject.status == 'removed')
             {
-                IsQuestion ? state.data.find(questionItem => questionItem.question.id == QuestionID).question.media = ''
-                : state.nonQuestionData.find(questionItem => questionItem.question && questionItem.question.id == QuestionID ).question.media = ''
+                if(IsQuestion)
+                {
+                    if(!group)
+                        state.data.find(questionItem => questionItem.question.id == QuestionID).question.media = ''
+                    else 
+                        state.data.find(questionItem => questionItem.question.id == group).question.child_questions
+                        .find(item => item.question.id == QuestionID).question.media = '';
+                }
+                else
+                    state.nonQuestionData.find(questionItem => questionItem.question && questionItem.question.id == QuestionID ).question.media = ''
             }
         },
         RemoveFileHandler : (state, action) => {
-            const { QuestionID , IsQuestion } = action.payload;
+            const { QuestionID , IsQuestion , group } = action.payload;
             if(IsQuestion)
             {
-              if(state.data.find(questionItem => questionItem.question.id == QuestionID)) 
+              if(!group) 
                  state.data.find(questionItem => questionItem.question.id == QuestionID).question.media = '';
             else
-                 state.data.forEach(item => item.question.child_questions ?
-                    item.question.child_questions.find(child_item => child_item.question.id == QuestionID).question.media = '' : '')  
+            {
+                
+                state.data.find(questionItem => questionItem.question.id == group).question.child_questions
+                .find(item => item.question.id == QuestionID).question.media = ''
+
+                console.log(JSON.parse(JSON.stringify(state.data.find(questionItem => questionItem.question.id == group).question.child_questions
+                .find(item => item.question.id == QuestionID).question)))
+            }
             }
             else
             {
@@ -512,14 +683,14 @@ const QuestionSlice =  createSlice({
             }
         },
         ChangeUploadSizeHandler : (state, action) => {
-            const { QuestionID , uploadSize } = action.payload; 
+            const { QuestionID , uploadSize , group } = action.payload; 
+            state.Error = state.Error?.filter(item => item.qid != QuestionID)
 
-            state.data.find(questionItem => questionItem.question.id == QuestionID) ?
-            state.data.find(questionItem => questionItem.question.id == QuestionID).question.max_volume = uploadSize
-            :
-            state.data.forEach(item => item.question.child_questions ?
-                item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                .question.max_volume = uploadSize  : '')
+            if(!group)
+                state.data.find(questionItem => questionItem.question.id == QuestionID).question.max_volume = uploadSize
+            else 
+                state.data.find(item => item.question.id == group).question.child_questions.
+                    find(item => item.question.id == QuestionID).question.max_volume = uploadSize;
         },
         ReorderOptions : (state, action) => {
             const { QuestionID , NewOptionsPlacement } = action.payload;
@@ -529,15 +700,97 @@ const QuestionSlice =  createSlice({
             state.data.forEach(item => item.question.child_questions ?
                 item.question.child_questions.find(child_item => child_item.question.id == QuestionID).question.options = NewOptionsPlacement : '')
         },
+        ChildQuestionAdder : (state , action) => {
+            const { groupID , childQuestion , childQuestionIndex , prevIndex } = action.payload;
+
+            state.data.splice(prevIndex , 1);
+            
+            if(!state.data.find(item => item?.question?.id == groupID).question.child_questions?.length)
+            {
+                console.log('push check')
+                childQuestion.question.placement = 1;
+                state.data.find(item => item?.question?.id == groupID).question.child_questions.push(childQuestion)
+            }
+            else 
+            {
+                console.log(prevIndex , childQuestionIndex)
+               state.data.find(item => item?.question?.id == groupID).question.child_questions.splice(childQuestionIndex, 0 ,childQuestion)
+               state.data.find(item => item?.question?.id == groupID).question.child_questions[childQuestionIndex].question.placement = childQuestionIndex ;
+               state.data.find(item => item?.question?.id == groupID).question.child_questions[childQuestionIndex].question.group = groupID; 
+               
+            //    console.log(JSON.parse(JSON.stringify(state.data.find(item => item?.question?.id == groupID).question.child_questions)))
+            }
+            console.log(JSON.parse(JSON.stringify(state.data)))
+        },
         ChildQuestionReorder : (state, action) => {
-            const { ParentQuestionID , NewChildQuestion } = action.payload;
-            console.log(ParentQuestionID , NewChildQuestion)
+            const { ParentQuestionID } = action.payload;
+
+            state.data.find(item => item.question.id == ParentQuestionID).question.child_questions.forEach((item,index) => {
+                item.question.placement = index + 1;
+            })
+            // console.log(ParentQuestionID , NewChildQ/uestion)
             // state.data.find(item => item.question && item.question.id == ParentQuestionID).question.child_questions = NewChildQuestion;
         },
         FileVolumeTypeHandler : (state, action) => {
-            const { QuestionID , NewVolumeType } = action.payload;
+            const { QuestionID , NewVolumeType , group } = action.payload;
 
-            state.data.find(item => item.question && item.question.id == QuestionID).question.volume_unit = NewVolumeType;
+            if(!group)
+               state.data.find(item => item.question && item.question.id == QuestionID)
+            .question.volume_unit = NewVolumeType; 
+            else 
+                state.data.find(item => item.question?.id == group).question.child_questions
+                    .find(item => item.question.id == QuestionID).question.volume_unit = NewVolumeType;
+            
+        },
+        DeleteOptionsError : (state , action) => {
+            const { errID } = action.payload;
+
+            if(state.Error.find(item => item.qid == errID) && state.Error.find(item => item.qid == errID).err_object?.options)
+            { 
+              state.Error.find(item => item.qid == errID).err_object.options = null;
+            }
+                
+        },
+        DeleteInputError : (state , action) => {
+            const { errID , inputName } = action.payload;
+            console.log(errID,inputName)
+            if(state.Error.find(item => item.qid == errID) && state.Error.find(item => item.qid == errID).err_object?.inputName)
+            {
+              
+              state.Error.find(item => item.qid == errID).err_object.inputName = null;
+            }
+        },
+        ChildQuestionRemover : (state, action) => {
+            const { group , questionIndex , questionNewIndex } = action.payload;
+            // console.log('before remove',JSON.parse(JSON.stringify(state.data.find(item => item.question.id == group).question)))
+
+            let removedChild = state.data.find(item => item.question.id == group).question.child_questions[questionIndex];
+            state.data.find(item => item.question.id == group).question.child_questions[questionIndex].question.group = null;
+            state.data.find(item => item.question.id == group).question.child_questions.splice(questionIndex , 1);
+       
+            state.data.splice(questionNewIndex , 0, removedChild)
+
+            // console.log(JSON.s)
+          
+        },
+        ChildQuestionReplace : (state , action) => {
+            const { newChildrenArray , groupID } = action.payload;
+
+           state.data.find(item => item.question.id == groupID).question.child_questions = newChildrenArray;
+        },
+        SwitchIntoGroups : (state, action) => {
+            const { oldGroup , newGroup , questionID , oldIndex , newIndex } = action.payload;
+            // console.log(newIndex)
+            let switchedQuestion = state.data.find(item => item.question.id == oldGroup).question.child_questions
+                .find(childItem => childItem.question.id == questionID);
+
+            state.data.find(item => item.question.id == oldGroup).question.child_questions.splice(oldIndex , 1);
+            console.log(JSON.parse(JSON.stringify(state.data.find(item => item.question.id == oldGroup).question.child_questions)))
+            state.data.find(item => item.question.id == newGroup).question.child_questions
+                .splice(newIndex , 0 , switchedQuestion)
+
+
+            console.log(JSON.parse(JSON.stringify(state.data.find(item => item.question.id == newGroup))))
         }
     }
 })
@@ -549,13 +802,13 @@ const QuestionStore = configureStore({
         serializableCheck: false,
         }),
 })
-export const { initialQuestionsSetter , ChangeDescriptionHandler ,
-    DuplicateQuestionHandler,   ChangeQuestionType , DeleteQuestionHandler ,
+export const { initialQuestionsSetter , ChangeDescriptionHandler , ChildQuestionReplace ,
+    DuplicateQuestionHandler,   ChangeQuestionType , DeleteQuestionHandler , SwitchIntoGroups ,
      AddQuestion , DeleteNonQuestionHandler , ChildQuestionReorder , ChangeErrorData ,
-    ChangeToggleHandler,  ChangeNameHandler , ChangeMinOrMaxAnswerHandler,
-     ChangeLabelHandler , OptionsAlphaBeticalSorter , ReorderOptions ,
-    OptionModifier , OptionAdder , OptionRemover , ChangeUploadSizeHandler
-    , ChangeDegreeShapeHandler , OptionRemoverByText , finalizer , FileVolumeTypeHandler ,
+    ChangeToggleHandler,  ChangeNameHandler , ChangeMinOrMaxAnswerHandler, DeleteInputError ,
+     ChangeLabelHandler , OptionsAlphaBeticalSorter , ReorderOptions , DeleteOptionsError ,
+    OptionModifier , OptionAdder , OptionRemover , ChangeUploadSizeHandler , ChildQuestionAdder ,
+    ChildQuestionRemover , ChangeDegreeShapeHandler , OptionRemoverByText , finalizer , FileVolumeTypeHandler ,
     ChangeAnswerPattern , QuestionReorder , UploadFileHandler , RemoveFileHandler , AddWelcome , AddThanks ,
     QuestionSorter , ChangeDegreeHandler , NonQuestionSetter} = QuestionSlice.actions;
 

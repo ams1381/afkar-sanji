@@ -12,22 +12,45 @@ export const SettingDropDownAnswer = ({ QuestionInfo }) => {
 
     const MultipleAnswerToggleHandler = (Value) => {
         // SetMultipleAnswerState(!MultipleAnswerState)
-        DropDownDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : 'multiple_choice' , ToggleValue : Value}));
+        DropDownDispatcher(ChangeToggleHandler({
+             QuestionID : QuestionInfo.id ,
+              ToggleName : 'multiple_choice' ,
+               ToggleValue : Value ,
+               group : QuestionInfo.group
+            }));
     }
     const ChangeMinMaxHandler = (event,InputName) => {
         DropDownDispatcher(ChangeMinOrMaxAnswerHandler({
-             QuestionID : QuestionInfo.id , MinMaxName : InputName , MinMaxValue : event
+             QuestionID : QuestionInfo.id , 
+             MinMaxName : InputName , 
+             MinMaxValue : event ,
+             group : QuestionInfo.group
          }))
     }
     const RegularToggleHandler = (Event , TName) => {
-        DropDownDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : TName , ToggleValue : Event}))
+        DropDownDispatcher(ChangeToggleHandler({
+             QuestionID : QuestionInfo.id ,
+              ToggleName : TName ,
+               ToggleValue : Event ,
+               group : QuestionInfo.group
+            }))
 
         if(TName == 'is_random_options')
-            DropDownDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : 'is_alphabetic_order' , ToggleValue : false}))
+            DropDownDispatcher(ChangeToggleHandler({
+         QuestionID : QuestionInfo.id ,
+          ToggleName : 'is_alphabetic_order' , 
+          ToggleValue : false ,
+          group : QuestionInfo.group
+        }))
         if(TName == 'is_alphabetic_order')
         {
-             DropDownDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : 'is_random_options' , ToggleValue : false}))
-             DropDownDispatcher(OptionsAlphaBeticalSorter({ QuestionID : QuestionInfo.id }))
+             DropDownDispatcher(ChangeToggleHandler({ 
+                QuestionID : QuestionInfo.id ,
+                 ToggleName : 'is_random_options' ,
+                  ToggleValue : false ,
+                  group : QuestionInfo.group
+                }))
+             DropDownDispatcher(OptionsAlphaBeticalSorter({ QuestionID : QuestionInfo.id, group : QuestionInfo.group }))
         }
        
     }

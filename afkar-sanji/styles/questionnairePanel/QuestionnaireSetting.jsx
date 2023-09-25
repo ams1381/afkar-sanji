@@ -2,14 +2,24 @@ import { styled } from "styled-components"
 
 
 export const QuestionnaireDatePickerContainer  = styled.div`
-    color: var(--Neutral-Gray9);
     display: flex;
     justify-content: space-between;
     flex-direction: column;
     margin: 0.7rem 0;
     padding-bottom: 1rem;
     border-bottom: 1px solid  #CCCCCC;
-
+    pointer-events : ${p => p.disabled ? 'none' : 'all'};
+    text-align : right;
+    .picker_header 
+    {
+        color: ${p => p.disabled ? '#00000059' : 'var(--Neutral-Gray9)' };
+    }
+    .disable_warning
+    {
+        color: var(--Error-color);
+        font-size: 12px;
+        margin-top: 4px;
+    }
     .picker_container.time_picker .ant-picker , .picker_container.date_picker
     {
         border-radius: 2px;
@@ -45,6 +55,14 @@ export const QuestionnaireDatePickerContainer  = styled.div`
     .rmdp-arrow-container.rmdp-down 
     {
         align-items: center;
+    }
+    .rmdp-panel
+    {
+        min-width: 152px !important;
+    }
+    .rmdp-panel-body li , .rmdp-panel-body li .b-deselect
+    {
+        background : var(--primary-color);
     }
 `
 export const TimePickerContainer = styled.div`

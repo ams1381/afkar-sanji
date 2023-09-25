@@ -10,10 +10,19 @@ export const RangeWrite = ({ QuestionInfo }) => {
     const dispatcher = useDispatch();
 
     const DegreeChangeHandler = (newValue) => {
-      dispatcher(ChangeDegreeHandler({ QuestionID : QuestionInfo.id , DegreeValue : newValue }))
+      dispatcher(ChangeDegreeHandler({
+         QuestionID : QuestionInfo.id , 
+         DegreeValue : newValue ,
+         group : QuestionInfo.group
+        }))
     };
     const LabelValueChangeHandler = (e,LabelName) => {
-        dispatcher(ChangeLabelHandler({ QuestionID : QuestionInfo.id , Label : LabelName , LabelValue : e.target.value }))
+        dispatcher(ChangeLabelHandler({ 
+          QuestionID : QuestionInfo.id , 
+          Label : LabelName , 
+          LabelValue : e.target.value ,
+          group : QuestionInfo.group
+        }))
     }
   return (
     <div style={{ textAlign : 'right' , color : 'var(--Neutral-Gray9)' }}>

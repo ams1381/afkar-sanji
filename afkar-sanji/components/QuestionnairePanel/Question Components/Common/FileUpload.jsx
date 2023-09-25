@@ -38,7 +38,27 @@ const FileUpload = ({ QuestionInfo }) => {
       setUploadError(false);
       return
     }
-      
+    console.log(detectFileFormat(file.file?.name))
+    if(detectFileFormat(file.file?.name) == 'UNKNOWN' || detectFileFormat(file.file?.name) == 'Zip' ||
+    detectFileFormat(file.file?.name) == 'Audio')
+    {
+      messageApi.error({
+        content : `لطفا عکس یا فیلم آپلود کنید`,
+        style: {
+          fontFamily: 'IRANSans',
+          direction: 'rtl'
+        }
+      })
+      setFileList([{
+        name : file.file.name,
+        status: 'error',
+        url: URL.createObjectURL(file.file),
+        thumbUrl : URL.createObjectURL(file.file)
+      }]);
+      setFileUploaded(null)
+      setUploadError(true);
+      return
+    }
     if(file.file.size / 1024000 > 30)
     {
       messageApi.error({
@@ -60,8 +80,12 @@ const FileUpload = ({ QuestionInfo }) => {
     }
     file.fileList.length ? setFileUploaded(true) : setFileUploaded(null);
     dispatcher(UploadFileHandler(
-      { QuestionID : QuestionInfo.id , FileObject : file.file ,
-         IsQuestion : (QuestionInfo.question_type != 'welcome_page' && QuestionInfo.question_type != 'thanks_page') }
+      {
+         QuestionID : QuestionInfo.id , 
+         FileObject : file.file ,
+         IsQuestion : (QuestionInfo.question_type != 'welcome_page' && QuestionInfo.question_type != 'thanks_page') ,
+         group : QuestionInfo.group
+         }
       ))
       setUploadError(false);
   }
@@ -98,7 +122,9 @@ const FileUpload = ({ QuestionInfo }) => {
           onRemove={() => {
             dispatcher(RemoveFileHandler(
             { QuestionID : QuestionInfo.id ,
-               IsQuestion :(QuestionInfo.question_type != 'welcome_page' && QuestionInfo.question_type != 'thanks_page') }
+               IsQuestion :(QuestionInfo.question_type != 'welcome_page' && QuestionInfo.question_type != 'thanks_page'),
+               group : QuestionInfo.group 
+              }
             ))
           }}
         >
@@ -144,3 +170,18 @@ const beforeUpload = (file) => {
   });
 };
 export default FileUpload;
+
+export const detectFileFormat = (fileName) => {
+  if(!fileName)
+   return
+   fileName = fileName.toLowerCase();
+  let pictureFormats = ['jpg', 'jpeg', 'png', 'gif'];
+  let videoFormats = ['mp4', 'avi', 'mkv', 'mov', 'flv', 'wmv'];
+  let zip_formats  = ['zip','rar','7z'];
+  let audio_formats = ['mp3','wav','ogg','mpeg-1']
+  let fileFormat = fileName.split(".")[fileName.split(".").length - 1];
+
+  return pictureFormats.includes(fileFormat) ? 'Picture' :
+         videoFormats.includes(fileFormat) ? 'Video' : zip_formats.includes(fileFormat) ?
+          'Zip' : audio_formats.includes(fileFormat) ? 'Audio' : 'UNKNOWN';
+}

@@ -56,6 +56,7 @@ const InputAnswer = ({ InputPlaceholder , QuestionInfo }) => {
   return (
     <QuestionWithAnswerContainer>
         <TextAnswerInputBox value={textAnswer}
+        style={{ textAlign : QuestionInfo.pattern == 'english_letters' ? 'left' : 'right' }}
         type={ QuestionInfo ? (QuestionInfo.pattern.includes('phone_number') || 
         QuestionInfo.pattern.includes('phone_number') || 
           QuestionInfo.pattern.includes('number_character')) ? 'number' : 'text' : 'text' } 

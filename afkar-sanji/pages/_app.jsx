@@ -49,7 +49,7 @@ export default function App({ Component, pageProps }) {
         setReadyToRender(true)
     },[])
 
-  return <AuthContextProvider>
+  return  <AuthContextProvider>
     <QueryClientProvider client={queryClient}>
       { readyToRender && <Component {...pageProps} /> }
       </QueryClientProvider>

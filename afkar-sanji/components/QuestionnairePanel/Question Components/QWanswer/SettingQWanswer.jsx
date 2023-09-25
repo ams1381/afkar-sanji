@@ -31,7 +31,10 @@ const SettingQWanswer = ({ QuestionInfo }) => {
   const ChangeMinMaxHandler = (event,InputName) => {
     console.log(event,InputName)
     dispatcher(ChangeMinOrMaxAnswerHandler({
-         QuestionID : QuestionInfo.id , MinMaxName : InputName , MinMaxValue : event
+         QuestionID : QuestionInfo.id , 
+         MinMaxName : InputName , 
+         MinMaxValue : event ,
+         group : QuestionInfo.group
      }))
      
 }

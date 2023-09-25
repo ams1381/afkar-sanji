@@ -15,10 +15,16 @@ export const ChartGenerator = (chartType,data,PlotData,options,chartRef) =>
             if(PlotData?.question_type != 'integer_selective')
                 return <Line id={PlotData.question_id} data={data} options={options} ref={chartRef} />
             else
-                return <div style={{ margin : '24px 0', gap : 15 , display : 'flex' , justifyContent : 'center'}}>
+                return <div style={{ textAlign : 'center' }}>
+                <p style={{ marginTop : 20 }}> میانگین { digitsEnToFa(parseFloat(PlotData.average).toFixed(2)) } </p>
+                <div style={{ margin : '24px 0', gap : 15 , display : 'flex' , justifyContent : 'center'}}>
+                    
                 { Array.from({ length : PlotData.max }).map((item,index) => <span key={index}>
-                    { RateIconGenerator(PlotData.shape,index + 1 <= Math.floor(PlotData.average))}
-                </span>) }
+                    { RateIconGenerator(PlotData.shape,PlotData.average,index + 1) }
+
+                </span>
+                )}
+                </div>
                 </div>
         case 'Bar':
             return <Bar data={data} id={PlotData.question_id} options={options} ref={chartRef}/>

@@ -34,7 +34,7 @@ const RateQuestion = ({ QuestionInfo }) => {
          setRateValue(QuestionsAnswerSet.find(item => item.question == QuestionInfo.id).answer?.integer_selective)
       }
        
-    },[])
+    },[QuestionInfo])
   return (
     <RateContainer>
       <div className='rate_selector'> 

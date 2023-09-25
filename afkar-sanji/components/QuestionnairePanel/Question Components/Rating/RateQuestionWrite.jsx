@@ -10,7 +10,11 @@ export const RateQuestionWrite = ({ QuestionInfo }) => {
     const dispatcher = useDispatch();
 
     const DegreeChangeHandler = (newValue) => {
-      dispatcher(ChangeDegreeHandler({ QuestionID : QuestionInfo.id , DegreeValue : newValue }))
+      dispatcher(ChangeDegreeHandler({ 
+        QuestionID : QuestionInfo.id ,
+         DegreeValue : newValue ,
+         group : QuestionInfo.group
+       }))
     };
     
   return (

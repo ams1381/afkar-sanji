@@ -12,12 +12,18 @@ export const RangeSetting = ({ QuestionInfo }) => {
         
         ZeroStartToggle ? 
         dispatcher(ChangeMinOrMaxAnswerHandler(
-            { QuestionID : QuestionInfo.id , MinMaxName : 'min' , MinMaxValue : 0 }
-            ))
+            { QuestionID : QuestionInfo.id , 
+                MinMaxName : 'min' , 
+                MinMaxValue : 0 ,
+                group : QuestionInfo.group
+            }))
         :
         dispatcher(ChangeMinOrMaxAnswerHandler(
-            { QuestionID : QuestionInfo.id , MinMaxName : 'min' , MinMaxValue : 1}
-            ))
+            { QuestionID : QuestionInfo.id , 
+                MinMaxName : 'min' , 
+                MinMaxValue : 1 , 
+                group : QuestionInfo.group
+            }))
     }
 
   return (

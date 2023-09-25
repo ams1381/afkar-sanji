@@ -1,6 +1,6 @@
 import { NumberInputContainer } from '@/styles/questionnairePanel/QuestionComponent'
 import { ChangeInputAnswer } from '@/utilities/AnswerStore'
-import { digitsEnToFa } from '@persian-tools/persian-tools'
+import { digitsEnToFa, digitsFaToEn } from '@persian-tools/persian-tools'
 import { Input, InputNumber } from 'antd'
 import React, { useEffect } from 'react'
 import { useState } from 'react'
@@ -22,13 +22,16 @@ export const Number = ({ QuestionInfo }) => {
     }
   },[QuestionInfo.id])
   const NumberAnswerHandler = (NumberValue) => {
-    setNumberAnswer(NumberValue)
+    const inputValue = NumberValue.target.value ? digitsFaToEn(NumberValue.target.value) : '';
+    const cleanedValue = inputValue.replace(/[^0-9]/g, '');
+
+    setNumberAnswer(cleanedValue)
     if(QuestionsAnswerSet && QuestionsAnswerSet.length)
     {
       dispatcher(ChangeInputAnswer({
          QuestionID : QuestionInfo.id ,
          InputName : 'number_answer' ,
-         InputValue : NumberValue
+         InputValue : digitsFaToEn(NumberValue.target.value)
         }))
       // number_answer
     }
@@ -36,9 +39,10 @@ export const Number = ({ QuestionInfo }) => {
   return (
     // <EmailInputContainer>
     <NumberInputContainer>
-        <InputNumber type='number' value={NumberAnswer}
+        <Input type='text' 
+        value={NumberAnswer ? digitsEnToFa(NumberAnswer) : ''}
         onChange={NumberAnswerHandler}
-         style={{ fontFamily : 'IRANSans' , direction : 'ltr' , textAlign : 'left' }}
+         style={{ fontFamily : 'IRANSans' , direction : 'ltr' , textAlign : 'left' , borderRadius : 2 }}
          placeholder={!(QuestionInfo.min == 0 && QuestionInfo.max == 0) ? `از ${QuestionInfo.min ? digitsEnToFa(QuestionInfo.min) : digitsEnToFa(10000)} تا ${QuestionInfo.max ? digitsEnToFa(QuestionInfo.max) : digitsEnToFa(30000)}` : 'یک عدد وارد کنید'} />
     </NumberInputContainer>
   )

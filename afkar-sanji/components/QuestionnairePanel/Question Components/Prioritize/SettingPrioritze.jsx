@@ -11,7 +11,12 @@ export const SettingPrioritize = ({ QuestionInfo }) => {
     const PrioritizeDispatcher = useDispatch();
 
     const RegularToggleHandler = (Event , TName) => {
-        PrioritizeDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : TName , ToggleValue : Event}))
+        PrioritizeDispatcher(ChangeToggleHandler({
+           QuestionID : QuestionInfo.id ,
+            ToggleName : TName ,
+             ToggleValue : Event ,
+             group : QuestionInfo.group
+          }))
     }
   return (
     <ToggleContainer>

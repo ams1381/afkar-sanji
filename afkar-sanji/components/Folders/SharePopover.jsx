@@ -4,7 +4,8 @@ import React from 'react'
 import { useState } from 'react'
 
 
-export const SharePopOverContent = ({ Questionnaire }) => {
+export const SharePopOverContent = ({ Questionnaire , UUID }) => {
+  // console.log(UUID)
   const [ CopiedState , setCopiedState ] = useState(false);
   return (
    
@@ -27,13 +28,13 @@ export const SharePopOverContent = ({ Questionnaire }) => {
           </a>
         </div>
         <div className='icon_container'>
-          <a href={`https://eitaa.com/share/url?url=http://mah.ariomotion.com/questionnaire/${Questionnaire.uuid}/AnswerPage/&text=لطفا در این پرسشنامه شرکت کنید`} target='_blank'>
+          <a href={`https://eitaa.com/share/url?url=http://mah.ariomotion.com/questionnaire/${Questionnaire ? Questionnaire.uuid : UUID}/AnswerPage/&text=لطفا در این پرسشنامه شرکت کنید`} target='_blank'>
             <Icon name='Eaita'/>
           </a>
         </div>
       </div>
     <SharePopoverButton  onClick={() => {
-      navigator.clipboard.writeText(`http://mah.ariomotion.com/questionnaire/${Questionnaire.uuid}/AnswerPage/`)
+      navigator.clipboard.writeText(`http://mah.ariomotion.com/questionnaire/${Questionnaire ? Questionnaire.uuid : UUID}/AnswerPage/`)
       setCopiedState(true);
       }}>
        { CopiedState ? <p>کپی شد</p> : <p>کپی لینک</p> }

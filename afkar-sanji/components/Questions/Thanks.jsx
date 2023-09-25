@@ -1,12 +1,17 @@
 import { Icon } from '@/styles/icons';
 import { QuestionComponentContainer, QuestionDescription, QuestionTitle } from '@/styles/questionnairePanel/QuestionComponent';
 import { detectFileFormat } from '@/utilities/FormData';
-import { Button, Image } from 'antd';
+import { Button, Image, Popover } from 'antd';
 import React from 'react'
+import { useState } from 'react';
 import { Player } from 'video-react';
+import { SharePopOverContent } from '../Folders/SharePopover';
 
-const ThankComponent = ({ ThanksInfo , mobilepreview }) => {
+const ThankComponent = ({ ThanksInfo , mobilepreview , UUID}) => {
+  console.log(UUID)
   const regex = /(<([^>]+)>)/gi;
+  const [ copiedState , setCopiedState ] = useState(false);
+  const [ sharePopoverState , setSharePopoverState ] = useState(false);
   return (
     <QuestionComponentContainer mobilepreview={mobilepreview}>
     <QuestionTitle>
@@ -44,12 +49,19 @@ const ThankComponent = ({ ThanksInfo , mobilepreview }) => {
               </button>
             </div> */}
               { ThanksInfo?.share_link && <div className='default_thanks_button_container' style={{ marginTop : 20 }}>
-                  <button>
-                    <p>کپی لینک</p>
+                  <button onClick={() => {
+                    navigator.clipboard.writeText(`http://mah.ariomotion.com/questionnaire/${UUID}/AnswerPage/`)
+                    setCopiedState(true);
+                    }}>
+                { copiedState ? <p>کپی شد</p> : <p>کپی لینک</p>}
                   </button>
-                  <button>
-                    <Icon name='Share' />
-                  </button>
+                  <button onClick={() => setSharePopoverState(!sharePopoverState)}>
+                      <Popover open={sharePopoverState}
+                      onOpenChange={() => setSharePopoverState(false)}
+                      content={<SharePopOverContent  UUID={UUID}/>}
+                      />
+                      <Icon name='Share' />
+              </button>
               </div>}
             
     </QuestionComponentContainer>

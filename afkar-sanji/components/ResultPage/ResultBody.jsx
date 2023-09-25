@@ -120,83 +120,97 @@ export const ResultBody = ({ ResultQuery , QuestionnaireQuery  }) => {
   let columns = [];
   let rows = [];
   useEffect(() => {
+
     setResultData(ResultQuery?.data?.data.results)
     setRowDeleted(false)
     if(ColumnsRef.current?.length && !columns.length)
         columns = ColumnsRef.current;
   },[ResultQuery , rowDeleted])
-
+  // console.log(ResultData)
   if(ResultData)
   {
-    if(ColumnsRef.current)
-      columns = ColumnsRef.current; 
+    
+    let QuestionsArray = QuestionnaireQuery?.data?.data?.questions.filter(item => item.question != null)
+
+    if(QuestionsArray)
+      columns = QuestionsArray?.map(item => ({
+        title : <Tooltip 
+          title={<div className='tooltip_container' onClick={() => navigator.clipboard.writeText(item.question?.title)}>
+            {item.question?.title} <Icon name='WDuplicate' />
+            </div>}>
+                <p>{item.question?.title ? item.question?.title?.replace(regex,"") : ' '}</p>
+            </Tooltip>,
+        render : (Answer) => (Answer && typeof Answer == 'string' && Answer.includes('/media/'))
+          ? 
+          <Upload isImageUrl={() => true} disabled
+          iconRender={() => <Icon name='File' />}
+            defaultFileList={[{
+            name: Answer.split('/')[6],
+            status: 'done',
+            url: 'https://mah-api.ariomotion.com' + Answer,
+            thumbUrl : 'https://mah-api.ariomotion.com' + Answer
+          }]} />: 
+          <div ><p></p></div>,
+          dataIndex : item.question?.title  , 
+          key : item.question?.title ,
+          align : 'center' ,
+          children : item?.question?.question_type == 'group' ? 
+          item?.question.child_questions.map(ChildQuestion => ({
+            title : <Tooltip title={<div className='tooltip_container' 
+            onClick={() => navigator.clipboard.writeText(ChildQuestion.question?.title)}>
+            {ChildQuestion.question?.title ? ChildQuestion.question?.title.replace(regex,"") : ' '} <Icon name='WDuplicate' />
+            </div>}>
+                <p>{ChildQuestion.question?.title != 'null' ? ChildQuestion.question?.title?.replace(regex,"") : ' '}</p>
+            </Tooltip> ,
+            align : 'center' ,
+            key : ChildQuestion?.question?.id,
+            dataIndex : ChildQuestion?.question?.title,
+            children : ChildQuestion?.question?.options?.map(option => ({
+              title : <Tooltip title={<div className='tooltip_container' 
+              onClick={() => navigator.clipboard.writeText(option?.text)}>
+              {option?.text ? option?.text?.replace(regex,"") : ' '} <Icon name='WDuplicate' />
+              </div>}>
+                  <p>{option?.text != 'null' ? option?.text?.replace(regex,"") : ' '}</p>
+              </Tooltip> ,
+              align : 'center' ,
+              key : option?.id,
+              dataIndex : option?.text
+            }))
+          }))
+          : item?.question?.options?.map(option => ({
+            title : <Tooltip title={<div className='tooltip_container' 
+            onClick={() => navigator.clipboard.writeText(option?.text)}>
+            {option?.text ? option.text?.replace(regex,"") : ' '} <Icon name='WDuplicate' />
+            </div>}>
+                <p>{option?.text != 'null' ? option?.text?.replace(regex,"") : ' '}</p>
+            </Tooltip> ,
+            align : 'center' ,
+            key : option.text?.id,
+            dataIndex : option.text
+          }))
+      }))
+    // console.log()
     ResultData?.forEach((AnswerSet,index) => {
 
-    console.log(AnswerSet.answers)
+    // console.log(AnswerSet.answers)
     // if(!AnswerSet.answers.length)
     // {
     //   rows.push({});
     // }
      if(AnswerSet.answers && AnswerSet.answers.length)
     {
-     
       rows.push({});
-      // if(!ColumnsRef.current)
-      columns = AnswerSet.answers.map(item => ({ 
-        excelTitle : item.question, 
-        title : <Tooltip 
-        title={<div className='tooltip_container' onClick={() => navigator.clipboard.writeText(item.question)}>
-          {item.question} <Icon name='WDuplicate' />
-          </div>}>
-              <p>{item.question ? item.question?.replace(regex,"") : ' '}</p>
-          
-          </Tooltip> , 
-        render : (Answer) => (Answer && typeof Answer == 'string' && Answer.includes('/media/'))
-        ? 
-        <Upload isImageUrl={() => true} disabled
-        iconRender={() => <Icon name='File' />}
-         defaultFileList={[{
-          name: Answer.split('/')[6],
-          status: 'done',
-          url: 'https://mostafarm7.pythonanywhere.com' + Answer,
-          thumbUrl : 'https://mostafarm7.pythonanywhere.com' + Answer
-        }]} />: 
-        <div ><p>{Answer}</p></div>,
-        dataIndex : item.question  , 
-        key : item.id ,
-        align : 'center' ,
-        children : QuestionnaireQuery?.data?.data?.questions.find(QuestionItem => 
-          QuestionItem?.question?.id == item.question_id)?.question?.options?.map(optionItem => ({
-          excelTitle : optionItem.text ? optionItem.text?.replace(regex,"") : ' ',
-          title : <Tooltip title={<div className='tooltip_container' 
-          onClick={() => navigator.clipboard.writeText(optionItem.text)}>
-          {optionItem.text ? optionItem.text?.replace(regex,"") : ' '} <Icon name='WDuplicate' />
-          </div>}>
-              <p>{optionItem.text != 'null' ? optionItem.text.replace(regex,"") : ' '}</p>
-          </Tooltip>  ,
-          align : 'center' ,
-          key : optionItem.key,
-          dataIndex : optionItem.text
-        })) 
-        // : item.answer?.options?.map(optionItem => ({
-        //   excelTitle : optionItem.text, 
-        //   title : <Tooltip title={<div className='tooltip_container' 
-        //   onClick={() => navigator.clipboard.writeText(optionItem.text)}>
-        //   {optionItem.text} <Icon name='WDuplicate' />
-        //   </div>}>
-        //       <p>{optionItem.text}</p>
-        //   </Tooltip>  ,
-        //   align : 'center' ,
-        //   key : optionItem.key,
-        //   dataIndex : optionItem.text
-        // }))
-      }));
+
        AnswerSet.answers.forEach((item) => {
         if(!item.answer)  
           return
           // console.log(rows,index)
           if(typeof item.answer != 'object')
-            rows[rows.length - 1][item.question] = item.answer;
+          {
+             rows[rows.length - 1][item.question] = item.answer;
+            // console.log(item.question,item.answer)
+          }
+           
           else
           
           {
@@ -227,27 +241,45 @@ export const ResultBody = ({ ResultQuery , QuestionnaireQuery  }) => {
       })
       rows[rows.length - 1]['id'] = AnswerSet.id;
     }
-    // else if(!AnswerSet.answers.length)
-    // {
-      
-      // rows.push({});
-    // }
+    else if(!AnswerSet.answers.length)
+    { 
+      rows.push({});
+      QuestionnaireQuery.data?.data?.questions.forEach(item => {
+        if(item.question)
+        {
+          rows[rows.length - 1][item?.question?.title] = '';
+          rows[rows.length - 1]['id'] = AnswerSet.id;
+          rows[rows.length - 1]['key'] = AnswerSet.id;
+          rows[rows.length - 1]['ردیف'] = rows.length
+          // console.log(rows[rows.length - 1][item?.question?.title])
+        if(item?.question?.options)
+        {
+          item.question.options.forEach(optionItem => {
+            rows[rows.length - 1][optionItem.text] = ''
+          })
+        }
+      }
+      })
+  
+    }
   })
   }
-  console.log(ResultData)
+
   useEffect(() => {
-    if(columns.length)
+    if(columns?.length)
     {
       ColumnsRef.current = columns;
     }
   },[columns])
+
+  console.log(rows)
+  // console.log(rows)
   // console.log(document.querySelector("thead.ant-table-thead tr"),
   // document.querySelector(".ant-table-container .ant-table-body"))
 const ResultSearchHandler = async (e) => {
   // console.log(e.target.value?.length)
   if(!e.target.value?.length)
   {
-    // ResultData = ResultQuery.data?.data
     setResultData(ResultQuery.data?.data?.results)
     return
   }    
@@ -268,7 +300,6 @@ const ResultSearchHandler = async (e) => {
     })
   }
 } 
-  
   useEffect(() => {
     if(tableRef.current)
       ScrollByDrag(); 
@@ -277,12 +308,17 @@ const ResultSearchHandler = async (e) => {
     try
     {
       if(selectedRows.length)
+      {
         selectedRows.forEach(async (row) => {
            await axiosInstance.delete(`/question-api/questionnaires/${QuestionnaireQuery.data?.data?.uuid}/answer-sets/${row}/`)
           //  setRowDeleted(true)
             ResultQuery?.refetch()
             setResultData(ResultQuery?.data?.data.results)
-    }) 
+         }) 
+         setDeleteRowState(false);
+      }
+        
+   
     }
     catch(err)
     {
@@ -296,11 +332,9 @@ const ResultSearchHandler = async (e) => {
           direction : 'rtl'
         }
       })
-    }
-    finally
-    {
       setDeleteRowState(false);
     }
+  
   }
 
   const DateFilterHandler = async (_,filterDate) => {
@@ -412,31 +446,28 @@ const ResultSearchHandler = async (e) => {
         <ResultTableContainer>
            { (ResultData?.length && rows?.length) ?  <Table 
               columns={columns}
-              dataSource={rows}
-              
+              dataSource={rows}       
               ref={tableRef}
               sticky
               bordered
+              locale={{
+                emptyText : <p className='no_result_message'>نتیجه‌ای یافت نشد</p>
+              }}
               direction='ltr'
               pagination={{
                 total : ResultQuery?.data?.data.count,
                 pageSize : 6,
-                // defaultCurrent : 7,
                 defaultPageSize : 4,
                 itemRender : (page,ItemName,ItemNode) => {
-                  // console.log(page,fdhdfh,mhgmjg)
                   if(ItemName != 'page')
                     return ItemNode
                   return  digitsEnToFa(page)
                 },
-                // onShowSizeChange : (asaf) => {
-                //   console.log(asaf)
-                // },
                 onChange : TablePaginationHandler
               }}
-              components={(fd) => console.log(fd)}
               rowSelection={{
                 onChange : (_,SelectedList) => {
+                  console.log(SelectedList)
                   setSelectedRows(SelectedList?.map(item => item?.id))
                 },
                 hideSelectAll : true,
@@ -464,11 +495,46 @@ const ResultSearchHandler = async (e) => {
                 </Link>
               </EmptyResultContainer>
               : <EmptyResultContainer>
-              <img src={EmptyImage.src} />
-              <p>نتیجه‌ای جهت نمایش وجود ندارد</p>
-              <Link href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/AnswerPage`} target='_blank'>
-                <EmptyButtonPage type='primary'>به پرسشنامه پاسخ دهید</EmptyButtonPage>
-              </Link>
+                <div className='no_data_table'>
+                <Table 
+                columns={QuestionnaireQuery?.data?.data?.questions.map(item => ({
+                  title : <Tooltip 
+                    title={<div className='tooltip_container' onClick={() => navigator.clipboard.writeText(item.question?.title)}>
+                      {item.question?.title} <Icon name='WDuplicate' />
+                      </div>}>
+                          <p>{item.question?.title ? item.question?.title?.replace(regex,"") : ' '}</p>
+                      </Tooltip>,
+                  render : (Answer) => (Answer && typeof Answer == 'string' && Answer.includes('/media/'))
+                    ? 
+                    <Upload isImageUrl={() => true} disabled
+                    iconRender={() => <Icon name='File' />}
+                      defaultFileList={[{
+                      name: Answer.split('/')[6],
+                      status: 'done',
+                      url: 'https://mah-api.ariomotion.com' + Answer,
+                      thumbUrl : 'https://mah-api.ariomotion.com' + Answer
+                    }]} />: 
+                    <div ><p></p></div>,
+                    dataIndex : item.question?.title  , 
+                    key : item.question?.id ,
+                    align : 'center' ,
+                    children : item?.question?.options?.map(option => ({
+                      title : <Tooltip title={<div className='tooltip_container' 
+                      onClick={() => navigator.clipboard.writeText(option?.text)}>
+                      {option?.text ? option.text?.replace(regex,"") : ' '} <Icon name='WDuplicate' />
+                      </div>}>
+                          <p>{option.text != 'null' ? option?.text?.replace(regex,"") : ' '}</p>
+                      </Tooltip> ,
+                      align : 'center' ,
+                      key : option.text,
+                      dataIndex : option.text
+                    }))
+                }))}
+                locale={{
+                  emptyText : <p className='no_result_message'>نتیجه‌ای یافت نشد</p>
+                }}
+                />
+                </div>
             </EmptyResultContainer> 
               }
         </ResultTableContainer>

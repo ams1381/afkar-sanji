@@ -8,7 +8,12 @@ export const CommonSetting = ({ QuestionInfo }) => {
     const Dispatcher = useDispatch();
 
     const RegularToggleHandler = (Event , TName) => {
-        Dispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : TName , ToggleValue : Event}))
+        Dispatcher(ChangeToggleHandler({
+             QuestionID : QuestionInfo.id , 
+             ToggleName : TName ,
+             ToggleValue : Event ,
+             group : QuestionInfo.group
+            }))
     }
   return (
     <>

@@ -174,7 +174,7 @@ export const QuestionChart = ({ PlotDetail , totalChartType , totalChartSort}) =
         ChartData?.datasets[0]?.backgroundColor,
         ChartData?.datasets[0]?.borderColor))
       // ,PlotDetail.datasets[0]?.backgroundColor
-      console.log(ChartData)
+
     },[currentChartType, currentSort])
     useEffect(() => {
         if(totalChartType)
@@ -268,7 +268,7 @@ export const QuestionChart = ({ PlotDetail , totalChartType , totalChartSort}) =
                  
                else 
                {
-                // console.log(PlotDetail)
+  
                  let dataArray = objectToSparseArray(PlotDetail.counts , PlotDetail.max).map((item,index) => [ PlotDetail.minimum_answer == 0 ? index : index + 1 , item ]);
                  let SortArray = currentSort == 'increase' ? Object.values(PlotDetail.counts).sort((a,b) => a - b) :
                    currentSort == 'decrease' ? Object.values(PlotDetail.counts).sort((a,b) => a - b).reverse() : ''
@@ -347,11 +347,10 @@ export const QuestionChart = ({ PlotDetail , totalChartType , totalChartSort}) =
                      return [n, item]
                  }).sort().map(function(j) { return j[1] })
  
-                //  console.log(dataArray.map(item => item[1]),currentSort)
+        
                  if(dataArray[index] && dataArray[index][0])
                    return digitsEnToFa(dataArray[index][0])
-                //   else
-                //    return digitsEnToFa(objectToSparseArray(PlotDetail.counts , PlotDetail.max)[index])
+              
               }
             }
         }
@@ -474,6 +473,7 @@ export const QuestionChart = ({ PlotDetail , totalChartType , totalChartSort}) =
     //   };
     // }
   return (
+    
     <QuestionChartContainer>
         <QuestionChartContainerHeader>
             <div className='question_chart_title'>

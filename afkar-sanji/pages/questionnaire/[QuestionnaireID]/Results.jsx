@@ -22,10 +22,9 @@ const ResultsPage = () => {
       {
         queryKey: ['result'],
         queryFn: async () =>
-          await axiosInstance.get(`/result-api/${router.query.QuestionnaireID}/answer-sets/?answered_at&start_date&end_date`)
+          await axiosInstance.get(`/result-api/${router.query.QuestionnaireID}/answer-sets/?answered_at&start_date&end_date`) ,
       },
     ],
-    // staleTime : 6000
   });
 
   return (

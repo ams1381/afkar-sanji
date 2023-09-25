@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { AlphabetNumberContainer, ToggleContainer } from '@/styles/questionnairePanel/QuestionSetting';
 import ToggleCheckBoxItem from '../Common/Toggle';
-import { ChangeToggleHandler , ChangeMinOrMaxAnswerHandler, OptionAdder, OptionRemoverByText } from '@/utilities/QuestionStore';
+import { ChangeToggleHandler , ChangeMinOrMaxAnswerHandler, OptionAdder, OptionRemoverByText, DeleteInputError } from '@/utilities/QuestionStore';
 import { Checkbox, Input, InputNumber, Switch } from 'antd';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
@@ -22,7 +22,10 @@ const SettingMultipleAnswer = ({QuestionInfo}) => {
     useEffect(() => {
         if(OcurredError)
         {
-            if(OcurredError.min_selected_options || OcurredError.max_selected_options)
+            // console.log(OcurredError)
+            if(OcurredError.find(item => item?.qid == QuestionInfo.id) &&
+             OcurredError.find(item => item?.qid == QuestionInfo.id)?.err_object?.min_selected_options ||
+             OcurredError.find(item => item?.qid == QuestionInfo.id)?.err_object?.max_selected_options)
             {
                 setInputError('active');
                 LimitContainerRef.current?.scrollIntoView({ behavior : 'smooth' })
@@ -39,54 +42,93 @@ const SettingMultipleAnswer = ({QuestionInfo}) => {
     const MultipleAnswerToggleHandler = () => {
         SetMultipleAnswerState(!MultipleAnswerState)
         OptionalDispatcher(ChangeToggleHandler({
-             QuestionID : QuestionInfo.id , ToggleName : 'multiple_choice' , ToggleValue : !MultipleAnswerState
+             QuestionID : QuestionInfo.id ,
+              ToggleName : 'multiple_choice' ,
+               ToggleValue : !MultipleAnswerState ,
+               group : QuestionInfo.group
         }));
         
     }
     const ChangeMinMaxHandler = (event,InputName) => {
 
         OptionalDispatcher(ChangeMinOrMaxAnswerHandler({
-             QuestionID : QuestionInfo.id , MinMaxName : InputName , MinMaxValue : event
+             QuestionID : QuestionInfo.id , 
+             MinMaxName : InputName , 
+             MinMaxValue : event ,
+             group : QuestionInfo.group
          }))
+         setInputError(false)
     }
     const AdditionalOptionsHandler = (ToggleValue) => {
 
         OptionalDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : 'additional_options' , ToggleValue : ToggleValue}))
         if(!ToggleValue)
         {
-            OptionalDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : 'nothing_selected' , ToggleValue : false}))
-            OptionalDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : 'all_options' , ToggleValue : false}))
-            OptionalDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : 'other_options' , ToggleValue : false }))
-            OptionalDispatcher(OptionRemoverByText({ QuestionID : QuestionInfo.id , OptionText : '<span>هیچ کدام</span>' }))
-            OptionalDispatcher(OptionRemoverByText({ QuestionID : QuestionInfo.id , OptionText : '<span>همه گزینه ها</span>' }))
-            OptionalDispatcher(OptionRemoverByText({ QuestionID : QuestionInfo.id , OptionText : '<span>سایر</span>' }))
+            OptionalDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : 'nothing_selected' , ToggleValue : false , group : QuestionInfo.group}))
+            OptionalDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : 'all_options' , ToggleValue : false , group : QuestionInfo.group }))
+            OptionalDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : 'other_options' , ToggleValue : false , group : QuestionInfo.group}))
+            OptionalDispatcher(OptionRemoverByText({ QuestionID : QuestionInfo.id , OptionText : '<span>هیچ کدام</span>' , group : QuestionInfo.group }))
+            OptionalDispatcher(OptionRemoverByText({ QuestionID : QuestionInfo.id , OptionText : '<span>همه گزینه ها</span>' , group : QuestionInfo.group }))
+            OptionalDispatcher(OptionRemoverByText({ QuestionID : QuestionInfo.id , OptionText : '<span>سایر</span>' , group : QuestionInfo.group }))
         }
     }
     const RegularToggleHandler = (Event , TName) => {
-        OptionalDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : TName , ToggleValue : Event}))
+        OptionalDispatcher(ChangeToggleHandler({ 
+            QuestionID : QuestionInfo.id ,
+            ToggleName : TName ,
+            ToggleValue : Event ,
+            group : QuestionInfo.group
+        }))
 
         if(TName == 'all_options')
         {
             if(Event)
             {
                 ChangeMinMaxHandler(1,'min_selected_options');
-                OptionalDispatcher(OptionAdder({ QuestionID : QuestionInfo.id , OptionText : '<span>همه گزینه ها</span>' , NewOptionID : RandomIdGenerator()}))
+                OptionalDispatcher(OptionAdder({ 
+                    QuestionID : QuestionInfo.id ,
+                     OptionText : '<span>همه گزینه ها</span>' ,
+                      NewOptionID : RandomIdGenerator(),
+                      group : QuestionInfo?.group
+                    }))
             }
             else
-              OptionalDispatcher(OptionRemoverByText({ QuestionID : QuestionInfo.id , OptionText : '<span>همه گزینه ها</span>' }))
+              OptionalDispatcher(OptionRemoverByText({ 
+            QuestionID : QuestionInfo.id ,
+             OptionText : '<span>همه گزینه ها</span>' ,
+             group : QuestionInfo.group
+        }))
         }
             
         if(TName == 'nothing_selected')
-            Event ? OptionalDispatcher(OptionAdder({ QuestionID : QuestionInfo.id , OptionText : '<span>هیچ کدام</span>' , NewOptionID : RandomIdGenerator()}))
-            : OptionalDispatcher(OptionRemoverByText({ QuestionID : QuestionInfo.id , OptionText : '<span>هیچ کدام</span>' }))
+            Event ? OptionalDispatcher(OptionAdder({ 
+                        QuestionID : QuestionInfo.id ,
+                         OptionText : '<span>هیچ کدام</span>' ,
+                          NewOptionID : RandomIdGenerator() ,
+                          group : QuestionInfo?.group
+                        }))
+            : OptionalDispatcher(OptionRemoverByText({
+                 QuestionID : QuestionInfo.id , 
+                 OptionText : '<span>هیچ کدام</span>' ,
+                 group : QuestionInfo.group
+                }))
         if(TName == 'other_options')
-            Event ? OptionalDispatcher(OptionAdder({ QuestionID : QuestionInfo.id , OptionText : '<span>سایر</span>' , NewOptionID : RandomIdGenerator()}))
-            : OptionalDispatcher(OptionRemoverByText({ QuestionID : QuestionInfo.id , OptionText : '<span>سایر</span>' }))
+            Event ? OptionalDispatcher(OptionAdder({
+         QuestionID : QuestionInfo.id ,
+          OptionText : '<span>سایر</span>' ,
+           NewOptionID : RandomIdGenerator() , 
+           group : QuestionInfo?.group
+        }))
+            : OptionalDispatcher(OptionRemoverByText({ 
+                QuestionID : QuestionInfo.id , 
+                OptionText : '<span>سایر</span>' ,
+                group : QuestionInfo.group
+            }))
     }
 
   return (
     <ToggleContainer>
-        <div className='checkbox_container' onClick={MultipleAnswerToggleHandler} style={{ borderBottom : QuestionInfo.multiple_choice ? 'none' : '1px solid #D9D9D9' }}>
+        <div className='checkbox_container' onClick={MultipleAnswerToggleHandler} style={{ borderBottom : QuestionInfo.multiple_choice ? 'none' : '1px solid rgba(217, 217, 217, 0.2)' }}>
             <p>سوال چند انتخابی باشد</p>
             <Switch checked={QuestionInfo.multiple_choice} />
         </div>
@@ -104,7 +146,7 @@ const SettingMultipleAnswer = ({QuestionInfo}) => {
           </label>
         </AlphabetNumberContainer> : ''}
          <div className='additional_options_container'>
-            <div className='checkbox_container additional_option_toggle' style={{ borderBottom : QuestionInfo.additional_options ? 'none' : '1px solid rgb(217 217 217 / 20%)' }}
+            <div className='checkbox_container additional_option_toggle' style={{ borderBottom : QuestionInfo.additional_options ? 'none' : '1px solid rgba(217, 217, 217, 0.2)' }}
              onClick={(e => AdditionalOptionsHandler(!QuestionInfo.additional_options))}>
                 <Switch checked={QuestionInfo.additional_options} />
                 <p>گزینه های اضافی</p>

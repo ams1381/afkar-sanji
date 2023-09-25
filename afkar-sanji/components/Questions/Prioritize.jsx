@@ -47,6 +47,14 @@ const Prioritize = ({ QuestionInfo }) => {
   };
   const onDragStartHandler = (E) => {
   } 
+  const getItemStyle = (isDragging, draggableStyle) => ({
+    ...draggableStyle,
+    userSelect: 'none',
+    position: 'static',
+    // padding: 8 * 2,
+    // margin: `0 0 8px 0`,
+    // background: isDragging ? 'lightgreen' : 'red',    
+  });
   return (
     <OptionsContainer>
     <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStartHandler}>
@@ -68,13 +76,17 @@ const Prioritize = ({ QuestionInfo }) => {
                     ref={draggableProvided.innerRef}
                     {...draggableProvided.draggableProps}
                     {...draggableProvided.dragHandleProps}
+                    style={getItemStyle(
+                      draggableSnapshot.isDragging,
+                      draggableProvided.draggableProps.style
+                    )}
                   >
                     <label
                       className='OptionalAnswerItemContainer Prioritize'
                       style={{ cursor: 'pointer' }}
                     >
                       <Icon name='DND' />
-                      <p style={{ marginRight: 15 }}>{item.text}</p>
+                      <p style={{ marginRight: 15 }}>{item.text && item.text != 'null' ? item.text : ''}</p>
                     </label>
                   </div>
                 )}
