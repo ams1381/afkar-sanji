@@ -35,7 +35,6 @@ export default function App({ Component, pageProps }) {
       
     }
     else
-      console.log(err)
       router.push('/auth');
   }
   // if(typeof)

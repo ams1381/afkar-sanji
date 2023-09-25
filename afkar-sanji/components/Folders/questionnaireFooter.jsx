@@ -111,7 +111,7 @@ const QuestionnaireFooterPart = ({ questionnaire , FolderReload , folderNumber})
             },900)
             }}>
             {/* <PDFDownloadLink document={<PdfGenerator />} > */}
-                    <Icon name='pdf' />
+                    <Icon name='PDFExport' />
              {/* </PDFDownloadLink> */}
         </QuestionnaireFooterButton>
        
