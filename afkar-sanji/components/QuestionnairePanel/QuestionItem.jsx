@@ -708,7 +708,7 @@ export const QuestionItem = ({  ActiveQuestion, provided , childPlacement ,setAc
          ? questionsData.question.child_questions.length ?
           <ReactSortable {...sortableOptions} id={'group-container-' + questionsData.question.id} className='child_container'
           list={questionsData.question.child_questions.map(item =>
-           item.question ? ({ ...item.question , chosen : true }) : '')} setList={(e) => {}}>
+           item?.question ? ({ ...item?.question , chosen : true }) : '')} setList={(e) => {}}>
                { questionsData.question.child_questions.map((item,index) =>
                     <div style={{ width : '100%' }} id={'question' + item?.question.id} className='child_question'>
                                <QuestionItem

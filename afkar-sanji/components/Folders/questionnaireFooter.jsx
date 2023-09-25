@@ -12,6 +12,7 @@ import { axiosInstance } from '@/utilities/axios';
 import { PdfGenerator } from './pdfExport';
 import { useLocalStorage } from '@/utilities/useLocalStorage';
 import { PDFDownloadLink } from '@react-pdf/renderer';
+import TopBarProgress from 'react-topbar-progress-indicator';
 
 
 const QuestionnaireFooterPart = ({ questionnaire , FolderReload , folderNumber}) => {
@@ -20,6 +21,7 @@ const QuestionnaireFooterPart = ({ questionnaire , FolderReload , folderNumber})
     const [ OperatingState, SetOperatingState ] = useState(false);
     const [ SavedMessage , contextHolder] = message.useMessage();
     const { setItem } = useLocalStorage();
+    const [ ProgressBarState , SetProgressBarState ] = useState(false);
     const router = useRouter();
     const [ RetrievedQuestionnaire , setRetrievedQuestionnaire ] = useState(null);
     const RemoveQuestionnaireHandler = async () => {
@@ -58,6 +60,7 @@ const QuestionnaireFooterPart = ({ questionnaire , FolderReload , folderNumber})
     }
   return (
     <QuestionnaireFooter>
+        {ProgressBarState ? <TopBarProgress /> : ''}
         {contextHolder}
         <QuestionnaireFooterItem>
             <Popover
@@ -100,7 +103,13 @@ const QuestionnaireFooterPart = ({ questionnaire , FolderReload , folderNumber})
         </QuestionnaireFooterItem>
         <QuestionnaireFooterItem style={{ borderRight : 0 }}>
             
-         <QuestionnaireFooterButton onClick={() => PdfGenerator(questionnaire)}>
+         <QuestionnaireFooterButton onClick={async () => {
+           SetProgressBarState(true)
+            await PdfGenerator(questionnaire)
+            setTimeout(() => {
+                SetProgressBarState(false)
+            },900)
+            }}>
             {/* <PDFDownloadLink document={<PdfGenerator />} > */}
                     <Icon name='pdf' />
              {/* </PDFDownloadLink> */}

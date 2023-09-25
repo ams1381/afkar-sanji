@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactPDF, { Page, Text, View, Document, StyleSheet, Canvas, Image, Note } from '@react-pdf/renderer';;
+import ReactPDF, { Page, Text, View, Document, StyleSheet, Canvas, Note, pdf } from '@react-pdf/renderer';;
 import { axiosInstance } from '@/utilities/axios';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
@@ -28,10 +28,78 @@ const SmileIconString = `
 </svg>
 
 `
+function convertSvgToBase64Jpeg(svg) {
+  return new Promise((resolve, reject) => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
 
+    // Set the canvas dimensions based on the SVG size
+    canvas.width = 25; // Adjust width as needed
+    canvas.height = 25; // Adjust height as needed
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const img = new Image();
+
+    
+    // Convert the SVG data to a data URL
+    const svgBlob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(svgBlob);
+
+    // Set the Image src to the SVG data URL
+    img.src = url;
+
+    // When the image loads, draw it on the canvas
+    img.onload = function () {
+      ctx.fillStyle = 'white';
+      ctx.drawImage(img, 0, 0);
+
+      // Convert canvas content to a base64-encoded JPEG image
+      const base64Jpeg = canvas.toDataURL('image/jpeg');
+
+      // Cleanup
+      URL.revokeObjectURL(url);
+
+      // Resolve with the base64-encoded JPEG data
+      resolve(base64Jpeg);
+    };
+
+    // Handle image load error
+    img.onerror = function (error) {
+      reject(error);
+    };
+  });
+}
 const regex = /(<([^>]+)>)/gi;
 // Create styles
-
+// export const PdfGenerator = async () => {
+//   try {
+//     const base64Jpeg = await convertSvgToBase64Jpeg(StartIConString);
+//     const a4Width = 595.28;
+//     const a4Height = 841.89;
+//     const doc = new jsPDF('p', 'pt', [a4Width, a4Height]);
+//      doc.addFileToVFS(
+//   "IRANSans Regular-normal.ttf",
+//   customfont
+// );
+// doc.addFont(
+//   "IRANSans Regular-normal.ttf",
+//   "IRANSans",
+//   "normal"
+// );
+// doc.setTextColor(0, 0, 0);
+// doc.setFont("IRANSans");
+//     doc.addPage()
+//     doc.setTextColor(0, 0, 0);
+//     doc.setLineWidth(1)
+//     doc.setDrawColor(0);
+//     doc.setFillColor(0 , 0 , 0);
+//     for(let i = 0; i < 5 ; i ++)
+//       doc.addImage(base64Jpeg, 'JPEG', i * 10, 0, 15, 15);
+//     doc.save('safafaf.pdf');
+//   } catch (error) {
+//     console.error('Error generating PDF:', error);
+//   }
+// }
 export const PdfGenerator = async (questionnaire) => {
   // let QuestionsComponents = ''
   try 
@@ -81,16 +149,46 @@ data?.questions.forEach(async (item, index) => {
       pdf.addPage();  // Move to the next page
       yOffset = 10;   // Reset y offset for the new page
     }
+  
     pdf.setDrawColor(255, 255, 255); 
-    const titleHeight = pdf.getTextDimensions(item.question.title, { align: 'right', maxWidth: maxTextWidth }).h;
+    const titleHeight = pdf.getTextDimensions(digitsEnToFa(item.question.placement) + ' ' + item.question.title, { align: 'right', maxWidth: maxTextWidth }).h;
     let descHeight = 0;
-
+    
     if (item.question.description) {
       descHeight = pdf.getTextDimensions(item.question.description, { align: 'right', maxWidth: maxTextWidth, fontSize: 14 }).h;
     }
     // Calculate total height for the parent box
     let totalHeight = titleHeight + descHeight + 40;  // Add extra padding for the child box
 
+    if (item.question.question_type === 'integer_selective') {
+      // const iconSize = 20;
+      // const iconX = boxX + boxWidth - iconSize - 10;
+      // const iconY = yOffset + parentBoxTopMargin + 10;// Y position for the icon
+      // let dataUri;
+      // switch(item.question.shape)
+      // {
+      //   case 'L':
+      //     dataUri = await convertSvgToBase64Jpeg(LikeIconString)
+      //     break;
+      //   case 'D':
+      //     dataUri = await convertSvgToBase64Jpeg(DislikeIConString)
+      //     break;
+      //   case 'SM':
+      //     dataUri = await convertSvgToBase64Jpeg(SmileIconString)
+      //   case 'S':
+      //     dataUri = await convertSvgToBase64Jpeg(StartIConString)
+      // }
+      // // const img = document.createElement('img');
+      // // img.src = dataUri;
+      // // Draw the SVG icons based on item.question.max
+      // for (let i = 0; i < item.question.max; i++) {
+      //   const xPos = iconX + i * (iconSize + 5);  // Adjust X position for each icon
+  
+      //   pdf.addImage(dataUri, 'JPEG',  xPos, iconY, iconSize , iconSize);
+      //   // Draw the SVG icon
+      // }
+      // pdf.setFillColor(255, 255, 255);  
+    }
     // Check if the child box should be included
     if (item.question.question_type === 'link' || item.question.question_type === 'email_field' ||
      item.question.question_type === 'number_answer' || item.question.question_type === 'text_answer') {
@@ -98,7 +196,7 @@ data?.questions.forEach(async (item, index) => {
     }
 
     pdf.rect(boxX, yOffset, boxWidth, totalHeight + parentBoxTopMargin);  // Draw the border
-
+   
     // Draw the parent box
     pdf.setFillColor(255, 255, 255);  // Set fill color to white
     pdf.rect(boxX, yOffset, boxWidth, totalHeight + parentBoxTopMargin, 'F');  // Draw the box
@@ -128,7 +226,8 @@ data?.questions.forEach(async (item, index) => {
       // Set text color
       
       pdf.setFontSize(16);  // Adjust font size for numbers
-      pdf.text(digitsEnToFa(i.toString()), integerBoxX + integerBoxSize / 2, integerBoxStartY + integerBoxSize / 2 + 5, { align: 'center' });
+      pdf.text(digitsEnToFa(item.question.min == 0 ? (i-1).toString() : i.toString()), 
+      integerBoxX + integerBoxSize / 2, integerBoxStartY + integerBoxSize / 2 + 5, { align: 'center' });
       // pdf.setFillColor(255, 0, 0);
       // pdf.setTextColor(255, 0, 0);
     }
@@ -136,7 +235,9 @@ data?.questions.forEach(async (item, index) => {
     // Update total height to account for integer boxes
     totalHeight += integerBoxSize + 20;  // Add extra padding
   }
-  if (item.question.question_type === 'optional' || item.question.question_type === 'drop_down') {
+
+  if (item.question.question_type === 'optional' || item.question.question_type === 'drop_down'
+  || item.question.question_type === 'sort') {
     const colWidth = maxBoxWidth / 2;
 
     for (let i = 0; i < item.question.options.length; i++) {
@@ -145,64 +246,22 @@ data?.questions.forEach(async (item, index) => {
       const y = yOffset + totalHeight + parentBoxTopMargin + 10 + Math.floor(i / 2) * 40; // Adjust the y position
 
       // Draw the option box
-      drawOptionBox(x, y, item.question.options[i].text, false); // Pass true as the last argument to preselect the checkbox
+      drawOptionBox(x, y, item.question.options[i].text, false,item.question.question_type); // Pass true as the last argument to preselect the checkbox
     }
 
     // Update total height to account for option boxes
     totalHeight += Math.ceil(item.question.options.length / 2) * 40 + 20; // Add extra padding
   }
  
+  
     // Set text properties for right alignment and text wrapping
     pdf.setTextColor(0, 0, 0);  // Black color
     pdf.setFont('IRANSans', 'normal');
     pdf.setFontSize(16);
 
-    if (item.question.question_type === 'integer_selective') {
-      const iconSize = 20;  // Size of the icon
-      const iconX = boxX + boxWidth - iconSize - 10;  // X position for the icon
-      const iconY = yOffset + parentBoxTopMargin + 10;  // Y position for the icon
-      let dataUri;
-      switch(item.question.shape)
-      {
-        case 'L':
-          dataUri = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(LikeIconString)))}`;
-          break;
-        case 'D':
-          dataUri = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(DislikeIConString)))}}`;
-          break;
-        case 'SM':
-          dataUri = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(SmileIconString)))}`;
-        case 'S':
-          dataUri = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(StartIConString)))}`;
-      }
-      const img = document.createElement('img');
-      img.src = dataUri;
-      // Draw the SVG icons based on item.question.max
-      for (let i = 0; i < item.question.max; i++) {
-        const xPos = iconX + i * (iconSize + 5);  // Adjust X position for each icon
-        console.log('test')
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const context = canvas.getContext('2d');
-  
-          // Set the canvas dimensions to match the image
-          canvas.width = img.width;
-          canvas.height = img.height;
-  
-          // Draw the image onto the canvas
-          context.drawImage(img, 0, 0);
-  
-          // Convert the canvas to a data URL
-          const imgDataUrl = canvas.toDataURL('image/png');
-          
-          pdf.addImage(imgDataUrl, 'PNG', 0, 0, 50, 50);
-        }
-        // Draw the SVG icon
-        
-      }
-    }
+   
     // Draw the title
-    pdf.text(item.question.title, boxX + boxWidth - 10, yOffset + parentBoxTopMargin + 10, { align: 'right', maxWidth: maxTextWidth });
+    pdf.text(digitsEnToFa(item.question.placement) + ' ' +  item.question.title, boxX + boxWidth - 10, yOffset + parentBoxTopMargin + 10, { align: 'right', maxWidth: maxTextWidth });
 
     // Draw the description if available
     if (item.question.description) {
@@ -217,20 +276,21 @@ data?.questions.forEach(async (item, index) => {
       pdf.setLineWidth(1);  // Border width
       pdf.setDrawColor(0); // Set border color to black
       pdf.rect(boxX + maxBoxWidth * 0.1, yOffset + totalHeight - childBoxHeight, maxBoxWidth * 0.9, childBoxHeight);  // Draw the border
-
       // Draw the child box
-      pdf.setFillColor(255, 255, 255);  // Set fill color to white
+      pdf.setFillColor(220,220,220);
+        // Set fill color to white
       pdf.rect(boxX + maxBoxWidth * 0.1, yOffset + totalHeight - childBoxHeight, maxBoxWidth * 0.9, childBoxHeight, 'F');  // Draw the box
 
       pdf.setDrawColor(255, 255, 255); 
+      pdf.setFillColor(255, 255, 255);
     }
     
     // Update yOffset for the next item
     yOffset += totalHeight + parentBoxTopMargin;  // Adjust yOffset for the next item
   }
-  function drawOptionBox(x, y, text, isChecked) {
+  function drawOptionBox(x, y, text, isChecked,questionType) {
     pdf.setDrawColor(1); 
-  const boxSize = 12;
+  const boxSize = questionType == 'sort' ? 20 : 12;
 
   // Draw the checkbox
   // pdf.setDrawColor(0);
@@ -252,7 +312,7 @@ data?.questions.forEach(async (item, index) => {
    
   }
   pdf.setDrawColor(255, 255, 255); 
-}
+  }
 });
 
 pdf.save('exported.pdf');
@@ -285,30 +345,4 @@ function wrapText(text, font, maxWidth, context) {
 
   lines.push(line);
   return lines;
-}
-function convertSVGToBase64(svgString) {
-  const svgBlob = new Blob([svgString], { type: 'image/svg+xml' });
-  const svgUrl = URL.createObjectURL(svgBlob);
-
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = function () {
-      const canvas = document.createElement('canvas');
-      canvas.width = img.width;
-      canvas.height = img.height;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0);
-
-      // Get the base64 representation of the image
-      const base64Data = canvas.toDataURL('image/png');
-
-      // Cleanup
-      URL.revokeObjectURL(svgUrl);
-      resolve(base64Data);
-    };
-    img.onerror = function (error) {
-      reject(error);
-    };
-    img.src = svgUrl;
-  });
 }
