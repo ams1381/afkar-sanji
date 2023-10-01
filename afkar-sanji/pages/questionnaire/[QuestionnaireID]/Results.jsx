@@ -47,6 +47,9 @@ const ResultsPage = ({ cookies }) => {
   useEffect(() => {
     ResultQuery.refetch();
   },[StartDate , EndDate])
+   useEffect(() => {
+    SearchQuery.refetch();
+   },[SearchValue])
   return (
     <>
     <Head>
@@ -70,10 +73,9 @@ export default ResultsPage;
 export async function getServerSideProps(context) {
   const { req } = context;
   const cookies = req.headers.cookie;
+  const urlDest = req.url;
 
-  // Check if cookies are present
   if (cookies) {
-    // Parse the cookies
     const parsedCookies = cookies.split(';').reduce((acc, cookie) => {
       const [key, value] = cookie.trim().split('=');
       acc[key] = decodeURIComponent(value);
@@ -82,17 +84,15 @@ export async function getServerSideProps(context) {
 
     return {
       props: {
-        // Pass the cookies as props to the component
         cookies: parsedCookies,
       },
     };
   }
 
-  // Handle the case where cookies are undefined
-
   return {
-    props: {
-      cookies: null,
-    },
+    redirect: {
+      permanent: false,
+      destination: "/auth?returnUrl=" + urlDest
+    }
   };
 }

@@ -30,7 +30,7 @@ const QuestionnairePanel = ({ cookies }) => {
     async () => await axiosInstance.get(`/question-api/questionnaires/${router?.query?.QuestionnaireID}/`),{
       refetchOnWindowFocus : false
     })
-
+    
     if(error && error?.response)
     {
       if(error?.response.status == 404)
@@ -102,9 +102,7 @@ export async function getServerSideProps(context) {
   const { req } = context;
   const cookies = req.headers.cookie;
   const urlDest = req.url;
-  // const urlObject = new URL(urlDest);
-  // const queryParams = urlObject.searchParams;
-  // Check if cookies are present
+
   if (cookies) {
     // Parse the cookies
     const parsedCookies = cookies.split(';').reduce((acc, cookie) => {
@@ -112,19 +110,17 @@ export async function getServerSideProps(context) {
       acc[key] = decodeURIComponent(value);
       return acc;
     }, {});
-
+  
     return {
       props: {
         cookies: parsedCookies,
       },
     };
   }
-
-  console.log(urlDest)
   return {
     redirect: {
       permanent: false,
-      destination: "/auth"
+      destination: "/auth?returnUrl=" + urlDest
     }
   };
-}
+}  

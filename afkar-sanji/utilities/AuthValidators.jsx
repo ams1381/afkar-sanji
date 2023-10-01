@@ -3,7 +3,7 @@ export const AuthValidator = (Input,AuthLevel) => {
         {
             if(!Input)
                 return('لطفا شماره همراه را وارد کنید');
-            const pattern = new RegExp('09(1[0-9]|3[1-9]|2[1-9])-?[0-9]{3}-?[0-9]{4}');
+            const pattern = new RegExp('^09[0-9]{9}$');
             if(Input.length > 11 || !pattern.test(Input))
                 return('شماره همراه را درست وارد کنید');
         }

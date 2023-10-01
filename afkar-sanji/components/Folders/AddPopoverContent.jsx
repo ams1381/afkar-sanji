@@ -12,7 +12,7 @@ const AddPopoverContent = ({folders , setReadyToCreate , SetSideBar , SelectedFo
     },[])
     const AddQuestionnaireModalHandler = () => {
         setAddPopover()
-        if(folders.length)
+        if(folders?.length)
             setQuestionnaireModalState(true);
         else
             SetSideBar(true);

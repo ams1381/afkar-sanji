@@ -140,6 +140,11 @@ export const ResultTableContainer = styled.div`
         flex-direction: row-reverse;
         gap: 8px;
     }
+    .question_title_cell i 
+    {
+        background-size: 12px;
+        padding: 0 10px 0 10px;
+    }
     & .ant-table-tbody tr:nth-child(odd)
     {
         background: var(--surface) !important;

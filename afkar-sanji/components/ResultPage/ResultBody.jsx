@@ -3,14 +3,10 @@ import { ResultBodyContainer , ResultButton , DeleteRowButton , EmptyButtonPage 
 import { Icon } from '@/styles/icons';
 import { Skeleton , Table , ConfigProvider, Upload, message, Tooltip, Button, Modal, Select, Input } from 'antd';
 import fa_IR from "antd/lib/locale/fa_IR";
-import dayjs from 'dayjs';
 import React, { useEffect } from 'react'
-import moment from 'moment-jalaali';
 import Link from 'next/link';
-import transition from "react-element-popper/animations/transition"
 import { axiosInstance } from '@/utilities/axios';
 import EmptyImage from '../../public/Images/empty-image.png'
-import ScrollContainer from 'react-indiana-drag-scroll'
 import { digitsEnToFa, digitsFaToEn } from '@persian-tools/persian-tools';
 import { convertDate, convertStringToDate } from '../QuestionnairePanel/SettingPanel';
 import { Excel } from 'antd-table-saveas-excel';
@@ -25,6 +21,7 @@ import persian from 'react-date-object/calendars/persian';
 import DatePanel from 'react-multi-date-picker/plugins/date_panel';
 import { calculateTextWidth } from '@/utilities/RenameFunctions';
 import { QuestionTypeIcon } from '@/utilities/QuestionTypes';
+import { useLocalStorage } from '@/utilities/useLocalStorage';
 
 const SkeletonTable = ({ columns, rowCount }) => {
     return (
@@ -110,8 +107,8 @@ export const ResultBody = ({ ResultQuery , setStartDate , setSearchValue , query
   const [ resultMessage , contextHolder] = message.useMessage();
   const [ deleteRowState , setDeleteRowState ] = useState(false);
   const [ selectedRows , setSelectedRows ] = useState([]);
+  const { setItem } = useLocalStorage();
   const [ rowDeleted , setRowDeleted ] = useState(false);
-  // const [ SearchValue , setSearchValue ] = useState(null);
   const [ ReplaceDataWithQuery , setReplaceDataWithQuery ] = useState(true);
   const tableRef = useRef(null);
   const [ LoadingTable , setLoadingTable ] = useState(true);
@@ -122,9 +119,7 @@ export const ResultBody = ({ ResultQuery , setStartDate , setSearchValue , query
   let delayTimer;
 
   const regex = /(<([^>]+)>)/gi;
-  // let selectedRows = [];
- 
-  // let columns = useRef([]);
+
   let [ TableColumns , setTableColumns ] = useState(null);
   let [ TableData , setTableData ] = useState(null);
 
@@ -180,19 +175,8 @@ export const ResultBody = ({ ResultQuery , setStartDate , setSearchValue , query
                   <p>{Answer}</p>
                 </div>
           }
-          // (Answer) => (Answer && typeof Answer == 'string' && Answer.includes('/media/'))
-            // ? 
-            // <Upload isImageUrl={() => true} disabled
-            // iconRender={() => <Icon name='File' />}
-            //   defaultFileList={[{
-            //   name: Answer.split('/')[6],
-            //   status: 'done',
-            //   url: 'https://mah-api.ariomotion.com' + Answer,
-            //   thumbUrl : 'https://mah-api.ariomotion.com' + Answer
-            // }]} />: 
-            // typeof Answer == 'string' || typeof Answer == 'number' &&
             ,
-             width : calculateTextWidth(item.question?.title,'14px IRANSans') + 45, 
+             width : 340, 
             dataIndex : item.question?.title, 
             // key : item.question?.id ,
             align : 'center' ,
@@ -205,14 +189,14 @@ export const ResultBody = ({ ResultQuery , setStartDate , setSearchValue , query
                 </div>}>
                    <div className='question_title_cell'>
                       <p>{item.question?.title ? item.question?.title?.replace(regex,"") : ' '}</p>
-                      { QuestionTypeIcon(item.question?.question_type) }
+                      { QuestionTypeIcon(ChildQuestion.question?.question_type) }
                    </div> 
                 </Tooltip> ,
               align : 'center' ,
               ellipsis: true,
               key : ChildQuestion?.question?.id,
               dataIndex : ChildQuestion?.question?.title,
-              width :  calculateTextWidth(ChildQuestion?.question?.title,'14px IRANSans'),
+              width :  226,
               children : ChildQuestion?.question?.options?.map(option => ({
                 title : <Tooltip title={<div className='tooltip_container' 
                 onClick={() => navigator.clipboard.writeText(option?.text)}>
@@ -223,7 +207,7 @@ export const ResultBody = ({ ResultQuery , setStartDate , setSearchValue , query
                 align : 'center' ,
                 // key : option?.id,
                 ellipsis: true,
-                width : option?.text ? calculateTextWidth(option?.text,'14px IRANSans') : 40,
+                width : 53,
                 dataIndex : option?.text
               }))
             }))
@@ -236,7 +220,7 @@ export const ResultBody = ({ ResultQuery , setStartDate , setSearchValue , query
               </Tooltip> ,
               align : 'center' ,
               // key : option.text?.id,
-              width : option?.text ? calculateTextWidth(option?.text,'14px IRANSans') + 40 : 50,
+              width : 53,
               ellipsis: true,
               dataIndex : option.text
             }))
@@ -320,50 +304,16 @@ export const ResultBody = ({ ResultQuery , setStartDate , setSearchValue , query
     }
   },[ResultData , QuestionnaireQuery])
   
-  // console.log(ResultData)
-  // useEffect(() => {
-  //   if(columns?.length)
-  //   {
-  //     ColumnsRef.current = columns;
-  //   }
-  // },[columns])
-
-  // console.log(columns,rows)
-  // console.log(rows)
-  // console.log(document.querySelector("thead.ant-table-thead tr"),
-  // document.querySelector(".ant-table-container .ant-table-body"))
 const ResultSearchHandler = async (e) => {
-  // setSearchValue(e.target.value)
-  // searchValue = e.target.value
-    // console.log(e.target.value)
     clearTimeout(delayTimer);
     delayTimer = setTimeout(function() {
         // Do the ajax stuff
-        console.log(e.target.value)
         if(!e.target.value?.length)
           setSearchValue(null)
         else
           setSearchValue(e.target.value)
     }, 1000);
-  // console.log(e.target.value?.length)
-    
-  // try 
-  // {
-    
-  // //  let { data } = await axiosInstance.get(`/result-api/${QuestionnaireQuery.data?.data?.uuid}/answer-sets/search/?search=${e.target.value}`);
-  // //  setResultData(data?.results);
-  // }
-  // catch(err)
-  // {
-  //   resultMessage.error({
-  //     content : 'یافت نشد',
-  //     duration : 6,
-  //     style : {
-  //       fontFamily : 'IRANSans',
-  //       direction : 'rtl'
-  //     }
-  //   })
-  // }
+
 } 
 
   useEffect(() => {
@@ -562,7 +512,8 @@ const ResultSearchHandler = async (e) => {
              /> : (!QuestionnaireQuery.data?.data?.questions?.length) ? <EmptyResultContainer>
                 <img src={EmptyImage.src} />
                 <p>هنوز هیچ سوالی نساختید</p>
-                <Link href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/`}>
+                <Link onClick={() => setItem('tabType','question_design')}
+                 href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/`}>
                   <EmptyButtonPage type='primary'>الان بسازید</EmptyButtonPage>
                 </Link>
               </EmptyResultContainer>

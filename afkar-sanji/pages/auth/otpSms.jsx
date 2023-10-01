@@ -88,19 +88,14 @@ export async function getServerSideProps(context) {
       acc[key] = decodeURIComponent(value);
       return acc;
     }, {});
-// 
-    console.log('Parsed cookies:', parsedCookies);
 
     return {
       props: {
-        // Pass the cookies as props to the component
         cookies: parsedCookies,
       },
     };
   }
 
-  // Handle the case where cookies are undefined
-  console.log('No cookies found.');
 
   return {
     props: {

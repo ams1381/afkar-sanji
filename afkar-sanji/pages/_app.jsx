@@ -19,8 +19,6 @@ export default function App({ Component, pageProps , cookies }) {
    
     const authentication = async () => {
       if (!pageProps.cookies || !pageProps.cookies.access_token) {
-        // Redirect to login page and store the requested URL
-        console.log(router)
         router.push({
           pathname: '/auth',
           query: { 
@@ -43,17 +41,10 @@ export default function App({ Component, pageProps , cookies }) {
       }
       
     }
-    // else 
-    //   console.log()
-      // router.push('/auth');
-  // }
-  // if(typeof)
-  // questionnaire
-    // return
-  // console.log(router.query , router.pathname.includes('AnswerPage'))
     useEffect(() => {
       if(router.pathname !== '/auth' 
       && router.pathname !== '/404' &&
+      router.pathname !== '/403' &&
       router.pathname != '/505' 
       && router.pathname !== '/auth/otpSms'
        && !router.pathname.includes('AnswerPage'))

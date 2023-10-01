@@ -56,8 +56,9 @@ export default ChartsPage;
 export async function getServerSideProps(context) {
   const { req } = context;
   const cookies = req.headers.cookie;
+  const urlDest = req.url;
 
-  // Check if cookies are present
+
   if (cookies) {
     // Parse the cookies
     const parsedCookies = cookies.split(';').reduce((acc, cookie) => {
@@ -68,18 +69,16 @@ export async function getServerSideProps(context) {
 
     return {
       props: {
-        // Pass the cookies as props to the component
         cookies: parsedCookies,
       },
     };
   }
 
-  // Handle the case where cookies are undefined
-  console.log('No cookies found.');
 
   return {
-    props: {
-      cookies: null,
-    },
+    redirect: {
+      permanent: false,
+      destination: "/auth?returnUrl=" + urlDest
+    }
   };
 }

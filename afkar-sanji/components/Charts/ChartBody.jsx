@@ -20,6 +20,7 @@ import { Popover, Skeleton } from 'antd';
 import { SortPopoverContent } from './SortPopoverContent';
 import { QuestionChart } from './QuestionChart';
 import html2canvas from "html2canvas";
+import { useLocalStorage } from '@/utilities/useLocalStorage';
 
 ChartJS.register(
   CategoryScale,
@@ -47,7 +48,7 @@ const ChartsBody = ({ ChartQuery , QuestionnaireQuery }) => {
   const [ filterPopover , setFilterPopover ] = useState(false);
   const [ totalChartType , setTotalChartType ] = useState(null);
   const [ totalChartSort , setTotalSort ] = useState(null);
-
+  const { setItem } = useLocalStorage();
   const DownloadAllCharts = async () => {
     let ChartArrayHTML = '';
     let ChartsArray = document.querySelectorAll('canvas');
@@ -191,7 +192,8 @@ const ChartsBody = ({ ChartQuery , QuestionnaireQuery }) => {
               : (!QuestionnaireQuery.data?.data?.questions?.length) ? <EmptyResultContainer>
               <img src={EmptyImage.src} />
               <p>هنوز هیچ سوالی نساختید</p>
-              <Link href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/`}>
+              <Link onClick={() => setItem('tabType','question_design')}
+              href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/`}>
                 <EmptyButtonPage type='primary'>الان بسازید</EmptyButtonPage>
               </Link>
             </EmptyResultContainer>

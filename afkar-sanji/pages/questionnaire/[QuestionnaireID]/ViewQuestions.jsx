@@ -514,8 +514,9 @@ export default ViewQuestions;
 export async function getServerSideProps(context) {
   const { req } = context;
   const cookies = req.headers.cookie;
+  const urlDest = req.url;
 
-  // Check if cookies are present
+
   if (cookies) {
     // Parse the cookies
     const parsedCookies = cookies.split(';').reduce((acc, cookie) => {
@@ -532,8 +533,9 @@ export async function getServerSideProps(context) {
   }
 
   return {
-    props: {
-      cookies: null,
-    },
+    redirect: {
+      permanent: false,
+      destination: "/auth?returnUrl=" + urlDest
+    }
   };
 }
