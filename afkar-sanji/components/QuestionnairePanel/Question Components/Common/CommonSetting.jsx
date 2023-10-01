@@ -17,12 +17,7 @@ export const CommonSetting = ({ QuestionInfo }) => {
     }
   return (
     <>
-    <ToggleContainer>
-        <div className='checkbox_container' onClick={e => RegularToggleHandler(!QuestionInfo.show_number,'show_number')}>
-            <p>عدم نمایش شماره سوال</p>
-            <Switch checked={QuestionInfo.show_number}/>
-        </div>
-    </ToggleContainer>
+  
     <ToggleContainer>
         <div className='checkbox_container' onClick={e => RegularToggleHandler(!QuestionInfo.is_required,'is_required')}>
             <p>پاسخ به سوال اجباری باشد</p>

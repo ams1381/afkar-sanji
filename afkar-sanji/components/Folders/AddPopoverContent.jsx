@@ -20,7 +20,7 @@ const AddPopoverContent = ({folders , setReadyToCreate , SetSideBar , SelectedFo
     const AddFolderHandler = () => {
         SetSideBar(true);
         setAddPopover();
-        setReadyToCreate(true)
+        setReadyToCreate(true);
     }
   return (
     <PopoverContainer>
@@ -40,9 +40,7 @@ const AddPopoverContent = ({folders , setReadyToCreate , SetSideBar , SelectedFo
         setQuestionnaireModalState={() => setQuestionnaireModalState(!AddQuestionnaireModal)}
         FolderReload={FolderReload}
         folders={folders}
-        SelectedFolderNumber={SelectedFolderNumber}
-        />
-        
+        SelectedFolderNumber={SelectedFolderNumber}/>
     </PopoverContainer>
   )
 }

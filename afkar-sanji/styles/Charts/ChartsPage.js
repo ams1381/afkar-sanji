@@ -125,15 +125,33 @@ export const QuestionChartContainer = styled.div`
     border: ${p => p.loading ? 'none' : '1px solid var(--Outline-variant, #CCC)'};
     background: ${p => p.loading ? '#E7E7E7' :  'var(--Surface, #FEFEFE)'};
     padding : 12px;
+    .selective_degree_line
+    {
+        margin: 24px 0px;
+        gap: 15px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .selective_degree_line svg 
+    {
+        width : 45px;
+        height : 45px;
+    }
+    @media screen and (max-width : 480px)
+    {
+        .selective_degree_line svg 
+        {
+            width : 35px;
+            height : 35px;
+        }
+    }
 
-    // @media screen and (max-width : 480px)
-    // {
-    //    & canvas
-    //    {
-    //     max-width: 60%;
-    //     object-fit: contain;
-    //    } 
-    // }
+    & canvas 
+    {
+        min-width : 350px;
+    }
+      
 `
 export const QuestionChartContainerHeader = styled.div`
     display: flex;

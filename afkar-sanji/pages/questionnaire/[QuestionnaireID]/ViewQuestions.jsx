@@ -40,7 +40,7 @@ function isInViewport(element) {
   );
 }
 
-const ViewQuestions = ({ answerSetID , Questionnaire }) => {
+const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
   const router = useRouter();
   const [ QuestionnaireInfo , SetQuestionnaireInfo ] = useState(Questionnaire);
   const [ QuestionsData , SetQuestionsData ] = useState(Questionnaire?.questions);
@@ -90,11 +90,20 @@ const ViewQuestions = ({ answerSetID , Questionnaire }) => {
         let data;
         if(answerSetID)
         {
-          let  response =  await axios.get(`/question-api/${router.query.QuestionnaireID}/`);
+          try 
+          {
+            let  response =  await axios.get(`/question-api/${router.query.QuestionnaireID}/`);
           data = response.data;
+          }
+          catch(err) {
+            if(err?.response?.status == 403)
+              router.push('/403')
+            return
+          }
         }
         else
         {
+          axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + cookies?.access_token;
           let  response =  await axiosInstance.get(`/question-api/questionnaires/${router?.query?.QuestionnaireID}/`);
           data = response.data;
         }          
@@ -117,6 +126,8 @@ const ViewQuestions = ({ answerSetID , Questionnaire }) => {
     catch(err)
     {
       console.log(err)
+      if(err?.response?.status == 403)
+        router.push('/403')
       messageApi.error({
         content : 'در لود کردن سوالا مشکلی پیش آمد',
         style : {
@@ -499,3 +510,30 @@ const ViewQuestions = ({ answerSetID , Questionnaire }) => {
   )
 }
 export default ViewQuestions;
+
+export async function getServerSideProps(context) {
+  const { req } = context;
+  const cookies = req.headers.cookie;
+
+  // Check if cookies are present
+  if (cookies) {
+    // Parse the cookies
+    const parsedCookies = cookies.split(';').reduce((acc, cookie) => {
+      const [key, value] = cookie.trim().split('=');
+      acc[key] = decodeURIComponent(value);
+      return acc;
+    }, {});
+
+    return {
+      props: {
+        cookies: parsedCookies,
+      },
+    };
+  }
+
+  return {
+    props: {
+      cookies: null,
+    },
+  };
+}

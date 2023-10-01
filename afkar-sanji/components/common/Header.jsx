@@ -18,19 +18,22 @@ import Link from 'next/link';
 import { handleInputWidth } from '@/utilities/RenameFunctions';
 import { QuestionnairePopover } from '../QuestionnairePanel/QuestionnairePopover';
 import { axiosInstance } from '@/utilities/axios';
+import { getCookie } from 'react-use-cookie';
 
-export const Header = ({SetSideBar , goToFolders , Questionnaire , loadingHeader}) => {
+export const Header = ({SetSideBar , goToFolders , Questionnaire , cookies , loadingHeader}) => {
     const [ logoutPopOver , switchPopover ] = useState(false);
     const { getItem , setItem , removeItem } = useLocalStorage();
     const router = useRouter();
+    const PhoneNumber = getCookie('numberPhone');
     const [ QuestionnaireName , SetQuestionnaireName ]= useState(Questionnaire ? Questionnaire.name : null);
     const [ RenameState , SetRenameState ] = useState(false);
     const Auth = useContext(AuthContext);
     const QuestionnaireNameInputRef = useRef(null);
     const [ QuestionnairePopoverState , SetQuestionnairePopoverState ] = useState(false);
     useEffect(() => {
-        Auth.changePhone(getItem('phoneNumber'))
+        Auth.changePhone(PhoneNumber)
     },[])
+    // console.log(document.cookie)
     const FolderButtonHandler = () => {
         goToFolders ? router.back() : SetSideBar();
     }
@@ -72,7 +75,7 @@ export const Header = ({SetSideBar , goToFolders , Questionnaire , loadingHeader
         <HeaderComponent>
             <ConfigProvider theme={themeContext}>
                 <Popover
-                content={AvatarComponent}
+                content={<AvatarComponent cookies={cookies} />}
                 trigger="click"
                 className='LogoutPopover'
                 open={logoutPopOver}

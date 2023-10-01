@@ -43,7 +43,8 @@ export const Number = ({ QuestionInfo }) => {
         value={NumberAnswer ? digitsEnToFa(NumberAnswer) : ''}
         onChange={NumberAnswerHandler}
          style={{ fontFamily : 'IRANSans' , direction : 'ltr' , textAlign : 'left' , borderRadius : 2 }}
-         placeholder={!(QuestionInfo.min == 0 && QuestionInfo.max == 0) ? `از ${QuestionInfo.min ? digitsEnToFa(QuestionInfo.min) : digitsEnToFa(10000)} تا ${QuestionInfo.max ? digitsEnToFa(QuestionInfo.max) : digitsEnToFa(30000)}` : 'یک عدد وارد کنید'} />
+        //  placeholder={!(QuestionInfo.min == 0 && QuestionInfo.max == 0) ? `از ${QuestionInfo.min ? digitsEnToFa(QuestionInfo.min) : digitsEnToFa(10000)} تا ${QuestionInfo.max ? digitsEnToFa(QuestionInfo.max) : digitsEnToFa(30000)}` : 'یک عدد وارد کنید'} 
+         />
     </NumberInputContainer>
   )
 }

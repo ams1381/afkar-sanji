@@ -220,7 +220,7 @@ const QuestionSlice =  createSlice({
                     state.data.find(item => item.question.id == group).question
                     .child_questions.find(item => item.question.id == QuestionID).question[ToggleName] = ToggleValue;
                 }
-                
+
             }
             
         },
@@ -337,7 +337,8 @@ const QuestionSlice =  createSlice({
                     const foundGroup = state.data.find(item => item.question.id === group);
                     const childQuestions = foundGroup?.question.child_questions;
                     const foundChildQuestion = childQuestions?.find(item => item?.question?.id);
-
+                    // console.log(JSON.parse(JSON.stringity(foundGroup)),
+              
                     if (foundChildQuestion) {
 
                     // console.log(DuplicatedOption , DuplicatedIndex)
@@ -483,6 +484,7 @@ const QuestionSlice =  createSlice({
                 button_text : 'test',
                 volume_unit : 'mb',
                 all_options: false,
+                group : null,
                 newFace : true,
                 pattern : 'free',
                 answer_template : 'متن آزاد',
@@ -707,20 +709,20 @@ const QuestionSlice =  createSlice({
             
             if(!state.data.find(item => item?.question?.id == groupID).question.child_questions?.length)
             {
-                console.log('push check')
                 childQuestion.question.placement = 1;
                 state.data.find(item => item?.question?.id == groupID).question.child_questions.push(childQuestion)
+                state.data.find(item => item?.question?.id == groupID).question.child_questions[0].question.group = groupID;
             }
             else 
             {
-                console.log(prevIndex , childQuestionIndex)
                state.data.find(item => item?.question?.id == groupID).question.child_questions.splice(childQuestionIndex, 0 ,childQuestion)
                state.data.find(item => item?.question?.id == groupID).question.child_questions[childQuestionIndex].question.placement = childQuestionIndex ;
                state.data.find(item => item?.question?.id == groupID).question.child_questions[childQuestionIndex].question.group = groupID; 
-               
-            //    console.log(JSON.parse(JSON.stringify(state.data.find(item => item?.question?.id == groupID).question.child_questions)))
+               state.data.find(item => item?.question?.id == groupID).question.child_questions.forEach((ChildItem,index) => {
+                ChildItem.question.placement = index + 1;
+               })
+
             }
-            console.log(JSON.parse(JSON.stringify(state.data)))
         },
         ChildQuestionReorder : (state, action) => {
             const { ParentQuestionID } = action.payload;
@@ -743,17 +745,18 @@ const QuestionSlice =  createSlice({
             
         },
         DeleteOptionsError : (state , action) => {
-            const { errID } = action.payload;
+            const { errID , optionID } = action.payload;
 
-            if(state.Error.find(item => item.qid == errID) && state.Error.find(item => item.qid == errID).err_object?.options)
+            if(state.Error.find(item => item.qid == errID) && state.Error.find(item => item.qid == errID).err_object?.length)
             { 
-              state.Error.find(item => item.qid == errID).err_object.options = null;
+                state.Error.find(item => item.qid == errID).err_object = state.Error.find(item => item.qid == errID).err_object.filter(item => item.optionID != optionID)
+            //   state.Error.find(item => item.qid == errID).err_object.options = null;
             }
                 
         },
         DeleteInputError : (state , action) => {
             const { errID , inputName } = action.payload;
-            console.log(errID,inputName)
+
             if(state.Error.find(item => item.qid == errID) && state.Error.find(item => item.qid == errID).err_object?.inputName)
             {
               
@@ -763,7 +766,6 @@ const QuestionSlice =  createSlice({
         ChildQuestionRemover : (state, action) => {
             const { group , questionIndex , questionNewIndex } = action.payload;
             // console.log('before remove',JSON.parse(JSON.stringify(state.data.find(item => item.question.id == group).question)))
-
             let removedChild = state.data.find(item => item.question.id == group).question.child_questions[questionIndex];
             state.data.find(item => item.question.id == group).question.child_questions[questionIndex].question.group = null;
             state.data.find(item => item.question.id == group).question.child_questions.splice(questionIndex , 1);
@@ -783,14 +785,11 @@ const QuestionSlice =  createSlice({
             // console.log(newIndex)
             let switchedQuestion = state.data.find(item => item.question.id == oldGroup).question.child_questions
                 .find(childItem => childItem.question.id == questionID);
-
+            switchedQuestion.question.group = newGroup;
             state.data.find(item => item.question.id == oldGroup).question.child_questions.splice(oldIndex , 1);
-            console.log(JSON.parse(JSON.stringify(state.data.find(item => item.question.id == oldGroup).question.child_questions)))
+
             state.data.find(item => item.question.id == newGroup).question.child_questions
-                .splice(newIndex , 0 , switchedQuestion)
-
-
-            console.log(JSON.parse(JSON.stringify(state.data.find(item => item.question.id == newGroup))))
+                .splice(newIndex , 0 , switchedQuestion);
         }
     }
 })

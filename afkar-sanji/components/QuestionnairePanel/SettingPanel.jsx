@@ -19,6 +19,7 @@ import persian from "react-date-object/calendars/persian"
 import persian_fa from "react-date-object/locales/persian_fa"
 import moment from 'moment-jalaali';
 import DatePanel from 'react-multi-date-picker/plugins/date_panel';
+import { useLocalStorage } from '@/utilities/useLocalStorage';
 
 export const convertStringToDate = str => {
   const [datePart, timezonePart] = str.split(/[T+]/);
@@ -49,10 +50,11 @@ function convertToRegularTime(dateTimeString) {
 const convertToISOString = (datePart, timePart) =>
   new Date(`${datePart}T${timePart}`).toISOString().replace('Z', `+${(new Date().getTimezoneOffset() / -60).toFixed(0).padStart(2, '0')}:${(Math.abs(new Date().getTimezoneOffset()) % 60).toString().padStart(2, '0')}`);
 
-const SettingPanel = ({ Questionnaire , refetch }) => {
+const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
   const [DateValue, SetDateValue] = useState(null);
   const [QuestionnaireData, Dispatcher] = useReducer(QuestionnaireReducerFunction, Questionnaire);
-  const [messageApi, contextHolder] = message.useMessage()
+  const [messageApi, contextHolder] = message.useMessage();
+  const { getItem , setItem } = useLocalStorage();
   const [DateActive, SetDateActive] = useState(false);
   const [TimerActive, SetTimerActive] = useState(QuestionnaireData?.timer ? true : false);
   const [TimerOpen, setTimerOpen] = useState(false);
@@ -63,16 +65,17 @@ const SettingPanel = ({ Questionnaire , refetch }) => {
   let end_date;
   let pub_date;
   const [ DatePickerValue , setDatePickerValue ] = useState(null);
-  // useEffect(() => {
+
     if(QuestionnaireData.pub_date)
     {
-   
+      // console.log(parseInt(convertToRegularTime(QuestionnaireData.pub_date).split(" ")[1].split(':')[0]) + 1 
+      // convertToRegularTime(QuestionnaireData.pub_date).split(" ")[1].split(':')[1] + ':' +
+      // convertToRegularTime(QuestionnaireData.pub_date).split(" ")[1].split(':')[0])
       pub_date = digitsEnToFa(convertDate((convertToRegularTime(QuestionnaireData.pub_date).split(" ")[0]),'jalali') + ' ' +
       convertToRegularTime(QuestionnaireData.pub_date).split(" ")[1])
     }
-      
     let date_picker = pub_date;
-    // setDatePickerValue(pub_date)
+
     if(QuestionnaireData.end_date)
     {
       end_date = digitsEnToFa(convertDate((convertToRegularTime(QuestionnaireData.end_date).split(" ")[0]),'jalali') + ' ' +
@@ -93,7 +96,7 @@ const SettingPanel = ({ Questionnaire , refetch }) => {
       Dispatcher({ ACTION: 'Timer Cleared' });
     SetSettingChanged(true)
   }
-  //  console.log(new DateObject({ calendar: persian }).)
+
   const DateChangeHandler = (ali, NewDate) => {
     SetErrorType(null)
     
@@ -126,6 +129,8 @@ const SettingPanel = ({ Questionnaire , refetch }) => {
   const ToggleCheckBoxHandler = (e, ToggleName) => {
     Dispatcher({ ACTION: ToggleName, NewToggleValue: e });
     SetSettingChanged(true)
+
+    // console.log(QuestionnaireData,e, ToggleName)
   }
   const CancelEditHandler = () => {
     Dispatcher({ ACTION: 'reset_questionnaire', Resetvalue: Questionnaire })
@@ -150,12 +155,15 @@ const SettingPanel = ({ Questionnaire , refetch }) => {
      {
       SetSettingChanged(false)
       refetch()
+      setItem('tabType','question_design');
+      ChangeSide('question_design')
       // Dispatcher({ ACTION : 'Data Replacement' , newData : data })
       // console.log(data,QuestionnaireData)
      }
       
     }
     catch (err) {
+      console.log(err)
       SetSettingChanged(true)
       if (err.response)
         Object.keys(err.response.data).includes('pub_date', 'end_date') ? SetErrorType('date_error') : ''
@@ -182,7 +190,7 @@ const SettingPanel = ({ Questionnaire , refetch }) => {
             <Switch checked={DateActive} />
           </div>
           <div className='picker_container date_picker' >
-            <DatePicker  format="YYYY/MM/DDHH:mm:ss"
+            <DatePicker  format=" YYYY/MM/DD HH:mm:ss "
               // value={[
               //   new DateObject({ calendar: persian })
               //   .setDate(
@@ -207,7 +215,7 @@ const SettingPanel = ({ Questionnaire , refetch }) => {
               range
               plugins={[
                 <TimePicker position="bottom" />,
-                <DatePanel position="right" />
+                <DatePanel position="left" />
               ]}
               onChange={DateChangeHandler}
               calendar={persian}
@@ -268,13 +276,18 @@ const SettingPanel = ({ Questionnaire , refetch }) => {
                     : null
                 } 
                 /> */}
-    
           </div>
         </QuestionnaireDatePickerContainer>
         <QuestionnaireDatePickerContainer>
           <div className='picker_header' onClick={e => ToggleCheckBoxHandler(!QuestionnaireData.show_question_in_pages, 'show_question_in_pages')}>
             <p>در هر صفحه یک سوال نمایش داده شود</p>
             <Switch checked={QuestionnaireData.show_question_in_pages} />
+          </div>
+        </QuestionnaireDatePickerContainer>
+        <QuestionnaireDatePickerContainer>
+          <div className='picker_header' onClick={e => ToggleCheckBoxHandler(!QuestionnaireData.show_number, 'show_number')}>
+            <p>عدم نمایش شماره سوال</p>
+            <Switch checked={!QuestionnaireData.show_number} />
           </div>
         </QuestionnaireDatePickerContainer>
         <QuestionnaireDatePickerContainer style={{ borderBottom: 'none', paddingBottom: 0, marginRight: '30px' }}>
@@ -286,9 +299,9 @@ const SettingPanel = ({ Questionnaire , refetch }) => {
         <QuestionnaireDatePickerContainer disabled={!QuestionnaireData.show_question_in_pages}
          style={{ borderBottom: 'none', paddingBottom: 0, marginRight: '30px' }}>
           <div className='picker_header' onClick={e => ToggleCheckBoxHandler(QuestionnaireData.previous_button, 'previous_button')}>
-            <p>حذف دکمه قبلی</p>
+            <p>دکمه‌ی قبل</p>
             <Switch disabled={!QuestionnaireData.show_question_in_pages}
-             checked={!QuestionnaireData.previous_button && QuestionnaireData.show_question_in_pages} />
+             checked={QuestionnaireData.previous_button && QuestionnaireData.show_question_in_pages} />
           </div>
          { !QuestionnaireData.show_question_in_pages &&
           <p className='disable_warning'>دکمه‌ها فقط در صورتی که در هر صفحه یک سوال نمایش داده‌شود فعال هستند.</p>}
@@ -296,7 +309,7 @@ const SettingPanel = ({ Questionnaire , refetch }) => {
         <div className='questionnaire_setting_footer'>
           <Button type='primary' icon={SettingChanged ? <Icon name='Check' /> : null} disabled={!SettingChanged}
             onClick={SaveQuestionnaireChanges} loading={SettingLoading}>
-            <p>ذخیره ی تغییرات</p>
+            <p>ذخیره‌ی تغییرات</p>
           </Button>
           <Button danger onClick={CancelEditHandler} disabled={!SettingChanged}>
             <p>انصراف</p>
@@ -323,6 +336,7 @@ export const convertDate = (inputDate, dateType) => {
 };
 // const convertToGregorian 
 const QuestionnaireReducerFunction = (State,ACTION) => {
+
   switch(ACTION.ACTION)
   {
     case 'Date Cleared' :
@@ -372,7 +386,11 @@ const QuestionnaireReducerFunction = (State,ACTION) => {
       }
     case 'reset_questionnaire':
       return ACTION.Resetvalue
-      
+    case 'show_number':
+      return {
+        ...State,
+        show_number : ACTION.NewToggleValue
+      }
   }
 }
 

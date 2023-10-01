@@ -52,14 +52,16 @@ const QuestionnairePanelHeader = ({ FolderName , isFetched , Questionnaire , Sid
       </div>,
     },
   ]
-   if(getItem('tabType'))
+  useEffect(() => {
+    if(getItem('tabType'))
     {
       ChangeSide(getItem('tabType'))
       // getItem('tabType') == 'questionnaire_setting' ? TabIndex = 2 : TabIndex = 1;
     
     }
+  },[])
+   
       
-  // console.log(getItem('tabType'))
 
   if(isFetched)
     handleInputWidth(QuestionnaireNameInputRef,QuestionnaireName)
@@ -98,53 +100,11 @@ const QuestionnairePanelHeader = ({ FolderName , isFetched , Questionnaire , Sid
   return (
     Questionnaire ? 
     <>
-    {/* <PanelHeader> */}
-          {/* <QuestionnaireDirectoryContainer>
-            <QuestionnaireDirectoryPath>
-              <QuestionnaireNameInput style={{ marginRight : 10 , fontSize : 14 , color : '#000000D9' }} 
-              ref={QuestionnaireNameInputRef} questionnairePanel='active'
-               value={QuestionnaireName} onKeyDown={e => e.key == 'Enter' ? QuestionnaireRenameConfirmHandler() : ''}
-               onChange={QuestionnaireNameChangeHandler} disabled={!RenameState} /> 
-               <span style={{ color : '#00000073' }}>/</span>
-              <Link style={{ color : '#A3A3A3' }} href={{
-                pathname : '/'
-              }}> {Questionnaire.folder} </Link>
-            </QuestionnaireDirectoryPath>
-              <div>
-                <Popover content={<QuestionnairePopover RenameInput={QuestionnaireNameInputRef}
-                Questionnaire={Questionnaire}
-                trigger='click'
-                RenameChangeState={SetRenameState} SetQuestionnairePopoverState={SetQuestionnairePopoverState} />}
-                open={QuestionnairePopoverState}
-                onOpenChange={() => SetQuestionnairePopoverState(false)}>
-                </Popover>
-                <FolderPopoverToggle style={{ marginRight : RenameState ? 10 : 8 }}
-                onClick={RenameState ? QuestionnaireRenameConfirmHandler : 
-                  () => SetQuestionnairePopoverState(!QuestionnairePopoverState)}>
-                  {RenameState ? <Icon name='GrayCheck' /> : <Icon name='Menu' />}
-                </FolderPopoverToggle>
-                {RenameState && <FolderPopoverToggle style={{ marginRight : 8 }}
-                onClick={() => {
-                  SetQuestionnaireName(Questionnaire?.name)
-                  handleInputWidth(QuestionnaireNameInputRef,Questionnaire?.name)
-                  SetRenameState(false);
-              }}><Icon name='BlackClose' style={{ width : 15}} /></FolderPopoverToggle>}
-              </div>
-          </QuestionnaireDirectoryContainer> */}
-          {/* <div className='see_result_container'>
-            <Link href={`/questionnaire/${Questionnaire.uuid}/Results/`}>
-            <SeeResultButton>
-              <p>مشاهده نتایج</p>
-              <Icon name='SeeResult' />
-            </SeeResultButton>
-            </Link>
-          </div> */}
-        {/* </PanelHeader> */}
         <QuestionnaireEditItemsContainer>
             <QuestionnaireEditItemsInnerContainer>
             <Tabs
-                defaultActiveKey={getItem('tabType') == 'questionnaire_setting' ?  '2' : '1'}
                 items={TabHeadItems}
+                activeKey={getItem('tabType') == 'questionnaire_setting' ?  '2' : '1'}
                 centered={true}
                 onChange={ChangeTabHandler}
                 indicatorSize={(origin) => origin - 16}
@@ -159,7 +119,7 @@ const QuestionnairePanelHeader = ({ FolderName , isFetched , Questionnaire , Sid
               </button>
               </Link>
               <Popover
-            content={<SharePopOverContent Questionnaire={Questionnaire?.uuid} />}
+            content={<SharePopOverContent Questionnaire={Questionnaire} />}
             trigger="click"
             open={SharePopover}
             onOpenChange={() => setSharePopOver(false)}>

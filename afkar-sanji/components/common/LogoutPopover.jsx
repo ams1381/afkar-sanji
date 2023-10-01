@@ -7,14 +7,32 @@ import { useRouter } from 'next/router';
 import { axiosInstance } from '@/utilities/axios';
 import PN from 'persian-number';
 import { digitsEnToFa } from '@persian-tools/persian-tools';
+import { setCookie } from 'react-use-cookie';
 
-const AvatarComponent = () => {
+const AvatarComponent = ({ cookies }) => {
     const Auth = useContext(AuthContext);
     const router = useRouter();
+
     const LogoutHandler = () => {
-        delete axiosInstance.defaults.headers['Authorization'];
+        // removeCookie('access_token')
+        // removeCookie('refresh_token');
+        try 
+        {
+            (function(){document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); }); })();
+            axiosInstance.post('/user-api/auth/logout/',{
+                 refresh_token : cookies.refresh_token ,
+                })
+        }
+        catch(Err)
+        {
+            console.log(Err)
+        }
+        
+ 
+        // getCookie
         router.push('/auth')
     }
+    // console.log(document.cookie)
   return (
     <LogoutPopOverLayout>
     <LogoutPopOverInfo>

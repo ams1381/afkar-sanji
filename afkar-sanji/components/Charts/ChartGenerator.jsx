@@ -8,7 +8,7 @@ import { Divider } from 'antd'
 
 export const ChartGenerator = (chartType,data,PlotData,options,chartRef) => 
 {
-
+    const regex = /(<([^>]+)>)/gi;
     switch(chartType)
     {
         case 'Line':
@@ -17,7 +17,7 @@ export const ChartGenerator = (chartType,data,PlotData,options,chartRef) =>
             else
                 return <div style={{ textAlign : 'center' }}>
                 <p style={{ marginTop : 20 }}> میانگین { digitsEnToFa(parseFloat(PlotData.average).toFixed(2)) } </p>
-                <div style={{ margin : '24px 0', gap : 15 , display : 'flex' , justifyContent : 'center'}}>
+                <div className='selective_degree_line'>
                     
                 { Array.from({ length : PlotData.max }).map((item,index) => <span key={index}>
                     { RateIconGenerator(PlotData.shape,PlotData.average,index + 1) }
@@ -27,7 +27,7 @@ export const ChartGenerator = (chartType,data,PlotData,options,chartRef) =>
                 </div>
                 </div>
         case 'Bar':
-            return <Bar data={data} id={PlotData.question_id} options={options} ref={chartRef}/>
+            return <Bar data={data}  id={PlotData.question_id} options={options} ref={chartRef}/>
         case 'Pie':
             return <Pie data={data} id={PlotData.question_id} options={options} ref={chartRef}/>
         case 'Table':
@@ -181,7 +181,7 @@ export const ChartGenerator = (chartType,data,PlotData,options,chartRef) =>
                 <tbody>
                     {PlotData?.options?.map((item,index) => 
                     <tr key={index}>
-                        <td>{digitsEnToFa(index)}</td>
+                        <td>{digitsEnToFa(item?.text?.replace(regex,""))}</td>
                         <td>{PlotData?.percentages && 
                         digitsEnToFa(parseFloat(Object.values(PlotData?.counts)[index]).toFixed(2))}</td>
                         <td>{PlotData?.percentages && 

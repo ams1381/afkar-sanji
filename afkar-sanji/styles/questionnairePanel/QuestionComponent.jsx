@@ -119,9 +119,29 @@ export const QuestionTitle = styled.div`
     }
 `
 export const QuestionDescription = styled.div`
-    color : #666666;
+    // color : #666666;
     margin-bottom : 0.4rem;
     direction: rtl;
+    display : flex;
+    justify-content : flex-end;
+    flex-direction: column;
+    width: 95.1%;
+    & p 
+    {
+        width: 100%;
+    }
+    & span 
+    {
+        color : #525252;
+        margin-top : 4px;
+        font-size: 12px;
+    }
+    @media screen and (max-width : 400px)
+    {
+    
+         width : 94%;
+        
+    }
 `
 export const WelcomeComponentContainer = styled.div`
     text-align : center;

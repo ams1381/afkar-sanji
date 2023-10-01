@@ -1,3 +1,4 @@
+import AuthContextProvider from '@/utilities/AuthContext';
 import Document, {
   DocumentContext,
   DocumentInitialProps,
@@ -45,8 +46,10 @@ export default class MyDocument extends Component {
       />
       </Head>
       <body>
+      {/* <AuthContextProvider> */}
           <Main />
           <NextScript />
+          {/* </AuthContextProvider> */}
       </body>
     </Html>
     )

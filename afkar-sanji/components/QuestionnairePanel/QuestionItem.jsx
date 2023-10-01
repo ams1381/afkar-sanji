@@ -11,12 +11,12 @@ import 'react-dropdown/style.css';
 import RemovePopup from '../common/RemovePopup';
 import React, { useEffect, useReducer, useRef, useState } from 'react'
 import {useDispatch, useSelector} from 'react-redux'
-import { Button, ConfigProvider, Select, Skeleton, Upload, message } from 'antd';
+import { Button, ConfigProvider, Select, Switch , Skeleton, Upload, message } from 'antd';
 import QuestionDescription from './Question Components/Common/Description';
 import QuestionComponent from '../Questions/Question';
 import FileUpload from './Question Components/Common/FileUpload';
 import { axiosInstance } from '@/utilities/axios';
-import { AddQuestion, ChangeErrorData, ChangeNameHandler, ChildQuestionRemover, ChildQuestionReorder, 
+import { AddQuestion, ChangeErrorData, ChangeNameHandler, ChangeToggleHandler, ChildQuestionRemover, ChildQuestionReorder, 
   ChildQuestionReplace, 
   DeleteNonQuestionHandler, 
   DeleteQuestionHandler, DuplicateQuestionHandler, QuestionReorder, 
@@ -30,17 +30,22 @@ import { themeContext } from '@/utilities/ThemeContext';
 import { ReorderPoster, getListStyle } from './QuestionDesignPanel';
 import { StyleSheetConsumer } from 'styled-components';
 import { ReactSortable } from 'react-sortablejs';
+import { ToggleContainer } from '@/styles/questionnairePanel/QuestionSetting';
+import { useMemo } from 'react';
+import { moveItem } from './QuestionDesignPanel';
 
 function shallowEqual(obj1, obj2) {
-  // console.log(obj1, obj2)
-  if (obj1 === null || obj2 === null || typeof obj1 !== 'object' || typeof obj2 !== 'object') {
+  if (obj1 === null || obj2 === null ||
+     typeof obj1 !== 'object' || 
+     typeof obj2 !== 'object') {
     return obj1 === obj2;
   }
 
   let keys1 = Object.keys(obj1);
   let keys2 = Object.keys(obj2);
 
-  keys1 = keys1.filter(item => item != 'placement' && item != 'child_questions' && item != 'group');
+  keys1 = keys1.filter(item =>
+     item != 'placement' && item != 'child_questions' && item != 'group');
   keys2 = keys2.filter(item => item != 'placement' && item != 'child_questions' && item != 'group');
 
   if (keys1.length !== keys2.length) return false;
@@ -55,7 +60,7 @@ function shallowEqual(obj1, obj2) {
       : val1 === val2;
   });
 }
-export const QuestionItem = ({  ActiveQuestion, provided , childPlacement ,setActiveQuestion , QuestionnaireReloader ,
+export const QuestionItem = ({  ActiveQuestion, provided , childPlacement ,setActiveQuestion , Questionnaire ,
    QuestionsList  , IsQuestion , question , UUID , parentPlacement , GroupID }) => {
   const [ QuestionRootOpenState , SetQuestionRootOpenState ] = useState(false);
   const [ QuestionActionState , SetQuestionActionState ] = useState('edit');
@@ -74,23 +79,25 @@ export const QuestionItem = ({  ActiveQuestion, provided , childPlacement ,setAc
   const [ titleError , setTitleError ] = useState(false);
   const OcurredError = useSelector(state => state.reducer.Error);
   let childQuestion = question?.question?.child_questions;
-  let QuestionTopDis = 137;
+  // let QuestionTopDis = 137;
+  const [ QuestionTopDis , setQuestionTopDis ] = useState(137);
   // const InitialQuestionData = IsQuestion ? : useSelector(s => s.reducer.nonQuestionData.find(item => item.question && item.question.id == question.id));
   const regex = /(<([^>]+)>)/gi;
-
+  
   // const [ questionsData , setQuestionData ] = useState(null)
   let questionsData = question;
-
+  // useMemo(
+  //   () => { InitialQuestionData.current = question; },
+  //   []
+  // );
   useEffect(() => {
     InitialQuestionData.current = question;
  },[]) 
  window.addEventListener('resize',() => {
   if(window.innerWidth > 768 && QuestionActionState == 'view')
     SetQuestionActionState('edit')
-  
 })
- useEffect(() =>{
-  
+ useEffect(() => {
   if(questionsData && InitialQuestionData.current)
   {    
     if(!shallowEqual(InitialQuestionData.current ,questionsData))
@@ -134,7 +141,8 @@ export const QuestionItem = ({  ActiveQuestion, provided , childPlacement ,setAc
       if(questionsData.question.url_prefix)
         await axiosInstance.delete(`/question-api/questionnaires/${UUID}/delete-question/?id=${questionsData.question.id}`);
       else
-        questionsData.question.question_type == 'welcome_page'  ? await axiosInstance.delete(`/question-api/questionnaires/${UUID}/welcome-pages/${questionsData.question.id}/`)
+        questionsData.question.question_type == 'welcome_page' ? 
+      await axiosInstance.delete(`/question-api/questionnaires/${UUID}/welcome-pages/${questionsData.question.id}/`)
        : await axiosInstance.delete(`/question-api/questionnaires/${UUID}/thanks-pages/${questionsData.question.id}/`)
     }
     QuestionDispatcher(QuestionSorter());
@@ -174,16 +182,16 @@ export const QuestionItem = ({  ActiveQuestion, provided , childPlacement ,setAc
         'QuestionType' : questionsData.question.question_type
       })
       // console.log(document.querySelector('.search_box_container').getBoundingClientRect().top - 8.8);
-      QuestionTopDis = document.querySelector('.search_box_container').getBoundingClientRect().top - 8.8
-      // console.log(document.querySelector('.search_box_container').getBoundingClientRect().top - 8.8 + 'px',document.querySelector('.question_preview'))
-      // document.querySelector('.question_preview').style.top = document.querySelector('.search_box_container').getBoundingClientRect().top - 8.8 + 'px'
+      
+      setQuestionTopDis(document.querySelector('.search_box_container').getBoundingClientRect().top - 8.8)
+
       document.querySelector(`.QuestionItem${questionsData.question.id}`)?.scrollIntoView({ behavior : 'smooth' });
     }
     
     else
       setActiveQuestion(null)
   }
-  const ChangeQuestionTypeHandler = (_,ChangedType) => {
+  const ChangeQuestionTypeHandler = (_,ChangedType,e) => {
     ChangedType ? QuestionDispatcher(ChangeQuestionType({ 
       newType : ChangedType.value ,
        QuestionID : questionsData.question.id , 
@@ -212,23 +220,20 @@ export const QuestionItem = ({  ActiveQuestion, provided , childPlacement ,setAc
     let QDataInstance = JSON.parse(JSON.stringify(questionsData))
     QDataInstance.question.media = questionsData.question.media;
 
-    // if(!questionsData?.question.media?.length)
-    // {
-    //   console.log(questionsData?.question)
-    //   QDataInstance.question.media = '';
-    // }
-    if(questionsData.question?.options?.length == 2 && questionsData.question?.options?.find(item => !item.text))
+    if(questionsData.question?.options?.find(item => !item.text))
         {
-
+          let ErrorData = [];
+          questionsData.question?.options?.forEach(item => {
+            if(!item.text)
+              ErrorData.push({ optionID : item.id })
+          })
           QuestionDispatcher(ChangeErrorData({ actionErrorObject : {
-              data : {
-                options : 'برای ذخیره‌ سوال حداقل ۲ گزینه ایجاد کنید.',
-              }
+              data : ErrorData
              },
           questionID : questionsData?.question?.id
          }))
          SavedMessage.error({
-          content : 'برای ذخیره سوال حداقل 2 گزینه ایجاد کنید',
+          content : 'متن گزینه نمیتواند خالی باشد',
           duration : 4,
           style : {
             fontFamily : 'IRANSans',
@@ -240,7 +245,7 @@ export const QuestionItem = ({  ActiveQuestion, provided , childPlacement ,setAc
         }) 
           SetSaveButtonLoadingState(false);
           return;
-        }
+      }
     if(typeof questionsData?.question?.media == 'string' && questionsData?.question?.media?.length)
     {
       delete QDataInstance.question['media'];
@@ -293,22 +298,23 @@ export const QuestionItem = ({  ActiveQuestion, provided , childPlacement ,setAc
       if(questionsData.question.url_prefix)
       {
         SetSaveButtonLoadingState(true);
-        if(questionsData.question?.options?.length == 2 && 
-           (questionsData.question?.question_type == 'optional' ||
+        if((questionsData.question?.question_type == 'optional' ||
          questionsData.question?.question_type == 'drop_down' || 
         questionsData.question?.question_type == 'sort') &&
           questionsData.question?.options?.find(item => !item.text))
         {
-          
+          let ErrorData = [];
+          questionsData.question?.options?.forEach(item => {
+            if(!item.text)
+              ErrorData.push({ optionID : item.id })
+          })
           QuestionDispatcher(ChangeErrorData({ actionErrorObject : {
-              data : {
-                options : 'برای ذخیره‌ سوال حداقل ۲ گزینه ایجاد کنید.',
-              }
-             },
-          questionID : questionsData?.question?.id
-         }))
+            data : ErrorData
+           },
+        questionID : questionsData?.question?.id
+       }))
          SavedMessage.error({
-          content : 'برای ذخیره سوال حداقل 2 گزینه ایجاد کنید',
+          content : 'متن گزینه نمیتواند خالی باشد',
           duration : 4,
           style : {
             fontFamily : 'IRANSans',
@@ -403,26 +409,26 @@ export const QuestionItem = ({  ActiveQuestion, provided , childPlacement ,setAc
       // same properties as onEnd
       
     },
-    
     onEnd: async function (/**Event*/evt) {
       var itemEl = evt.item;  // dragged HTMLElement
       if(evt.to.getAttribute('class') == 'main_container')
       {
-
         try {
             let copiedChildQuestion = JSON.parse(JSON.stringify(childQuestion));
             let questionID = childQuestion[evt.oldDraggableIndex]?.question?.id;
             let questionParentID = childQuestion[evt.oldDraggableIndex]?.question?.group;
             let AllQuestions = JSON.parse(JSON.stringify(QuestionsArray));
+
             QuestionDispatcher(ChildQuestionRemover({ 
               group : childQuestion[evt.oldDraggableIndex]?.question?.group ,
               questionIndex : evt.oldDraggableIndex , 
               questionNewIndex : evt.newDraggableIndex
              }))
              axiosInstance.defaults.headers['Content-Type'] = 'application/json';
-           await axiosInstance.patch(`/question-api/questionnaires/${UUID}/${childQuestion[evt.oldDraggableIndex]?.question?.url_prefix}/
-           ${childQuestion[evt.oldDraggableIndex]?.question?.id}`
-           ,{ group : null })
+            if(!childQuestion[evt.oldDraggableIndex]?.question?.newFace)
+              await axiosInstance.patch(`/question-api/questionnaires/${UUID}/${childQuestion[evt.oldDraggableIndex]?.question?.url_prefix}/
+              ${childQuestion[evt.oldDraggableIndex]?.question?.id}`
+              ,{ group : null })
            AllQuestions.splice(evt.newDraggableIndex , 0, copiedChildQuestion[evt.oldDraggableIndex])
 
            let reOrderedArray =  AllQuestions.map((item,index) => { 
@@ -464,9 +470,9 @@ export const QuestionItem = ({  ActiveQuestion, provided , childPlacement ,setAc
           evt.to.getAttribute('id').split('group-container-')[1])
         {
         
-      
-        const newArray = [...childQuestion];
-        [newArray[evt.oldDraggableIndex], newArray[evt.newDraggableIndex]] = [newArray[evt.newDraggableIndex], newArray[evt.oldDraggableIndex]];
+        let newArray = [...childQuestion];
+        newArray = moveItem(newArray,evt.oldDraggableIndex,evt.newDraggableIndex)
+        // [newArray[evt.oldDraggableIndex], newArray[evt.newDraggableIndex]] = [newArray[evt.newDraggableIndex], newArray[evt.oldDraggableIndex]];
 
         QuestionDispatcher(ChildQuestionReplace({
            newChildrenArray : newArray ,  
@@ -495,7 +501,9 @@ export const QuestionItem = ({  ActiveQuestion, provided , childPlacement ,setAc
           let newGroup = evt.to.getAttribute('id').split('group-container-')[1];
           let oldGroup = evt.from.getAttribute('id').split('group-container-')[1]
           let questionID = evt.clone.firstElementChild.className.split('QuestionItem')[1];
-         
+          let newGroupQuestion = JSON.parse(JSON.stringify(QuestionsArray.find(item => item.question.id == newGroup)));
+          let SwitchedQuestion =  JSON.parse(JSON.stringify(QuestionsArray.find(item => item.question.id == oldGroup).
+          question.child_questions.find(item => item.question.id == questionID)));
           QuestionDispatcher(SwitchIntoGroups({ 
             newGroup : newGroup ,
             oldGroup : oldGroup ,
@@ -503,13 +511,33 @@ export const QuestionItem = ({  ActiveQuestion, provided , childPlacement ,setAc
             oldIndex : evt.oldDraggableIndex ,
             newIndex : evt.newDraggableIndex 
           }))
+          let NewGroupOrder = [];
+          newGroupQuestion.question.child_questions.splice(evt.newDraggableIndex , 0 , SwitchedQuestion)
+          // moveItem(newGroupQuestion.question.child_questions)
+
+          NewGroupOrder.push({
+              question_id : newGroupQuestion.question.id ,
+             new_placement : newGroupQuestion.question.placement
+            })
+          newGroupQuestion.question.child_questions.forEach(ChildItem => {
+            if(!ChildItem.question.newFace)
+              NewGroupOrder.push({
+                question_id : ChildItem.question.id ,
+                new_placement : ChildItem.question.placement
+              })
+          })
+          await axiosInstance.post(`/question-api/questionnaires/${UUID}/change-questions-placements/`,{
+            'placements' : NewGroupOrder
+          })
           // console.log(QuestionsArray.find(item => item.question.id == newGroup))
           // QuestionsArray.find(item => item.question.id == newGroup)
+          if(!copiedChild[evt.oldDraggableIndex]?.question?.newFace)
           await axiosInstance.patch(`/question-api/questionnaires/${UUID}/${copiedChild[evt.oldDraggableIndex]?.question?.url_prefix}/
           ${childQuestion[evt.oldDraggableIndex]?.question?.id}`
           ,{ group : newGroup })
           // SwitchIntoGroups
           // console.log(evt.clone.firstElementChild.className.split('QuestionItem')[1])
+          // console.log(QuestionsArray.find(item => item.question.id == newGroup))
         }
       }
       else 
@@ -518,7 +546,6 @@ export const QuestionItem = ({  ActiveQuestion, provided , childPlacement ,setAc
         let oldGroup = evt.from.getAttribute('id').split('group-container-')[1]
         let newGroup = evt.to?.parentElement?.parentElement?.classList[2].split('QuestionItem')[1];
         let questionID = evt.clone.firstElementChild.className.split('QuestionItem')[1];
-
         QuestionDispatcher(SwitchIntoGroups({ 
           newGroup : newGroup ,
           oldGroup : oldGroup ,
@@ -526,9 +553,11 @@ export const QuestionItem = ({  ActiveQuestion, provided , childPlacement ,setAc
           oldIndex : evt.oldDraggableIndex ,
           newIndex : evt.newDraggableIndex 
         }))
-        await axiosInstance.patch(`/question-api/questionnaires/${UUID}/${copiedChild[evt.oldDraggableIndex]?.question?.url_prefix}/
-          ${childQuestion[evt.oldDraggableIndex]?.question?.id}`
-          ,{ group : newGroup })
+        if(!copiedChild[evt.oldDraggableIndex]?.question?.newFace)
+          await axiosInstance.patch(`/question-api/questionnaires/${UUID}/${copiedChild[evt.oldDraggableIndex]?.question?.url_prefix}/
+            ${childQuestion[evt.oldDraggableIndex]?.question?.id}`
+            ,{ group : newGroup })
+       
       }
     },
     onMove : event => {
@@ -568,6 +597,14 @@ export const QuestionItem = ({  ActiveQuestion, provided , childPlacement ,setAc
       return true;
     }
   };
+  const RegularToggleHandler = (Event , TName) => {
+    QuestionDispatcher(ChangeToggleHandler({
+         QuestionID : questionsData.question.id , 
+         ToggleName : TName ,
+         ToggleValue : Event ,
+         group : questionsData.question.group
+        }))
+}
   return (
     (questionsData) ? 
     
@@ -575,9 +612,7 @@ export const QuestionItem = ({  ActiveQuestion, provided , childPlacement ,setAc
     isopen={QuestionRootOpenState ? 'true' : null}
     className={`QuestionItem${questionsData.question.id}`}>
       {contextHolder}
-      <div className='design_container'
-      //  style={{ width : questionsData.question.group ? '100%' : '50%' }}
-      > 
+      <div className='design_container'> 
     <QuestionDesignItem className='question_design_item' saved={!QuestionChanged ? 'active' : null} 
     style={{ marginTop : questionsData.question.question_type == 'welcome_page' ? 0 : '10px' }}
      errorocurr={OcurredError ? OcurredError.find(item => item.qid == questionsData.question.id)?.err_object?.title ? 'active' : null : null}
@@ -674,9 +709,13 @@ export const QuestionItem = ({  ActiveQuestion, provided , childPlacement ,setAc
                         }}
                         style={{ width: 120 , border : 'none' , color : 'var(--primary-color)'}}
                         dropdownStyle={{ width : '350px !important' }}
-                        options={Question_types}
+                        options={questionsData.question.group ? Question_types.filter(item => item?.value != 'group') : Question_types}
                         onChange={ChangeQuestionTypeHandler}
-                        dropdownRender={(menu) => <div id='select-type-container'>{menu}</div>}
+                        dropdownRender={(menu) => 
+                        <div id='select-type-container' className={questionsData.question.group ? 'group_disable' : ''}>
+                          {menu}
+                        </div>
+                      }
                       />
                     </div>
                 </div>
@@ -688,7 +727,7 @@ export const QuestionItem = ({  ActiveQuestion, provided , childPlacement ,setAc
               { SettingSectionProvider(questionsData.question.question_type,questionsData.question) }
             </QuestionItemWriteContainer>
             : <PreviewMobileSizeComponent>
-              <QuestionComponent mobilepreview={true} QuestionInfo={questionsData.question} UUID={UUID} />
+              <QuestionComponent mobilepreview={true} Questionnaire={Questionnaire} QuestionInfo={questionsData.question} UUID={UUID} />
               </PreviewMobileSizeComponent>}
             { QuestionRootOpenState ? <QuestionItemFooter savebuttonactive={!QuestionChanged ? 'active' : null} >
               <Button type='primary'
@@ -718,6 +757,7 @@ export const QuestionItem = ({  ActiveQuestion, provided , childPlacement ,setAc
                                 question={item}
                                 parentPlacement={questionsData.question.placement}
                                 childPlacement={index + 1}
+                                Questionnaire={Questionnaire}
                                 // provided={provided}
                                 QuestionsList={QuestionsList}
                                 ActiveQuestion={ActiveQuestion}
@@ -737,7 +777,8 @@ export const QuestionItem = ({  ActiveQuestion, provided , childPlacement ,setAc
            </div>
        { !GroupID ?  <PreviewContainer QuestionTopDis={QuestionTopDis}> 
               {QuestionRootOpenState ? <QuestionComponent QuestionInfo={questionsData.question} 
-              ChildQuestion={questionsData.question.group ? 'true' : null} UUID={UUID}/>
+              ChildQuestion={questionsData.question.group ? 'true' : null} Questionnaire={Questionnaire}
+              UUID={UUID}/>
                : ''}
         </PreviewContainer>: ''}
     </QuestionItemRow> : ''

@@ -138,7 +138,17 @@ const SideBar = ({ isopen , SetSideBar , folders , SelectedFolder  , ReadyToCrea
                 }} >
                 <p>{item.questionnaires ?  digitsEnToFa(item.questionnaires.length) : digitsEnToFa(index + 1)}</p>
                 <p className='folder_name'>{item.name}</p>
-            </SideBarFolderItem>) : <Skeleton style={{ width : '90%' , margin : '0 auto' }}/>
+            </SideBarFolderItem>) : <>
+            <SideBarFolderItem style={{ justifyContent : 'flex-end' }}>
+                    <Skeleton.Input active style={{ width : '90%' , margin : '0 auto' }}/>
+                 </SideBarFolderItem>
+                 <SideBarFolderItem style={{ justifyContent : 'flex-end' }}>
+                    <Skeleton.Input active style={{ width : '90%' , margin : '0 auto' }}/>
+                 </SideBarFolderItem>
+                 <SideBarFolderItem style={{ justifyContent : 'flex-end' }}>
+                    <Skeleton.Input active style={{ width : '90%' , margin : '0 auto' }}/>
+                 </SideBarFolderItem>
+            </> 
             }
         </div> 
     </Drawer>

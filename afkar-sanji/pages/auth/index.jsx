@@ -30,8 +30,11 @@ const AuthMainPage = () => {
        });
     if(number_phone_res.status == 201)
     {
-      setItem('phoneNumber',Auth.PhoneNumber)
-      typeof window !== 'undefined' ? router.push('auth/otpSms/') : ''
+      const returnUrl = router.query.returnUrl || '/';
+      typeof window !== 'undefined' ? router.push({
+        pathname: 'auth/otpSms',
+        query: { returnUrl },
+      }) : ''
     }
     else 
     {

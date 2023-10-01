@@ -23,6 +23,8 @@ import { TimePickerContainer } from '@/styles/questionnairePanel/QuestionnaireSe
 import persian_fa from 'react-date-object/locales/persian_fa';
 import persian from 'react-date-object/calendars/persian';
 import DatePanel from 'react-multi-date-picker/plugins/date_panel';
+import { calculateTextWidth } from '@/utilities/RenameFunctions';
+import { QuestionTypeIcon } from '@/utilities/QuestionTypes';
 
 const SkeletonTable = ({ columns, rowCount }) => {
     return (
@@ -103,203 +105,267 @@ const ExcelExportHandler = (Data,QuestionnaireQuery) => {
     })
     .saveAs(`${QuestionnaireQuery.data?.data?.name}ExcelOutput.xlsx`);
 }
-export const ResultBody = ({ ResultQuery , QuestionnaireQuery  }) => {
+export const ResultBody = ({ ResultQuery , setStartDate , setSearchValue , queryStatus
+  , QuestionnaireQuery , setEndDate , SetCurrentPage }) => {
   const [ resultMessage , contextHolder] = message.useMessage();
   const [ deleteRowState , setDeleteRowState ] = useState(false);
   const [ selectedRows , setSelectedRows ] = useState([]);
   const [ rowDeleted , setRowDeleted ] = useState(false);
+  // const [ SearchValue , setSearchValue ] = useState(null);
+  const [ ReplaceDataWithQuery , setReplaceDataWithQuery ] = useState(true);
   const tableRef = useRef(null);
+  const [ LoadingTable , setLoadingTable ] = useState(true);
   const ColumnsRef = useRef(null);
   // let ResultData = ResultQuery.data?.data;
   let [ ResultData , setResultData ] = useState(null)
+  let searchValue = ''
+  let delayTimer;
+
   const regex = /(<([^>]+)>)/gi;
   // let selectedRows = [];
-  useEffect(() => {
+ 
+  // let columns = useRef([]);
+  let [ TableColumns , setTableColumns ] = useState(null);
+  let [ TableData , setTableData ] = useState(null);
 
-  },[])
-  let columns = [];
-  let rows = [];
   useEffect(() => {
+    if(ResultQuery.isFetching || QuestionnaireQuery.isFetching)
+      setLoadingTable(true)
+  
+  else if(ResultQuery.isFetched && QuestionnaireQuery.isFetched)
+    setLoadingTable(false)
+      setResultData(ResultQuery?.data?.data.results)
 
-    setResultData(ResultQuery?.data?.data.results)
-    setRowDeleted(false)
-    if(ColumnsRef.current?.length && !columns.length)
-        columns = ColumnsRef.current;
+      setRowDeleted(false)
+      
   },[ResultQuery , rowDeleted])
-  // console.log(ResultData)
-  if(ResultData)
-  {
-    
-    let QuestionsArray = QuestionnaireQuery?.data?.data?.questions.filter(item => item.question != null)
-
-    if(QuestionsArray)
-      columns = QuestionsArray?.map(item => ({
-        title : <Tooltip 
-          title={<div className='tooltip_container' onClick={() => navigator.clipboard.writeText(item.question?.title)}>
-            {item.question?.title} <Icon name='WDuplicate' />
-            </div>}>
-                <p>{item.question?.title ? item.question?.title?.replace(regex,"") : ' '}</p>
-            </Tooltip>,
-        render : (Answer) => (Answer && typeof Answer == 'string' && Answer.includes('/media/'))
-          ? 
-          <Upload isImageUrl={() => true} disabled
-          iconRender={() => <Icon name='File' />}
-            defaultFileList={[{
-            name: Answer.split('/')[6],
-            status: 'done',
-            url: 'https://mah-api.ariomotion.com' + Answer,
-            thumbUrl : 'https://mah-api.ariomotion.com' + Answer
-          }]} />: 
-          <div ><p></p></div>,
-          dataIndex : item.question?.title  , 
-          key : item.question?.title ,
-          align : 'center' ,
-          children : item?.question?.question_type == 'group' ? 
-          item?.question.child_questions.map(ChildQuestion => ({
-            title : <Tooltip title={<div className='tooltip_container' 
-            onClick={() => navigator.clipboard.writeText(ChildQuestion.question?.title)}>
-            {ChildQuestion.question?.title ? ChildQuestion.question?.title.replace(regex,"") : ' '} <Icon name='WDuplicate' />
-            </div>}>
-                <p>{ChildQuestion.question?.title != 'null' ? ChildQuestion.question?.title?.replace(regex,"") : ' '}</p>
-            </Tooltip> ,
+ 
+  useEffect(() => {
+    if(ResultQuery.isFetching || QuestionnaireQuery.isFetching)
+      setLoadingTable(true)
+  
+  else if(ResultQuery.isFetched && QuestionnaireQuery.isFetched)
+    setLoadingTable(false)
+    // console.log(ResultData)
+    if(ResultData && ResultData.length)
+    {
+      let columns = []
+      let rows = [];
+      let QuestionsArray = QuestionnaireQuery?.data?.data?.questions.filter(item => item.question != null)
+      if(QuestionsArray)
+        columns = (QuestionsArray?.map(item => ({
+          title : <Tooltip 
+            title={<div className='tooltip_container' onClick={() => navigator.clipboard.writeText(item.question?.title)}>
+              {item.question?.title} <Icon name='WDuplicate' />
+              </div>}>
+                 <div className='question_title_cell'>
+                    <p>{item.question?.title ? item.question?.title?.replace(regex,"") : ' '}</p>
+                    { QuestionTypeIcon(item.question?.question_type) }
+                 </div> 
+              </Tooltip>,
+          render : (Answer) => {
+            if(!Answer)
+              return
+           else if((typeof Answer == 'string' && Answer.includes('/media/')))
+              return <Upload isImageUrl={() => true} disabled
+              iconRender={() => <Icon name='File' />}
+                defaultFileList={[{
+                name: Answer.split('/')[6],
+                status: 'done',
+                url: 'https://mah-api.ariomotion.com' + Answer,
+                thumbUrl : 'https://mah-api.ariomotion.com' + Answer
+              }]} />
+           else if(typeof Answer == 'string' || typeof Answer == 'number')
+              return <div>
+                  <p>{Answer}</p>
+                </div>
+          }
+          // (Answer) => (Answer && typeof Answer == 'string' && Answer.includes('/media/'))
+            // ? 
+            // <Upload isImageUrl={() => true} disabled
+            // iconRender={() => <Icon name='File' />}
+            //   defaultFileList={[{
+            //   name: Answer.split('/')[6],
+            //   status: 'done',
+            //   url: 'https://mah-api.ariomotion.com' + Answer,
+            //   thumbUrl : 'https://mah-api.ariomotion.com' + Answer
+            // }]} />: 
+            // typeof Answer == 'string' || typeof Answer == 'number' &&
+            ,
+             width : calculateTextWidth(item.question?.title,'14px IRANSans') + 45, 
+            dataIndex : item.question?.title, 
+            // key : item.question?.id ,
             align : 'center' ,
-            key : ChildQuestion?.question?.id,
-            dataIndex : ChildQuestion?.question?.title,
-            children : ChildQuestion?.question?.options?.map(option => ({
+            ellipsis: true,
+            children : item?.question?.question_type == 'group' ? 
+            item?.question.child_questions.map(ChildQuestion => ({
+              title : <Tooltip 
+              title={<div className='tooltip_container' onClick={() => navigator.clipboard.writeText(item.question?.title)}>
+                {item.question?.title} <Icon name='WDuplicate' />
+                </div>}>
+                   <div className='question_title_cell'>
+                      <p>{item.question?.title ? item.question?.title?.replace(regex,"") : ' '}</p>
+                      { QuestionTypeIcon(item.question?.question_type) }
+                   </div> 
+                </Tooltip> ,
+              align : 'center' ,
+              ellipsis: true,
+              key : ChildQuestion?.question?.id,
+              dataIndex : ChildQuestion?.question?.title,
+              width :  calculateTextWidth(ChildQuestion?.question?.title,'14px IRANSans'),
+              children : ChildQuestion?.question?.options?.map(option => ({
+                title : <Tooltip title={<div className='tooltip_container' 
+                onClick={() => navigator.clipboard.writeText(option?.text)}>
+                {option?.text ? option?.text?.replace(regex,"") : ' '} <Icon name='WDuplicate' />
+                </div>}>
+                    <p>{option?.text != 'null' ? option?.text?.replace(regex,"") : ' '}</p>
+                </Tooltip> ,
+                align : 'center' ,
+                // key : option?.id,
+                ellipsis: true,
+                width : option?.text ? calculateTextWidth(option?.text,'14px IRANSans') : 40,
+                dataIndex : option?.text
+              }))
+            }))
+            : item?.question?.options?.map(option => ({
               title : <Tooltip title={<div className='tooltip_container' 
               onClick={() => navigator.clipboard.writeText(option?.text)}>
-              {option?.text ? option?.text?.replace(regex,"") : ' '} <Icon name='WDuplicate' />
+              {option?.text ? option.text?.replace(regex,"") : ' '} <Icon name='WDuplicate' />
               </div>}>
                   <p>{option?.text != 'null' ? option?.text?.replace(regex,"") : ' '}</p>
               </Tooltip> ,
               align : 'center' ,
-              key : option?.id,
-              dataIndex : option?.text
+              // key : option.text?.id,
+              width : option?.text ? calculateTextWidth(option?.text,'14px IRANSans') + 40 : 50,
+              ellipsis: true,
+              dataIndex : option.text
             }))
-          }))
-          : item?.question?.options?.map(option => ({
-            title : <Tooltip title={<div className='tooltip_container' 
-            onClick={() => navigator.clipboard.writeText(option?.text)}>
-            {option?.text ? option.text?.replace(regex,"") : ' '} <Icon name='WDuplicate' />
-            </div>}>
-                <p>{option?.text != 'null' ? option?.text?.replace(regex,"") : ' '}</p>
-            </Tooltip> ,
-            align : 'center' ,
-            key : option.text?.id,
-            dataIndex : option.text
-          }))
-      }))
-    // console.log()
-    ResultData?.forEach((AnswerSet,index) => {
+        })))
+      // console.log()
+      ResultData?.forEach((AnswerSet,index) => {
 
-    // console.log(AnswerSet.answers)
-    // if(!AnswerSet.answers.length)
-    // {
-    //   rows.push({});
-    // }
-     if(AnswerSet.answers && AnswerSet.answers.length)
-    {
-      rows.push({});
-
-       AnswerSet.answers.forEach((item) => {
-        if(!item.answer)  
-          return
-          // console.log(rows,index)
-          if(typeof item.answer != 'object')
-          {
-             rows[rows.length - 1][item.question] = item.answer;
-            // console.log(item.question,item.answer)
-          }
-           
-          else
-          
-          {
-            if(item.answer.options)
+       if(AnswerSet.answers && AnswerSet.answers.length)
+      {
+        rows.push({});
+  
+         AnswerSet.answers.forEach((item) => {
+          if(!item.answer)  
+            return
+            // console.log(rows,index)
+            if(typeof item.answer != 'object')
             {
-              item.answer.options.forEach(optionItem => {
-                optionItem?.text == '<span>سایر</span>' ? 
-                rows[rows.length - 1][optionItem.text] = item.answer.other_text
-                :
-                rows[rows.length - 1][optionItem.text] = optionItem.text != 'null' ? optionItem.text?.replace(regex,"") : ' ';
-              })
+               rows[rows.length - 1][item.question] = item.answer;
+              // console.log(item.question,item.answer)
             }
-              else if (item.question_type == 'drop_down')
+             
+            else
+            
+            {
+              if(item.answer.options)
               {
-                item.answer.forEach(optionItem => {
-                  rows[rows.length - 1][optionItem.text] = optionItem.text != 'null' ? optionItem.text : ' ';
+                item.answer.options.forEach(optionItem => {
+                  optionItem?.text == '<span>سایر</span>' ? 
+                  rows[rows.length - 1][optionItem.text] = item.answer.other_text
+                  :
+                  rows[rows.length - 1][optionItem.text] = optionItem.text != 'null' ? optionItem.text?.replace(regex,"") : ' ';
                 })
               }
-              else if(item.question_type == 'sort')
+                else if (item.question_type == 'drop_down')
+                {
                   item.answer.forEach(optionItem => {
-                    rows[rows.length - 1][optionItem.text] = item.answer?.findIndex(item => item.text == optionItem.text) + 1;
+                    rows[rows.length - 1][optionItem.text] = optionItem.text != 'null' ? optionItem.text : ' ';
                   })
-          }
-           
-            rows[rows.length - 1]['key'] = item.id;
-            rows[rows.length - 1]['ردیف'] = rows.length ;
-            
-      })
-      rows[rows.length - 1]['id'] = AnswerSet.id;
-    }
-    else if(!AnswerSet.answers.length)
-    { 
-      rows.push({});
-      QuestionnaireQuery.data?.data?.questions.forEach(item => {
-        if(item.question)
-        {
-          rows[rows.length - 1][item?.question?.title] = '';
-          rows[rows.length - 1]['id'] = AnswerSet.id;
-          rows[rows.length - 1]['key'] = AnswerSet.id;
-          rows[rows.length - 1]['ردیف'] = rows.length
-          // console.log(rows[rows.length - 1][item?.question?.title])
-        if(item?.question?.options)
-        {
-          item.question.options.forEach(optionItem => {
-            rows[rows.length - 1][optionItem.text] = ''
-          })
-        }
+                }
+                else if(item.question_type == 'sort')
+                    item.answer.forEach(optionItem => {
+                      rows[rows.length - 1][optionItem.text] = item.answer?.findIndex(item => item.text == optionItem.text) + 1;
+                    })
+            }
+             
+              rows[rows.length - 1]['key'] = item.id;
+              rows[rows.length - 1]['ردیف'] = rows.length ;
+              
+        })
+        rows[rows.length - 1]['id'] = AnswerSet.id;
       }
-      })
-  
-    }
-  })
-  }
+      else if(!AnswerSet.answers.length)
+      { 
+        rows.push({});
+        QuestionnaireQuery.data?.data?.questions.forEach(item => {
+          if(item.question)
+          {
+            rows[rows.length - 1][item?.question?.title] = '';
+            rows[rows.length - 1]['id'] = AnswerSet.id;
+            rows[rows.length - 1]['key'] = AnswerSet.id;
+            rows[rows.length - 1]['ردیف'] = rows.length
+            // console.log(rows[rows.length - 1][item?.question?.title])
+          if(item?.question?.options)
+          {
+            item.question.options.forEach(optionItem => {
+              rows[rows.length - 1][optionItem.text] = ''
+            })
+          }
+        }
+        })
+      }
+    })
 
-  useEffect(() => {
-    if(columns?.length)
+    setTableColumns(columns);
+    setTableData(rows);
+    }
+    else 
     {
-      ColumnsRef.current = columns;
+      setTableColumns([]);
+      setTableData([]);
     }
-  },[columns])
+  },[ResultData , QuestionnaireQuery])
+  
+  // console.log(ResultData)
+  // useEffect(() => {
+  //   if(columns?.length)
+  //   {
+  //     ColumnsRef.current = columns;
+  //   }
+  // },[columns])
 
-  console.log(rows)
+  // console.log(columns,rows)
   // console.log(rows)
   // console.log(document.querySelector("thead.ant-table-thead tr"),
   // document.querySelector(".ant-table-container .ant-table-body"))
 const ResultSearchHandler = async (e) => {
+  // setSearchValue(e.target.value)
+  // searchValue = e.target.value
+    // console.log(e.target.value)
+    clearTimeout(delayTimer);
+    delayTimer = setTimeout(function() {
+        // Do the ajax stuff
+        console.log(e.target.value)
+        if(!e.target.value?.length)
+          setSearchValue(null)
+        else
+          setSearchValue(e.target.value)
+    }, 1000);
   // console.log(e.target.value?.length)
-  if(!e.target.value?.length)
-  {
-    setResultData(ResultQuery.data?.data?.results)
-    return
-  }    
-  try 
-  {
-   let { data } = await axiosInstance.get(`/result-api/${QuestionnaireQuery.data?.data?.uuid}/answer-sets/search/?search=${e.target.value}`);
-   setResultData(data?.results);
-  }
-  catch(err)
-  {
-    resultMessage.error({
-      content : 'یافت نشد',
-      duration : 6,
-      style : {
-        fontFamily : 'IRANSans',
-        direction : 'rtl'
-      }
-    })
-  }
+    
+  // try 
+  // {
+    
+  // //  let { data } = await axiosInstance.get(`/result-api/${QuestionnaireQuery.data?.data?.uuid}/answer-sets/search/?search=${e.target.value}`);
+  // //  setResultData(data?.results);
+  // }
+  // catch(err)
+  // {
+  //   resultMessage.error({
+  //     content : 'یافت نشد',
+  //     duration : 6,
+  //     style : {
+  //       fontFamily : 'IRANSans',
+  //       direction : 'rtl'
+  //     }
+  //   })
+  // }
 } 
+
   useEffect(() => {
     if(tableRef.current)
       ScrollByDrag(); 
@@ -317,8 +383,6 @@ const ResultSearchHandler = async (e) => {
          }) 
          setDeleteRowState(false);
       }
-        
-   
     }
     catch(err)
     {
@@ -336,19 +400,23 @@ const ResultSearchHandler = async (e) => {
     }
   
   }
-
   const DateFilterHandler = async (_,filterDate) => {
-    console.log(filterDate.validatedValue)
+    // console.log(filterDate.validatedValue)
     if(!filterDate.validatedValue?.length)
     {
-      setResultData(ResultQuery?.data?.data.results)
+      setStartDate('');
+      setEndDate('')
+      // setResultData(ResultQuery?.data?.data.results)
       return
     }
     try {
-        let response =  await axiosInstance.get(`/result-api/${QuestionnaireQuery.data?.data?.uuid}/answer-sets/?answered_at&start_date=
-        ${convertDate(digitsFaToEn(filterDate.validatedValue[0]),'gregorian')}
-        &end_date=${filterDate.validatedValue[1] ? convertDate(digitsFaToEn(filterDate.validatedValue[1]),'gregorian') : ''}`)
-        setResultData(response?.data?.results)
+      // console.log('check')
+      setStartDate(convertDate(digitsFaToEn(filterDate.validatedValue[0]),'gregorian'));
+      setEndDate(filterDate.validatedValue[1] ? convertDate(digitsFaToEn(filterDate.validatedValue[1]),'gregorian') : '')
+        // let response =  await axiosInstance.get(`/result-api/${QuestionnaireQuery.data?.data?.uuid}/answer-sets/?answered_at&start_date=
+        // ${convertDate(digitsFaToEn(filterDate.validatedValue[0]),'gregorian')}
+        // &end_date=${filterDate.validatedValue[1] ? convertDate(digitsFaToEn(filterDate.validatedValue[1]),'gregorian') : ''}`)
+        // setResultData(response?.data?.results)
     }
    catch(err)
    {
@@ -358,16 +426,19 @@ const ResultSearchHandler = async (e) => {
   const TablePaginationHandler = async (Page) => {
     try 
     {
-     let { data } = await axiosInstance.get(`result-api/${QuestionnaireQuery.data?.data?.uuid}/answer-sets/?answered_at=&end_date=&page=${Page}&start_date=`)
-     setResultData(data?.results)
+      // console.log(Page)
+      SetCurrentPage(Page)
+    //  let { data } = await axiosInstance.get(`result-api/${QuestionnaireQuery.data?.data?.uuid}/answer-sets/?answered_at=&end_date=&page=${Page}&start_date=`)
+    //  setResultData(data?.results)
     }
     catch(err)
     {
 
     }
   }
+
   return (
-    ResultQuery.isLoading ? 
+    (ResultQuery.isLoading && queryStatus != 'Search') ? 
     <ResultTableContainer loading='active'>
         <ResultBodyContainer>
         <ResultBodyTopPart style={{ flexDirection : 'column' }}>
@@ -444,11 +515,12 @@ const ResultSearchHandler = async (e) => {
             </div>
         </ResultBodyTopPart>
         <ResultTableContainer>
-           { (ResultData?.length && rows?.length) ?  <Table 
-              columns={columns}
-              dataSource={rows}       
+           { (TableColumns?.length && TableData?.length) ?  <Table 
+              columns={TableColumns}
+              dataSource={TableData}       
               ref={tableRef}
               sticky
+              loading={LoadingTable}
               bordered
               locale={{
                 emptyText : <p className='no_result_message'>نتیجه‌ای یافت نشد</p>
@@ -456,7 +528,7 @@ const ResultSearchHandler = async (e) => {
               direction='ltr'
               pagination={{
                 total : ResultQuery?.data?.data.count,
-                pageSize : 6,
+                pageSize : 7,
                 defaultPageSize : 4,
                 itemRender : (page,ItemName,ItemNode) => {
                   if(ItemName != 'page')
@@ -502,7 +574,10 @@ const ResultSearchHandler = async (e) => {
                     title={<div className='tooltip_container' onClick={() => navigator.clipboard.writeText(item.question?.title)}>
                       {item.question?.title} <Icon name='WDuplicate' />
                       </div>}>
-                          <p>{item.question?.title ? item.question?.title?.replace(regex,"") : ' '}</p>
+                          <div className='question_title_cell'>
+                            <p>{item.question?.title ? item.question?.title?.replace(regex,"") : ' '}</p>
+                            { QuestionTypeIcon(item.question?.question_type) }
+                        </div>
                       </Tooltip>,
                   render : (Answer) => (Answer && typeof Answer == 'string' && Answer.includes('/media/'))
                     ? 
@@ -533,6 +608,7 @@ const ResultSearchHandler = async (e) => {
                 locale={{
                   emptyText : <p className='no_result_message'>نتیجه‌ای یافت نشد</p>
                 }}
+                loading={LoadingTable}
                 />
                 </div>
             </EmptyResultContainer> 
@@ -603,8 +679,5 @@ const ScrollByDrag = () => {
       const yWalk = (y - startY) * 3;
       body.scrollLeft = scrollLeft - walk;
       body.scrollTop = scrollTop - yWalk;
-  
     });
-  // })
-    
 }

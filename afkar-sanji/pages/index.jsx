@@ -23,23 +23,31 @@ import { useLocalStorage } from '@/utilities/useLocalStorage';
 import { handleInputWidth } from '@/utilities/RenameFunctions';
 import { useQuery } from '@tanstack/react-query';
 
-export default function Home() {
+export default function Home({ cookies }) {
   const router = useRouter();
-  const { getItem , removeItem } = useLocalStorage();
+  const { getItem , removeItem , setItem} = useLocalStorage();
   const [ MessageApi , MessageContext ] = message.useMessage();
   const [ SelectedFolder , SelectFolder ] = useState(getItem('SelectedFolder') || 0);
   const [ AddQuestionnaireState , setAddQuestionnaireState ] = useState(false);
   const [ SideBarOpen , setOpen ] = useState(false);
   const [ addPopOver , setAddPopover ] = useState(false);
   const [ FolderPopover , setFolderPopover ] = useState(false);
+  // const [ accessToken, setAccessToken ] = useCookie('access', null)
   const [ readyToCreate , setReadyToCreate ] = useState(false);
   const CornerButton = useRef(null);
   const FolderNameInput = useRef(null);
   const [ ChangeFolderName , SetChangeFolderNameState ] = useState(false);
   const [ FolderName , SetFolderName ] = useState(null);
-  const { data , isLoading, error , refetch } = useQuery(['FolderFetch'],async () => await axiosInstance.get('/user-api/folders/'))
+  axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + cookies?.access_token;
+  const { data , isLoading, error , refetch } = useQuery(['FolderFetch'],
+  async () => await axiosInstance.get('/user-api/folders/'))
 
+  
   useEffect(() => {
+    // setItem('cookie',cookies.access_token);
+    // setItem('refresh',cookies.refresh_token);
+
+    // console.log(axiosInstance.defaults.headers['Authorization'])
     let scroll_position = 0;
     let scroll_direction;
     window.addEventListener('scroll', function(e){
@@ -117,7 +125,7 @@ export default function Home() {
       </Head>
       {MessageContext}
       <ProgressBarLoading />
-      <Header SetSideBar={() => setOpen(!SideBarOpen)} />
+      <Header SetSideBar={() => setOpen(!SideBarOpen)} cookies={cookies} />
       <SideBar folders={data?.data} SelectedFolder={SelectedFolder} isopen={SideBarOpen} ReadyToCreate={readyToCreate}
        setReadyToCreate={setReadyToCreate} FolderReload={refetch}  ChangeFolder={SelectFolder}
         SetSideBar={() => setOpen(!SideBarOpen)} ChangeFolderName={SetFolderName}/>
@@ -308,4 +316,31 @@ export default function Home() {
     </ContentBox>
     </>
   )
+}
+export async function getServerSideProps(context) {
+  const { req } = context;
+  const cookies = req.headers.cookie;
+
+  // Check if cookies are present
+  if (cookies) {
+    // Parse the cookies
+    const parsedCookies = cookies.split(';').reduce((acc, cookie) => {
+      const [key, value] = cookie.trim().split('=');
+      acc[key] = decodeURIComponent(value);
+      return acc;
+    }, {});
+    return {
+      props: {
+        // Pass the cookies as props to the component
+        cookies: parsedCookies,
+      },
+    };
+  }
+
+  return {
+    redirect: {
+      permanent: false,
+      destination: "/auth"
+    }
+  };
 }

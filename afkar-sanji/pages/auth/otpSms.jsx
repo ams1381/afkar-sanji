@@ -8,12 +8,17 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import persianNumberMin from 'persian-number';
 import React, { useContext } from 'react'
+import { parseCookies } from 'nookies';
+import nookies from 'nookies'
+import { useEffect } from 'react';
+import { setCookie , getCookie } from 'react-use-cookie';
 
 
-const OTPSms = () => {
+const OTPSms = ({ cookies }) => {
   const [LoginMessage, contextHolder] = message.useMessage();
+  delete axiosInstance.defaults.headers['Authorization'];
 
-  const { setItem } = useLocalStorage();
+  const { setItem , removeItem } = useLocalStorage();
   const router = useRouter();
   const Auth = useContext(AuthContext);
   Auth.Login_Context_value = {
@@ -39,12 +44,12 @@ const OTPSms = () => {
           justifyContent : 'center'
         }
       })
-      setItem('phoneNumber',Auth.PhoneNumber);
-      setItem('cookie',otp_res.data.access);
-      setItem('refresh',otp_res.data.refresh)
-      axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + otp_res.data.access;
+
       setTimeout(() => {
-        typeof window !== 'undefined' ? router.push("../") : ''
+        
+        const returnUrl = router.query.returnUrl || '/';
+        console.log(router)
+        typeof window !== 'undefined' ? router.push(returnUrl)  : ''
       },3000)
     }
     else
@@ -55,6 +60,7 @@ const OTPSms = () => {
       });
     }
    }
+
   return (
     <>
     <Head>
@@ -67,4 +73,38 @@ const OTPSms = () => {
    
   )
 }
+
 export default OTPSms;
+
+export async function getServerSideProps(context) {
+  const { req } = context;
+  const cookies = req.headers.cookie;
+  console.log(cookies)
+  // Check if cookies are present
+  if (cookies) {
+    // Parse the cookies
+    const parsedCookies = cookies.split(';').reduce((acc, cookie) => {
+      const [key, value] = cookie.trim().split('=');
+      acc[key] = decodeURIComponent(value);
+      return acc;
+    }, {});
+// 
+    console.log('Parsed cookies:', parsedCookies);
+
+    return {
+      props: {
+        // Pass the cookies as props to the component
+        cookies: parsedCookies,
+      },
+    };
+  }
+
+  // Handle the case where cookies are undefined
+  console.log('No cookies found.');
+
+  return {
+    props: {
+      cookies: null,
+    },
+  };
+}

@@ -8,6 +8,7 @@ import { axiosInstance } from '@/utilities/axios'
 import { useLocalStorage } from '@/utilities/useLocalStorage';
 import { digitsEnToFa } from "@persian-tools/persian-tools";
 import * as persianTools from "@persian-tools/persian-tools";
+import { getCookie } from 'react-use-cookie';
 
 export const LoginFormOTPInput = ({ErrorHandler , authentication}) => {
     const Router = useRouter();
@@ -25,7 +26,7 @@ export const LoginFormOTPInput = ({ErrorHandler , authentication}) => {
     useEffect(() => {
         LoginContext.ChangeOTP(null);
         if (typeof window !== 'undefined') {
-            LoginContext.changePhone(getItem('phoneNumber'));
+            LoginContext.changePhone(getCookie('numberPhone'));
           }
     },[])
     useEffect(() => {

@@ -44,7 +44,7 @@ export const PanelHeader = styled.div`
         background: var(--primary-color) !important;
         bottom: 5px;
     }
-    @media screen and (max-width : 480px)
+    @media screen and (max-width : 768px)
     {
         height : auto !important;
         flex-wrap : wrap-reverse;

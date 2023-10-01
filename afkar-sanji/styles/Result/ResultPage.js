@@ -122,7 +122,7 @@ export const ResultTableContainer = styled.div`
     // }
     & .ant-table-cell p 
     {
-        width: 95%;
+        // width: 95%;
         text-overflow: ellipsis;
         white-space: pre;
         overflow: hidden;
@@ -130,6 +130,15 @@ export const ResultTableContainer = styled.div`
         display: flex;
         justify-content: center;
     }
+    .question_title_cell
+    {
+        width: 100%;
+        justify-content: center;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        flex-direction: row-reverse;
+        gap: 8px;
     }
     & .ant-table-tbody tr:nth-child(odd)
     {
@@ -191,6 +200,26 @@ export const ResultTableContainer = styled.div`
     {
         width : 100%;
         height : 100%;
+    }
+    .no_data_table .ant-table-content
+    {
+        overflow-y : hidden;
+        overflow-x : scroll;
+    }
+    .no_data_table .ant-table-content::-webkit-scrollbar
+    {
+        width: 10px;
+        overflow: visible;
+        height: 10px;
+    }
+    .no_data_table .ant-table-content::-webkit-scrollbar-thumb
+    {
+        background: #D3CFCF;
+        border-radius: 31px;
+    }
+    .no_data_table .ant-table-content::-webkit-scrollbar-track
+    {
+        background: transparent;
     }
     .ant-table-cell .no_result_message
     {

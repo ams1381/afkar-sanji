@@ -6,48 +6,65 @@ import { useRouter } from 'next/router'
 import { useContext, useEffect, useState } from 'react'
 import { QueryClientProvider , QueryClient} from '@tanstack/react-query'
 import axios from 'axios'
-
+import { beforeUnloadHandler } from './questionnaire/[QuestionnaireID]'
+import { setCookie } from 'react-use-cookie'
 
 const queryClient = new QueryClient()
 
-export default function App({ Component, pageProps }) {
+export default function App({ Component, pageProps , cookies }) {
   const router = useRouter();
+  // const AuthContext = useContext();
   const [ readyToRender , setReadyToRender ] = useState(false);
-
-  const { getItem , setItem } = useLocalStorage();
+  // const [ phoneNum, setPhoneNumber ] = useCookie('numberPhone', null);
+   
     const authentication = async () => {
-    if(getItem('cookie'))
-    {
-      axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + getItem('cookie');
+      if (!pageProps.cookies || !pageProps.cookies.access_token) {
+        // Redirect to login page and store the requested URL
+        console.log(router)
+        router.push({
+          pathname: '/auth',
+          query: { 
+            returnUrl: router.asPath ,
+           },
+        });
+        return;
+      }
+      axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + pageProps?.cookies?.access_token;
       try
       {
         let { data } = await axiosInstance.get('/user-api/users/me/');
-        setItem('phoneNumber',data.phone_number)
         setReadyToRender(true)
         return
       }
       catch(err)
       {
-        console.log(err)
          router.push('/auth');
-          return
+        return
       }
       
     }
-    else
-      router.push('/auth');
-  }
+    // else 
+    //   console.log()
+      // router.push('/auth');
+  // }
   // if(typeof)
   // questionnaire
     // return
   // console.log(router.query , router.pathname.includes('AnswerPage'))
     useEffect(() => {
-      if(router.pathname !== '/auth' && router.pathname !== '/auth/otpSms' && !router.pathname.includes('AnswerPage'))
+      if(router.pathname !== '/auth' 
+      && router.pathname !== '/404' &&
+      router.pathname != '/505' 
+      && router.pathname !== '/auth/otpSms'
+       && !router.pathname.includes('AnswerPage'))
           authentication();
       else
         setReadyToRender(true)
     },[])
 
+      if (typeof window !== 'undefined') 
+          window.removeEventListener('beforeunload',beforeUnloadHandler)
+    
   return  <AuthContextProvider>
     <QueryClientProvider client={queryClient}>
       { readyToRender && <Component {...pageProps} /> }

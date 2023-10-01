@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 export const WriteDropDownAnswer = ({ QuestionInfo }) => {
   const OcurredError = useSelector(state => state.reducer.Error);
   const [ inputError , setInputError ] = useState(null);
-
+  const [ ErrorObject , setErrorObject ] = useState(null)
   const Dispatcher = useDispatch();
   const RandomIdGenerator = () => {
    let ID = Math.floor(Math.random() * 100);
@@ -19,12 +19,13 @@ export const WriteDropDownAnswer = ({ QuestionInfo }) => {
    return ID;
   }
   useEffect(() => {
-
     if(OcurredError)
     {
-        if(OcurredError?.find(item => item.qid == QuestionInfo?.id && item.err_object.options))
+        if(OcurredError?.find(item => item.qid == QuestionInfo?.id))
         {
             setInputError('active');
+
+            setErrorObject(OcurredError?.find(item => item.qid == QuestionInfo?.id).err_object)
             document.querySelector(`.QuestionItem${QuestionInfo?.id}`).setAttribute('style','max-height : initial');
         }
         else
@@ -44,10 +45,20 @@ export const WriteDropDownAnswer = ({ QuestionInfo }) => {
   return (
     <OptionWritingContainer>
       <p>گزینه ها</p>
-      {QuestionInfo.options?.map(item => <InputOptionsContainer key={item.id}
+      {QuestionInfo.options?.map((item,index) => <InputOptionsContainer key={item.id}
        >
         <div className='option_container'>
-        <OptionalInputItem type='text' autoFocus={item.newOption ? true : false} key={item.id} placeholder='چیزی بنویسید' 
+        <OptionalInputItem type='text' autoFocus={item.newOption ? true : false}
+          tabIndex={index + 1}
+          onKeyDown={e => e.key == 'Tab' && index == QuestionInfo.options.length - 1 ? 
+          Dispatcher(OptionAdder({ 
+            QuestionID : QuestionInfo.id , 
+            NewOptionID : RandomIdGenerator() , 
+            OptionText : null , 
+            newOption : true ,
+            group : QuestionInfo.group
+        })) : ''}
+         key={item.id} placeholder='چیزی بنویسید' 
         value={(item.text != 'null') ? item.text : ''}
          onChange={e => {
           Dispatcher(OptionModifier({
@@ -56,7 +67,7 @@ export const WriteDropDownAnswer = ({ QuestionInfo }) => {
            OptionText : e.target.value ,
            group : QuestionInfo?.group
            }))
-           Dispatcher(DeleteOptionsError({ errID : QuestionInfo.id }))
+           Dispatcher(DeleteOptionsError({ errID : QuestionInfo.id , optionID : item.id }))
           }}/>
         <div className='option_button_container'>
           <button onClick={() => { 
@@ -67,7 +78,7 @@ export const WriteDropDownAnswer = ({ QuestionInfo }) => {
               OptionText : null ,
               group : QuestionInfo?.group
              }))
-             Dispatcher(DeleteOptionsError({ errID : QuestionInfo.id }))
+         
             }}>
             <Icon name='CirclePlus' />
           </button>
@@ -77,10 +88,10 @@ export const WriteDropDownAnswer = ({ QuestionInfo }) => {
         </div>
         </div>
         
-        { (inputError && OcurredError?.find(item => item.qid == QuestionInfo?.id)) && 
+        { ErrorObject?.length ? ErrorObject.find(OptionItem => OptionItem?.optionID == item?.id) && 
             <p className='options_error_message'>
-              {OcurredError?.find(item => item.qid == QuestionInfo?.id).err_object.options}
-              </p> } 
+              متن گزینه نمیتواند خالی باشد
+              </p> : ''} 
       </InputOptionsContainer>
       )}
       

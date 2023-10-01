@@ -12,15 +12,17 @@ import { AuthValidator } from '@/utilities/AuthValidators';
 import persianNumberMin from 'persian-number';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FormChildDiv } from '@/styles/auth/Login';
+import { setCookie } from 'react-use-cookie';
 
 export const Login_form = ({ setLoggedIn }) => {
   const [ loadingState , setLoading ] = useState(false);
   const [ errMessage , setErMessage ] = useState(null);
   const [messageApi, contextHolder] = message.useMessage()
   const LoginContext =  useContext(AuthContext);
+  // const [cookies, setCookie, removeCookie] = useCookie();
   const [ showTransitionLine , setShowTransitionLine ] = useState(null);
   const InputRef = useRef(null)
-  
+  // phoneNumber
   useEffect(() => {
       window.addEventListener('keypress',(e) => {
         if(e.key == 'Enter')
@@ -38,6 +40,8 @@ export const Login_form = ({ setLoggedIn }) => {
     setLoading(true)
     try 
     {
+      if(LoginContext.Login_Context_value.FormType == 'PhoneNumber')
+          setCookie('numberPhone',persianNumberMin.convertEnToPe(LoginContext.PhoneNumber))
       let form_input = LoginContext.Login_Context_value.FormType == 'PhoneNumber' ? 
       persianNumberMin.convertPeToEn(LoginContext.PhoneNumber) : persianNumberMin.convertPeToEn(value);
       if(AuthValidator(form_input,LoginContext.Login_Context_value.FormType))
@@ -92,7 +96,9 @@ export const Login_form = ({ setLoggedIn }) => {
         </div>
       
         <ConfigProvider theme={themeContext}>
-              <Button typeof='submit' onClick={authentication} className={StyleModules['confirm_button']} type="primary" loading={loadingState}>
+              <Button typeof='submit' onClick={authentication}
+               className={StyleModules['confirm_button']}
+               type="primary" loading={loadingState}>
                     {LoginContext.Login_Context_value.ButtonText}
                 </Button>
           </ConfigProvider>

@@ -15,14 +15,21 @@ import QuestionStore from '@/utilities/QuestionStore';
 import { message } from 'antd';
 import { useQuery } from '@tanstack/react-query';
 
-const QuestionnairePanel = () => {
+export const beforeUnloadHandler = function (e) {
+    e.preventDefault();
+    e.returnValue = '';
+  };
+const QuestionnairePanel = ({ cookies }) => {
     const router = useRouter();
     const [ messageApi , messageContext ] = message.useMessage()
     const [ SideBarOpen , setOpen ] = useState(false);
     const [ SideState , SetSideState ] = useState('question_design');
     const [ QuestionnaireReloader , SetQuestionnaireReloader ] = useState(false);
+    axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + cookies?.access_token;
     const { data , isLoading , refetch , error , isFetched} = useQuery(['QuestionnaireRetrieve'],
-    async () => await axiosInstance.get(`/question-api/questionnaires/${router?.query?.QuestionnaireID}/`))
+    async () => await axiosInstance.get(`/question-api/questionnaires/${router?.query?.QuestionnaireID}/`),{
+      refetchOnWindowFocus : false
+    })
 
     if(error && error?.response)
     {
@@ -46,7 +53,8 @@ const QuestionnairePanel = () => {
             }
           })
     }
-
+    if(typeof window != 'undefined')
+    window.addEventListener('beforeunload',beforeUnloadHandler)
   return (
     <>
      <style global jsx>{`
@@ -68,15 +76,18 @@ const QuestionnairePanel = () => {
     <Provider store={QuestionStore}>
     <ProgressBarLoading />
     {messageContext}
-    <Header SetSideBar={() => setOpen(!SideBarOpen)} goToFolders={true} loadingHeader={isLoading}
+    <Header SetSideBar={() => setOpen(!SideBarOpen)} cookies={cookies}
+    goToFolders={true} loadingHeader={isLoading}
     Questionnaire={data?.data}/>
       <QuestionnairePanelContainer>
         <PanelInnerContainer> 
           {  <QuestionnairePanelHeader SideState={SideState} isFetched={isFetched}
            ChangeSide={SetSideState} Questionnaire={data?.data}/>}
           {
-            SideState == 'question_design' ? <QuestionDesignPanel QuestionnaireReloader={refetch} Questionnaire={data?.data}/> 
-            : data?.data && <SettingPanel Questionnaire={data?.data} refetch={refetch}/>
+            SideState == 'question_design' ? <QuestionDesignPanel QuestionnaireReloader={refetch}
+             Questionnaire={data?.data}  /> 
+            : data?.data && <SettingPanel Questionnaire={data?.data}  ChangeSide={SetSideState}
+            refetch={refetch}/>
             }
           </PanelInnerContainer>
       </QuestionnairePanelContainer>
@@ -86,3 +97,34 @@ const QuestionnairePanel = () => {
   )
 }
 export default QuestionnairePanel;
+
+export async function getServerSideProps(context) {
+  const { req } = context;
+  const cookies = req.headers.cookie;
+  const urlDest = req.url;
+  // const urlObject = new URL(urlDest);
+  // const queryParams = urlObject.searchParams;
+  // Check if cookies are present
+  if (cookies) {
+    // Parse the cookies
+    const parsedCookies = cookies.split(';').reduce((acc, cookie) => {
+      const [key, value] = cookie.trim().split('=');
+      acc[key] = decodeURIComponent(value);
+      return acc;
+    }, {});
+
+    return {
+      props: {
+        cookies: parsedCookies,
+      },
+    };
+  }
+
+  console.log(urlDest)
+  return {
+    redirect: {
+      permanent: false,
+      destination: "/auth"
+    }
+  };
+}

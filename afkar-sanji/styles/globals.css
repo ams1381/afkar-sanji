@@ -166,6 +166,17 @@ input:-webkit-autofill:active  {
   gap: 16px !important;
   padding: 10px !important;
 }
+#select-type-container.group_disable .GroupQuestion
+{
+  color : #c3c3c3;
+  pointer-events : none !important;
+  cursor: none;
+}
+#select-type-container.group_disable .GroupQuestion i 
+{
+  filter: invert(66%) sepia(75%) saturate(0%) hue-rotate(224deg) brightness(105%) contrast(85%);
+}
+
 .ant-picker-time-panel-cell .time_cell
     {
         text-align : center;

@@ -49,7 +49,7 @@ const AddQuestionnairePopUp = ({ AddQuestionnaireModal , FolderReload , folders 
                     </Button>
                 </ModalButtonsContainer>}>
             <ModalContentContainer>
-                <p>عنوان نظر سنجی را وارد کنید</p>
+                <p>عنوان نظرسنجی را وارد کنید</p>
                 <AddQuestionnaireModalInput placeholder='نظرسنجی 1'
                 onChange={(e) => {
                     setNewQuestionnaireName(e.target.value)

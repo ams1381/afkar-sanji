@@ -61,7 +61,12 @@ const SettingMultipleAnswer = ({QuestionInfo}) => {
     }
     const AdditionalOptionsHandler = (ToggleValue) => {
 
-        OptionalDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : 'additional_options' , ToggleValue : ToggleValue}))
+        OptionalDispatcher(ChangeToggleHandler({
+             QuestionID : QuestionInfo.id , 
+             ToggleName : 'additional_options' , 
+             ToggleValue : ToggleValue,
+             group : QuestionInfo.group
+            }))
         if(!ToggleValue)
         {
             OptionalDispatcher(ChangeToggleHandler({ QuestionID : QuestionInfo.id , ToggleName : 'nothing_selected' , ToggleValue : false , group : QuestionInfo.group}))

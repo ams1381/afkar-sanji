@@ -69,7 +69,7 @@ export const QuestionSearchContainer = styled.div`
         display : flex;
         align-items : center;
     }
-    ant-input-suffix
+    .ant-input-suffix
     {
         margin-left: 52px;
     }

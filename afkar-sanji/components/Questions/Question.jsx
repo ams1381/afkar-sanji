@@ -45,11 +45,11 @@ const QuestionComponentBodyProvider = (QuestionType,QuestionInfo) => {
             return <InputAnswer InputPlaceholder={QuestionInfo.answer_template} QuestionInfo={QuestionInfo}/>
   }
 }
-const QuestionComponent = ({ QuestionInfo , ChildQuestion , slidemode , mobilepreview , errorMessage , UUID }) => {
+const QuestionComponent = ({ QuestionInfo , Questionnaire , ChildQuestion , slidemode , mobilepreview , errorMessage , UUID }) => {
   const QuestionBodyComponent = QuestionComponentBodyProvider(QuestionInfo.question_type,QuestionInfo);
 
   const regex = /(<([^>]+)>)/gi;
-
+  
   return (
     QuestionInfo.question_type == 'welcome_page' ? <WelcomeComponent WelcomeInfo={QuestionInfo} mobilepreview={mobilepreview} /> 
     : QuestionInfo.question_type != 'thanks_page' ? <QuestionComponentContainer  onWheel={e => e.stopPropagation()}
@@ -58,7 +58,7 @@ const QuestionComponent = ({ QuestionInfo , ChildQuestion , slidemode , mobilepr
         <div className='question_header' >
         <QuestionTitle>
             <p>{<>{QuestionInfo.title?.replace(regex,"")} {(QuestionInfo.is_required && ' * ')} </>}</p>
-            { !QuestionInfo.show_number ? <span className='question_number'>
+            { Questionnaire?.show_number ? <span className='question_number'>
             { '-' + (persianNumberMin.convertEnToPe(QuestionInfo.placement)) }
             </span> : '' }
         </QuestionTitle>
@@ -68,6 +68,10 @@ const QuestionComponent = ({ QuestionInfo , ChildQuestion , slidemode , mobilepr
             QuestionInfo.description.replace(regex,"") :
              QuestionInfo.question_text && QuestionInfo.question_text != 'null' ?
               QuestionInfo?.question_text?.replace(regex,"") : ''}</p>
+              { 
+              QuestionInfo.question_type == 'number_answer' &&
+              <span>لطفا عددی را بین {QuestionInfo.min} تا {QuestionInfo.max} وارد کنید</span> 
+              }
         </QuestionDescription>
 
         { QuestionInfo.media ?
@@ -90,7 +94,8 @@ const QuestionComponent = ({ QuestionInfo , ChildQuestion , slidemode , mobilepr
         </div>
         {(QuestionInfo.question_type == 'group' && QuestionInfo.child_questions)? 
          QuestionInfo.child_questions.map(item => 
-            <QuestionComponent QuestionInfo={item.question} ChildQuestion='active'/>)
+            <QuestionComponent QuestionInfo={item.question} Questionnaire={Questionnaire} 
+            ChildQuestion='active'/>)
         : QuestionBodyComponent}
        { errorMessage ?  <p className='answer_error_message'>{errorMessage}</p> : ''}
     </QuestionComponentContainer> 

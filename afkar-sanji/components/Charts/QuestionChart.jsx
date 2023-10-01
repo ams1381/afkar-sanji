@@ -42,6 +42,7 @@ const exportChart = async (ChartID,ChartType) => {
       console.log(err)
     }
 }
+
 const ChartDataGenerator = (PlotDetail,currentSort,currentChartType,backgroundColors,borderColors) => {
   // console.log(backgr/oundColors)
   let data; 
@@ -80,6 +81,7 @@ const ChartDataGenerator = (PlotDetail,currentSort,currentChartType,backgroundCo
             yAxisID : 'y'
           },
         ],
+        // plugins: [htmlLegendPlugin],
       };
     }
      else if(PlotDetail.question_type == 'integer_range' || PlotDetail.question_type == 'integer_selective')
@@ -159,6 +161,7 @@ const ChartDataGenerator = (PlotDetail,currentSort,currentChartType,backgroundCo
       };
     }
 }
+
 export const QuestionChart = ({ PlotDetail , totalChartType , totalChartSort}) => {
     const [ FilterPopover , setFilterPopover ] = useState(false);
     const [ ChangeChartTypePopover , setChangeChartTypePopover ] = useState(false);
@@ -191,8 +194,13 @@ export const QuestionChart = ({ PlotDetail , totalChartType , totalChartSort}) =
         // maintainAspectRatio: false,
         indexAxis: indexAxis,
         plugins: {
+          // htmlLegend: {
+          //   // ID of the container to put the legend in
+          //   containerID: 'legend-container',
+          // },
           legend: {
             display:  currentChartType == 'Pie',
+            // display : false,
             position: 'right',
             labels: {
               color: "#666",
@@ -201,7 +209,6 @@ export const QuestionChart = ({ PlotDetail , totalChartType , totalChartSort}) =
                 family: "IRANSans" // Add your font here to change the font of your legend label
               }
             },
-           
           },
           tooltip: {
             display : false,
@@ -363,115 +370,6 @@ export const QuestionChart = ({ PlotDetail , totalChartType , totalChartSort}) =
       }
       }
     };
-    // if(PlotDetail.options)
-    // {
-    //  let dataArray =  Object.values(PlotDetail.counts).map((item,index) => [ PlotDetail.options[index].text  , item ])
-    //  let SortArray = currentSort == 'increase' ? Object.values(PlotDetail.counts).sort((a,b) => a - b) :
-    //   currentSort == 'decrease' ? Object.values(PlotDetail.counts).sort((a,b) => a - b).reverse() : ''
-    
-    // if(currentSort != 'default')
-    //   dataArray = dataArray.map(function(item) {
-    //     var n = SortArray.indexOf(item[1]);
-    //     SortArray[n] = '';
-    //     return [n, item]
-    // }).sort().map(function(j) { return j[1] }).map(item => item[0])
-
-    //   data = {
-    //     type : currentChartType == 'Line' ? 'line' : (currentChartType == 'Bar' ||  currentChartType == 'HorizontalBar') ? 'bar' :'pie',
-    //     labels: Object.values(PlotDetail.counts).every(item => item == 0) ? [] :
-    //     currentSort == 'default' ? PlotDetail.options?.map(item => item.text?.replace(regex,"")) :
-    //     dataArray.map(item => item.replace(regex,"")) 
-    //     ,
-    //     datasets: [
-    //       {
-    //         data: PlotDetail.counts ?  
-    //         currentSort == 'default' ?  Object.values(PlotDetail.counts) : currentSort == 'increase' ?
-    //         Object.values(PlotDetail.counts).sort((a,b) => a - b) : currentSort == 'decrease' ?
-    //          Object.values(PlotDetail.counts).sort((a,b) => a - b).reverse() : ''
-    //         : [],
-    //         // fill: true,
-    //         backgroundColor: currentChartType != 'Line' ? generateRandomColors(PlotDetail.options?.length) : null ,
-    //         borderColor: currentChartType == 'Line' ? generateRandomColors(1) : 'transparent',
-    //         fontFamily : 'IRANSans',
-    //         yAxisID : 'y'
-    //       },
-    //     ],
-    //   };
-    // }
-    // else if(PlotDetail.question_type == 'integer_range' || PlotDetail.question_type == 'integer_selective')
-    // {
-
-    //  let dataArray = objectToSparseArray(PlotDetail.counts , PlotDetail.max).map((item,index) => [ PlotDetail.min == 0 ? index : index + 1 , item ]);
-    //  let SortArray = currentSort == 'increase' ? objectToSparseArray(PlotDetail.counts , PlotDetail.max).sort((a,b) => a - b) :
-    //   currentSort == 'decrease' ? objectToSparseArray(PlotDetail.counts , PlotDetail.max).sort((a,b) => a - b).reverse() : ''
-    
-    // if(currentSort != 'default')
-    // {
-    //   dataArray = dataArray.map(function(item) {
-    //     var n = SortArray.indexOf(item[1]);
-    //     SortArray[n] = '';
-    //     return [n, item]
-    // }).sort().map(function(j) { return j[1] }).map(item => item[0]);
-    // }   
-    //     data = { 
-    //         type : currentChartType == 'Line' ? 'line' : (currentChartType == 'Bar' ||  currentChartType == 'HorizontalBar') ? 'bar' :'pie',
-    //         labels: (currentSort == 'default') ? Array.from({ length : PlotDetail.max }).map((_,index) =>
-    //            (PlotDetail.max == 0 ? index : index + 1)) : 
-    //            dataArray
-    //            ,
-    //         datasets: [
-    //           {
-    //             data: currentSort == 'default' ? objectToSparseArray(PlotDetail.counts , PlotDetail.max) :
-    //             currentSort == 'increase' ? objectToSparseArray(PlotDetail.counts , PlotDetail.max).sort((a,b) => a - b) :
-    //             currentSort == 'decrease' ? objectToSparseArray(PlotDetail.counts , PlotDetail.max).sort((a,b) => a - b).reverse() : []
-    //             ,
-    //             // fill: true,
-    //             backgroundColor: currentChartType != 'Line' ? generateRandomColors(PlotDetail.max) : null ,
-    //             borderColor: currentChartType == 'Line' ? generateRandomColors(1) : 'transparent',
-    //             fontFamily : 'IRANSans',
-    //             yAxisID : 'y'
-    //           },
-    //         ],
-    //       };
-    // }
-    // else if(PlotDetail.question_type == 'number_answer')
-    // {
-    //   let dataArray = Object.keys(PlotDetail.counts).map((item,index) => [ item , Object.values(PlotDetail.counts)[index] ]);
-    //   let SortArray = currentSort == 'increase' ? Object.values(PlotDetail.counts).sort((a,b) => a - b) :
-    //   currentSort == 'decrease' ? Object.values(PlotDetail.counts).sort((a,b) => a - b).reverse() : ''
-
-    //   if(currentSort != 'default')
-    //   {
-    //     dataArray = dataArray.map(function(item) {
-    //       var n = SortArray.indexOf(item[1]);
-    //       SortArray[n] = '';
-    //       return [n, item]
-    //   }).sort().map(function(j) { return j[1] }).map(item => item[0]);
-    //   }  
-
-    //   data = {
-    //     type : currentChartType == 'Line' ? 'line' : (currentChartType == 'Bar' ||  currentChartType == 'HorizontalBar') ? 'bar' :'pie',
-    //     labels: (currentSort == 'default') ? Object.keys(PlotDetail.counts).map((item,index) =>
-    //            digitsEnToFa(item)) : 
-    //            dataArray.map(item => digitsEnToFa(item))
-    //            ,
-    //     datasets: [
-    //       {
-    //         data: Object.values(PlotDetail.counts).length == 1 ? [(Object.values(PlotDetail.counts)[0])]
-    //         : currentSort == 'default' ? Object.values(PlotDetail.counts).map(item => (item)) :
-    //         currentSort == 'increase' ? Object.values(PlotDetail.counts).map(item => (item)).sort((a,b) => a - b) :
-    //         currentSort == 'decrease' ? Object.values(PlotDetail.counts).map(item => (item)).sort((a,b) => a - b).reverse() : []
-    //         ,
-    //         // fill: true,
-    //         backgroundColor: currentChartType != 'Line' ? generateRandomColors(PlotDetail.max) : null ,
-    //         borderColor: currentChartType == 'Line' ? generateRandomColors(1) : 'transparent',
-    //         fontFamily : 'IRANSans',
-    //         yAxisID : 'y',
-           
-    //       },
-    //     ],
-    //   };
-    // }
   return (
     
     <QuestionChartContainer>
@@ -509,6 +407,7 @@ export const QuestionChart = ({ PlotDetail , totalChartType , totalChartSort}) =
         <div>
             <div style={{ width : 'fit-content' , margin : '0 auto' }}>
             { ChartData && ChartGenerator(currentChartType,ChartData,PlotDetail,options,chartRef) }
+         
             </div>
         </div>
     </QuestionChartContainer>

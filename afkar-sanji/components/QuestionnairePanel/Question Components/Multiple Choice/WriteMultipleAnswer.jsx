@@ -12,7 +12,7 @@ import { useEffect } from 'react';
 const MultipleAnswer = ({ QuestionInfo }) => {
   const OcurredError = useSelector(state => state.reducer.Error);
   const [ inputError , setInputError ] = useState(null);
-
+  const [ ErrorObject , setErrorObject ] = useState(null)
   const Dispatcher = useDispatch();
   const RandomIdGenerator = () => {
    let ID = Date.now();
@@ -23,12 +23,13 @@ const MultipleAnswer = ({ QuestionInfo }) => {
    return ID;
   }
   useEffect(() => {
-
     if(OcurredError)
     {
-        if(OcurredError?.find(item => item.qid == QuestionInfo?.id && item.err_object.options))
+        if(OcurredError?.find(item => item.qid == QuestionInfo?.id))
         {
             setInputError('active');
+
+            setErrorObject(OcurredError?.find(item => item.qid == QuestionInfo?.id).err_object)
             document.querySelector(`.QuestionItem${QuestionInfo?.id}`).setAttribute('style','max-height : initial');
         }
         else
@@ -37,6 +38,7 @@ const MultipleAnswer = ({ QuestionInfo }) => {
     else
         setInputError(null)
 },[OcurredError])
+
   const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1); 
@@ -64,7 +66,7 @@ const MultipleAnswer = ({ QuestionInfo }) => {
     else
       setInputError('برای ذخیره‌ سوال حداقل ۲ گزینه ایجاد کنید.')
   }
-  
+
   return (
     <OptionWritingContainer>
       <p>گزینه ها</p>
@@ -80,7 +82,17 @@ const MultipleAnswer = ({ QuestionInfo }) => {
                   {...provided.draggableProps}
                   {...provided.dragHandleProps}>
               <div className='option_container'>
-                  <OptionalInputItem  type='text' autoFocus={item.newOption ? true : false} key={item.id}
+                  <OptionalInputItem  type='text'
+                  tabIndex={index + 1}
+                  onKeyDown={e => e.key == 'Tab' && index == QuestionInfo.options.length - 1 ? 
+                   Dispatcher(OptionAdder({ 
+                    QuestionID : QuestionInfo.id , 
+                    NewOptionID : RandomIdGenerator() , 
+                    OptionText : null , 
+                    newOption : true ,
+                    group : QuestionInfo.group
+                })) : ''}
+                  autoFocus={item.newOption ? true : false} key={item.id}
             onChange={e => {
               Dispatcher(OptionModifier({
                  QuestionID : QuestionInfo.id , 
@@ -88,8 +100,7 @@ const MultipleAnswer = ({ QuestionInfo }) => {
                  OptionText : e.target.value ,
                  group : QuestionInfo?.group
                 }))
-              Dispatcher(DeleteOptionsError({ errID : QuestionInfo.id }))
-              // console.log(OcurredError)
+              Dispatcher(DeleteOptionsError({ errID : QuestionInfo.id , optionID : item.id }))
             }}
             defaultValue={(item.text != 'null') ? item.text : ''} placeholder='چیزی بنویسید'/>
             <div className='option_button_container'>
@@ -110,9 +121,10 @@ const MultipleAnswer = ({ QuestionInfo }) => {
               </button>
             </div>
               </div>
-            
-            { (inputError && OcurredError?.find(item => item.qid == QuestionInfo?.id)) && 
-            <p className='options_error_message'>{OcurredError?.find(item => item.qid == QuestionInfo?.id).err_object.options}</p> } 
+            { ErrorObject?.length ? ErrorObject.find(OptionItem => OptionItem?.optionID == item?.id) && 
+            <p className='options_error_message'>
+              متن گزینه نمیتواند خالی باشد
+              </p> : ''} 
           </InputOptionsContainer>
           
           </div>}
@@ -126,11 +138,11 @@ const MultipleAnswer = ({ QuestionInfo }) => {
       </DragDropContext>
       <AddOptionButton onClick={() => {
         Dispatcher(OptionAdder({ 
-        QuestionID : QuestionInfo.id , 
-        NewOptionID : RandomIdGenerator() , 
-        OptionText : null , 
-        newOption : true ,
-        group : QuestionInfo.group
+            QuestionID : QuestionInfo.id , 
+            NewOptionID : RandomIdGenerator() , 
+            OptionText : null , 
+            newOption : true ,
+            group : QuestionInfo.group
         }))
         Dispatcher(DeleteOptionsError({ errID : QuestionInfo.id }))
         }}>

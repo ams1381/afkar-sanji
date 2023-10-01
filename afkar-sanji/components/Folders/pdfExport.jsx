@@ -48,6 +48,33 @@ function convertSvgToBase64Jpeg(svg) {
     };
   });
 }
+function extractArrayAfterChildQuestions(arr) {
+  const result = [];
+  let previousQuestion = null;
+
+  for (const item of arr) {
+    const currentQuestion = item.question;
+
+    if (currentQuestion) {
+      if (previousQuestion && previousQuestion.child_questions) {
+        // Extract child questions for the previous question
+        previousQuestion.child_questions.forEach((item) => {
+          result.push(item);
+        })
+        
+      }
+      result.push({ question: currentQuestion });
+      previousQuestion = currentQuestion;
+    }
+  }
+
+  // Handle the last question
+  if (previousQuestion && previousQuestion.child_questions) {
+    result.push({ question: { child_questions: previousQuestion.child_questions } });
+  }
+
+  return result;
+}
 const regex = /(<([^>]+)>)/gi;
 
 // export const PdfGenerator = async () => {
@@ -98,8 +125,8 @@ export const PdfGenerator = async (questionnaire) => {
   // console.log(data)
 
   // Set canvas dimensions
-  const canvas = document.createElement('canvas');
-  const context = canvas.getContext('2d');
+  // const canvas = document.createElement('canvas');
+  // const context = canvas.getContext('2d');
   const a4Width = 595.28;
   const a4Height = 841.89;
   const maxBoxWidth = a4Width * 0.95;  
@@ -124,21 +151,25 @@ export const PdfGenerator = async (questionnaire) => {
 
   let yOffset = 10;  // Initialize y offset
   // pdf.setDrawColor(255, 255, 255);
-  data?.questions.forEach(async (item, index) => {
+  // console.log(extractArrayAfterChildQuestions(data?.questions))
+  let ListToRenderPDF = extractArrayAfterChildQuestions(data?.questions);
+  ListToRenderPDF.forEach(async (item, index) => {
     if (item.question) {
-      if(item.question.question_type == 'file')
+      if(item.question.question_type == 'file' || !item.question.title)
         return
 
-      const boxWidth = maxBoxWidth;
+      const boxWidth = item.question.group ? maxBoxWidth - 20 : maxBoxWidth;
       const boxX = (a4Width - boxWidth) / 2;  // X position for the boxes
-
+  
       if (yOffset + 120 > a4Height) {
         pdf.addPage();  // Move to the next page
         yOffset = 10;   // Reset y offset for the new page
       }
     
       pdf.setDrawColor(255, 255, 255); 
-      const titleHeight = pdf.getTextDimensions(digitsEnToFa(item.question.placement) + ' ' + item.question.title, { align: 'right', maxWidth: maxTextWidth }).h;
+      console.log(item.question.title)
+      const titleHeight = 
+      pdf.getTextDimensions(item.question.title, { align: 'right', maxWidth: maxTextWidth }).h;
       let descHeight = 0;
       
       if (item.question.description) {
@@ -205,7 +236,7 @@ export const PdfGenerator = async (questionnaire) => {
 
       totalHeight += Math.ceil(item.question.options.length / 2) * 40 + 20; // Add extra padding
     }
-    
+
       // Set text properties for right alignment and text wrapping
       pdf.setTextColor(0, 0, 0);  // Black color
       pdf.setFont('IRANSans', 'normal');
@@ -244,8 +275,20 @@ export const PdfGenerator = async (questionnaire) => {
         pdf.setFillColor(255, 255, 255);  
       }
       // Draw the title
-      pdf.text(digitsEnToFa(item.question.placement) + ' ' +  item.question.title, boxX + boxWidth - 10, yOffset + parentBoxTopMargin + 10, { align: 'right', maxWidth: maxTextWidth });
+      let QuestionNumber;
+      if(item.question.group)
+      {
+        QuestionNumber =  item.question.placement  + ' - ' + ListToRenderPDF.find(Ite => Ite.question.id == item.question.group).question.placement ;
+      }
+      else 
+        QuestionNumber = item.question.placement
 
+      
+      pdf.text(digitsEnToFa(QuestionNumber.toString()),
+      boxX + 10 + boxWidth , yOffset + parentBoxTopMargin + 10,{ align: 'right', maxWidth: maxTextWidth })
+      pdf.text(item.question.title, item.question.group ? (boxX + boxWidth - 40) : (boxX + boxWidth - 10)
+       , yOffset + parentBoxTopMargin + 10, { align: 'right', maxWidth: maxTextWidth });
+     
 
       if (item.question.description) {
         pdf.setFontSize(14);  // Adjust font size for description

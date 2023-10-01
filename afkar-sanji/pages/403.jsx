@@ -13,9 +13,9 @@ const ServerError = () => {
       <ErrorContainer>
         <div className='error_inner_container'> 
         <ErrorPageTitle>
-          500
+          403
         </ErrorPageTitle>
-        <p>مشکلی پیش آمده مجددا تلاش کنید</p>
+        <p>شما دسترسی لازم به این بخش را ندارید</p>
         <Button type='primary'>
           <Link href='/'>
             باز گشت به صفحه اصلی

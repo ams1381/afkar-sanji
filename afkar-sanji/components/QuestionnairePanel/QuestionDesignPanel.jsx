@@ -41,6 +41,13 @@ export const ReorderPoster = async (UUID,reOrderedArray) => {
       throw err;
     }
 }
+export function moveItem(arr, prevIndex, newIndex) {
+  if (prevIndex >= 0 && prevIndex < arr.length && newIndex >= 0 && newIndex < arr.length) {
+    const [movedItem] = arr.splice(prevIndex, 1);
+    arr.splice(newIndex, 0, movedItem);
+  }
+  return arr;
+}
 const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
   const QuestionDataDispatcher = useDispatch();
   const [ SearchResult , SetSearchResult ] = useState([]);
@@ -51,8 +58,10 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
   const dndContainer = useRef();
   const regex = /(<([^>]+)>)/gi;
   const  AllQuestion = useSelector(s => s.reducer.data);
+  const [ QuestionsNewSort , setQuestionsNewSort ] = useState(null);
   // const [ defaultQuestionsOrder , setDefaultQuestionsOrder ] = useState(Questionnaire.questions)
   let defaultQuestionsOrder;
+  // console.log(QuestionsNewSort)
   const NonQuestions = useSelector(s => s.reducer.nonQuestionData);
   // const SearchBoxContainer = useRef();
   //  const { setNodeRef, isOver } = useDroppable({
@@ -76,18 +85,18 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
       // child_container
     } ,
     onUpdate: async function (/**Event*/e) {
-    const newArray = [...AllQuestion];
-    [newArray[e.oldDraggableIndex], newArray[e.newDraggableIndex]] = [newArray[e.newDraggableIndex], newArray[e.oldDraggableIndex]];
-
+    let newArray = [...AllQuestion];
+    newArray = moveItem(newArray,e.oldDraggableIndex,e.newDraggableIndex)
+ 
     QuestionDataDispatcher(QuestionReorder({ newPlacementArray : newArray }))
     QuestionDataDispatcher(QuestionSorter())
-      // console.log(e.oldDraggableIndex , e.newDraggableIndex)
+
 
       let reOrderedArray =  newArray.map((item,index) => { 
         if(item.question && !item.question.newFace)
           return { question_id : item.question.id , new_placement : index + 1}
        })
-      //  console.log(reOrderedArray)
+
        reOrderedArray.forEach((item,index) => !item  ? reOrderedArray.splice(index,1) : '');
        if(reOrderedArray.includes(undefined) || reOrderedArray.includes(null))
           return
@@ -138,16 +147,17 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
             childQuestionIndex : event.newDraggableIndex  , 
             prevIndex : event.oldDraggableIndex
           }))
-          console.log(document.querySelector(`.QuestionItem${DraggedQuestionID}`))
+          // console.log(document.querySelector(`.QuestionItem${DraggedQuestionID}`))
          
+          if(!DraggedQuestion?.question.newFace)
           await axiosInstance.patch(`/question-api/questionnaires/${Questionnaire.uuid}/${DraggedQuestion?.question.url_prefix}/${DraggedQuestionID}/`,
           { group : DroppedGroupQuestionID , placement : event.newDraggableIndex + 1});
           AllQuestionsData.find(item => item.question.id == DroppedGroupQuestionID).question.child_questions.splice(event.newDraggableIndex, 0 ,copiedDraggedQuestion);
-          console.log(AllQuestionsData)
+          // console.log(AllQuestionsData)
           // QuestionDataDispatcher(QuestionReorder({ newPlacementArray : AllQuestionsData }))
           QuestionDataDispatcher(QuestionSorter())
           // QuestionDataDispatcher(ChildQuestionReorder({ ParentQuestionID : DroppedGroupQuestionID }))
-          QuestionnaireReloader();
+          // QuestionnaireReloader();
 
 
           // document.getElementById('question' + DroppedGroupQuestionID).style.width = '100%'
@@ -159,7 +169,6 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
        }
         // console.log(event.oldDraggableIndex,event.newDraggableIndex,event.to)
       }
-      
     },
     onMove : event => {
       if(event.to.className.includes('child_container'))
@@ -189,6 +198,10 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
       return true;
     }
   };
+  // useEffect(() => {
+  //   QuestionDataDispatcher(QuestionReorder({ newPlacementArray : QuestionsNewSort.map(item => ({ question : JSON.parse(JSON.strin) })) }))
+  //   QuestionDataDispatcher(QuestionSorter())
+  // },[QuestionsNewSort])
   useEffect(() => {
     if(Questionnaire)
     {
@@ -236,46 +249,6 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
       );
      document.querySelector(`.QuestionItem${QuestionID}`)?.scrollIntoView({ behavior : 'smooth' });
   }
-  const onDragEnd = async (result) =>  {
-    if (!result.destination) {
-      return;
-    }
-
-    const reorderedItems = reorder(
-      AllQuestion,
-      result.source.index,
-      result.destination.index
-    );
-
-    QuestionDataDispatcher(QuestionReorder({ newPlacementArray : reorderedItems }))
-    QuestionDataDispatcher(QuestionSorter())
-    let reOrderedArray =  reorderedItems.map((item,index) => { 
-      if(item.question && !item.question.newFace)
-        return { question_id : item.question.id , new_placement : index + 1}
-     })
-    //  console.log(reOrderedArray)
-     reOrderedArray.forEach((item,index) => !item  ? reOrderedArray.splice(index,1) : '');
-     if(reOrderedArray.includes(undefined) || reOrderedArray.includes(null))
-        return
-    try 
-    {
-      await ReorderPoster(Questionnaire.uuid,reOrderedArray)
-    }
-    catch(err)
-    {
-      SavedMessage.error({
-        content : 'در مرتب کردن سوالات مشکلی پیش آمد',
-        duration : 4,
-        style : {
-          fontFamily : 'IRANSans',
-          display : 'flex',
-          alignItems : 'center',
-          justifyContent : 'center',
-          direction : 'rtl'
-        }
-      }) 
-    }
-  };
 
   const AddWelcomeHandler = () => {
     let welcomeID = Date.now();
@@ -305,38 +278,10 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
        'QuestionType' : 'optional'
       })
   }
-  // const DragEndHandler = (e) => {
-  //   console.log(e.oldDraggableIndex , e.newDraggableIndex)
-  // }
+
   return (
     <QuestionnairePanelBodyContainer>
       {contextHolder}
-      {/* <div>
-        <QuestionSearchContainer>   
-              { Questionnaire ?  <>
-                <Select
-                showSearch
-                defaultActiveFirstOption={false}
-                suffixIcon={<div>
-                  <Icon name='GraySearch' style={{ width : 15 }}/>
-                  </div>}
-                allowClear
-                placeholder="براساس عنوان سوال جست‌وجو کنید"
-                optionFilterProp="children"
-                options={SearchResult}
-                onSelect={SearchSelectHandler}
-                onChange={(e) => SearchQuestionHandler(e)}
-                style={{ width : '100%' , height : '100%' , direction : 'rtl' , fontFamily : 'IRANSans' }}
-                onSearch={SearchQuestionHandler}
-                notFoundContent={null}
-                
-                filterOption={(_, option) => option ? option.label : ''}/>
-                </> : <Skeleton.Input active />}
-          </QuestionSearchContainer>
-      </div> */}
-      {/* <QuestionDesignTitle>
-        { Questionnaire &&  <p>سوالی را ایجاد یا ویرایش کنید</p> }
-      </QuestionDesignTitle> */}
       <QuestionDesignBox id='characters' className=''>
       <QuestionSearchContainer questionnairePanel className='search_box_container'>   
               { Questionnaire ?  <>
@@ -365,6 +310,7 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                 IsQuestion={false}
                 UUID={Questionnaire.uuid}
                 ActiveQuestion={ActiveQuestion}
+                Questionnaire={Questionnaire}
                 setActiveQuestion={setActiveQuestion}
                 question={NonQuestions[0]}/> :
                  <AddNonQuestionItem onClick={AddWelcomeHandler}  >
@@ -385,13 +331,15 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                 { Questionnaire ? AllQuestion.length ?        
                 <ReactSortable {...sortableOptions}
                 list={AllQuestion.map(item => item.question ? ({ ...item.question , chosen : true }) : {})}
-                 setList={(newList) => { defaultQuestionsOrder = newList}} style={{ width : '100%' }} className='main_container' >
+                 setList={(newList) => {}}
+                  style={{ width : '100%' }} className='main_container' >
                   {
                     AllQuestion.map((item,index) =>
                     <div id={'question' + item?.question.id} className={item.question.question_type}>
                                <QuestionItem
                                 IsQuestion={true}
                                 QuestionnaireReloader
+                                Questionnaire={Questionnaire}
                                 UUID={Questionnaire.uuid}
                                 key={item.question.id}
                                 question={item}
@@ -404,35 +352,7 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                             </div>)
                   }
                 </ReactSortable>
-                // <DragDropContext onDragEnd={onDragEnd} >
-                //   <Droppable droppableId='dropboard'>
-                //   {(provided, snapshot) => <div  
-                //     ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
-                //     {AllQuestion.map((item,index) => 
-                //     ( item.question)? 
-                //       <Draggable
-                //       key={item.question.id}
-                //       draggableId={item.question.id.toString()}
-                //       index={index}>
-                //       {(provided, snapshot) => (
-                //         <div ref={provided.innerRef} {...provided.draggableProps}>
-                //           <QuestionItem
-                //             IsQuestion={true}
-                //             UUID={Questionnaire.uuid}
-                //             key={item.question.id}
-                //             question={item}
-                //             provided={provided}
-                //             QuestionsList={AllQuestion}
-                //             ActiveQuestion={ActiveQuestion}
-                //             setActiveQuestion={setActiveQuestion}
-                //             dropboardprovide={provided}/>         
-                //         </div>
-                //       )}
-                //     </Draggable> : null)}
-                //   {provided.placeholder}
-                //   </div>  } 
-                //   </Droppable>
-                // </DragDropContext>
+          
                 :  <AddNonQuestionItem style={{ marginTop : 10 }} addquestion='true' onClick={AddFirstQuestion}>
                   <svg width="17" height="16" viewBox="0 0 17 16" xmlns="http://www.w3.org/2000/svg">
                   <path d="M16.5 8C16.5 12.4183 12.9183 16 8.5 16C4.08172 16 0.5 12.4183 0.5 8C0.5 3.58172 4.08172 0 8.5 0C12.9183 0 16.5 3.58172 16.5 8ZM4.5 8C4.5 8.27614 4.72386 8.5 5 8.5H8V11.5C8 11.7761 8.22386 12 8.5 12C8.77614 12 9 11.7761 9 11.5V8.5H12C12.2761 8.5 12.5 8.27614 12.5 8C12.5 7.72386 12.2761 7.5 12 7.5H9V4.5C9 4.22386 8.77614 4 8.5 4C8.22386 4 8 4.22386 8 4.5V7.5H5C4.72386 7.5 4.5 7.72386 4.5 8Z"/>
@@ -446,6 +366,7 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                   setActiveQuestion={setActiveQuestion}
                   IsQuestion={false} 
                   UUID={Questionnaire.uuid} 
+                  Questionnaire={Questionnaire}
                   question={NonQuestions[1]} /> :
                    <AddNonQuestionItem onClick={AddThanksHandler} style={{  marginTop : 10 }}>
                   <p>افزودن صفحه تشکر</p>
