@@ -52,12 +52,15 @@ export const Login_form = ({ setLoggedIn }) => {
         setLoggedIn();
     }
     catch(error)
-    {
-      if(typeof error == 'string')
-        setErMessage(error)
-      if(typeof error == 'object' && error.response)
-        setErMessage(error.response.data[0].split('.')[0])
-        
+    { 
+      if(error.response.status == 500) 
+        setErMessage('مشکلی پیش آمد')
+      else {
+        if(typeof error == 'string')
+          setErMessage(error)
+        if(typeof error == 'object' && error.response)
+          setErMessage(error.response.data[0].split('.')[0])
+      }     
     }
     finally
     {

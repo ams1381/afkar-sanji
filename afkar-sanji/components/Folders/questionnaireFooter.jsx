@@ -95,7 +95,7 @@ const QuestionnaireFooterPart = ({ questionnaire , FolderReload , folderNumber})
             </Link>
         </QuestionnaireFooterItem>
         <QuestionnaireFooterItem>
-        <Link href={`questionnaire/${questionnaire.uuid}}/Charts/`}>
+        <Link href={`questionnaire/${questionnaire.uuid}}/charts/`}>
             <QuestionnaireFooterButton>
             <Icon name='statics' />
             </QuestionnaireFooterButton>

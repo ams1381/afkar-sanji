@@ -61,7 +61,7 @@ axiosInstance.interceptors.response.use(function (response) {
             window.location.pathname = '/404'
             break;
         case 500:
-            window.location.pathname = '/500'
+            // window.location.pathname = '/500'
             break;
     }
     return Promise.reject(error);

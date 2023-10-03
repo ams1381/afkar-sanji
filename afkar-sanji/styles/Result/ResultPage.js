@@ -112,14 +112,39 @@ export const ResultTableContainer = styled.div`
         // min-width : 217px;
         color: var(--Neutral-Gray9) !important;
     }
-    //  .ant-table-cell.ant-table-selection-column
-    // {
-    //     min-width : 70px !important;
-    // }
-    // colgroup col 
-    // {
-    //     min-width : 217px;
-    // }
+    .ant-pagination-item , .ant-pagination-next , .ant-pagination-prev
+    {
+        border-radius: 2px !important;
+        border: 1px solid var(--Outline, #D9D9D9) !important;
+        background: var(--Surface, #FEFEFE) !important;
+        padding: 1px 7px !important;
+        width: 32px;
+        height: 32px !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .ant-pagination 
+    {
+        gap : 8px !important;
+        justify-content : center !important;
+        align-items: center !important; 
+    }
+    .ant-pagination-options
+    {
+        height : 32px;
+    }
+    .ant-pagination-options input 
+    {
+       width: 50px;
+       height: 32px;
+       border-radius: 2px; 
+    }
+    .ant-pagination-item-active
+    {
+        border: 1px solid var(--primary-color) !important;
+        color: var(--primary-color) !important;
+    }
     & .ant-table-cell p 
     {
         // width: 95%;

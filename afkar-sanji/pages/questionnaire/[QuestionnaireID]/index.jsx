@@ -55,6 +55,9 @@ const QuestionnairePanel = ({ cookies }) => {
     }
     if(typeof window != 'undefined')
     window.addEventListener('beforeunload',beforeUnloadHandler)
+    useEffect(() => {
+      refetch();
+    },[SideState])
   return (
     <>
      <style global jsx>{`

@@ -58,6 +58,7 @@ export const WriteDropDownAnswer = ({ QuestionInfo }) => {
             newOption : true ,
             group : QuestionInfo.group
         })) : ''}
+        maxLength={250}
          key={item.id} placeholder='چیزی بنویسید' 
         value={(item.text != 'null') ? item.text : ''}
          onChange={e => {

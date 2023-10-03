@@ -1,5 +1,5 @@
 import { Header } from '@/components/common/Header';
-import SideBar from '@/components/common/SideBar';
+import SideBar from '@/components/Folders/SideBar';
 import { ScreenMask } from '@/styles/common';
 import { CornerAddButton } from '@/styles/folders/cornerAdd';
 import AddPopoverContent from '@/components/Folders/AddPopoverContent';

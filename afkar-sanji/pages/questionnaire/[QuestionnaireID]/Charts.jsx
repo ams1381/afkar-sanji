@@ -52,15 +52,13 @@ const ChartsPage = ({ cookies }) => {
   )
 }
 export default ChartsPage;
-
 export async function getServerSideProps(context) {
   const { req } = context;
   const cookies = req.headers.cookie;
-  const urlDest = req.url;
+  const urlDest = req.pathname ;
 
 
   if (cookies) {
-    // Parse the cookies
     const parsedCookies = cookies.split(';').reduce((acc, cookie) => {
       const [key, value] = cookie.trim().split('=');
       acc[key] = decodeURIComponent(value);
@@ -74,11 +72,18 @@ export async function getServerSideProps(context) {
     };
   }
 
-
-  return {
-    redirect: {
-      permanent: false,
-      destination: "/auth?returnUrl=" + urlDest
-    }
-  };
+  if(urlDest != '/500' && urlDest != '/404' && urlDest != '/403')
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/auth?returnUrl=" + urlDest
+      }
+    };
+  else
+    return {
+      redirect: {
+        permanent: false,
+        destination: urlDest
+      }
+  }
 }

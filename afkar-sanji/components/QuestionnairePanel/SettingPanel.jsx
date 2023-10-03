@@ -1,18 +1,13 @@
 import React, { useEffect, useReducer, useRef, useState } from 'react';
-import { ConfigProvider, Space, message } from 'antd';
+import { message } from 'antd';
 import { Button } from 'antd';
-import dayjs from 'dayjs';
 import { Switch, Checkbox } from 'antd';
-import fa_IR from "antd/lib/locale/fa_IR";
 import { QuestionnaireDatePickerContainer, QuestionnaireSettingContainer , TimePickerContainer
  } from '@/styles/questionnairePanel/QuestionnaireSetting';
 import { Icon } from '@/styles/icons';
 import { axiosInstance } from '@/utilities/axios';
 import jalaali from 'jalaali-js';
-import jalaliMoment from 'jalali-moment';
-import { NumberFormat } from 'react-hichestan-numberinput';
 import TimePicker from "react-multi-date-picker/plugins/time_picker";
-import transition from "react-element-popper/animations/transition"
 import { digitsEnToFa, digitsFaToEn } from '@persian-tools/persian-tools';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import persian from "react-date-object/calendars/persian"
@@ -34,7 +29,7 @@ export const convertStringToDate = str => {
 
   return [formattedDate, formattedTime];
 };
-function convertToRegularTime(dateTimeString) {
+export function convertToRegularTime(dateTimeString) {
   const dateObj = new Date(dateTimeString);
 
   const year = dateObj.getFullYear();
@@ -47,8 +42,6 @@ function convertToRegularTime(dateTimeString) {
 
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
-const convertToISOString = (datePart, timePart) =>
-  new Date(`${datePart}T${timePart}`).toISOString().replace('Z', `+${(new Date().getTimezoneOffset() / -60).toFixed(0).padStart(2, '0')}:${(Math.abs(new Date().getTimezoneOffset()) % 60).toString().padStart(2, '0')}`);
 
 const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
   const [DateValue, SetDateValue] = useState(null);
@@ -68,18 +61,22 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
 
     if(QuestionnaireData.pub_date)
     {
-      // console.log(parseInt(convertToRegularTime(QuestionnaireData.pub_date).split(" ")[1].split(':')[0]) + 1 
+      // console.log(parseInt(convertToRegularTime(QuestionnaireData.pub_date).split(" ")[1].split(':')[0]) + 1 + ':' +
       // convertToRegularTime(QuestionnaireData.pub_date).split(" ")[1].split(':')[1] + ':' +
       // convertToRegularTime(QuestionnaireData.pub_date).split(" ")[1].split(':')[0])
-      pub_date = digitsEnToFa(convertDate((convertToRegularTime(QuestionnaireData.pub_date).split(" ")[0]),'jalali') + ' ' +
-      convertToRegularTime(QuestionnaireData.pub_date).split(" ")[1])
+      pub_date = digitsEnToFa(convertDate((convertToRegularTime(QuestionnaireData.pub_date).split(" ")[0]),'jalali') + ' ') +
+      digitsEnToFa(parseInt(parseInt(convertToRegularTime(QuestionnaireData.pub_date).split(" ")[1].split(':')[0]) + 1) + ':' +
+      convertToRegularTime(QuestionnaireData.pub_date).split(" ")[1].split(':')[1] + ':' +
+      convertToRegularTime(QuestionnaireData.pub_date).split(" ")[1].split(':')[2])
     }
     let date_picker = pub_date;
 
     if(QuestionnaireData.end_date)
     {
-      end_date = digitsEnToFa(convertDate((convertToRegularTime(QuestionnaireData.end_date).split(" ")[0]),'jalali') + ' ' +
-      convertToRegularTime(QuestionnaireData.end_date).split(" ")[1])
+      end_date = digitsEnToFa(convertDate((convertToRegularTime(QuestionnaireData.end_date).split(" ")[0]),'jalali') + ' ') +
+      digitsEnToFa(parseInt(parseInt(convertToRegularTime(QuestionnaireData.end_date).split(" ")[1].split(':')[0]) + 1) + ':' +
+      convertToRegularTime(QuestionnaireData.end_date).split(" ")[1].split(':')[1] + ':' +
+      convertToRegularTime(QuestionnaireData.end_date).split(" ")[1].split(':')[2])
      
      date_picker += ' => ' + end_date;
     }
@@ -144,8 +141,7 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
       return
     SetSettingLoading(true)
     try {
-      if(!QuestionnaireData.pub_date)
-        delete QuestionnaireData.pub_date;
+
       delete QuestionnaireData.folder
       delete QuestionnaireData.welcome_page;
       delete QuestionnaireData.questions;
@@ -157,8 +153,7 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
       refetch()
       setItem('tabType','question_design');
       ChangeSide('question_design')
-      // Dispatcher({ ACTION : 'Data Replacement' , newData : data })
-      // console.log(data,QuestionnaireData)
+
      }
       
     }
@@ -181,7 +176,7 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
     }
   }
   return (
-    <ConfigProvider locale={fa_IR} direction="rtl">
+    <>
       {contextHolder}
       <QuestionnaireSettingContainer>
         <QuestionnaireDatePickerContainer>
@@ -260,22 +255,7 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
             locale={persian_fa}
             calendarPosition="bottom-right"
           />
-              {/* <TimePicker
-                open={TimerOpen}
-                onOpenChange={setTimerOpen}
-                onChange={TimerChangeHandler}
-                disabled={!TimerActive}
-                showNow={false}
-                cellRender={(current, info) => <div className='time_cell'>{digitsEnToFa(current)}</div>}
-                inputReadOnly 
-                // locale={{ momentLocale: 'fa' }} 
-                defaultValue={
-                  TimerValue
-                    ? (dayjs(TimerValue, 'HH:mm:ss'))
-                     // Set Jalali locale for moment
-                    : null
-                } 
-                /> */}
+         
           </div>
         </QuestionnaireDatePickerContainer>
         <QuestionnaireDatePickerContainer>
@@ -316,7 +296,7 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
           </Button>
         </div>
       </QuestionnaireSettingContainer>
-    </ConfigProvider>
+    </>
   )
 }
 

@@ -50,7 +50,7 @@ const ThankComponent = ({ ThanksInfo , mobilepreview , UUID}) => {
             </div> */}
               { ThanksInfo?.share_link && <div className='default_thanks_button_container' style={{ marginTop : 20 }}>
                   <button onClick={() => {
-                    navigator.clipboard.writeText(`http://mah.ariomotion.com/questionnaire/${UUID}/AnswerPage/`)
+                    navigator.clipboard.writeText(`http://mah.ariomotion.com/questionnaire/${UUID}/answer-page/`)
                     setCopiedState(true);
                     }}>
                 { copiedState ? <p>کپی شد</p> : <p>کپی لینک</p>}

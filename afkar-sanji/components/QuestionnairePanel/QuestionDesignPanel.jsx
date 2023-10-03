@@ -414,7 +414,7 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                   }
                   </div> : <></>}
                   { !ActiveQuestion && Questionnaire && <div className='QuestionDesignLeftContainer' >
-                       <p>جهت ویرایش یک از سوالات را از قسمت سمت‌راست انتخاب کنید</p>
+                       <p>یکی از سوالات را انتخاب کنید یا سوالی بسازید</p>
                    </div> }
         
       </QuestionDesignBox>

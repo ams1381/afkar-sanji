@@ -166,7 +166,7 @@ const ChartsBody = ({ ChartQuery , QuestionnaireQuery }) => {
                 <p>دانلود نمودار‌ها</p>
                 <Icon name='Upload'/>
               </ResultButton>
-              <Link href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/Results/`}>
+              <Link href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/results/`}>
                 <ResultButton>
                   <p>نتایج</p>
                 </ResultButton>
@@ -200,7 +200,7 @@ const ChartsBody = ({ ChartQuery , QuestionnaireQuery }) => {
             : <EmptyResultContainer>
             <img src={EmptyImage.src} />
             <p>نتیجه‌ای جهت نمایش وجود ندارد</p>
-            <Link href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/AnswerPage`} target='_blank'>
+            <Link href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/answer-page`} target='_blank'>
               <EmptyButtonPage type='primary'>به پرسشنامه پاسخ دهید</EmptyButtonPage>
             </Link>
           </EmptyResultContainer> 

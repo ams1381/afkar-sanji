@@ -55,9 +55,9 @@ export const ChartsHeader = ({ QuestionnaireQuery }) => {
           setItem('tabType','questionnaire_setting');
         }
       else if(ID == 3)
-        router.push(`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/Results/`);
+        router.push(`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/results/`);
       else if(ID == 4)
-        router.push(`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/Charts/`);
+        router.push(`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/charts/`);
     }
     return (
         QuestionnaireQuery.isLoading ? <>
@@ -85,7 +85,7 @@ export const ChartsHeader = ({ QuestionnaireQuery }) => {
             </QuestionnaireEditItemsInnerContainer>
             <QuestionnaireEditButtonContainer>
             <Link onClick={(e) => { !QuestionnaireQuery.data?.data?.questions.length ? e.preventDefault() : '' }}
-            href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/ViewQuestions/`}  target='_blank'>
+            href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/view-questions/`}  target='_blank'>
               <button style={{ pointerEvents :(QuestionnaireQuery.data?.data?.questions &&  QuestionnaireQuery.data?.data?.questions.length) ? 'all' : 'none' }}>
                      <Icon name='BlackEye' />
               </button>

@@ -12,6 +12,7 @@ import { Icon } from '@/styles/icons';
 import { handleInputWidth } from '@/utilities/RenameFunctions';
 import { digitsEnToFa } from '@persian-tools/persian-tools';
 import Link from 'next/link';
+import { convertToRegularTime } from '../QuestionnairePanel/SettingPanel';
 
 const convertToJalaliDate = (inputDate) => {
     const [year, month, day] = inputDate.split('-');
@@ -63,7 +64,7 @@ const QuestionnaireBox = ({Questionnaire , FolderReload , folderNumber}) => {
         handleInputWidth(nameRef,e.target.value);
         setQuestionnaireName(e.target.value)
     }
-    
+
   return (
      <QuestionnaireDiv>
         <Badge.Ribbon className={BadgeStyle['QuestionnaireBadge']} color={Questionnaire.is_active ? "green" : "red"} text={Questionnaire.is_active ? 'فعال' : 'غیر فعال'}  
@@ -93,7 +94,7 @@ const QuestionnaireBox = ({Questionnaire , FolderReload , folderNumber}) => {
              </QuestionnaireNameContainer> : <Skeleton active /> }
              <div className="questionnaire_preview">
                 {Questionnaire.question_count != 0  ? 
-                <Link href={`/questionnaire/${Questionnaire.uuid}/ViewQuestions/`} target='_blank'>
+                <Link href={`/questionnaire/${Questionnaire.uuid}/view-questions/`} target='_blank'>
                  <QuestionnairePreviewButton disabled={Questionnaire.question_count == 0}>
                      پیش نمایش
                  </QuestionnairePreviewButton>
@@ -106,7 +107,9 @@ const QuestionnaireBox = ({Questionnaire , FolderReload , folderNumber}) => {
              <div className="questionnaire_stats">
                 { Questionnaire ?
                 <> <QuestionnaireBodyStat>
-                     <p>{Questionnaire.pub_date ? digitsEnToFa(convertToJalaliDate(Questionnaire.pub_date)) : ''}</p>
+                     <p>{Questionnaire.created_at ?
+                      digitsEnToFa(convertToJalaliDate(convertToRegularTime(Questionnaire.created_at.split(" ")[0]))) 
+                      : ''}</p>
                      <p>: ایجاد شده در</p>
                  </QuestionnaireBodyStat>
                  <QuestionnaireBodyStat>
@@ -115,7 +118,7 @@ const QuestionnaireBox = ({Questionnaire , FolderReload , folderNumber}) => {
                  </QuestionnaireBodyStat> </>: <Skeleton active />}
              </div>
              <div className="questionnaire_see_result">
-             <Link style={{ width : '117px' , display : 'block' }} href={`/questionnaire/${Questionnaire.uuid}/Results/`}>
+             <Link style={{ width : '117px' , display : 'block' }} href={`/questionnaire/${Questionnaire.uuid}/results/`}>
                  <QuestionnaireSeeResultButton>
                      <p>مشاهده نتایج</p>
                  </QuestionnaireSeeResultButton>

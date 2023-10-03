@@ -7,7 +7,7 @@ import { PreviewPageContainer, PreviewPageHeader , ControlButtonsContainer
   , PreviewPage, AnimLightOne , AnimLightTwo , AnimLightThree , AnimLightFour ,
    PreviewQuestionsContainer } from '@/styles/questionnairePanel/ViewQuestions';
 import { axiosInstance, baseURL } from '@/utilities/axios';
-import { Button, Progress, Skeleton, message } from 'antd';
+import { Button, Progress, Skeleton, message , Statistic  } from 'antd';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react'
@@ -17,29 +17,32 @@ import ProgressBarLoading from '@/styles/ProgressBarLoading';
 import TopBarProgress from 'react-topbar-progress-indicator';
 import { Provider, useSelector } from 'react-redux';
 import AnswerStore, { setInitialAnswerSet } from '@/utilities/AnswerStore';
-import { configureStore, createSlice } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { AnswerSetFormDataConverter } from '@/utilities/FormData';
 import { digitsEnToFa } from '@persian-tools/persian-tools';
-import useDetectScroll from "@smakss/react-scroll-direction";
 import { AnimatePresence , motion} from 'framer-motion';
 import { FreeMode, Mousewheel, Pagination } from 'swiper/modules';
 import { isValidElement } from 'react';
+import { useTimer } from 'react-timer-hook';
+import { Timer } from '@/components/ViewQuestions/Timer';
 // import { NullifiedContextProvider } from '@dnd-kit/core/dist/components/DragOverlay/components';
 
-
 SwiperCore.use([Navigation]);
-function isInViewport(element) {
-  const rect = element.getBoundingClientRect();
-  return (
-      rect.top >= 0 &&
-      rect.left >= 0 &&
-      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-  );
-}
 
+function getDeadlineTimestamp(timeString) {
+  if(!timeString)
+    return null
+  const [hours, minutes, seconds] = timeString.split(':').map(Number);
+
+  // Calculate milliseconds from the given time
+  const millisecondsFromTime = (hours * 3600 + minutes * 60 + seconds) * 1000;
+
+  // Calculate the total deadline timestamp
+  const deadlineTimestamp = Date.now() + millisecondsFromTime;
+
+  return deadlineTimestamp;
+}
 const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
   const router = useRouter();
   const [ QuestionnaireInfo , SetQuestionnaireInfo ] = useState(Questionnaire);
@@ -50,15 +53,12 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
   const [ swiperInstance , setSwiperInstance ] = useState(null);
   const [ nextQuestionError , setNextQuestionError ] = useState(null);
   const [ nextQuestionLoading , setNextQuestionLoading ] = useState(false);
-  const scrollDir = useDetectScroll({ axis: "y" });
   const [prevScrollPos, setPrevScrollPos] = useState(0);
-  const [scrollDirection, setScrollDirection] = useState('none');
-  var [ prevButtonPressed  , setPrevButtonPressed ] = useState(false);
-  var [ nextButtonPressed , setNextButtonPressed ] = useState(false);
+  const [ TimerFinished , SetTimerFinished ] = useState(false);
+ 
 
-  let scroll_position = 0;
-  let scroll_direction;
-  // const [ notAnsweredQuestions , setNotAnsweredQuestions ] = useState([]);
+ 
+
 
   let notAnsweredQuestions = []
   let QuestionsAnswerSet;
@@ -68,13 +68,8 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
     dispatcher = useDispatch();
     QuestionsAnswerSet = useSelector(state => state.reducer.AnswerSet)
   }
-  const disableScroll = () => {
-    const scrollTop = window.scrollY;
-    document.body.style.overflow = 'hidden';
-    document.body.style.position = 'fixed';
-    document.body.style.top = `-${scrollTop}px`;
-    setIsScrollDisabled(true);
-  };
+  
+
   const enableScroll = () => {
     const scrollTop = parseInt(document.body.style.top || '0', 10);
     document.body.style.overflow = '';
@@ -135,12 +130,7 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
         }
       })
     }
-    // if(QuestionnaireInfo && !QuestionnaireInfo.show_question_in_pages)
-    // {
-    //   disableScroll();
-    // }
   },[])
-
 
   useEffect(() => {
       setNextQuestionError(null)
@@ -149,7 +139,9 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
   const saveSwiperInstance = (swiper) => { 
     setSwiperInstance(swiper); // Store the Swiper instance
   };
-  
+  // console.log(getDeadlineTimestamp(QuestionnaireInfo.timer))
+  // if(QuestionnaireInfo)
+  //   console.log(getDeadlineTimestamp(QuestionnaireInfo?.timer),QuestionnaireInfo?.timer)
   const NextQuestionHandler = async () => {
     setNextQuestionError(null)
     // console.log(QuestionsData[CurrentIndex].question , QuestionsAnswerSet)
@@ -230,17 +222,11 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
       
   } 
   const ChangeSwiperSlideHandler = async (E) => {
-    console.log(E)
-    // console.log(document.querySelector('.swiper-wrapper').getAttribute('style'))
     const text = document.querySelector('.swiper-wrapper').getAttribute('style');
 
     const regex = /translate3d\(([-\d]+px), ([-\d]+px), ([-\d]+px)\)/;
     const match = text.match(regex);
-    // console.log(match[2])
-    // document.querySelector('.swiper-wrapper').setAttribute('style','transform : none')
-    // document.querySelector('.swiper-wrapper').style.position = 'absolute';
-    // document.querySelector('.swiper-wrapper').style.top = match[2];
-    // document.querySelector('.swiper-wrapper').style.left = 0;
+
     SetCurrentIndex(E.activeIndex)
     if(QuestionsData[E.activeIndex - 1]?.question?.question_type != 'group' && QuestionsAnswerSet)
     {
@@ -306,6 +292,16 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
   }
   const ConfirmAnswersHandler = async () => {
 
+    if(TimerFinished)
+    {
+      messageApi.error({
+        content : 'مدت زمان پاسخ به پایان رسیده',
+        style : {
+          fontFamily : 'IRANSans'
+        }
+      })
+      return
+    }
     let FileQuestionQuestions = QuestionsAnswerSet.map(item => {
       if(item.file)
         return item
@@ -315,9 +311,7 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
       if(item.answer && !Object.keys(item.answer)?.length)
           item.answer = null
     })
-    console.log(notAnsweredQuestions)
-    // if(notAnsweredQuestions?.length)
-    //   setNextQuestionError(notAnsweredQuestions)
+
     FileQuestionQuestions = FileQuestionQuestions.filter(item => item != undefined);
     CopiedQuestionAnswerSet = CopiedQuestionAnswerSet.filter(item => item.file == null);
 
@@ -335,7 +329,6 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
   }
   catch(err)
   {
-    console.log(err)
     err.response.data?.forEach((item) => {
       if(item && Object.values(item).length)
           messageApi.error({
@@ -346,10 +339,7 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
           })
     })
   }
-    
   }
-  // let prevButtonPressed = false;
-  // let nextButtonPressed = false;
   return (
     <>
     <Head>
@@ -361,6 +351,9 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
       <AnimLightFour />
     {messageContext}
     { QuestionnaireInfo ? <PreviewPage> 
+      <div>
+      <Timer SetTimerFinished={SetTimerFinished} expiryTimestamp={getDeadlineTimestamp(QuestionnaireInfo?.timer)} />
+      </div>
       <Provider store={AnswerStore}>
         <PreviewPageContainer >  
           <PreviewPageHeader>
@@ -397,12 +390,6 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
                   mousewheel
                   // slideToClickedSlide
                   breakpoints={{
-                    // when window width is >= 320px
-                    // '320': {
-                    //   slidesPerView: 2,
-                    //   spaceBetween: 20
-                    // },
-                    // when window width is >= 480px
                     '480': {
                       slidesPerView: 'auto',
                       // spaceBetween: 0

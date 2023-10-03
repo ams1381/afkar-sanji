@@ -23,20 +23,20 @@ const ResultsPage = ({ cookies }) => {
       {
         queryKey: ['questionnaire'],
         queryFn: async () => await axiosInstance.get(`/question-api/questionnaires/${router.query.QuestionnaireID}/`),
+        refetchOnWindowFocus : false
       },
       {
         queryKey: ['result'],
         queryFn: async () =>
           await axiosInstance.get(`/result-api/${router.query.QuestionnaireID}/answer-sets/?answered_at=&end_date=${EndDate}&page=${CurrentPage}&start_date=${StartDate}`) ,
-      },
+        refetchOnWindowFocus : false
+        },
     ],
   });
   const SearchQuery = useQuery(['ResultSearch'],
     async () => await axiosInstance.get(`/result-api/${router.query.QuestionnaireID}/answer-sets/search/?search=${SearchValue}`),{
     enabled : SearchValue ? true : false
   })
-  // ResultQuery.
-
   useEffect(() => {
     if(CurrentPage != CurrentRef.current)
     {
@@ -81,14 +81,12 @@ export async function getServerSideProps(context) {
       acc[key] = decodeURIComponent(value);
       return acc;
     }, {});
-
     return {
       props: {
         cookies: parsedCookies,
       },
     };
   }
-
   return {
     redirect: {
       permanent: false,

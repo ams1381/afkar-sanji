@@ -207,7 +207,8 @@ export const OptionalAnswerBlockContainer = styled.div`
     & > .OptionalAnswerItemContainer p 
     {
         margin-right : 0.5rem;
-        direction: rtl
+        direction: rtl;
+        user-select : none;
     }
      & .Prioritize
     {

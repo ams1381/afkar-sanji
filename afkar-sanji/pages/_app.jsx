@@ -19,12 +19,7 @@ export default function App({ Component, pageProps , cookies }) {
    
     const authentication = async () => {
       if (!pageProps.cookies || !pageProps.cookies.access_token) {
-        router.push({
-          pathname: '/auth',
-          query: { 
-            returnUrl: router.asPath ,
-           },
-        });
+        window.location.pathname = '/auth'
         return;
       }
       axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + pageProps?.cookies?.access_token;
@@ -42,12 +37,13 @@ export default function App({ Component, pageProps , cookies }) {
       
     }
     useEffect(() => {
+      // ['/auth', ].includes(router.pathname)
       if(router.pathname !== '/auth' 
       && router.pathname !== '/404' &&
       router.pathname !== '/403' &&
       router.pathname != '/505' 
       && router.pathname !== '/auth/otpSms'
-       && !router.pathname.includes('AnswerPage'))
+       && !router.pathname.includes('answer-page'))
           authentication();
       else
         setReadyToRender(true)

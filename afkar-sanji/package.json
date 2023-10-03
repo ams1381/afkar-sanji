@@ -70,6 +70,7 @@
     "react-redux": "^8.1.2",
     "react-scrollbars-custom": "^4.1.1",
     "react-sortablejs": "^6.1.4",
+    "react-timer-hook": "^3.0.7",
     "react-to-pdf": "^1.0.1",
     "react-topbar-progress-indicator": "^4.1.1",
     "react-use-cookie": "^1.4.0",

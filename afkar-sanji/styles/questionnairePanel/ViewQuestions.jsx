@@ -255,9 +255,15 @@ export const PreviewPageContainer = styled.div`
 export const PreviewPageHeader = styled.div`
     width : 100%;
     display : flex;
+    background: white;
     justify-content : center;
-    padding-top : 1rem;
 
+    .ant-progress 
+    {
+        height : 34px;
+        display : flex;
+        align-items : center;
+    }
     .ant-progress-steps-outer .ant-progress-steps-item
     {
         width : 8px !important;
@@ -289,4 +295,18 @@ export const PreviewQuestionsContainer = styled.div`
 export const PreviewQuestionComponent = styled(QuestionComponent)`
     box-shadow : none;
     background : transparent;
+`
+export const TimerContainer = styled.div`
+    text-align: center;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 2px;
+    width: 86px;
+    left: 30px;
+    top: 74px;
 `
