@@ -536,7 +536,7 @@ const ResultSearchHandler = async (e) => {
                   return  digitsEnToFa(page)
                 },
                 showQuickJumper : true ,
-                // showSizeChanger  : true,
+                showSizeChanger  : false,
                 showTotal : (total , range) => {
                   return <p>جمعا {digitsEnToFa(Math.ceil(ResultQuery?.data?.data.count / 7))} صفحه </p>
                 },
@@ -544,7 +544,6 @@ const ResultSearchHandler = async (e) => {
                 locale : { 
                   jump_to: "",
                   page : 'رفتن به',
-                  // items_per_page : 'sdgsdg'
                  }
               }}
               rowSelection={{

@@ -9,6 +9,8 @@ import { axiosInstance } from '@/utilities/axios';
 import { useRouter } from 'next/router';
 import { ResultBody } from '@/components/ResultPage/ResultBody';
 import ProgressBarLoading from '@/styles/ProgressBarLoading';
+import { CommonDrawer } from '@/components/common/CommonDrawer';
+import { PageBox } from '@/styles/common';
 
 const ResultsPage = ({ cookies }) => {
   const [ SideBarOpen , setOpen ] = useState(false);
@@ -17,6 +19,7 @@ const ResultsPage = ({ cookies }) => {
   const CurrentRef = useRef(1);
   const [ StartDate , setStartDate ] = useState('');
   const [ EndDate , setEndDate ] = useState('')
+  const [ RightDrawerOpen , setRightDrawerOpen ] = useState(false);
   const [ SearchValue , setSearchValue ] = useState(null);
   const [ QuestionnaireQuery , ResultQuery ] = useQueries({
     queries: [
@@ -56,16 +59,21 @@ const ResultsPage = ({ cookies }) => {
       <title>Afkar Sanji | Result Page</title>
     </Head>
     <ProgressBarLoading />
-    <Header SetSideBar={() => setOpen(!SideBarOpen)} cookies={cookies}
-     goToFolders={true} loadingHeader={QuestionnaireQuery.isLoading}
-    Questionnaire={QuestionnaireQuery.data?.data}/>
-    <PanelInnerContainer>
-      <ResultHeader QuestionnaireQuery={QuestionnaireQuery}/>
-      <ResultBody ResultQuery={SearchValue ? SearchQuery : ResultQuery}
-       SetCurrentPage={SetCurrentPage} queryStatus={SearchValue ? 'Search' : 'Result'}
-      QuestionnaireQuery={QuestionnaireQuery} setEndDate={setEndDate} setSearchValue={setSearchValue}
-       setStartDate={setStartDate}/>
-    </PanelInnerContainer>
+    <PageBox>
+      <CommonDrawer RightDrawerOpen={RightDrawerOpen} setRightDrawerOpen={setRightDrawerOpen} />
+      <main style={{ width : RightDrawerOpen ? '80%' : '100%', transition : '0.3s' }}>
+      <Header SetSideBar={() => setOpen(!SideBarOpen)} cookies={cookies}
+      goToFolders={true} loadingHeader={QuestionnaireQuery.isLoading}
+      Questionnaire={QuestionnaireQuery.data?.data}/>
+      <PanelInnerContainer>
+        <ResultHeader QuestionnaireQuery={QuestionnaireQuery}/>
+        <ResultBody ResultQuery={SearchValue ? SearchQuery : ResultQuery}
+        SetCurrentPage={SetCurrentPage} queryStatus={SearchValue ? 'Search' : 'Result'}
+        QuestionnaireQuery={QuestionnaireQuery} setEndDate={setEndDate} setSearchValue={setSearchValue}
+        setStartDate={setStartDate}/>
+      </PanelInnerContainer>
+      </main>
+    </PageBox>
     </>
   )
 }

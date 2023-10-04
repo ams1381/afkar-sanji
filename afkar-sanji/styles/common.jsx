@@ -239,3 +239,82 @@ export const ScreenMask = styled.div`
     cursor : pointer;
     z-index : ${p => p.shown ? '2' : '-1'}
 `
+export const PageBox = styled.div`
+    display: flex;
+    justify-content: flex-start;
+`
+export const CommonDrawerContainer = styled.div`
+    height: 1000px;
+    background: white;
+    position: fixed;
+    right: 0;
+    z-index: 555;
+    width: ${p => p.open ? '307px' : '62px'};
+    transition : 0.3s;
+
+    .drawerLogo
+    {
+        height: 58px;
+        display: flex;
+        font-size: 12px;
+        color: var(--primary-color);
+        justify-content: space-around;
+        align-items: center;
+        cursor: pointer;
+        background: var(--Primary-surface, #EEF0FF);
+    }
+    .drawerLogo i 
+    {
+        width : 38px;
+        height : 38px;
+    }
+    .drawer_item {
+        display: flex;
+        padding: 12px 24px;
+        background: var(--hit-box, rgba(255, 255, 255, 0.00));
+        height: 38px;
+        cursor: pointer;
+        align-items: center;
+        justify-content: flex-end;
+        color: var(--Neutral-Gray9);
+        font-size: 14px;
+        gap: 10px;
+        transition : 0.3s;
+    }
+    .drawer_item:hover
+    {
+        color: var(--primary-color);
+        
+    }
+    .drawer_item:hover i 
+    {
+        filter: invert(37%) sepia(74%) saturate(1045%) hue-rotate(210deg) brightness(91%) contrast(105%);
+    }
+    .drawer_item i
+    {
+        width : 14px;
+        height : 14px;
+    }
+    .drawer_item p , .drawerLogo p
+    {
+        display : ${p => p.open ? 'block' : 'none'};
+    }
+    .drawerLogo button 
+    {
+        width: 24px;
+        height: 24px;
+        background: white;
+        border-radius: 50%;
+        box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.06);
+        border: 1px solid var(--neutral-5, #D9D9D9);
+        align-items: center;
+        justify-content: center;
+        cursor : pointer;
+        display : ${p => p.open ? 'flex' : 'none'};
+    }
+    .drawerLogo button i 
+    {
+        width : 10px;
+        transform: rotate(-90deg);
+    }
+`

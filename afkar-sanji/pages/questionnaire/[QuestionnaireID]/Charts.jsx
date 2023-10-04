@@ -9,10 +9,13 @@ import { ChartsHeader } from '@/components/Charts/ChartsHeader';
 import ProgressBarLoading from '@/styles/ProgressBarLoading';
 import ChartsBody from '@/components/Charts/ChartBody';
 import { axiosInstance } from '@/utilities/axios';
+import { CommonDrawer } from '@/components/common/CommonDrawer';
+import { PageBox } from '@/styles/common';
 
 const ChartsPage = ({ cookies }) => {
   const [ SideBarOpen , setOpen ] = useState(false);
   const router = useRouter();
+  const [ RightDrawerOpen , setRightDrawerOpen ] = useState(false);
   const [ QuestionnaireQuery , ChartQuery ] = useQueries({
     queries: [
       {
@@ -40,13 +43,18 @@ const ChartsPage = ({ cookies }) => {
         <title>Afkar Sanji | Charts</title>
       </Head>
       <ProgressBarLoading />
-      <Header SetSideBar={() => setOpen(!SideBarOpen)} cookies={cookies}
-       goToFolders={true} loadingHeader={QuestionnaireQuery?.isLoading}
-      Questionnaire={QuestionnaireQuery?.data?.data}/>
-      <PanelInnerContainer>
-        <ChartsHeader QuestionnaireQuery={QuestionnaireQuery}/>
-        <ChartsBody ChartQuery={ChartQuery} QuestionnaireQuery={QuestionnaireQuery}/>
-    </PanelInnerContainer>
+      <PageBox>
+        <CommonDrawer RightDrawerOpen={RightDrawerOpen} setRightDrawerOpen={setRightDrawerOpen} />
+        <main style={{ width : RightDrawerOpen ? '80%' : '100%', transition : '0.3s' }}>
+        <Header SetSideBar={() => setOpen(!SideBarOpen)} cookies={cookies}
+        goToFolders={true} loadingHeader={QuestionnaireQuery?.isLoading}
+        Questionnaire={QuestionnaireQuery?.data?.data}/>
+        <PanelInnerContainer>
+          <ChartsHeader QuestionnaireQuery={QuestionnaireQuery}/>
+          <ChartsBody ChartQuery={ChartQuery} QuestionnaireQuery={QuestionnaireQuery}/>
+      </PanelInnerContainer>
+      </main>
+    </PageBox>
     </>
     
   )

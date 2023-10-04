@@ -216,8 +216,6 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
     else
     {
       SetCurrentIndex(CurrentIndex + 1)
-      setNextButtonPressed(true)
-      setPrevButtonPressed(false);
     }
       
   } 
@@ -285,8 +283,6 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
     else
     {
       SetCurrentIndex(CurrentIndex - 1)
-      setPrevButtonPressed(true)
-      setNextButtonPressed(false);
     }
       
   }

@@ -134,11 +134,11 @@ export const ResultTableContainer = styled.div`
     {
         height : 32px;
     }
-    .ant-pagination-options input 
+    .ant-pagination-options input , .ant-pagination-options-quick-jumper inout
     {
-       width: 50px;
-       height: 32px;
-       border-radius: 2px; 
+       width: 50px !important;
+       height: 32px !important;
+       border-radius: 2px !important; 
     }
     .ant-pagination-item-active
     {
