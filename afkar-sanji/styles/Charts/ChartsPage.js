@@ -222,6 +222,14 @@ export const QuestionChartBodyContainer = styled.div`
     scrollbar-width: thin;
     scrollbar-color: transparent transparent; 
 
+    .childChartsContainer
+    {
+         width: 95%;
+        margin: 12px auto;
+        display: flex;
+        flex-direction: column;
+        gap: 12px; 
+    }
     & canvas 
     {
         margin : 24px auto;

@@ -10,7 +10,7 @@ export const CornerAddButton = styled.button`
     cursor: pointer;
     border: 2px solid var(--primary-color);
     position: fixed;
-    right: ${p => p.RightDrawerOpen ? '26.5vw' : '7.5vw' };
+    right: ${p => p.RightDrawerOpen ? '26vw' : '7.5vw' };
     bottom: 1rem;
     z-index: 1;
     transition : 0.3s;

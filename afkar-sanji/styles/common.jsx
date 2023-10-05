@@ -249,7 +249,7 @@ export const CommonDrawerContainer = styled.div`
     position: fixed;
     right: 0;
     z-index: 555;
-    width: ${p => p.open ? '307px' : '62px'};
+    width: ${p => p.open ? '20%' : '62px'};
     transition : 0.3s;
 
     .drawerLogo
@@ -317,4 +317,17 @@ export const CommonDrawerContainer = styled.div`
         width : 10px;
         transform: rotate(-90deg);
     }
+`
+export const QuestionerPageContainer = styled.div`
+    width : 100%;
+    height : 87vh;
+`
+export const QuestionerContentBox = styled.div`
+    width: 86%;
+    height: 100%;
+    display: flex;
+    padding: 16px 0px;
+    gap: 16px;
+    margin: 0 auto;
+    flex-direction: row-reverse;
 `

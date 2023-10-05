@@ -397,15 +397,18 @@ export const RangeQuestionAnswerItem = styled.div`
 `
 export const RangeLabelText = styled.p`
     margin : 0 auto;
+    font-size: 12px;
+    text-align : ${p => p.leftL ? 'left' : p.rightL ? 'right' : p.midL ? 'center' : 'auto'};
     &::before
     {
         content: '';
         position: absolute;
         width: 4px;
-        height: 17px;
+        height: 10px;
         background: var(--primary-color);
-        top: 10px;
-        left: 50%;
+        top: -2px;
+        left: ${p => p.leftL ? '10px' : p.midL ? '50%' : 'auto'};
+        right : ${p => p.rightL ? '10px' : p.midL ? '50%' : 'auto'};
         transform: translate(-50% , -4px);
     }
 `
@@ -421,7 +424,7 @@ export const QuestionRangeLabel = styled.div`
     // width: calc(1.6vw + 0.99rem);
     width: calc(1.6vw + 1.6rem);
     text-align: center;
-    padding-top: 1.5rem;
+    // padding-top: 1.5rem;
     top: 48px;
 
     @media screen and (max-width : 768px)

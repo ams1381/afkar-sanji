@@ -1,6 +1,7 @@
-import '@/styles/globals.css'
-import AuthContextProvider, { AuthContext } from '@/utilities/AuthContext'
-import { axiosInstance } from '@/utilities/axios'
+import '@/styles/globals.css';
+import AuthContextProvider, { AuthContext } from '@/utilities/AuthContext';
+import { axiosInstance } from '@/utilities/axios';
+import { message } from 'antd';
 import { useLocalStorage } from '@/utilities/useLocalStorage'
 import { useRouter } from 'next/router'
 import { useContext, useEffect, useState } from 'react'
@@ -8,13 +9,15 @@ import { QueryClientProvider , QueryClient} from '@tanstack/react-query'
 import axios from 'axios'
 import { beforeUnloadHandler } from './questionnaire/[QuestionnaireID]'
 import { setCookie } from 'react-use-cookie'
+import { ThreeDots } from 'react-loader-spinner'
 
 const queryClient = new QueryClient()
 
 export default function App({ Component, pageProps , cookies }) {
   const router = useRouter();
-  // const AuthContext = useContext();
+  const [ MessageApi , MessageContext ] = message.useMessage();
   const [ readyToRender , setReadyToRender ] = useState(false);
+  const [ UserData , setUserData ]= useState(null);
   // const [ phoneNum, setPhoneNumber ] = useCookie('numberPhone', null);
    
     const authentication = async () => {
@@ -26,12 +29,16 @@ export default function App({ Component, pageProps , cookies }) {
       try
       {
         let { data } = await axiosInstance.get('/user-api/users/me/');
+        setUserData(data)
         setReadyToRender(true)
         return
       }
       catch(err)
       {
-         router.push('/auth');
+        if(err?.response?.status ==  401)
+          router.push('/auth');
+        else if(err?.response?.status == 500)
+          window.location.pathname = '/500'
         return
       }
       
@@ -54,7 +61,19 @@ export default function App({ Component, pageProps , cookies }) {
     
   return  <AuthContextProvider>
     <QueryClientProvider client={queryClient}>
-      { readyToRender && <Component {...pageProps} /> }
+      { readyToRender ? <Component {...pageProps} userData={UserData} /> : 
+      <div style={{ display : 'flex' , alignItems : 'center' , justifyContent : 'center' , height : '100vh' }}>
+      <ThreeDots 
+          height="80" 
+          width="80" 
+          radius="9"
+          color="#5360ED" 
+          ariaLabel="three-dots-loading"
+          wrapperStyle={{}}
+          wrapperClassName=""
+          visible={true}
+          /> 
+      </div>}
       </QueryClientProvider>
   </AuthContextProvider> 
 }

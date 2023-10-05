@@ -261,6 +261,15 @@ export const ResultTableContainer = styled.div`
     {
         margin-left : 3.5rem;
     }
+    .ant-spin-container
+    {
+        max-height: 500px;
+        overflow: scroll;
+    }
+    .ant-spin-container::-webkit-scrollbar 
+    {
+        width : 0;
+    }
 `
 export const EmptyResultContainer = styled.div`
     height: 70vh;

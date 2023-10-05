@@ -26,7 +26,6 @@ import { FreeMode, Mousewheel, Pagination } from 'swiper/modules';
 import { isValidElement } from 'react';
 import { useTimer } from 'react-timer-hook';
 import { Timer } from '@/components/ViewQuestions/Timer';
-// import { NullifiedContextProvider } from '@dnd-kit/core/dist/components/DragOverlay/components';
 
 SwiperCore.use([Navigation]);
 
@@ -35,10 +34,8 @@ function getDeadlineTimestamp(timeString) {
     return null
   const [hours, minutes, seconds] = timeString.split(':').map(Number);
 
-  // Calculate milliseconds from the given time
   const millisecondsFromTime = (hours * 3600 + minutes * 60 + seconds) * 1000;
 
-  // Calculate the total deadline timestamp
   const deadlineTimestamp = Date.now() + millisecondsFromTime;
 
   return deadlineTimestamp;
@@ -48,17 +45,12 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
   const [ QuestionnaireInfo , SetQuestionnaireInfo ] = useState(Questionnaire);
   const [ QuestionsData , SetQuestionsData ] = useState(Questionnaire?.questions);
   const [ messageApi , messageContext ] = message.useMessage();
-  const [isScrollDisabled, setIsScrollDisabled] = useState(false);
   const [ CurrentIndex , SetCurrentIndex ] = useState('Welcome');
   const [ swiperInstance , setSwiperInstance ] = useState(null);
   const [ nextQuestionError , setNextQuestionError ] = useState(null);
   const [ nextQuestionLoading , setNextQuestionLoading ] = useState(false);
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [ TimerFinished , SetTimerFinished ] = useState(false);
- 
-
- 
-
 
   let notAnsweredQuestions = []
   let QuestionsAnswerSet;
@@ -69,15 +61,6 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
     QuestionsAnswerSet = useSelector(state => state.reducer.AnswerSet)
   }
   
-
-  const enableScroll = () => {
-    const scrollTop = parseInt(document.body.style.top || '0', 10);
-    document.body.style.overflow = '';
-    document.body.style.position = '';
-    document.body.style.top = '';
-    window.scrollTo(0, -scrollTop); // Scroll back to original position
-    setIsScrollDisabled(false);
-  };
   useEffect(() => {
     try 
     {
@@ -139,9 +122,7 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
   const saveSwiperInstance = (swiper) => { 
     setSwiperInstance(swiper); // Store the Swiper instance
   };
-  // console.log(getDeadlineTimestamp(QuestionnaireInfo.timer))
-  // if(QuestionnaireInfo)
-  //   console.log(getDeadlineTimestamp(QuestionnaireInfo?.timer),QuestionnaireInfo?.timer)
+
   const NextQuestionHandler = async () => {
     setNextQuestionError(null)
     // console.log(QuestionsData[CurrentIndex].question , QuestionsAnswerSet)
@@ -275,8 +256,6 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
     //   setNextQuestionError(null)
   }
   const PrevQuestionHandler = () => {
-    // nextButtonPressed = false;
-    // prevButtonPressed = true;
     setNextQuestionError(null)
     if(CurrentIndex == 0)
       SetCurrentIndex('welcome_page')
@@ -333,8 +312,8 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
               fontFamily : 'IRANSans'
             }
           })
-    })
-  }
+      })
+    }
   }
   return (
     <>
@@ -347,9 +326,9 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
       <AnimLightFour />
     {messageContext}
     { QuestionnaireInfo ? <PreviewPage> 
-      <div>
+     { QuestionnaireInfo.timer && <div>
       <Timer SetTimerFinished={SetTimerFinished} expiryTimestamp={getDeadlineTimestamp(QuestionnaireInfo?.timer)} />
-      </div>
+      </div>}
       <Provider store={AnswerStore}>
         <PreviewPageContainer >  
           <PreviewPageHeader>
@@ -364,14 +343,12 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
            QuestionnaireInfo.welcome_page && CurrentIndex =='welcome_page') 
           && <WelcomeComponent mobilepreview={true}
           WelcomeInfo={QuestionnaireInfo.welcome_page} SetCurrentIndex={SetCurrentIndex} />}
-
           { ( CurrentIndex !='Thanks') ? !QuestionnaireInfo.show_question_in_pages ?
                 <div className="custom-swiper-container">
                 <Swiper 
                   direction="vertical"
                   onSwiper={saveSwiperInstance}
                   slidesPerView={'auto'}
-                  // spaceBetween={30}
                   effect="coverflow"
                   coverflowEffect={{
                     rotate: -5,
@@ -382,7 +359,6 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
                 }}
                   mousewheelControl
                   centeredSlides={true}
-     
                   mousewheel
                   // slideToClickedSlide
                   breakpoints={{
@@ -412,15 +388,9 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
                         QuestionInfo={item.question}
                          UUID={router.query.QuestionnaireID}
                         errorMessage={ nextQuestionError && nextQuestionError.number == index ? nextQuestionError?.message : null} />
-                        
                         { index == QuestionsData.length - 1 &&   <ControlButtonsContainer style={{ width : '90%' , flexDirection : 'column' , alignItems : 'center' }}>
-                          {/* { Array.isArray(nextQuestionError) &&  nextQuestionError ?
-                          <p className='answer_error_message'>پاسخ به این سوالات {
-                          nextQuestionError?.map(item => ` ${digitsEnToFa(item)} , `)
-                          } اجباری است </p>  : '' } */}
                           <Button type='primary' onClick={answerSetID ? ConfirmAnswersHandler : () => {
                           SetCurrentIndex('Thanks')
-                          enableScroll();
                           }}>ارسال</Button>
                           </ControlButtonsContainer>}
                     </SwiperSlide>

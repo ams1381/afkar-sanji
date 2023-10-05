@@ -55,13 +55,19 @@ const ResultsPage = ({ cookies }) => {
    },[SearchValue])
   return (
     <>
+    <style global jsx>{`
+            html,
+            body {
+              overflow: hidden;
+            }
+    `}</style>
     <Head>
       <title>Afkar Sanji | Result Page</title>
     </Head>
     <ProgressBarLoading />
     <PageBox>
       <CommonDrawer RightDrawerOpen={RightDrawerOpen} setRightDrawerOpen={setRightDrawerOpen} />
-      <main style={{ width : RightDrawerOpen ? '80%' : '100%', transition : '0.3s' }}>
+      <main style={{ width : RightDrawerOpen ? '84%' : '100%', transition : '0.3s' }}>
       <Header SetSideBar={() => setOpen(!SideBarOpen)} cookies={cookies}
       goToFolders={true} loadingHeader={QuestionnaireQuery.isLoading}
       Questionnaire={QuestionnaireQuery.data?.data}/>

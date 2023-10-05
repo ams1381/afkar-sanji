@@ -46,8 +46,6 @@ export default function Home({ cookies }) {
 
   
   useEffect(() => {
-    // setItem('cookie',cookies.access_token);
-    // setItem('refresh',cookies.refresh_token);
 
     // console.log(axiosInstance.defaults.headers['Authorization'])
     let scroll_position = 0;
@@ -145,7 +143,7 @@ export default function Home({ cookies }) {
             overlayInnerStyle={{ 
               boxShadow : 'none' 
               , marginRight : window.innerWidth > 720 ?
-               '6.9vw' : '4vw'
+              RightDrawerOpen ? '11.5vw' : '7.7vw' : '4vw'
                , background : 'transparent'
           }}
             onOpenChange={() => setAddPopover(false)}

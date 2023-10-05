@@ -84,7 +84,7 @@ const QuestionnairePanel = ({ cookies }) => {
     {messageContext}
     <PageBox>
       <CommonDrawer RightDrawerOpen={RightDrawerOpen} setRightDrawerOpen={setRightDrawerOpen} />
-      <main style={{ width : RightDrawerOpen ? '80%' : '100%', transition : '0.3s' }}>
+      <main style={{ width : RightDrawerOpen ? '84%' : '100%', transition : '0.3s' }}>
       <Header SetSideBar={() => setOpen(!SideBarOpen)} cookies={cookies}
       goToFolders={true} loadingHeader={isLoading}
       Questionnaire={data?.data}/>

@@ -258,12 +258,12 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
          
           </div>
         </QuestionnaireDatePickerContainer>
-        <QuestionnaireDatePickerContainer>
+        {/* <QuestionnaireDatePickerContainer>
           <div className='picker_header' onClick={e => ToggleCheckBoxHandler(!QuestionnaireData.show_question_in_pages, 'show_question_in_pages')}>
             <p>در هر صفحه یک سوال نمایش داده شود</p>
             <Switch checked={QuestionnaireData.show_question_in_pages} />
           </div>
-        </QuestionnaireDatePickerContainer>
+        </QuestionnaireDatePickerContainer> */}
         <QuestionnaireDatePickerContainer>
           <div className='picker_header' onClick={e => ToggleCheckBoxHandler(!QuestionnaireData.show_number, 'show_number')}>
             <p>عدم نمایش شماره سوال</p>
