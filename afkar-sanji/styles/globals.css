@@ -270,6 +270,41 @@ input:-webkit-autofill:active {
     }
 }
 
+
+/*step*/
+.ant-steps-item-container {
+    display: flex !important;
+    flex-direction: row-reverse !important;
+    gap: 25px !important;
+}
+
+.ant-steps-item-tail {
+    margin-left: 76% !important;
+}
+
+.ant-select-selector {
+    font-family: 'IRANSans' !important;
+    display: flex !important;
+    padding: 8px 12px !important;
+    align-items: center !important;
+    gap: 4px !important;
+    border-radius: 2px !important;
+    border: 1px solid var(--login-input-default-border) !important;
+    background: #FFF !important;
+    direction: ltr !important;
+}
+
+/*step*/
+
+
+.ant-select-selection-item {
+    padding: 0 !important;
+}
+
+.rc-virtual-list-holder-inner {
+    direction: rtl !important;
+}
+
 /* @media screen and (max-width : 420px)
 {
   .ant-select-dropdown.css-dev-only-do-not-override-byeoj0

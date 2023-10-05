@@ -1,5 +1,50 @@
 import {styled} from "styled-components";
 
+
+export const BgSlide = styled.div`
+  > .one, .two, .three, .four, .five {
+    position: fixed;
+    flex-shrink: 0;
+    background: transparent;
+    top: 50%;
+    border-radius: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -99 !important;
+    opacity: 0.1;
+  }
+
+  > .one {
+    width: 874px;
+    height: 874px;
+    border: 7px solid rgba(83, 96, 237, 0.46);
+  }
+
+  > .two {
+    width: 749.143px;
+    height: 749.143px;
+    border: 6px solid rgba(83, 96, 237, 0.38);
+  }
+
+  > .three {
+    width: 624.286px;
+    height: 624.286px;
+    border: 6px solid rgba(83, 96, 237, 0.29);
+  }
+
+  > .four {
+    width: 499.429px;
+    height: 499.429px;
+    border: 6px solid rgba(83, 96, 237, 0.2);
+  }
+
+  > .five {
+    width: 374.571px;
+    height: 374.571px;
+    border: 6px solid rgba(83, 96, 237, 0.2);
+  }
+`
+
 export const Container = styled.div`
   display: flex;
   align-items: center;

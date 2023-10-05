@@ -1,5 +1,7 @@
 import Image from 'next/image'
 import React, {useState} from "react";
+import Link from 'next/link';
+import {useRouter} from "next/router";
 // style component
 import {
     AfterBox, Container, ImageWallpaper, QuestionBox, Header, RightHeader, LeftHeader
@@ -15,33 +17,38 @@ import {liListData} from "@/utilities/data/questioner";
 import {Button} from 'antd';
 
 const Questioner = () => {
+    // router
+    const router = useRouter()
     return (<Container>
-            <QuestionBox>
-                <Header>
-                    <RightHeader>
-                        <p>ثبت درخواست پرسشگری</p>
-                        <h2>با جمع‌آوری دیدگاه‌های مختلف کسب درآمد کنید!</h2>
+        <QuestionBox>
+            <Header>
+                <RightHeader>
+                    <p>ثبت درخواست پرسشگری</p>
+                    <h2>با جمع‌آوری دیدگاه‌های مختلف کسب درآمد کنید!</h2>
 
-                        <Button className={`bottom`}
-                        >
+                    <Button className={`bottom`}
+                    >
+                        <Link href={'/questioner/information'}>
                             <img src={arrowRightIcon?.src}/>
                             تکمیل اطلاعات
-                        </Button>
-                    </RightHeader>
-                    <LeftHeader>
-                        {liListData?.map(item => (<li key={item?.id}>
-                                <img className={`icon`} src={item?.icon} alt=""/>
-                                <div className="text">{item?.text}</div>
-                            </li>))}
-                    </LeftHeader>
-                </Header>
-                <AfterBox/>
-                <ImageWallpaper
-                    src={backGround?.src} alt={''}/>
-            </QuestionBox>
-            <Image width={28}
-                   height={28} className={'close'} src={closeIcon?.src} alt={'بستن'}/>
-        </Container>)
+                        </Link>
+                    </Button>
+
+                </RightHeader>
+                <LeftHeader>
+                    {liListData?.map(item => (<li key={item?.id}>
+                        <img className={`icon`} src={item?.icon} alt=""/>
+                        <div className="text">{item?.text}</div>
+                    </li>))}
+                </LeftHeader>
+            </Header>
+            <AfterBox/>
+            <ImageWallpaper
+                src={backGround?.src} alt={''}/>
+        </QuestionBox>
+        <Image width={28}
+               height={28} className={'close'} src={closeIcon?.src} alt={'بستن'}/>
+    </Container>)
 }
 
 export default Questioner

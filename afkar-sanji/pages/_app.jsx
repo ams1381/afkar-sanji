@@ -20,7 +20,7 @@ export default function App({ Component, pageProps , cookies }) {
     const authentication = async () => {
       if (!pageProps.cookies || !pageProps.cookies.access_token) {
         router.push({
-          pathname: '/auth',
+          pathname: '',
           query: { 
             returnUrl: router.asPath ,
            },
@@ -30,24 +30,24 @@ export default function App({ Component, pageProps , cookies }) {
       axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + pageProps?.cookies?.access_token;
       try
       {
-        let { data } = await axiosInstance.get('/user-api/users/me/');
+        let { data } = await axiosInstance.get('');
         setReadyToRender(true)
         return
       }
       catch(err)
       {
-         router.push('/auth');
+         router.push('');
         return
       }
       
     }
     useEffect(() => {
-      if(router.pathname !== '/auth' 
-      && router.pathname !== '/404' &&
-      router.pathname !== '/403' &&
-      router.pathname != '/505' 
-      && router.pathname !== '/auth/otpSms'
-       && !router.pathname.includes('AnswerPage'))
+      if(router.pathname !== ''
+      && router.pathname !== '' &&
+      router.pathname !== '' &&
+      router.pathname != ''
+      && router.pathname !== ''
+       && !router.pathname.includes(''))
           authentication();
       else
         setReadyToRender(true)
