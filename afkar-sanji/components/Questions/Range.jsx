@@ -70,9 +70,11 @@ export const RangeQuestionComponent = ({ QuestionInfo }) => {
             </label>
             {<QuestionRangeLabel>
               <RangeQuestionLabelContainer>
-         {index == 0 && QuestionInfo.min_label && <RangeLabelText ref={leftLabelRef}>{QuestionInfo.min_label}</RangeLabelText>}
-         {QuestionInfo.max % 2 != 0 && QuestionInfo.mid_label && index == Math.floor(QuestionInfo.max / 2) && <RangeLabelText ref={midLabelRef}>{QuestionInfo.mid_label}</RangeLabelText>}
-         {index == QuestionInfo.max -1  && QuestionInfo.max_label && <RangeLabelText ref={rightLabelRef}>{QuestionInfo.max_label}</RangeLabelText>}
+         {index == 0 && QuestionInfo.min_label && <RangeLabelText leftL ref={leftLabelRef}>{QuestionInfo.min_label}</RangeLabelText>}
+         {QuestionInfo.max % 2 != 0 && QuestionInfo.mid_label && index == Math.floor(QuestionInfo.max / 2) && 
+         <RangeLabelText midL ref={midLabelRef}>{QuestionInfo.mid_label}</RangeLabelText>}
+         {index == QuestionInfo.max -1  && QuestionInfo.max_label && 
+         <RangeLabelText rightL ref={rightLabelRef}>{QuestionInfo.max_label}</RangeLabelText>}
          </RangeQuestionLabelContainer>
       </QuestionRangeLabel>}
           </RangeQuestionAnswerItem>

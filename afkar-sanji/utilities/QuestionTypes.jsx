@@ -6,6 +6,7 @@ export const QuestionTypeContainer = styled.div`
   justify-content: flex-end;
   gap: 8px;
   font-family : IRANSans;
+  white-space: nowrap;
   font-size : 13px;
   align-items: center;
   color: ${p => p.activetype ? 'var(--primary-color)' : 'auto'};

@@ -197,6 +197,9 @@ input:-webkit-autofill:active {
 .ant-picker-time-panel-column::-webkit-scrollbar {
     width: 0;
 }
+.ant-modal-content
+{
+  border-radius: 2px !important;
 
 /* #select-type-container .rc-virtual-list-holder > div
 {
@@ -205,6 +208,14 @@ input:-webkit-autofill:active {
 .ant-modal-content {
     border-radius: 2px !important;
 }
+.ant-message-custom-content.ant-message-info
+{
+  display: flex;
+}
+.ant-popover-inner , .ant-tooltip-inner , .ant-select-item.ant-select-item-option  ,
+ .ant-select-item.ant-select-item-option.ant-select-item-option-selected
+{
+  border-radius: 2px !important;
 
 .ant-popover-inner, .ant-tooltip-inner, .ant-select-item.ant-select-item-option,
 .ant-select-item.ant-select-item-option.ant-select-item-option-selected {
@@ -218,6 +229,10 @@ input:-webkit-autofill:active {
     cursor: pointer;
     text-align: right;
 }
+
+.sortable-chosen.ghost
+{
+  cursor: pointer;
 
 /* .sortable
 {
@@ -254,6 +269,7 @@ input:-webkit-autofill:active {
         width: 310px !important;
     }
 
+
     /* .ant-select-dropdown.css-dev-only-do-not-override-byeoj0
     {
       width: 290px !important;
@@ -267,6 +283,12 @@ input:-webkit-autofill:active {
 
     .ant-tabs-tab {
         font-size: 14px !important;
+    }
+}
+@media screen and (max-width : 400px)  {
+  .ant-tabs-nav-list
+    {
+      gap: 9px !important;
     }
 }
 

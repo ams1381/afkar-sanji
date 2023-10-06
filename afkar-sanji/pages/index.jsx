@@ -1,6 +1,6 @@
 import { Header } from '@/components/common/Header';
-import SideBar from '@/components/common/SideBar';
-import { ScreenMask } from '@/styles/common';
+import SideBar from '@/components/Folders/SideBar';
+import { PageBox, ScreenMask } from '@/styles/common';
 import { CornerAddButton } from '@/styles/folders/cornerAdd';
 import AddPopoverContent from '@/components/Folders/AddPopoverContent';
 import { ContentBox, QuestionnaireBodyStat, QuestionnaireDiv, QuestionnaireFooter, QuestionnaireHeader, QuestionnaireNameContainer, QuestionnaireNameInput, QuestionnaireSeeResultButton } from '@/styles/folders/Questionnaire';
@@ -22,6 +22,7 @@ import ProgressBarLoading from '@/styles/ProgressBarLoading';
 import { useLocalStorage } from '@/utilities/useLocalStorage';
 import { handleInputWidth } from '@/utilities/RenameFunctions';
 import { useQuery } from '@tanstack/react-query';
+import { CommonDrawer } from '@/components/common/CommonDrawer';
 
 export default function Home({ cookies }) {
   const router = useRouter();
@@ -35,6 +36,7 @@ export default function Home({ cookies }) {
   // const [ accessToken, setAccessToken ] = useCookie('access', null)
   const [ readyToCreate , setReadyToCreate ] = useState(false);
   const CornerButton = useRef(null);
+  const [ RightDrawerOpen , setRightDrawerOpen ] = useState(false);
   const FolderNameInput = useRef(null);
   const [ ChangeFolderName , SetChangeFolderNameState ] = useState(false);
   const [ FolderName , SetFolderName ] = useState(null);
@@ -44,8 +46,6 @@ export default function Home({ cookies }) {
 
   
   useEffect(() => {
-    // setItem('cookie',cookies.access_token);
-    // setItem('refresh',cookies.refresh_token);
 
     // console.log(axiosInstance.defaults.headers['Authorization'])
     let scroll_position = 0;
@@ -115,6 +115,7 @@ export default function Home({ cookies }) {
     }
     SetChangeFolderNameState(false);
   }
+
   return (
     <>
       <Head>
@@ -125,6 +126,9 @@ export default function Home({ cookies }) {
       </Head>
       {MessageContext}
       <ProgressBarLoading />
+      <PageBox>
+        <CommonDrawer RightDrawerOpen={RightDrawerOpen} setRightDrawerOpen={setRightDrawerOpen} />
+        <main style={{ width : RightDrawerOpen ? '80%' : '100%', transition : '0.3s' }}>
       <Header SetSideBar={() => setOpen(!SideBarOpen)} cookies={cookies} />
       <SideBar folders={data?.data} SelectedFolder={SelectedFolder} isopen={SideBarOpen} ReadyToCreate={readyToCreate}
        setReadyToCreate={setReadyToCreate} FolderReload={refetch}  ChangeFolder={SelectFolder}
@@ -138,12 +142,14 @@ export default function Home({ cookies }) {
             open={addPopOver}
             overlayInnerStyle={{ 
               boxShadow : 'none' 
-              , marginRight : window.innerWidth > 720 ? '6.9vw' : '4vw'
+              , marginRight : window.innerWidth > 720 ?
+              RightDrawerOpen ? '11.5vw' : '7.7vw' : '4vw'
                , background : 'transparent'
           }}
             onOpenChange={() => setAddPopover(false)}
             style={{marginRight : 15}}>
-                <CornerAddButton ref={CornerButton} clicked={addPopOver ? 'true' : null} onClick={() => setAddPopover(!addPopOver)}>
+                <CornerAddButton ref={CornerButton} RightDrawerOpen={RightDrawerOpen ? 'active' : null}
+                 clicked={addPopOver ? 'true' : null} onClick={() => setAddPopover(!addPopOver)}>
                   <Icon name='Add' />
                 </CornerAddButton>
         </Popover>
@@ -314,6 +320,8 @@ export default function Home({ cookies }) {
         </MainContainer> 
       } 
     </ContentBox>
+    </main>
+    </PageBox>
     </>
   )
 }

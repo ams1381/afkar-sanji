@@ -93,6 +93,7 @@ const MultipleAnswer = ({ QuestionInfo }) => {
                     group : QuestionInfo.group
                 })) : ''}
                   autoFocus={item.newOption ? true : false} key={item.id}
+                  maxLength={250}
             onChange={e => {
               Dispatcher(OptionModifier({
                  QuestionID : QuestionInfo.id , 

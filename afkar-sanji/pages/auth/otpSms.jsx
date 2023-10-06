@@ -36,7 +36,7 @@ const OTPSms = ({ cookies }) => {
     {
       LoginMessage.success({
         content : 'ورود با موفقیت انجام شد' ,
-        duration : 50,
+        duration : 10,
         style : {
           fontFamily : 'IRANSans',
           display : 'flex',
@@ -79,7 +79,6 @@ export default OTPSms;
 export async function getServerSideProps(context) {
   const { req } = context;
   const cookies = req.headers.cookie;
-  console.log(cookies)
   // Check if cookies are present
   if (cookies) {
     // Parse the cookies

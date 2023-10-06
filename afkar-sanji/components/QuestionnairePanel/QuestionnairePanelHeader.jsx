@@ -93,9 +93,9 @@ const QuestionnairePanelHeader = ({ FolderName , isFetched , Questionnaire , Sid
       ChangeSide('questionnaire_setting');
     }
     else if(ID == 3)
-      router.push(`/questionnaire/${Questionnaire.uuid}/Results/`);
+      router.push(`/questionnaire/${Questionnaire.uuid}/results/`);
     else if(ID == 4)
-      router.push(`/questionnaire/${Questionnaire.uuid}/Charts/`);
+      router.push(`/questionnaire/${Questionnaire.uuid}/charts/`);
   }
   return (
     Questionnaire ? 
@@ -113,7 +113,7 @@ const QuestionnairePanelHeader = ({ FolderName , isFetched , Questionnaire , Sid
             </QuestionnaireEditItemsInnerContainer>
             <QuestionnaireEditButtonContainer>
             <Link onClick={(e) => { !Questionnaire.questions.length ? e.preventDefault() : '' }}
-            href={`/questionnaire/${Questionnaire.uuid}/ViewQuestions/`}  target='_blank'>
+            href={`/questionnaire/${Questionnaire.uuid}/view-questions/`}  target='_blank'>
               <button style={{ pointerEvents :(Questionnaire.questions &&  Questionnaire.questions.length) ? 'all' : 'none' }}>
                      <Icon name='BlackEye' />
               </button>

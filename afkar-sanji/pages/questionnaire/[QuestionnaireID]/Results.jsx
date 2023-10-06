@@ -9,6 +9,8 @@ import { axiosInstance } from '@/utilities/axios';
 import { useRouter } from 'next/router';
 import { ResultBody } from '@/components/ResultPage/ResultBody';
 import ProgressBarLoading from '@/styles/ProgressBarLoading';
+import { CommonDrawer } from '@/components/common/CommonDrawer';
+import { PageBox } from '@/styles/common';
 
 const ResultsPage = ({ cookies }) => {
   const [ SideBarOpen , setOpen ] = useState(false);
@@ -17,26 +19,27 @@ const ResultsPage = ({ cookies }) => {
   const CurrentRef = useRef(1);
   const [ StartDate , setStartDate ] = useState('');
   const [ EndDate , setEndDate ] = useState('')
+  const [ RightDrawerOpen , setRightDrawerOpen ] = useState(false);
   const [ SearchValue , setSearchValue ] = useState(null);
   const [ QuestionnaireQuery , ResultQuery ] = useQueries({
     queries: [
       {
         queryKey: ['questionnaire'],
         queryFn: async () => await axiosInstance.get(`/question-api/questionnaires/${router.query.QuestionnaireID}/`),
+        refetchOnWindowFocus : false
       },
       {
         queryKey: ['result'],
         queryFn: async () =>
           await axiosInstance.get(`/result-api/${router.query.QuestionnaireID}/answer-sets/?answered_at=&end_date=${EndDate}&page=${CurrentPage}&start_date=${StartDate}`) ,
-      },
+        refetchOnWindowFocus : false
+        },
     ],
   });
   const SearchQuery = useQuery(['ResultSearch'],
     async () => await axiosInstance.get(`/result-api/${router.query.QuestionnaireID}/answer-sets/search/?search=${SearchValue}`),{
     enabled : SearchValue ? true : false
   })
-  // ResultQuery.
-
   useEffect(() => {
     if(CurrentPage != CurrentRef.current)
     {
@@ -52,20 +55,31 @@ const ResultsPage = ({ cookies }) => {
    },[SearchValue])
   return (
     <>
+    <style global jsx>{`
+            html,
+            body {
+              overflow: hidden;
+            }
+    `}</style>
     <Head>
       <title>Afkar Sanji | Result Page</title>
     </Head>
     <ProgressBarLoading />
-    <Header SetSideBar={() => setOpen(!SideBarOpen)} cookies={cookies}
-     goToFolders={true} loadingHeader={QuestionnaireQuery.isLoading}
-    Questionnaire={QuestionnaireQuery.data?.data}/>
-    <PanelInnerContainer>
-      <ResultHeader QuestionnaireQuery={QuestionnaireQuery}/>
-      <ResultBody ResultQuery={SearchValue ? SearchQuery : ResultQuery}
-       SetCurrentPage={SetCurrentPage} queryStatus={SearchValue ? 'Search' : 'Result'}
-      QuestionnaireQuery={QuestionnaireQuery} setEndDate={setEndDate} setSearchValue={setSearchValue}
-       setStartDate={setStartDate}/>
-    </PanelInnerContainer>
+    <PageBox>
+      <CommonDrawer RightDrawerOpen={RightDrawerOpen} setRightDrawerOpen={setRightDrawerOpen} />
+      <main style={{ width : RightDrawerOpen ? '84%' : '100%', transition : '0.3s' }}>
+      <Header SetSideBar={() => setOpen(!SideBarOpen)} cookies={cookies}
+      goToFolders={true} loadingHeader={QuestionnaireQuery.isLoading}
+      Questionnaire={QuestionnaireQuery.data?.data}/>
+      <PanelInnerContainer>
+        <ResultHeader QuestionnaireQuery={QuestionnaireQuery}/>
+        <ResultBody ResultQuery={SearchValue ? SearchQuery : ResultQuery}
+        SetCurrentPage={SetCurrentPage} queryStatus={SearchValue ? 'Search' : 'Result'}
+        QuestionnaireQuery={QuestionnaireQuery} setEndDate={setEndDate} setSearchValue={setSearchValue}
+        setStartDate={setStartDate}/>
+      </PanelInnerContainer>
+      </main>
+    </PageBox>
     </>
   )
 }
@@ -81,14 +95,12 @@ export async function getServerSideProps(context) {
       acc[key] = decodeURIComponent(value);
       return acc;
     }, {});
-
     return {
       props: {
         cookies: parsedCookies,
       },
     };
   }
-
   return {
     redirect: {
       permanent: false,

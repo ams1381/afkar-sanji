@@ -21,6 +21,8 @@ import { SortPopoverContent } from './SortPopoverContent';
 import { QuestionChart } from './QuestionChart';
 import html2canvas from "html2canvas";
 import { useLocalStorage } from '@/utilities/useLocalStorage';
+import { useEffect } from 'react';
+import { QuestionTypeIcon } from '@/utilities/QuestionTypes';
 
 ChartJS.register(
   CategoryScale,
@@ -43,18 +45,33 @@ export const options = {
   },
 };
 
+function groupBy(arr) {
+  const result = {};
 
+  arr.forEach(item => {
+    for (const prop in item.counts) {
+      if (result[prop]) {
+        result[prop] += item.counts[prop];
+      } else {
+        result[prop] = item.counts[prop];
+      }
+    }
+  });
+
+  return result;
+}
 const ChartsBody = ({ ChartQuery , QuestionnaireQuery }) => {
   const [ filterPopover , setFilterPopover ] = useState(false);
   const [ totalChartType , setTotalChartType ] = useState(null);
   const [ totalChartSort , setTotalSort ] = useState(null);
+  const [ ChartsDataArray , setChartsDataArray ] = useState(null);
   const { setItem } = useLocalStorage();
   const DownloadAllCharts = async () => {
     let ChartArrayHTML = '';
     let ChartsArray = document.querySelectorAll('canvas');
     if(!ChartQuery?.data?.data?.length)
       return
-
+   
     try 
     {
       ChartsArray.forEach(async (item) => {
@@ -71,6 +88,40 @@ const ChartsBody = ({ ChartQuery , QuestionnaireQuery }) => {
       console.log(err)
     }   
   }
+  useEffect(() => {
+    if(ChartQuery?.data?.data)
+    {
+      let arrayOfObjects = ChartQuery?.data?.data
+      
+      const groupedObjects = {};
+      
+      // Group objects based on group_id
+      arrayOfObjects.forEach(obj => {
+        const groupId = obj.group_id;
+        if (!groupedObjects[groupId]) {
+          groupedObjects[groupId] = [];
+        }
+        groupedObjects[groupId].push(obj);
+      });
+      
+      // Remove grouped objects from the original array
+      const groupIdsToRemove = Object.keys(groupedObjects);
+      groupIdsToRemove.forEach(groupId => {
+        arrayOfObjects = arrayOfObjects.filter(obj => obj.group_id !== parseInt(groupId));
+      });
+      
+      // console.log('Grouped Objects:', groupedObjects);
+      Object.keys(groupedObjects).map(item => {
+        if(item != 'null')
+        arrayOfObjects.push({
+          ChildQuestions : groupedObjects[item] ,
+          question_title : groupedObjects[item][0].group_title
+      })
+        // console.log(groupedObjects[item])
+      })
+      setChartsDataArray(arrayOfObjects)
+    }
+  },[ChartQuery?.data?.data])
 
   return (
     ChartQuery.isLoading ? <div>
@@ -166,7 +217,7 @@ const ChartsBody = ({ ChartQuery , QuestionnaireQuery }) => {
                 <p>دانلود نمودار‌ها</p>
                 <Icon name='Upload'/>
               </ResultButton>
-              <Link href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/Results/`}>
+              <Link href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/results/`}>
                 <ResultButton>
                   <p>نتایج</p>
                 </ResultButton>
@@ -186,10 +237,28 @@ const ChartsBody = ({ ChartQuery , QuestionnaireQuery }) => {
         </TopBar>
         <QuestionChartBodyContainer>
           {
-            ChartQuery.data?.data?.length ?
-            ChartQuery.data?.data?.map(item => <QuestionChart totalChartType={totalChartType} totalChartSort={totalChartSort}
-               key={item.question_id} PlotDetail={item} />)
-              : (!QuestionnaireQuery.data?.data?.questions?.length) ? <EmptyResultContainer>
+            ChartQuery.data?.data?.length && ChartsDataArray ?
+            ChartsDataArray.map(item =>
+              !item?.ChildQuestions ? <QuestionChart totalChartType={totalChartType} totalChartSort={totalChartSort}
+               key={item.question_id} PlotDetail={item} />
+               : <QuestionChartContainer>
+                  <QuestionChartContainerHeader style={{ paddingBottom : 0 , padding : '12px' , border : '1px solid var(--Outline-variant, #CCC)' }}>
+                  <div className='question_chart_title'>
+                    { QuestionTypeIcon('group') }
+                    <p>{item.question_title}</p>
+                    </div>
+                  </QuestionChartContainerHeader>
+                  <div>
+                  
+                  <div className='childChartsContainer' style={{ width : '95%' , margin : '12px auto' }}>
+                      {
+                          item?.ChildQuestions.map(ChildItem => <QuestionChart totalChartType={totalChartType} totalChartSort={totalChartSort}
+                            key={ChildItem.question_id} PlotDetail={ChildItem} />)
+                      }
+                    </div>
+                  </div>
+               </QuestionChartContainer>)
+               : (!QuestionnaireQuery.data?.data?.questions?.length) ? <EmptyResultContainer>
               <img src={EmptyImage.src} />
               <p>هنوز هیچ سوالی نساختید</p>
               <Link onClick={() => setItem('tabType','question_design')}
@@ -200,7 +269,7 @@ const ChartsBody = ({ ChartQuery , QuestionnaireQuery }) => {
             : <EmptyResultContainer>
             <img src={EmptyImage.src} />
             <p>نتیجه‌ای جهت نمایش وجود ندارد</p>
-            <Link href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/AnswerPage`} target='_blank'>
+            <Link href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/answer-page`} target='_blank'>
               <EmptyButtonPage type='primary'>به پرسشنامه پاسخ دهید</EmptyButtonPage>
             </Link>
           </EmptyResultContainer> 

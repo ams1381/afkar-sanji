@@ -1,8 +1,7 @@
 import { ResultBodyContainer , ResultButton , DeleteRowButton , EmptyButtonPage ,
       ResultTableContainer , EmptyResultContainer , ResultBodyTopPart , TableOutPut } from '@/styles/Result/ResultPage';
 import { Icon } from '@/styles/icons';
-import { Skeleton , Table , ConfigProvider, Upload, message, Tooltip, Button, Modal, Select, Input } from 'antd';
-import fa_IR from "antd/lib/locale/fa_IR";
+import { Skeleton , Table , Upload, message, Tooltip, Button, Modal, Select, Input } from 'antd';
 import React, { useEffect } from 'react'
 import Link from 'next/link';
 import { axiosInstance } from '@/utilities/axios';
@@ -22,7 +21,7 @@ import DatePanel from 'react-multi-date-picker/plugins/date_panel';
 import { calculateTextWidth } from '@/utilities/RenameFunctions';
 import { QuestionTypeIcon } from '@/utilities/QuestionTypes';
 import { useLocalStorage } from '@/utilities/useLocalStorage';
-
+const regex = /(<([^>]+)>)/gi;
 const SkeletonTable = ({ columns, rowCount }) => {
     return (
       <Table
@@ -92,7 +91,6 @@ const ExcelExportHandler = (Data,QuestionnaireQuery) => {
       })
     }
   })
-  console.log(columns,rows)
   const excel = new Excel();
   excel
     .addSheet("test")
@@ -118,7 +116,7 @@ export const ResultBody = ({ ResultQuery , setStartDate , setSearchValue , query
   let searchValue = ''
   let delayTimer;
 
-  const regex = /(<([^>]+)>)/gi;
+  
 
   let [ TableColumns , setTableColumns ] = useState(null);
   let [ TableData , setTableData ] = useState(null);
@@ -150,7 +148,19 @@ export const ResultBody = ({ ResultQuery , setStartDate , setSearchValue , query
       if(QuestionsArray)
         columns = (QuestionsArray?.map(item => ({
           title : <Tooltip 
-            title={<div className='tooltip_container' onClick={() => navigator.clipboard.writeText(item.question?.title)}>
+            title={<div className='tooltip_container' onClick={() => 
+            {
+              resultMessage.info({
+                content : 'کپی شد' ,
+                duration : 3 ,
+                style : {
+                  display : 'flex',
+                  alignItems : 'center',
+                  justifyContent : 'center'
+                }
+              })
+              navigator.clipboard.writeText(item.question?.title)
+            }}>
               {item.question?.title} <Icon name='WDuplicate' />
               </div>}>
                  <div className='question_title_cell'>
@@ -184,11 +194,24 @@ export const ResultBody = ({ ResultQuery , setStartDate , setSearchValue , query
             children : item?.question?.question_type == 'group' ? 
             item?.question.child_questions.map(ChildQuestion => ({
               title : <Tooltip 
-              title={<div className='tooltip_container' onClick={() => navigator.clipboard.writeText(item.question?.title)}>
-                {item.question?.title} <Icon name='WDuplicate' />
+              title={<div className='tooltip_container' 
+              onClick={() => 
+                {
+                  resultMessage.info({
+                    content : 'کپی شد' ,
+                    duration : 3 ,
+                    style : {
+                      display : 'flex',
+                      alignItems : 'center',
+                      justifyContent : 'center'
+                    }
+                  })
+                  navigator.clipboard.writeText(ChildQuestion.question?.title)
+                }}>
+                {ChildQuestion.question?.title} <Icon name='WDuplicate' />
                 </div>}>
                    <div className='question_title_cell'>
-                      <p>{item.question?.title ? item.question?.title?.replace(regex,"") : ' '}</p>
+                      <p>{ChildQuestion.question?.title ? ChildQuestion.question?.title?.replace(regex,"") : ' '}</p>
                       { QuestionTypeIcon(ChildQuestion.question?.question_type) }
                    </div> 
                 </Tooltip> ,
@@ -199,7 +222,19 @@ export const ResultBody = ({ ResultQuery , setStartDate , setSearchValue , query
               width :  226,
               children : ChildQuestion?.question?.options?.map(option => ({
                 title : <Tooltip title={<div className='tooltip_container' 
-                onClick={() => navigator.clipboard.writeText(option?.text)}>
+                onClick={() => 
+                  {
+                    resultMessage.info({
+                      content : 'کپی شد' ,
+                      duration : 3 ,
+                      style : {
+                        display : 'flex',
+                        alignItems : 'center',
+                        justifyContent : 'center'
+                      }
+                    })
+                    navigator.clipboard.writeText(option?.text)
+                  }}>
                 {option?.text ? option?.text?.replace(regex,"") : ' '} <Icon name='WDuplicate' />
                 </div>}>
                     <p>{option?.text != 'null' ? option?.text?.replace(regex,"") : ' '}</p>
@@ -213,7 +248,19 @@ export const ResultBody = ({ ResultQuery , setStartDate , setSearchValue , query
             }))
             : item?.question?.options?.map(option => ({
               title : <Tooltip title={<div className='tooltip_container' 
-              onClick={() => navigator.clipboard.writeText(option?.text)}>
+              onClick={() => 
+                {
+                  resultMessage.info({
+                    content : 'کپی شد' ,
+                    duration : 3 ,
+                    style : {
+                      display : 'flex',
+                      alignItems : 'center',
+                      justifyContent : 'center'
+                    }
+                  })
+                  navigator.clipboard.writeText(option?.text)
+                }}>
               {option?.text ? option.text?.replace(regex,"") : ' '} <Icon name='WDuplicate' />
               </div>}>
                   <p>{option?.text != 'null' ? option?.text?.replace(regex,"") : ' '}</p>
@@ -477,15 +524,27 @@ const ResultSearchHandler = async (e) => {
               }}
               direction='ltr'
               pagination={{
+                hideOnSinglePage : true,
                 total : ResultQuery?.data?.data.count,
                 pageSize : 7,
+                position : 'center' , 
+                alignment : 'center' ,
                 defaultPageSize : 4,
                 itemRender : (page,ItemName,ItemNode) => {
                   if(ItemName != 'page')
                     return ItemNode
                   return  digitsEnToFa(page)
                 },
-                onChange : TablePaginationHandler
+                showQuickJumper : true ,
+                showSizeChanger  : false,
+                showTotal : (total , range) => {
+                  return <p>جمعا {digitsEnToFa(Math.ceil(ResultQuery?.data?.data.count / 7))} صفحه </p>
+                },
+                onChange : TablePaginationHandler ,
+                locale : { 
+                  jump_to: "",
+                  page : 'رفتن به',
+                 }
               }}
               rowSelection={{
                 onChange : (_,SelectedList) => {

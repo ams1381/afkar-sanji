@@ -1,5 +1,5 @@
 import React from 'react'
-import ViewQuestions from './ViewQuestions'
+import ViewQuestions from './view-questions'
 import { Provider } from 'react-redux'
 import AnswerStore from '@/utilities/AnswerStore'
 import Head from 'next/head'

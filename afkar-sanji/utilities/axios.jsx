@@ -1,13 +1,12 @@
 import axios from "axios";
 import { AuthContext } from "./AuthContext";
-import { useLocalStorage } from "./useLocalStorage";
 import { getCookie } from "react-use-cookie";
 // export const baseURL = 'http://mah-api.ariomotion.com/';
 // export const baseURL = 'https://mostafarm7.pythonanywhere.com/'
 // axios.defaults.baseURL = 'https://mostafarm7.pythonanywhere.com/';
 axios.defaults.baseURL = '/api'
 let refreshToken;
-const { getItem , setItem } = useLocalStorage();
+
 
 export const axiosInstance = axios.create({
     headers: {
@@ -61,7 +60,7 @@ axiosInstance.interceptors.response.use(function (response) {
             window.location.pathname = '/404'
             break;
         case 500:
-            window.location.pathname = '/500'
+            // window.location.pathname = '/500'
             break;
     }
     return Promise.reject(error);

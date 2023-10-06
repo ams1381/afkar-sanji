@@ -1,11 +1,11 @@
 import { SharePopoverContainer , SharePopoverButton } from '@/styles/folders/Popovers'
 import { Icon } from '@/styles/icons'
 import React from 'react'
+import { useEffect } from 'react'
 import { useState } from 'react'
 
 
 export const SharePopOverContent = ({ Questionnaire , UUID }) => {
-  // console.log(UUID)
   const [ CopiedState , setCopiedState ] = useState(false);
   return (
    
@@ -34,8 +34,11 @@ export const SharePopOverContent = ({ Questionnaire , UUID }) => {
         </div>
       </div>
     <SharePopoverButton  onClick={() => {
-      navigator.clipboard.writeText(`http://mah.ariomotion.com/questionnaire/${Questionnaire ? Questionnaire.uuid : UUID}/AnswerPage/`)
+      navigator.clipboard.writeText(`http://mah.ariomotion.com/questionnaire/${Questionnaire ? Questionnaire.uuid : UUID}/answer-page/`)
       setCopiedState(true);
+      setTimeout(() => {
+        setCopiedState(false);
+      }, 3000); 
       }}>
        { CopiedState ? <p>کپی شد</p> : <p>کپی لینک</p> }
     </SharePopoverButton>

@@ -14,6 +14,8 @@ import { Provider } from 'react-redux';
 import QuestionStore from '@/utilities/QuestionStore';
 import { message } from 'antd';
 import { useQuery } from '@tanstack/react-query';
+import { CommonDrawer } from '@/components/common/CommonDrawer';
+import { PageBox } from '@/styles/common';
 
 export const beforeUnloadHandler = function (e) {
     e.preventDefault();
@@ -25,6 +27,7 @@ const QuestionnairePanel = ({ cookies }) => {
     const [ SideBarOpen , setOpen ] = useState(false);
     const [ SideState , SetSideState ] = useState('question_design');
     const [ QuestionnaireReloader , SetQuestionnaireReloader ] = useState(false);
+    const [ RightDrawerOpen , setRightDrawerOpen ] = useState(false);
     axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + cookies?.access_token;
     const { data , isLoading , refetch , error , isFetched} = useQuery(['QuestionnaireRetrieve'],
     async () => await axiosInstance.get(`/question-api/questionnaires/${router?.query?.QuestionnaireID}/`),{
@@ -55,6 +58,9 @@ const QuestionnairePanel = ({ cookies }) => {
     }
     if(typeof window != 'undefined')
     window.addEventListener('beforeunload',beforeUnloadHandler)
+    useEffect(() => {
+      refetch();
+    },[SideState])
   return (
     <>
      <style global jsx>{`
@@ -76,21 +82,26 @@ const QuestionnairePanel = ({ cookies }) => {
     <Provider store={QuestionStore}>
     <ProgressBarLoading />
     {messageContext}
-    <Header SetSideBar={() => setOpen(!SideBarOpen)} cookies={cookies}
-    goToFolders={true} loadingHeader={isLoading}
-    Questionnaire={data?.data}/>
-      <QuestionnairePanelContainer>
-        <PanelInnerContainer> 
-          {  <QuestionnairePanelHeader SideState={SideState} isFetched={isFetched}
-           ChangeSide={SetSideState} Questionnaire={data?.data}/>}
-          {
-            SideState == 'question_design' ? <QuestionDesignPanel QuestionnaireReloader={refetch}
-             Questionnaire={data?.data}  /> 
-            : data?.data && <SettingPanel Questionnaire={data?.data}  ChangeSide={SetSideState}
-            refetch={refetch}/>
-            }
-          </PanelInnerContainer>
-      </QuestionnairePanelContainer>
+    <PageBox>
+      <CommonDrawer RightDrawerOpen={RightDrawerOpen} setRightDrawerOpen={setRightDrawerOpen} />
+      <main style={{ width : RightDrawerOpen ? '84%' : '100%', transition : '0.3s' }}>
+      <Header SetSideBar={() => setOpen(!SideBarOpen)} cookies={cookies}
+      goToFolders={true} loadingHeader={isLoading}
+      Questionnaire={data?.data}/>
+        <QuestionnairePanelContainer>
+          <PanelInnerContainer> 
+            {  <QuestionnairePanelHeader SideState={SideState} isFetched={isFetched}
+            ChangeSide={SetSideState} Questionnaire={data?.data}/>}
+            {
+              SideState == 'question_design' ? <QuestionDesignPanel QuestionnaireReloader={refetch}
+              Questionnaire={data?.data}  /> 
+              : data?.data && <SettingPanel Questionnaire={data?.data}  ChangeSide={SetSideState}
+              refetch={refetch}/>
+              }
+            </PanelInnerContainer>
+        </QuestionnairePanelContainer>
+        </main>
+      </PageBox>
       </Provider>
       
     </>

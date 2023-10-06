@@ -59,6 +59,7 @@ export const WritePrioritize = ({ QuestionInfo }) => {
             newOption : true ,
             group : QuestionInfo.group
         })) : ''}
+        maxLength={250}
          autoFocus={item.newOption ? true : false}
         placeholder='چیزی بنویسید'  
         onChange={e => {
