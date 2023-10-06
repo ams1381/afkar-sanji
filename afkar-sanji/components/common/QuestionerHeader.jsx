@@ -1,10 +1,11 @@
 import React from 'react'
-import { HeaderContainer , HeaderComponent , UserAvatarLogout, PageBox } from '@/styles/common';
+import {HeaderContainer, HeaderComponent, UserAvatarLogout, PageBox, LogoutPopoverItem} from '@/styles/common';
 import { QuestionnaireDirectoryContainer , QuestionnaireDirectoryPath
 } from '@/styles/questionnairePanel/QuestionnairePanelHeader';
 import { Popover } from 'antd'
 import { Icon } from '@/styles/icons';
 import { useState } from 'react';
+import Link from "next/link";
 
 export const QuestionerHeader = ({ pageName }) => {
   const [ logoutPopOver , switchPopover ] = useState(false);
@@ -12,7 +13,15 @@ export const QuestionerHeader = ({ pageName }) => {
     <HeaderContainer>
           <HeaderComponent>
           <Popover
-                content={<p>fgsdgsdgsdg</p>}
+              content={<div style={{ padding : '4px 0' }}>
+                  <LogoutPopoverItem>
+                      <Link href={'/'}>پروفایل کابری</Link>
+                  </LogoutPopoverItem>
+                  <LogoutPopoverItem>
+                      <p>خروج</p>
+                      <Icon name={'Logout'} />
+                  </LogoutPopoverItem>
+              </div>}
                 trigger="click"
                 className='LogoutPopover'
                 open={logoutPopOver}
@@ -41,6 +50,11 @@ const pathComponentGenerator = (PageName) => {
         <p> پروفایل </p> / 
          <p> داشبود </p>  
         
+      </>
+      case 'add-result':
+      return <>
+          <p> ثبت پاسخ </p> /
+          <p> داشبورد </p>
       </>
   }
 }

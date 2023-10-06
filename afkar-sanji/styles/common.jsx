@@ -251,7 +251,10 @@ export const CommonDrawerContainer = styled.div`
     z-index: 555;
     width: ${p => p.open ? '20%' : '62px'};
     transition : 0.3s;
-
+  & a
+  {
+    text-decoration: none;
+  }
     .drawerLogo
     {
         height: 58px;
@@ -330,4 +333,19 @@ export const QuestionerContentBox = styled.div`
     gap: 16px;
     margin: 0 auto;
     flex-direction: row-reverse;
+`
+export const LogoutPopoverItem = styled.div`
+  display: flex;
+  padding: 5px 12px;
+  height: 34px;
+  gap: 8px;
+  justify-content: flex-end;
+  align-items: center;
+  color: var(--Error-color);
+  cursor: pointer;
+
+  & a
+  {
+    color: var(--Neutral-Gray9);
+  }
 `

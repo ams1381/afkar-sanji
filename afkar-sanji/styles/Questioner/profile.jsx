@@ -1,15 +1,29 @@
 import { styled } from "styled-components";
 
+export const UserInfoBoxHeader = styled.div`
+  display : flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  .ant-upload-list
+  {
+    height: 100%;
+  }
+  .ant-upload-list-item-undefined
+  {
+    transition : 0.3s !important;
+    border-radius : 2px !important;
+    border-color : ${p => p.uploaderror ? '#ff4d4f' : '#d9d9d9'} !important;
+    color : ${p => p.uploaderror ? '#ff4d4f' : 'black'} !important;
+  }
+  .ant-upload.ant-upload-select
+  {
+    display : ${p => p.fileuploaded ? 'none' : 'block'}
+  }
+`
 export const UserInfoContainer = styled.div`   
     width: 45%;
     text-align: right;
-
-    .info_box_header
-    {
-        display : flex;
-        justify-content: space-between;
-        margin-bottom: 12px;
-    }
+  
     .ant-upload-wrapper.avatar-uploader
     {  
         width : auto !important;
@@ -41,6 +55,12 @@ export const InfoBox = styled.div`
         text-align: left;
         outline: none;
     }
+  .last_update_container
+  {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 10px
+  }
 `
 export const EditInfoBox = styled.div`
     display: flex;

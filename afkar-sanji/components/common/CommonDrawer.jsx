@@ -2,6 +2,7 @@ import React from 'react'
 import { CommonDrawerContainer } from '@/styles/common'
 import { Icon } from '@/styles/icons'
 import { message } from 'antd';
+import Link from "next/link";
 
 export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen }) => {
     const [ MessageApi , MessageContext ] = message.useMessage();
@@ -40,16 +41,18 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen }) => {
                 <p>پروژه ها</p>
                 <Icon name='Projects' />
             </div>
-            <div className='drawer_item' onClick={() => MessageApi.info({
-                content : 'این قابلیت به زودی فعال میشود'
-            })}>
-                <p>اطلاعات کاربر</p>
-                <Icon name='UserInfo' />
-            </div>
-            <div className='drawer_item'>
-                <p>ساخت پرسشنامه</p>
-                <Icon name='CreateQuestionnaire' />
-            </div>
+            <Link href={'/questioner/dashboard/profile'}>
+                <div className='drawer_item'>
+                    <p>اطلاعات کاربر</p>
+                    <Icon name='UserInfo' />
+                </div>
+            </Link>
+            <Link href={'/'}>
+                <div className='drawer_item'>
+                    <p>ساخت پرسشنامه</p>
+                    <Icon name='CreateQuestionnaire' />
+                </div>
+            </Link>
         </div>
     </CommonDrawerContainer>
   )

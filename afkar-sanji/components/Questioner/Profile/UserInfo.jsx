@@ -1,45 +1,111 @@
-import { UserInfoContainer , InfoBox 
-    , EditInfoBox , UserBoldInfoContainer } from '@/styles/Questioner/profile'
+import {
+    UserInfoContainer, InfoBox
+    , EditInfoBox, UserBoldInfoContainer, UserInfoBoxHeader
+} from '@/styles/Questioner/profile'
 import { Icon } from '@/styles/icons'
-import { Upload } from 'antd'
-import React from 'react'
+import {message, Upload} from 'antd'
+import React, {useState} from 'react'
 import { InfoContainer } from './InfoBox';
+import {digitsEnToFa} from "@persian-tools/persian-tools";
+import {UploadFileHandler} from "@/utilities/QuestionStore";
+import {beforeUpload, detectFileFormat} from "@/components/QuestionnairePanel/Question Components/Common/FileUpload";
+import {axiosInstance} from "@/utilities/axios";
 
-const beforeUpload = (file) => {
-    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-    if (!isJpgOrPng) {
-      message.error('You can only upload JPG/PNG file!');
-    }
-    const isLt2M = file.size / 1024 / 1024 < 2;
-    if (!isLt2M) {
-      message.error('Image must smaller than 2MB!');
-    }
-    return isJpgOrPng && isLt2M;
-};
-const getBase64 = (img, callback) => {
-    const reader = new FileReader();
-    reader.addEventListener('load', () => callback(reader.result));
-    reader.readAsDataURL(img);
-  };
+
 export const UserInfoBox = ({ userData }) => {
-    const handleChange = (info) => {
-        if (info.file.status === 'uploading') {
-          setLoading(true);
-          return;
+    const [messageApi, contextHolder] = message.useMessage();
+    const [fileUploaded, setFileUploaded] = useState(userData?.avatar ? true : null);
+    const [ uploadError , setUploadError ] = useState(false);
+    const [fileList, setFileList] = useState(userData.avatar ?
+        [{
+            name : 'عکس پروفایل',
+            status: 'success',
+            url: 'https://mah-api.ariomotion.com' + userData.avatar,
+            thumbUrl : 'https://mah-api.ariomotion.com' + userData.avatar
+        }]
+        : null);
+    const FileUploadHandler = async (file, fileList , event) => {
+
+        // if(file.file.percent == 0) {
+        //     setFileUploaded(null)
+        //     setUploadError(false);
+        //     return
+        // }
+        try
+        {
+        if(!file.fileList?.length)
+        {
+            setFileUploaded(null)
+            setUploadError(false)
+            await axiosInstance.patch('/user-api/users/me/',{ avatar : null })
+            return
         }
-        if (info.file.status === 'done') {
-          // Get this url from response in real world.
-          getBase64(info.file.originFileObj, (url) => {
-            setLoading(false);
-            setImageUrl(url);
-          });
+        if(detectFileFormat(file.file?.name) != 'Picture')
+        {
+
+            messageApi.error({
+                content : `لطفا فقط عکس آپلود کنید`,
+                style: {
+                    fontFamily: 'IRANSans',
+                    direction: 'rtl'
+                }
+            })
+            setFileList([{
+                name : file.file.name,
+                status: 'error',
+                url: URL.createObjectURL(file.file),
+                thumbUrl : URL.createObjectURL(file.file)
+            }]);
+            setFileUploaded(null)
+            setUploadError(true);
+            return
         }
-      };
+        if(file.file.size / 1024000 > 30)
+        {
+
+            messageApi.error({
+                content : `فایل آپلودی بیشتر از ${digitsEnToFa(30)} مگابایت است`,
+                style: {
+                    fontFamily: 'IRANSans',
+                    direction: 'rtl'
+                }
+            })
+            setFileUploaded(null)
+            setUploadError(true);
+            setFileList([]);
+            return
+        }
+
+        setFileList([{
+            name : file.file.name,
+            status: 'error',
+            url: URL.createObjectURL(file.file),
+            thumbUrl : URL.createObjectURL(file.file)
+        }]);
+        setUploadError(false);
+        setFileUploaded(true)
+
+            let formData = new FormData();
+            formData.append('avatar',file.file);
+            axiosInstance.defaults.headers['Content-Type'] = 'multipart/form-data';
+            await axiosInstance.patch('/user-api/users/me/',formData)
+        }
+       catch (err)
+       {
+           messageApi.error({
+               content : 'مشکل در آپلود پروفایل'
+           })
+       }
+
+    }
+
   return (
     <UserInfoContainer>
+        {contextHolder}
         <h3>اطلاعات کاربری</h3>
         <div style={{ marginTop : 12 }}>
-            <div className='info_box_header'>
+            <UserInfoBoxHeader fileuploaded={(fileUploaded || uploadError) ? 'true' : null}
+                uploaderror={uploadError ? 'occur' : null}>
                 <UserBoldInfoContainer>
                     <InfoContainer bold BoxName='نام' UserData={userData}
                      BoxDataName='first_name' />
@@ -49,15 +115,20 @@ export const UserInfoBox = ({ userData }) => {
                 <Upload
                     name="avatar"
                     listType="picture-card"
+                    // listType="picture"
                     className="avatar-uploader"
-                    showUploadList={false}
-                    action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
+                    defaultFileList={fileList}
+                    maxCount={1}
+
+                    onRemove={() => setFileList([])}
+                    // showUploadList={false}
+                    // action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
                     beforeUpload={beforeUpload}
-                    onChange={handleChange}>
+                    onChange={FileUploadHandler}>
                     آپلود پروفایل
                     
-                </Upload>    
-            </div>
+                </Upload>
+            </UserInfoBoxHeader>
             <InfoContainer BoxName='شماره تلفن' UserData={userData}
                      BoxDataName='phone_number' />
             <InfoContainer BoxName='ایمیل' UserData={userData}
@@ -69,14 +140,7 @@ export const UserInfoBox = ({ userData }) => {
             <InfoContainer BoxName='ملیت' UserData={userData}
                      BoxDataName='nationality' />
             <InfoContainer BoxName='استان محل سکونت' UserData={userData}
-                     BoxDataName='province' />     
-            {/* <InfoBox>
-                 <p>استان محل سکونت </p>
-                <EditInfoBox>
-                    <input />
-                    <Icon name='ProfilePen' />
-                </EditInfoBox>
-            </InfoBox> */}
+                     BoxDataName='province' />
         </div>
     </UserInfoContainer>
   )

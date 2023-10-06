@@ -53,7 +53,7 @@ export const Login_form = ({ setLoggedIn }) => {
     }
     catch(error)
     { 
-      if(error.response.status == 500) 
+      if(error?.response?.status == 500)
         setErMessage('مشکلی پیش آمد')
       else {
         if(typeof error == 'string')

@@ -38,7 +38,7 @@ const FileUpload = ({ QuestionInfo }) => {
       setUploadError(false);
       return
     }
-    console.log(detectFileFormat(file.file?.name))
+
     if(detectFileFormat(file.file?.name) == 'UNKNOWN' || detectFileFormat(file.file?.name) == 'Zip' ||
     detectFileFormat(file.file?.name) == 'Audio')
     {
@@ -113,7 +113,6 @@ const FileUpload = ({ QuestionInfo }) => {
           className="upload-list-inline"
           listType="picture"
           multiple={false}
-          
           method={null}
           maxCount={1}
           onPreview={handlePreview}
@@ -136,9 +135,8 @@ const FileUpload = ({ QuestionInfo }) => {
           </QuestionFileUploadContainer>
   )
 }
-const beforeUpload = (file) => {
+export const beforeUpload = (file) => {
   return new Promise((resolve, reject) => {
-    console.log(ImageOrVideo)
     const ImageOrVideo = file.type === 'image/jpeg' || file.type === 'video/mkv' || file.type === 'video/mp4'
     file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/gif';
     if (!ImageOrVideo) 
