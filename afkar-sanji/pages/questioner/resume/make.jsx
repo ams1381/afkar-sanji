@@ -26,12 +26,6 @@ import {Row} from "@/styles/questioner/information";
 
 
 export default function () {
-    // achievements دستاوردها
-    // educational-backgrounds پیشینه تحصیلی
-    // research-histories تحقیق-تاریخ
-    // skills مهارت ها
-    // work-backgrounds پیشینه شغلی
-    // step items
     const [educational_backgrounds, setEducational_backgrounds] = useState([{id: 1}]);
     const [skills, setSkills] = useState([{id: 1}])
     const [achievements, setAchievements] = useState([{id: 1}])
@@ -174,14 +168,13 @@ export default function () {
 
     const onChange = (value) => {
         console.log(value)
-        // setCurrent(value);
+        setCurrent(value);
         value === 0 && setTitle('سوابق تحصیلی')
         value === 1 && setTitle('مهارت')
         value === 2 && setTitle('افتخارات')
         value === 3 && setTitle('سابقه شغلی')
         value === 4 && setTitle('سابقه پژوهشی')
     };
-
 
     return (<>
         <BgSlide/>
