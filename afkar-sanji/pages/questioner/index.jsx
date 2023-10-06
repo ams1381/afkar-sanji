@@ -52,3 +52,31 @@ const Questioner = () => {
 }
 
 export default Questioner
+
+export async function getServerSideProps(context) {
+    const { req } = context;
+    const cookies = req.headers.cookie;
+
+    // Check if cookies are present
+    if (cookies) {
+        // Parse the cookies
+        const parsedCookies = cookies.split(';').reduce((acc, cookie) => {
+            const [key, value] = cookie.trim().split('=');
+            acc[key] = decodeURIComponent(value);
+            return acc;
+        }, {});
+        return {
+            props: {
+                // Pass the cookies as props to the component
+                cookies: parsedCookies,
+            },
+        };
+    }
+
+    return {
+        redirect: {
+            permanent: false,
+            destination: "/auth"
+        }
+    };
+}

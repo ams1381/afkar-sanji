@@ -323,8 +323,8 @@ export const QuestionerPageContainer = styled.div`
     height : 87vh;
 `
 export const QuestionerContentBox = styled.div`
-    width: 86%;
-    height: 100%;
+    width: 84%;
+    //height: 100%;
     display: flex;
     padding: 16px 0px;
     gap: 16px;
