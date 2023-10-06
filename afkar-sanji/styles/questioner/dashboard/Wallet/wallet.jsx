@@ -47,7 +47,7 @@ export const WalletContainer = styled.div`
   flex-direction: row;
   width: 100%;
   gap: 24px;
-
+  margin-top: 50px;
 
   @media screen and (max-width: 768px) {
     flex-direction: column;

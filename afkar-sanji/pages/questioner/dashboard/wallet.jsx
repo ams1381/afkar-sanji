@@ -21,9 +21,7 @@ import wallet from 'public/Icons/Wallet2.svg'
 // component
 import TransactionList from "@/components/Questioner/Dashboadr/Wallet/TransactionList";
 import Statistics from "@/components/Questioner/Dashboadr/Wallet/Statistics/Statistics";
-
-
-
+import Bank from "@/components/Questioner/Dashboadr/Wallet/Bank/Bank"
 
 export default function ({cookies, userData}) {
     const [logoutPopOver, switchPopover] = useState(false);
@@ -50,8 +48,8 @@ export default function ({cookies, userData}) {
                                 </Button>
                             </WalletHeader>
                             <WalletContainer>
-                                <TransactionList/>
-                               <Statistics />
+                                <Bank/>
+                                <Statistics/>
                                 <TransactionList/>
                             </WalletContainer>
                         </Container>
