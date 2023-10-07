@@ -6,16 +6,15 @@ import StatisticsChart from "@/components/Questioner/Dashboadr/Wallet/Statistics
 // antd
 import {Skeleton} from "antd";
 
-export default function ({loading}) {
+export default function ({loading,data}) {
     return (
         <StatisticsContainer>
-            <StatisticsHead/>
+            <StatisticsHead loading={loading} data={data}/>
             {loading ? (
                 <Skeleton.Input style={{width: '100%', height: '418px'}}/>
             ) : (
                 <StatisticsChart/>
             )}
-
         </StatisticsContainer>
 
     )

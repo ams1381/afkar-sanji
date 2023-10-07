@@ -6,17 +6,17 @@ import edit from 'public/Icons/EditCard.svg'
 import {Skeleton} from "antd";
 import React from "react";
 
-export default function ({loading}) {
+export default function ({loading,data}) {
     return (
         <Bank>
             <BankHead>
                 <img src={bank?.src} alt=""/>
                 <div className={`text`}>اطلاعات بانکی</div>
             </BankHead>
-            {[0, 0].map(card => {
-                if (loading) return <Skeleton.Input style={{width: '100%', height: '50px'}} loading active/>
+            {[0, 0].map((card,index) => {
+                if (loading) return <Skeleton.Input style={{width: '100%', height: '50px'}} loading active key={index}/>
                 else {
-                    return <BankCard>
+                    return <BankCard key={index}>
                         <img src={edit?.src} alt=""/>
                         <div className="type_text">IR۰۰۰۰۰۰۰۰۱۴۲۱۳۴۱۲۶۷۸۹</div>
                         <div className="type_text">شماره شبا</div>

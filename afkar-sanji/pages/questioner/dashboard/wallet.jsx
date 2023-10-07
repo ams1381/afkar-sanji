@@ -30,8 +30,9 @@ export default function ({cookies, wallet}) {
     const [logoutPopOver, switchPopover] = useState(false);
     const [RightDrawerOpen, setRightDrawerOpen] = useState(true);
     const router = useRouter()
-    const {data, isLoading, error, refetch} = useQuery(['FolderFetch'],
-        async () => await axiosInstance.get('/user-api/folders/'))
+    const {data, isLoading, error, refetch} = useQuery(['Wallet'],
+        async () => await axiosInstance.get('/wallet-api/wallet/my-wallet/'))
+
 
     return (
         <PageBox>
@@ -53,8 +54,8 @@ export default function ({cookies, wallet}) {
                                 </Button>
                             </WalletHeader>
                             <WalletContainer>
-                                <Bank loading={isLoading}/>
-                                <Statistics loading={isLoading}/>
+                                <Bank data={data?.data} loading={isLoading}/>
+                                <Statistics data={data?.data} loading={isLoading}/>
                                 <TransactionList loading={isLoading}/>
                             </WalletContainer>
                         </Container>

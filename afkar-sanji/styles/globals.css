@@ -292,4 +292,20 @@ input:-webkit-autofill:active {
 .notBorder {
     border-radius: 2px;
 }
+
 /* custom */
+
+.ant-input-wrapper.ant-input-group.css-dev-only-do-not-override-pr0fja {
+    direction: rtl !important;
+}
+
+.ant-input-wrapper.ant-input-group.css-dev-only-do-not-override-pr0fja input ,
+.ant-input-wrapper.ant-input-group.css-dev-only-do-not-override-pr0fja button{
+    border-radius: 2px !important;
+    font-family: IRANSans;
+    height: 40px;
+}
+
+.ant-input-wrapper.ant-input-group.css-dev-only-do-not-override-pr0fja button{
+    width: 40px;
+}

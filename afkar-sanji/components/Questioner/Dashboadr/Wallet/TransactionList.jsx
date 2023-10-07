@@ -7,10 +7,10 @@ import {Skeleton} from "antd";
 export default function ({loading}) {
     return (
         <TransactionContainer>
-            {[0, 0, 0, 0].map(item => {
-                if (loading) return <Skeleton.Input style={{width: '100%', height: '100px'}} loading active/>
+            {[0, 0, 0, 0].map((item,index) => {
+                if (loading) return <Skeleton.Input style={{width: '100%', height: '100px'}} loading active key={index}/>
                 else {
-                    return <TransactionItem/>
+                    return <TransactionItem key={index}/>
                 }
             })}
 
