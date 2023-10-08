@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 // style
 import {
     CharContainer,
@@ -15,47 +15,17 @@ import Chart from 'chart.js/auto';
 import income from 'public/Icons/ArrowGren.svg'
 import cost from 'public/Icons/Arrow Circle Down.svg'
 
-export default function () {
+export default function ({data, setFilterParams}) {
     const [incomeActive, setIncomeActive] = useState(false)
     const [costActive, setCostActive] = useState(false)
     const [chartData, setChartData] = useState({
         datasets: [
             {
-                data: [400, 100],
+                data: [data?.answering, data?.interviewing],
                 backgroundColor: ['#52C41A', '#1890FF']
             }
         ]
     });
-
-    const incomeChart = () => {
-        setIncomeActive(p => p = !p)
-        setCostActive(false)
-        const updatedData = {
-            datasets: [
-                {
-                    data: [100, 0], // filtered data
-                    backgroundColor: ['#52C41A', '#1890FF']
-                }
-            ]
-        };
-
-        setChartData(updatedData);
-    }
-
-    const costChart = () => {
-        setCostActive(p => p = !p)
-        setIncomeActive(false)
-        const updatedData = {
-            datasets: [
-                {
-                    data: [0, 100], // filtered data
-                    backgroundColor: ['#52C41A', '#1890FF']
-                }
-            ]
-        };
-        setChartData(updatedData);
-    }
-
 
     return (
         <CharContainer>
@@ -68,7 +38,14 @@ export default function () {
             <ChartBody>
                 <ChartFilter>
                     <ChartFilterLeft>
-                        <Income onClick={incomeChart} filter={incomeActive ? 'grayscale(100%) contrast(500%)' : ''}
+                        <Income onClick={() => {
+                            setIncomeActive(p => p = !p)
+                            setCostActive(false)
+                            setFilterParams(p => ({
+                                ...p,
+                                transaction_type: 'i'
+                            }))
+                        }} filter={incomeActive ? 'grayscale(100%) contrast(500%)' : ''}
                                 background={incomeActive ? '#52C41A' : 'transparent'}
                                 color={!incomeActive ? '#52C41A' : '#fff'}>
                             <div className="text">
@@ -76,7 +53,14 @@ export default function () {
                                 <div>درآمد</div>
                             </div>
                         </Income>
-                        <Cost onClick={costChart} filter={costActive ? 'brightness(103.5)' : ''}
+                        <Cost onClick={() => {
+                            setCostActive(p => p = !p)
+                            setIncomeActive(false)
+                            setFilterParams(p => ({
+                                ...p,
+                                transaction_type: 'o'
+                            }))
+                        }} filter={costActive ? 'brightness(103.5)' : ''}
                               background={costActive ? '#FF4D4F' : 'transparent'}
                               color={!costActive ? '#FF4D4F' : '#fff'}>
                             <div className="text">

@@ -23,6 +23,12 @@ import {Button, message, Select} from 'antd'
 import StyleModules from "@/styles/auth/LoginStyles.module.css";
 import {axiosInstance} from "@/utilities/axios";
 import {Row} from "@/styles/questioner/information";
+import Achievements from "@/components/Questioner/Resume/Achievements";
+import EducationalBackgrounds from "@/components/Questioner/Resume/EducationalBackgrounds";
+import Skills from "@/components/Questioner/Resume/Skills";
+import WorkBackgrounds from "@/components/Questioner/Resume/WorkBackgrounds";
+import ResearchHistories from "@/components/Questioner/Resume/ResearchHistories";
+import {useQuery} from "@tanstack/react-query";
 
 
 export default function () {
@@ -31,7 +37,6 @@ export default function () {
     const [achievements, setAchievements] = useState([{id: 1}])
     const [work_backgrounds, setWork_backgrounds] = useState([{id: 1}])
     const [research_histories, setResearch_histories] = useState([{id: 1}])
-
     const [current, setCurrent] = useState(0);
     const [loading, setLoading] = useState(false)
     const [title, setTitle] = useState('سوابق تحصیلی')
@@ -111,63 +116,7 @@ export default function () {
     const [selectScore, setSelectScore] = useState()
     const [gender, setGender] = useState('')
 
-    // educational-backgrounds
-    function removeEducational(id) {
-        setEducational_backgrounds(prevItems => prevItems.filter(item => item.id !== id));
-        message.success('با موفقیت حذف شد')
-    }
-
-    function addEducational() {
-        setEducational_backgrounds(prevItems => [...prevItems, {id: prevItems.length + 1}]);
-        message.success('با موفقیت اضافه شد')
-    }
-
-    // skills
-    function removeSkills(id) {
-        setSkills(prevItems => prevItems.filter(item => item.id !== id));
-        message.success('با موفقیت حذف شد')
-    }
-
-    function addSkills() {
-        setSkills(prevItems => [...prevItems, {id: prevItems.length + 1}]);
-        message.success('با موفقیت اضافه شد')
-    }
-
-    // achievements
-    function removeAchievements(id) {
-        setAchievements(prevItems => prevItems.filter(item => item.id !== id));
-        message.success('با موفقیت حذف شد')
-    }
-
-    function addAchievements() {
-        setAchievements(prevItems => [...prevItems, {id: prevItems.length + 1}]);
-        message.success('با موفقیت اضافه شد')
-    }
-
-    // work
-    function removeWork(id) {
-        setWork_backgrounds(prevItems => prevItems.filter(item => item.id !== id));
-        message.success('با موفقیت حذف شد')
-    }
-
-    function addWork() {
-        setWork_backgrounds(prevItems => [...prevItems, {id: prevItems.length + 1}]);
-        message.success('با موفقیت اضافه شد')
-    }
-
-    // research_histories
-    function removeResearch_histories(id) {
-        setResearch_histories(prevItems => prevItems.filter(item => item.id !== id));
-        message.success('با موفقیت حذف شد')
-    }
-
-    function addResearch_histories() {
-        setResearch_histories(prevItems => [...prevItems, {id: prevItems.length + 1}]);
-        message.success('با موفقیت اضافه شد')
-    }
-
     const onChange = (value) => {
-        console.log(value)
         setCurrent(value);
         value === 0 && setTitle('سوابق تحصیلی')
         value === 1 && setTitle('مهارت')
@@ -187,298 +136,42 @@ export default function () {
             <FromStep>
                 {current === 0 && (<>
                     <div className="title"> : تحصیلات شماره ۱</div>
-                    <FromStepScroll>
-                        {educational_backgrounds.map(item => (
-                            <FromResumeItem flexDirection={'column'} key={item.id}>
-                                <Row>
-                                    <ResumeInputCom>
-                                        <div className="title">مقطع مدرک</div>
-                                        <Select
-                                            style={{
-                                                width: '100%',
-                                                height: '40px',
-                                                textAlign: 'right',
-                                                padding: '0',
-                                                boxShadow: 'none',
-                                                direction: 'rtl'
-                                            }}
-                                            placeholder={'PHD : مثال'}
-                                            options={educations}
-                                            onChange={(e) => setSelectedEducation(e)}
-                                        />
-                                    </ResumeInputCom>
-                                    <ResumeInputCom>
-                                        <div className="title">سال پایان</div>
-                                        <Select
-                                            style={{
-                                                width: '100%',
-                                                height: '40px',
-                                                textAlign: 'right',
-                                                padding: '0',
-                                                boxShadow: 'none',
-                                                direction: 'rtl'
-                                            }}
-                                            placeholder={'انتخاب کنید'}
-                                            options={year}
-                                            onChange={(e) => setGender(e)}
-                                        />
-                                    </ResumeInputCom>
-                                    <ResumeInputCom>
-                                        <div className="title">سال شروع</div>
-                                        <Select
-                                            style={{
-                                                width: '100%',
-                                                height: '40px',
-                                                textAlign: 'right',
-                                                padding: '0',
-                                                boxShadow: 'none',
-                                                direction: 'rtl'
-                                            }}
-                                            placeholder={'انتخاب کنید'}
-                                            options={year}
-                                            onChange={(e) => setGender(e)}
-                                        />
-                                    </ResumeInputCom>
-                                    <ResumeInputCom>
-                                        <div className="title">نام مرکز</div>
-                                        <InputCom direction="rtl" placeholder="مثال: زبان انگلیسی، زبان عربی و"/>
-                                    </ResumeInputCom>
-                                </Row>
-                                <RowCom>
-                                    {item.id !== 1 && <img
-                                        onClick={() => removeEducational(item.id)}
-                                        className="close"
-                                        src={close.src}
-                                        alt=""
-                                    />}
-                                    <ResumeInputCom style={{
-                                        width: '100%'
-                                    }}>
-                                        <div className="title">رشته</div>
-                                        <InputCom direction="rtl"
-                                                  placeholder="مثال: زبان انگلیسی، زبان عربی و"/>
-                                    </ResumeInputCom>
-                                </RowCom>
-                            </FromResumeItem>))}
-                    </FromStepScroll>
-                    <ButtonContainer justify={`flex-end`}>
-                        <AddBtn onClick={addEducational}>
-                            <h2 className={`text`}>افزودن</h2>
-                            <img src={add.src} alt="" className="icon"/>
-                        </AddBtn>
-                    </ButtonContainer>
-                    <Button typeof='submit'
-                            onClick={() => {
-                                setCurrent(1)
-                                setTitle('مهارت')
-                            }}
-                            className={StyleModules['confirm_button']}
-                            type="primary" loading={loading}>
-                        بعدی
-                    </Button>
+                    <EducationalBackgrounds
+                                            educations={educations}
+                                            setSelectedEducation={setSelectedEducation}
+                                            year={year}
+                                            setGender={setGender}
+
+                                            setCurrent={setCurrent}
+                                            setTitle={setTitle}/>
                 </>)}
 
                 {current === 1 && (<>
                     <div className="title"> : مهارت ۲</div>
-                    <FromStepScroll>
-                        {skills.map(item => (<FromResumeItem key={item.id}>
-                            {item.id !== 1 && <img
-                                onClick={() => removeSkills(item.id)}
-                                className="close"
-                                src={close.src}
-                                alt=""
-                            />}
-                            <ResumeInputCom>
-                                <div className="title">سطح</div>
-                                <Select
-                                    style={{
-                                        width: '100%',
-                                        height: '40px',
-                                        textAlign: 'right',
-                                        padding: '0',
-                                        boxShadow: 'none',
-                                        direction: 'rtl'
-                                    }}
-                                    placeholder='از ۱ تا ۱۰'
-                                    options={score}
-                                    onChange={(e) => setSelectScore(e)}
-                                />
-                            </ResumeInputCom>
-                            <ResumeInputCom>
-                                <div className="title">نام مهارت</div>
-                                <InputCom direction="rtl" placeholder="مثال: زبان انگلیسی، زبان عربی و"/>
-                            </ResumeInputCom>
-                        </FromResumeItem>))}
-                    </FromStepScroll>
-
-                    <ButtonContainer justify={`flex-end`}>
-                        <AddBtn onClick={addSkills}>
-                            <h2 className={`text`}>افزودن</h2>
-                            <img src={add.src} alt="" className="icon"/>
-                        </AddBtn>
-                    </ButtonContainer>
-                    <Button typeof='submit'
-                            onClick={() => {
-                                setCurrent(2)
-                                setTitle('افتخارات')
-                            }}
-                            className={StyleModules['confirm_button']}
-                            type="primary" loading={loading}>
-                        بعدی
-                    </Button>
+                    <Skills setCurrent={setCurrent}
+                            setTitle={setTitle} skills={skills} score={score}
+                            setSelectScore={score}
+                            setSkills={setSkills}/>
                 </>)}
                 {current === 2 && (<>
                     <div className="title"> : افتخارات ۳</div>
-                    <FromStepScroll>
-                        {achievements.map(item => (<FromResumeItem key={item.id}>
-                            {item.id !== 1 && <img
-                                onClick={() => removeAchievements(item.id)}
-                                className="close"
-                                src={close.src}
-                                alt=""
-                            />}
-                            <ResumeInputCom>
-                                <div className="title">سال دریافت</div>
-                                <Select
-                                    style={{
-                                        width: '100%',
-                                        height: '40px',
-                                        textAlign: 'right',
-                                        padding: '0',
-                                        boxShadow: 'none',
-                                        direction: 'rtl'
-                                    }}
-                                    placeholder={'انتخاب کنید'}
-                                    options={year}
-                                    onChange={(e) => setGender(e)}
-                                />
-                            </ResumeInputCom>
-                            <ResumeInputCom>
-                                <div className="title">مرکز دریافت</div>
-                                <InputCom direction="rtl" placeholder={`مثال: وزارت علوم`}/>
-                            </ResumeInputCom>
-                            <ResumeInputCom>
-                                <div className="title">نوع افتخار</div>
-                                <InputCom direction="rtl" placeholder={`مثال: دریافت جایزه‌ی زکریا`}/>
-                            </ResumeInputCom>
-                        </FromResumeItem>))}
-                    </FromStepScroll>
+                    <Achievements setCurrent={setCurrent}
+                                  setTitle={setTitle} achievements={achievements} setAchievements={setAchievements}
+                                  setGender={setGender}
+                                  year={year}/>
 
-                    <ButtonContainer justify={`flex-end`}>
-                        <AddBtn onClick={addAchievements}>
-                            <h2 className={`text`}>افزودن</h2>
-                            <img src={add.src} alt="" className="icon"/>
-                        </AddBtn>
-                    </ButtonContainer>
-                    <Button typeof='submit'
-                            onClick={() => {
-                                setCurrent(3)
-                                setTitle('سابقه شغلی')
-                            }}
-                            className={StyleModules['confirm_button']}
-                            type="primary" loading={loading}>
-                        بعدی
-                    </Button>
                 </>)}
                 {current === 3 && (<>
                     <div className="title"> : سابقه شغلی ۴</div>
-                    <FromStepScroll>
-                        {work_backgrounds.map(item => (<FromResumeItem key={item.id}>
-                            {item.id !== 1 && <img
-                                onClick={() => removeWork(item.id)}
-                                className="close"
-                                src={close.src}
-                                alt=""
-                            />}
-                            <ResumeInputCom>
-                                <div className="title">سال پژوهش</div>
-                                <Select
-                                    style={{
-                                        width: '100%',
-                                        height: '40px',
-                                        textAlign: 'right',
-                                        padding: '0',
-                                        boxShadow: 'none',
-                                        direction: 'rtl'
-                                    }}
-                                    placeholder={'انتخاب کنید'}
-                                    options={year}
-                                    onChange={(e) => setGender(e)}
-                                />
-                            </ResumeInputCom> <ResumeInputCom>
-                            <div className="title">لینک</div>
-                            <InputCom direction="ltr" placeholder={`https://google.com`}/>
-                        </ResumeInputCom>
-                            <ResumeInputCom>
-                                <div className="title">عنوان</div>
-                                <InputCom direction="rtl" placeholder={`وارد کنید`}/>
-                            </ResumeInputCom>
-                        </FromResumeItem>))}
-                    </FromStepScroll>
-
-                    <ButtonContainer justify={`flex-end`}>
-                        <AddBtn onClick={addWork}>
-                            <h2 className={`text`}>افزودن</h2>
-                            <img src={add.src} alt="" className="icon"/>
-                        </AddBtn>
-                    </ButtonContainer>
-                    <Button typeof='submit'
-                            onClick={() => {
-                                setCurrent(4)
-                                setTitle('سابقه پژوهشی')
-                            }}
-                            className={StyleModules['confirm_button']}
-                            type="primary" loading={loading}>
-                        بعدی
-                    </Button>
+                    <WorkBackgrounds setCurrent={setCurrent}
+                                     setTitle={setTitle} work_backgrounds={work_backgrounds} setGender={setGender}
+                                     year={year}
+                                     setWork_backgrounds={setWork_backgrounds}/>
                 </>)}
                 {current === 4 && (<>
                     <div className="title"> : سابقه پژوهشی ۵</div>
-                    <FromStepScroll>
-                        {research_histories.map(item => (<FromResumeItem key={item.id}>
-                            {item.id !== 1 && <img
-                                onClick={() => removeResearch_histories(item.id)}
-                                className="close"
-                                src={close.src}
-                                alt=""
-                            />}
-                            <ResumeInputCom>
-                                <div className="title">سال دریافت</div>
-                                <Select
-                                    style={{
-                                        width: '100%',
-                                        height: '40px',
-                                        textAlign: 'right',
-                                        padding: '0',
-                                        boxShadow: 'none',
-                                        direction: 'rtl'
-                                    }}
-                                    placeholder={'انتخاب کنید'}
-                                    options={year}
-                                    onChange={(e) => setGender(e)}
-                                />
-                            </ResumeInputCom>
-                            <ResumeInputCom>
-                                <div className="title">مرکز دریافت</div>
-                                <InputCom direction="rtl" placeholder={`مثال: وزارت علوم`}/>
-                            </ResumeInputCom>
-                            <ResumeInputCom>
-                                <div className="title">نوع افتخار</div>
-                                <InputCom direction="rtl" placeholder={`مثال: دریافت جایزه‌ی زکریا`}/>
-                            </ResumeInputCom>
-                        </FromResumeItem>))}
-                    </FromStepScroll>
-                    <ButtonContainer justify={`flex-end`}>
-                        <AddBtn onClick={addResearch_histories}>
-                            <h2 className={`text`}>افزودن</h2>
-                            <img src={add.src} alt="" className="icon"/>
-                        </AddBtn>
-                    </ButtonContainer>
-                    <Button typeof='submit'
-                            className={StyleModules['confirm_button']}
-                            type="primary" loading={loading}>
-                        اتمام
-                    </Button>
+                    <ResearchHistories research_histories={research_histories} setGender={setGender}
+                                       setResearch_histories={setResearch_histories} year={year}/>
                 </>)}
             </FromStep>
 
@@ -488,7 +181,7 @@ export default function () {
 }
 
 export async function getServerSideProps(context) {
-    const { req } = context;
+    const {req} = context;
     const cookies = req.headers.cookie;
 
     // Check if cookies are present

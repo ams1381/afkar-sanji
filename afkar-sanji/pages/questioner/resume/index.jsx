@@ -27,10 +27,11 @@ export default function () {
     const [link, setLink] = useState('')
     const router = useRouter()
 
+
     const props = {
         name: 'file',
         headers: {
-            authorization: 'authorization-text',
+            'Content-Type': 'multipart/form-data'
         },
         onChange(info) {
             if (info.file.status !== 'uploading') {
@@ -40,7 +41,8 @@ export default function () {
                 setFileSize(`${sizeInMegabytes.toFixed(2)}`);
             }
             if (info.file.status === 'done') {
-                setFile(info)
+                console.log(info)
+                setFile(info?.fileList[0]?.originFileObj)
                 message.success(`با موفقیت آپلود شد`);
             } else if (info.file.status === 'error') {
                 message.error(`با شکست مواجه شد `);
@@ -48,21 +50,19 @@ export default function () {
         },
     };
 
-
     const submit = () => {
         let formData = new FormData()
         formData.append('linkedin', link.trim() || '')
-        formData.append('file', file?.file?.originFileObj|| '')
-
+        formData.append('file', '' )
         // send req
-        axiosInstance.post('/user-api/users/3/resume/', formData).then(res => {
+        axiosInstance.post('/user-api/users/3/resume/', formData, {headers:{
+                'Content-Type': 'multipart/form-data'
+            }}).then(res => {
             message.success('موفقیت آمیز بود')
         }).catch(err => {
             message.error('مشکلی پیش آمده است   ')
         })
-        console.log(Object.fromEntries(formData))
-
-        router.push('/questioner/resume/make')
+       router.push(`/questioner/resume/make/?resume_pk=1`)
     }
 
     return (
@@ -117,7 +117,8 @@ export default function () {
                             {fileSize && <div className="fileSize">حداکثر حجم فایل: {fileSize} مگابایت</div>}
                             {!fileSize && ''}
                         </UploaderHeader>
-                        <Upload {...props}>
+                        <Upload {...props} maxCount={1}
+                                showUploadList={false}>
                             <ButtonUploader disabled={false}>
                                 <p className="text">آپلود</p>
                                 <img src={UploaderIcon?.src} alt=""/>
@@ -132,7 +133,7 @@ export default function () {
 }
 
 export async function getServerSideProps(context) {
-    const { req } = context;
+    const {req} = context;
     const cookies = req.headers.cookie;
 
     // Check if cookies are present

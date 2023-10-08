@@ -74,6 +74,7 @@ export const CollaborationItem = styled.div`
   flex: 1 0 0;
   border-radius: var(--radius-XS, 2px);
   background: var(--surface);
+  cursor: pointer;
 `
 
 
@@ -151,4 +152,24 @@ export const CollaborationItemLeft = styled.div`
     }
 
   }
+`
+
+export const DropDownItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+  padding: 5px 0;
+  
+  > .text {
+    color: var(--On-Surface, #525252);
+    text-align: right;
+    font-family: IRANSansX;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 24px; /* 171.429% */
+  }
+  
+  
 `

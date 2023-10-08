@@ -28,18 +28,18 @@ export const BankHead = styled.div`
 
 export const BankCard = styled.div`
   width: 100%;
-  display: flex;
   padding: 10px 15px;
-  align-items: center;
-  justify-content: space-between;
   gap: 10px;
   align-self: stretch;
   border-radius: 2px;
   border: 1px solid var(--login-input-default-border);
   background: var(--surface);
+  display: flex;
+  align-items: center;
   
   > .type_text {
     color: var(--Neutral-Gray9);
+    font-family: IRANSans;
     font-size: 14px;
     font-style: normal;
     font-weight: 400;

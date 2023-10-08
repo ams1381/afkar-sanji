@@ -45,7 +45,8 @@ const onSearch = (value, _e, info) => console.log(info?.source, value);
 export default function ({cookies}) {
     const [logoutPopOver, switchPopover] = useState(false);
     const [RightDrawerOpen, setRightDrawerOpen] = useState(true);
-
+    const [ StartDate , setStartDate ] = useState('');
+    const [ EndDate , setEndDate ] = useState('')
     const DateFilterHandler = async (_, filterDate) => {
         // console.log(filterDate.validatedValue)
         if (!filterDate.validatedValue?.length) {

@@ -49,7 +49,7 @@ export const TransactionBody = styled.h2`
   gap: 10px;
 
   > .text {
-    color: #52C41A;
+    color: ${p => p.success};
     text-align: right;
     font-size: 20px;
     font-style: normal;

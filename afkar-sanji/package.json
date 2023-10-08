@@ -26,6 +26,7 @@
     "framer-motion": "^10.16.4",
     "html2canvas": "^1.4.1",
     "jalaali-js": "^1.2.6",
+    "joi": "^17.11.0",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.6.0",
     "moment-jalaali": "^0.10.0",

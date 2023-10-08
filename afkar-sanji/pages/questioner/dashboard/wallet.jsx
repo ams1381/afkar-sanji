@@ -25,13 +25,34 @@ import Bank from "@/components/Questioner/Dashboadr/Wallet/Bank/Bank"
 import {axiosInstance} from "@/utilities/axios";
 import axios from "axios";
 import {useQuery} from "@tanstack/react-query";
+import SetQueryParams from "@/utilities/filtering/filter";
 
 export default function ({cookies, wallet}) {
     const [logoutPopOver, switchPopover] = useState(false);
     const [RightDrawerOpen, setRightDrawerOpen] = useState(true);
     const router = useRouter()
-    const {data, isLoading, error, refetch} = useQuery(['Wallet'],
-        async () => await axiosInstance.get('/wallet-api/wallet/my-wallet/'))
+    const [filterParams, setFilterParams] = useState({
+        transaction_type: undefined,
+        transaction_created_at_from: undefined,
+        transaction_created_at_to: undefined,
+        amount_ordering: undefined
+    })
+    // const [amount, setAmount] = useState('')
+    const [data, setData] = useState()
+    const [isLoading, setIsLoading] = useState(false)
+    // const {data, isLoading, error, refetch} = useQuery(['Wallet'],
+    //     async () => await axiosInstance.get(`/wallet-api/wallet/my-wallet/?amount_ordering=${amount}`))
+    const getWalletData = () => {
+        setIsLoading(true)
+        axiosInstance.get(`/wallet-api/wallet/my-wallet/${SetQueryParams(filterParams)}`).then(res => {
+            setData(res?.data)
+            setIsLoading(false)
+        })
+    }
+
+    useEffect(() => {
+        getWalletData()
+    }, [filterParams]);
 
 
     return (
@@ -54,9 +75,12 @@ export default function ({cookies, wallet}) {
                                 </Button>
                             </WalletHeader>
                             <WalletContainer>
-                                <Bank data={data?.data} loading={isLoading}/>
-                                <Statistics data={data?.data} loading={isLoading}/>
-                                <TransactionList loading={isLoading}/>
+                                <Bank filterParams={filterParams} setFilterParams={setFilterParams} data={data}
+                                      loading={isLoading}/>
+                                <Statistics filterParams={filterParams} setFilterParams={setFilterParams} data={data}
+                                            loading={isLoading}/>
+                                <TransactionList filterParams={filterParams} setFilterParams={setFilterParams}
+                                                 data={data} loading={isLoading}/>
                             </WalletContainer>
                         </Container>
                     </QuestionerContentBox>

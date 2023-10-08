@@ -81,35 +81,34 @@ export const QuestionnaireFooter = styled.div`
     justify-content: ${p => p.loading ? 'space-evenly' : 'space-around'};
 `
 export const QuestionnaireNameInput = styled.input`
-    font-family: 'IRANSANS';
-    background: none;
-    border: none;
-    color: var(--Neutral-Gray9);
-    font-weight: 600;
-    font-size: 1rem;
-    outline: none;
-    min-width: 25px!important;
-    max-width: 231px;
-    transition: width 0.25s;
-    box-sizing: border-box;
-    text-align: right;
-    margin-left: 0.8rem;
-    direction: rtl;
-    // text-overflow: ellipsis;
-    // white-space: nowrap;
-    // overflow: hidden;
-    
-    &::selection 
-    {
-        background : #86B6FF;
-    }
-    @media screen and (max-width : 480px)
-    {
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-        max-width: ${p => p.questionnairePanel ? '106px !important' : '162px'};
-    }
+  font-family: 'IRANSANS';
+  background: none;
+  border: none;
+  color: var(--Neutral-Gray9);
+  font-weight: 600;
+  font-size: 1rem;
+  outline: none;
+  min-width: 25px !important;
+  max-width: 231px;
+  transition: width 0.25s;
+  box-sizing: border-box;
+  text-align: right;
+  margin-left: 0.8rem;
+  direction: rtl;
+  // text-overflow: ellipsis;
+  // white-space: nowrap;
+  // overflow: hidden;
+
+  &::selection {
+    background: #86B6FF;
+  }
+
+  @media screen and (max-width: 480px) {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: ${p => p.questionnairePanel ? '106px !important' : '162px'};
+  }
 `
 export const RenameSpan = styled.span`
     cursor : pointer;
