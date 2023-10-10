@@ -5,7 +5,6 @@ import { QuestionDesignItem , QuestionItemSurface ,DropDownQuestionButton , Ques
   QuestionItemActionButton, PreviewMobileSizeComponent ,
   QuestionItemRow,
   PreviewContainer} from '@/styles/questionnairePanel/QuestionDesignPanel'
-import Dropdown from 'react-dropdown';
 import { QuestionTypeComponentGenerator, Question_types } from '@/utilities/QuestionTypes';
 import 'react-dropdown/style.css';
 import RemovePopup from '../common/RemovePopup';
@@ -26,12 +25,7 @@ import { WritingSectionProvider } from './Question Components/WritingSectionProv
 import { ChangeQuestionType } from '@/utilities/QuestionStore';
 import { form_data_convertor } from '@/utilities/FormData';
 import { digitsEnToFa } from '@persian-tools/persian-tools';
-import { themeContext } from '@/utilities/ThemeContext';
-import { ReorderPoster, getListStyle } from './QuestionDesignPanel';
-import { StyleSheetConsumer } from 'styled-components';
 import { ReactSortable } from 'react-sortablejs';
-import { ToggleContainer } from '@/styles/questionnairePanel/QuestionSetting';
-import { useMemo } from 'react';
 import { moveItem } from './QuestionDesignPanel';
 
 function shallowEqual(obj1, obj2) {
@@ -64,7 +58,6 @@ export const QuestionItem = ({  ActiveQuestion, provided , childPlacement ,setAc
    QuestionsList  , IsQuestion , question , UUID , parentPlacement , GroupID }) => {
   const [ QuestionRootOpenState , SetQuestionRootOpenState ] = useState(false);
   const [ QuestionActionState , SetQuestionActionState ] = useState('edit');
-  // const [nestedQuestions, setNestedQuestions] = useState(question.child_questions);
   const [ DeleteQuestionState , SetDeleteQuestionState ] = useState(false);
   const [ SaveButtonLoadingState , SetSaveButtonLoadingState ] = useState(false);
   const [ QuestionsReload , SetQuestionsReload ] = useState(false);

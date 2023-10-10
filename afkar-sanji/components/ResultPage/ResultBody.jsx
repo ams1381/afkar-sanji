@@ -22,7 +22,7 @@ import { calculateTextWidth } from '@/utilities/RenameFunctions';
 import { QuestionTypeIcon } from '@/utilities/QuestionTypes';
 import { useLocalStorage } from '@/utilities/useLocalStorage';
 const regex = /(<([^>]+)>)/gi;
-const SkeletonTable = ({ columns, rowCount }) => {
+export const SkeletonTable = ({ columns, rowCount }) => {
     return (
       <Table
         rowKey="key"
@@ -285,8 +285,7 @@ export const ResultBody = ({ ResultQuery , setStartDate , setSearchValue , query
             // console.log(rows,index)
             if(typeof item.answer != 'object')
             {
-               rows[rows.length - 1][item.question] = item.answer;
-              // console.log(item.question,item.answer)
+               rows[rows.length - 1][item.question] = item.answer ? digitsEnToFa(item.answer) : '';
             }
              
             else
@@ -309,7 +308,7 @@ export const ResultBody = ({ ResultQuery , setStartDate , setSearchValue , query
                 }
                 else if(item.question_type == 'sort')
                     item.answer.forEach(optionItem => {
-                      rows[rows.length - 1][optionItem.text] = item.answer?.findIndex(item => item.text == optionItem.text) + 1;
+                      rows[rows.length - 1][optionItem.text] = digitsEnToFa(item.answer?.findIndex(item => item.text == optionItem.text) + 1);
                     })
             }
              
@@ -410,28 +409,11 @@ const ResultSearchHandler = async (e) => {
       // console.log('check')
       setStartDate(convertDate(digitsFaToEn(filterDate.validatedValue[0]),'gregorian'));
       setEndDate(filterDate.validatedValue[1] ? convertDate(digitsFaToEn(filterDate.validatedValue[1]),'gregorian') : '')
-        // let response =  await axiosInstance.get(`/result-api/${QuestionnaireQuery.data?.data?.uuid}/answer-sets/?answered_at&start_date=
-        // ${convertDate(digitsFaToEn(filterDate.validatedValue[0]),'gregorian')}
-        // &end_date=${filterDate.validatedValue[1] ? convertDate(digitsFaToEn(filterDate.validatedValue[1]),'gregorian') : ''}`)
-        // setResultData(response?.data?.results)
     }
    catch(err)
    {
     console.log(err)
    }
-  }
-  const TablePaginationHandler = async (Page) => {
-    try 
-    {
-      // console.log(Page)
-      SetCurrentPage(Page)
-    //  let { data } = await axiosInstance.get(`result-api/${QuestionnaireQuery.data?.data?.uuid}/answer-sets/?answered_at=&end_date=&page=${Page}&start_date=`)
-    //  setResultData(data?.results)
-    }
-    catch(err)
-    {
-
-    }
   }
 
   return (
@@ -540,7 +522,7 @@ const ResultSearchHandler = async (e) => {
                 showTotal : (total , range) => {
                   return <p>جمعا {digitsEnToFa(Math.ceil(ResultQuery?.data?.data.count / 7))} صفحه </p>
                 },
-                onChange : TablePaginationHandler ,
+                onChange : (Page) => SetCurrentPage(Page) ,
                 locale : { 
                   jump_to: "",
                   page : 'رفتن به',
@@ -628,7 +610,7 @@ const ResultSearchHandler = async (e) => {
   )
 }
 
-const ScrollByDrag = () => {
+export const ScrollByDrag = () => {
     const slider = document.querySelector("thead.ant-table-thead tr");
 
     const body = document.querySelector(".ant-table-container .ant-table-body");

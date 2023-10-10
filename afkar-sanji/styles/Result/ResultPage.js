@@ -94,6 +94,22 @@ export const ResultTableContainer = styled.div`
         margin-top : 10px;
         background : ${p => p.loading ? '#EFE9E9' : 'none'};
     }
+      .react-draggable
+      {
+        position: absolute;
+        background: white;
+        width: 336px;
+        //height: 640px;
+        overflow: scroll;
+        max-width: 500px;
+        max-height: 500px;
+        z-index: 3333;
+        box-shadow: rgba(0, 0, 0, 0.05) 0px 9px 28px 8px, rgba(0, 0, 0, 0.08) 0px 6px 16px 0px, rgba(0, 0, 0, 0.12) 0px 3px 6px -4px;
+      }
+  .react-draggable::-webkit-scrollbar
+  {
+    width: 0;
+  }
     table 
     {
         // table-layout: auto !important;
@@ -123,6 +139,11 @@ export const ResultTableContainer = styled.div`
         display: flex;
         justify-content: center;
         align-items: center;
+        transition: 0.3s;
+    }
+    .ant-pagination-item:hover
+    {
+      border : 1px solid var(--primary-color) !important;
     }
     .ant-pagination 
     {
@@ -199,12 +220,43 @@ export const ResultTableContainer = styled.div`
         display: flex;
         justify-content: center;
         width : 50%;
+        align-items: center;
         border-left: 1px solid #D9D9D9;
+    }
+  .order_cell .edit_result_button
+  {
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 2px;
+    border: 1px solid var(--neutral-5, #D9D9D9);
+    cursor: pointer;
+    box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.06);
+    transition: 0.3s;
+  }
+  .order_cell .edit_result_button:hover
+  {
+    border: 1px solid var(--primary-color);
+  }
+  .order_cell .edit_result_button i
+  {
+    width: 11px;
+  }
+    .order_cell_number i
+    {
+      filter: invert(37%) sepia(74%) saturate(1045%) hue-rotate(210deg) brightness(91%) contrast(105%);
     }
     .order_checkbox
     {
         width : 50%;
-        display: flex
+        display: flex;
+        //justify-content : center;
+    }
+    .order_checkbox .ant-checkbox-inner
+    {
+      border-radius: 2px !important;
     }
     .order_cell p 
     {
@@ -263,13 +315,17 @@ export const ResultTableContainer = styled.div`
     }
     .ant-spin-container
     {
-        max-height: 500px;
+        max-height: 540px;
         overflow: scroll;
     }
     .ant-spin-container::-webkit-scrollbar 
     {
         width : 0;
     }
+    //.ant-table-body .ant-table-selection-col
+    //{
+    //  width: 30px !important;
+    //}
 `
 export const EmptyResultContainer = styled.div`
     height: 70vh;

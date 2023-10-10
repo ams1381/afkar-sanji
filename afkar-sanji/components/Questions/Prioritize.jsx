@@ -76,10 +76,10 @@ const Prioritize = ({ QuestionInfo }) => {
                     ref={draggableProvided.innerRef}
                     {...draggableProvided.draggableProps}
                     {...draggableProvided.dragHandleProps}
-                    style={getItemStyle(
-                      draggableSnapshot.isDragging,
-                      draggableProvided.draggableProps.style
-                    )}
+                    // style={getItemStyle(
+                    //   draggableSnapshot.isDragging,
+                    //   draggableProvided.draggableProps.style
+                    // )}
                   >
                     <label
                       className='OptionalAnswerItemContainer Prioritize'

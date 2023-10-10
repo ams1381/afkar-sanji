@@ -10,6 +10,7 @@ import axios from 'axios'
 import { beforeUnloadHandler } from './questionnaire/[QuestionnaireID]'
 import { setCookie } from 'react-use-cookie'
 import { ThreeDots } from 'react-loader-spinner'
+import ProgressBarLoading from "@/styles/ProgressBarLoading";
 
 const queryClient = new QueryClient()
 
@@ -37,8 +38,8 @@ export default function App({ Component, pageProps , cookies }) {
       {
         if(err?.response?.status ==  401)
           router.push('/auth');
-        else if(err?.response?.status == 500)
-          window.location.pathname = '/500'
+        // else if(err?.response?.status == 500)
+        //   window.location.pathname = '/500'
         return
       }
       
@@ -60,7 +61,9 @@ export default function App({ Component, pageProps , cookies }) {
           window.removeEventListener('beforeunload',beforeUnloadHandler)
     
   return  <AuthContextProvider>
+
     <QueryClientProvider client={queryClient}>
+      <ProgressBarLoading />
       { readyToRender ? <Component {...pageProps} userData={UserData} /> : 
       <div style={{ display : 'flex' , alignItems : 'center' , justifyContent : 'center' , height : '100vh' }}>
       <ThreeDots 

@@ -4,6 +4,7 @@ export const UserInfoBoxHeader = styled.div`
   display : flex;
   justify-content: space-between;
   margin-bottom: 12px;
+  gap: 12px;
   .ant-upload-list
   {
     height: 100%;
@@ -18,6 +19,17 @@ export const UserInfoBoxHeader = styled.div`
   .ant-upload.ant-upload-select
   {
     display : ${p => p.fileuploaded ? 'none' : 'block'}
+  }
+  .ant-upload-list-item-container
+  {
+    max-height: 112px !important;
+    max-width: 112px !important;
+    height : 100% !important;
+    margin-block : 0 !important;
+  }
+  .ant-upload-list-item.ant-upload-list-item-success
+  {
+    border-radius: 2px !important;
   }
 `
 export const UserInfoContainer = styled.div`   
@@ -35,6 +47,10 @@ export const UserInfoContainer = styled.div`
         margin-inline-end : 0 !important;
         height : 100% !important;
     }
+      .ant-upload-list-item-container
+      {
+        margin-inline : 0 !important;
+      }
 `
 export const InfoBox = styled.div`
     display: flex;
@@ -43,7 +59,7 @@ export const InfoBox = styled.div`
     font-size: 14px;
     align-items: center;
     height: 50px;
-    background: white;
+    background: ${p => p.loading ? 'none' : 'white'};
     color: var(--Neutral-Gray9);
     justify-content: space-between;
     flex-direction: row-reverse;
@@ -51,9 +67,11 @@ export const InfoBox = styled.div`
 
     & input 
     {
+        transition: 0.3s;
         border: none;
         text-align: left;
         outline: none;
+        color : ${p => p.error ? 'var(--Error-color)' : 'var(--Neutral-Gray9)'};
     }
   .last_update_container
   {
@@ -71,10 +89,17 @@ export const EditInfoBox = styled.div`
      {
         cursor : pointer;
      }
+  .ant-select-selector
+  {
+    border : none !important;
+    border-radius: 2px !important;
+  
+   
+  }
 `
 export const UserBoldInfoContainer = styled.div`
     gap: 10px;
-    width: 80%;
+    width: 100%;
     display: flex;
     flex-direction: column;
 `
@@ -98,7 +123,7 @@ export const LocationSelectorContainer = styled.div`
     margin-top: 12px;
     font-size: 14px;
     padding: 10px;
-    background: white;
+    background: ${p => p.loading ? 'none' : 'white'};
     color: var(--Neutral-Gray9);
 
     .ant-select

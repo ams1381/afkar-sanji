@@ -5,9 +5,17 @@ import {PageBox, QuestionerPageContainer , QuestionerContentBox } from "@/styles
 import {CommonDrawer} from "@/components/common/CommonDrawer";
 import QuestionerHeader from "@/components/common/QuestionerHeader";
 import {axiosInstance} from "@/utilities/axios";
+import {Button} from "antd";
+import {AddResultFooter, QuestionContainer, QuestionsContainer} from "@/styles/Result/AddResult";
+import {SubComponentGenerator} from "@/components/Questioner/AddResult/QuestionSubCompGenerator";
+import {digitsEnToFa} from "@persian-tools/persian-tools";
+import AnswerStore from "@/utilities/AnswerStore";
+import {Provider} from "react-redux";
+import {PageContent} from "@/components/Questioner/AddResult/PageContent";
 
 const AddResultPage = ({ questionnaire }) => {
     const [ RightDrawerOpen , setRightDrawerOpen ] = useState(false);
+
     console.log(questionnaire)
     return <>
         <Head>
@@ -17,19 +25,13 @@ const AddResultPage = ({ questionnaire }) => {
             <link rel="icon" href="/favicon.ico" />
         </Head>
         <PageBox>
-            <CommonDrawer RightDrawerOpen={RightDrawerOpen} setRightDrawerOpen={setRightDrawerOpen} />
-            <main style={{ width : RightDrawerOpen ? '80%' : '100%', transition : '0.3s' }}>
-                <QuestionerHeader pageName='add-result' />
-                <QuestionerPageContainer>
-                    <QuestionerContentBox>
-                        {
-                            questionnaire.questions.map(item => item?.question && <p>
-                                {item.question.title}
-                            </p>)
-                        }
-                    </QuestionerContentBox>
-                </QuestionerPageContainer>
-            </main>
+            <Provider store={AnswerStore}>
+                <CommonDrawer RightDrawerOpen={RightDrawerOpen} setRightDrawerOpen={setRightDrawerOpen} />
+                <main style={{ width : RightDrawerOpen ? '80%' : '100%', transition : '0.3s' }}>
+                    <QuestionerHeader pageName='add-result' />
+                    <PageContent questionnaire={questionnaire} />
+                </main>
+            </Provider>
         </PageBox>
     </>
 }

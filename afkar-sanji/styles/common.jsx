@@ -201,7 +201,7 @@ export const AddFolderButtons = styled.div`
 export const SideBarConfirmButton = styled(Button)`
     background: var(--primary-color);
     padding: 0.5rem;
-    border-radius: 50%;
+    border-radius: 50% !important;
     border: none;
     display: flex;
     align-items: center;
@@ -261,7 +261,7 @@ export const CommonDrawerContainer = styled.div`
         display: flex;
         font-size: 12px;
         color: var(--primary-color);
-        justify-content: space-around;
+        justify-content: ${p => p.open ? 'space-around' : 'center'};
         align-items: center;
         cursor: pointer;
         background: var(--Primary-surface, #EEF0FF);
@@ -273,12 +273,12 @@ export const CommonDrawerContainer = styled.div`
     }
     .drawer_item {
         display: flex;
-        padding: 12px 24px;
+        padding: ${p => p.open ? '12px 24px' : 'none'};
         background: var(--hit-box, rgba(255, 255, 255, 0.00));
         height: 38px;
         cursor: pointer;
         align-items: center;
-        justify-content: flex-end;
+        justify-content: ${p => p.open ? 'flex-end' : 'center'};
         color: var(--Neutral-Gray9);
         font-size: 14px;
         gap: 10px;
@@ -300,7 +300,11 @@ export const CommonDrawerContainer = styled.div`
     }
     .drawer_item p , .drawerLogo p
     {
-        display : ${p => p.open ? 'block' : 'none'};
+        //display : ${p => p.open ? 'block' : 'none'};
+        width: ${p => p.open ? 'auto' : '0%'};
+        overflow: hidden;
+        white-space: nowrap;
+        transition: width 0.9s;
     }
     .drawerLogo button 
     {
@@ -347,5 +351,19 @@ export const LogoutPopoverItem = styled.div`
   & a
   {
     color: var(--Neutral-Gray9);
+  }
+`
+export const HeaderAvatarButton = styled(UserAvatarLogout)`
+  display: flex;
+  padding: 4px;
+  gap: 24px;
+  align-items: center;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  width: auto;
+  
+  & img
+  {
+    max-width: 30px;
   }
 `

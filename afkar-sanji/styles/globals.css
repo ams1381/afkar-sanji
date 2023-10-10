@@ -100,10 +100,12 @@ html::-webkit-scrollbar-thumb
 .ant-message-custom-content.ant-message-error
 {
   display: flex;
+  align-items: center;
 }
 .ant-btn
 {
   font-family: IRANSans;
+    border-radius: 2px !important;
 }
 .ant-select-dropdown.css-dev-only-do-not-override-byeoj0 , .ant-select-dropdown.css-17a39f8
 {

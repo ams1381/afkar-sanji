@@ -32,9 +32,18 @@ const AnswerSetSlice =  createSlice({
                     })
             })
         },
+        setAnswerSetArray : (state , action) => {
+            const { AnswerSetArray } = action.payload;
+            let JSONAnswerSetArray = JSON.parse(JSON.stringify(AnswerSetArray))
+            JSONAnswerSetArray.forEach(item => {
+                if(!item.answer)
+                    item.answer = { };
+            })
+            state.AnswerSet = JSONAnswerSetArray;
+        } ,
         ChangeInputAnswer : (state , action) => {
             const { QuestionID , InputName , InputValue } = action.payload;
-
+            // console.log(QuestionID , InputName , InputValue )
             state.AnswerSet.find(item => item.question == QuestionID).answer[InputName] = InputValue;
 
         },
@@ -46,7 +55,7 @@ const AnswerSetSlice =  createSlice({
         },
         ChoseOption : (state , action) => {
             const { QuestionID , ChoseOptionsArray , other_text} = action.payload;
-            console.log(QuestionID , ChoseOptionsArray )
+
             if(ChoseOptionsArray && Array.isArray(ChoseOptionsArray) && ChoseOptionsArray.length)
             {
                 if(other_text)
@@ -83,14 +92,12 @@ const AnswerSetSlice =  createSlice({
         },
         NumberSelect : (state , action) => {
             const { QuestionID , NumberValue , NumberName } = action.payload;
-
             state.AnswerSet.find(item => item.question == QuestionID).answer[NumberName] = NumberValue;
         },
         FileUploadHandler : (state , action) => {
             const { QuestionID , file } = action.payload;
             
             state.AnswerSet.find(item => item.question == QuestionID).file = file
-
         },
         FileRemoveHandler : (state , action) => {
             const { QuestionID } = action.payload;
@@ -108,7 +115,7 @@ const AnswerStore = configureStore({
         serializableCheck: false,
         }),
 })
-export const { setInitialAnswerSet , FileRemoveHandler ,
+export const { setInitialAnswerSet , FileRemoveHandler , setAnswerSetArray ,
     ChangeInputAnswer , FileUploadHandler , OtherOptionHandler ,
      SortOptions , ChoseOption , NumberSelect } = AnswerSetSlice.actions
 export default AnswerStore;

@@ -66,7 +66,10 @@ const SideBar = ({ isopen , SetSideBar , folders , SelectedFolder  , ReadyToCrea
         catch(err)
         {
             if(err.response)
-                SetErrorMessage(err.response.data.name[0]) 
+            {
+                err.response.status == 400 ? SetErrorMessage(err.response.data.name[0]) : SetErrorMessage('مشکلی پیش آمد')
+            }
+
         }
         finally
         {

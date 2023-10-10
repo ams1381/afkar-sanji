@@ -8,13 +8,11 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import persianNumberMin from 'persian-number';
 import React, { useContext } from 'react'
-import { parseCookies } from 'nookies';
-import nookies from 'nookies'
-import { useEffect } from 'react';
-import { setCookie , getCookie } from 'react-use-cookie';
-
+import { getCookie } from 'react-use-cookie';
 
 const OTPSms = ({ cookies }) => {
+  if(!getCookie('numberPhone'))
+    window.location.pathname = '/auth'
   const [LoginMessage, contextHolder] = message.useMessage();
   delete axiosInstance.defaults.headers['Authorization'];
 

@@ -76,6 +76,14 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
           catch(err) {
             if(err?.response?.status == 403)
               router.push('/403')
+            else if(err?.response?.status == 404)
+              messageApi.error({
+                content : 'یافت نشد' ,
+                style : {
+                  fontFamily : 'IRANSans'
+                }
+
+              })
             return
           }
         }
@@ -231,8 +239,6 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
         else
           await axios.post(`/question-api/questionnaires/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,[CopiedAnswerItem]);
         setNextQuestionLoading(false)
-        // nextButtonPressed = true;
-        // prevButtonPressed = false;
       }
       catch(err)
       {
@@ -245,15 +251,7 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
       }
       // QuestionsData[CurrentIndex].quetion.id
     }
-      // console.log((QuestionsAnswerSet[E.activeIndex - 1]))
-    // if(QuestionsAnswerSet && !Object.values(QuestionsAnswerSet[E.activeIndex - 1]?.answer)?.length && 
-    //   QuestionsData[E.activeIndex - 1]?.question?.is_required)
-    //   {
-    //     setNextQuestionError('لطفا به سوال پاسخ دهید');
-    //     return
-    //   }
-    // else
-    //   setNextQuestionError(null)
+
   }
   const PrevQuestionHandler = () => {
     setNextQuestionError(null)
@@ -290,7 +288,6 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
     FileQuestionQuestions = FileQuestionQuestions.filter(item => item != undefined);
     CopiedQuestionAnswerSet = CopiedQuestionAnswerSet.filter(item => item.file == null);
 
-    console.log(FileQuestionQuestions)
     try
     {
       

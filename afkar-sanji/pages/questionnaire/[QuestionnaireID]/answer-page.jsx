@@ -20,7 +20,6 @@ const AnswerPage = () => {
     const answerSetCreator = async () => {
       try
       {
-       
         let { data } = await axios.post(`question-api/questionnaires/${router.query.QuestionnaireID}/answer-sets/`);
         setAnswerSetID(data.id)
       }

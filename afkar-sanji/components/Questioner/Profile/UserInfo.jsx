@@ -3,8 +3,8 @@ import {
     , EditInfoBox, UserBoldInfoContainer, UserInfoBoxHeader
 } from '@/styles/Questioner/profile'
 import { Icon } from '@/styles/icons'
-import {message, Upload} from 'antd'
-import React, {useState} from 'react'
+import {message, Skeleton, Upload} from 'antd'
+import React, {useEffect, useState} from 'react'
 import { InfoContainer } from './InfoBox';
 import {digitsEnToFa} from "@persian-tools/persian-tools";
 import {UploadFileHandler} from "@/utilities/QuestionStore";
@@ -12,25 +12,36 @@ import {beforeUpload, detectFileFormat} from "@/components/QuestionnairePanel/Qu
 import {axiosInstance} from "@/utilities/axios";
 
 
-export const UserInfoBox = ({ userData }) => {
+export const UserInfoBox = ({ MeQuery , regions }) => {
     const [messageApi, contextHolder] = message.useMessage();
-    const [fileUploaded, setFileUploaded] = useState(userData?.avatar ? true : null);
+    const [fileUploaded, setFileUploaded] = useState(MeQuery?.data?.data?.avatar ? true : null);
     const [ uploadError , setUploadError ] = useState(false);
-    const [fileList, setFileList] = useState(userData.avatar ?
+    const [fileList, setFileList] = useState(MeQuery?.data?.data?.avatar ?
         [{
             name : 'عکس پروفایل',
             status: 'success',
-            url: 'https://mah-api.ariomotion.com' + userData.avatar,
-            thumbUrl : 'https://mah-api.ariomotion.com' + userData.avatar
+            url: 'https://mah-api.ariomotion.com' + MeQuery?.data?.data?.avatar,
+            thumbUrl : 'https://mah-api.ariomotion.com' + MeQuery?.data?.data?.avatar
         }]
         : null);
+    // console.log(fileList)
+    useEffect(() => {
+        // console.log(MeQuery?.data?.data)
+        if(MeQuery.data && MeQuery.data.data?.avatar)
+        {
+            setFileList([{
+                name : 'عکس پروفایل',
+                status: 'success',
+                url: 'https://mah-api.ariomotion.com' + MeQuery?.data?.data?.avatar,
+                thumbUrl : 'https://mah-api.ariomotion.com' + MeQuery?.data?.data?.avatar
+            }])
+            // setFileUploaded(true)
+        }
+
+    },[MeQuery?.data?.data])
+    console.log(fileList)
     const FileUploadHandler = async (file, fileList , event) => {
 
-        // if(file.file.percent == 0) {
-        //     setFileUploaded(null)
-        //     setUploadError(false);
-        //     return
-        // }
         try
         {
         if(!file.fileList?.length)
@@ -78,7 +89,7 @@ export const UserInfoBox = ({ userData }) => {
 
         setFileList([{
             name : file.file.name,
-            status: 'error',
+            status: 'uploading',
             url: URL.createObjectURL(file.file),
             thumbUrl : URL.createObjectURL(file.file)
         }]);
@@ -96,10 +107,44 @@ export const UserInfoBox = ({ userData }) => {
                content : 'مشکل در آپلود پروفایل'
            })
        }
-
     }
-
   return (
+      MeQuery.isLoading ?
+          <UserInfoContainer>
+              {contextHolder}
+              <h3>اطلاعات کاربری</h3>
+              <div style={{ marginTop : 12 }}>
+                  <UserInfoBoxHeader fileuploaded={(fileUploaded || uploadError) ? 'true' : null}
+                                     uploaderror={uploadError ? 'occur' : null}>
+                      <UserBoldInfoContainer>
+                          <Skeleton.Input active style={{ minWidth : 'auto' , width : '100%' }} />
+                          <Skeleton.Input active style={{ minWidth : 'auto' , width : '100%' }}/>
+                      </UserBoldInfoContainer>
+                      <Skeleton.Image active/>
+                  </UserInfoBoxHeader>
+                  <InfoBox loading>
+                      <Skeleton.Input active />
+                      <Skeleton.Input active style={{ minWidth : 'auto' , width : '50px' }} />
+                  </InfoBox>
+                  <InfoBox loading>
+                      <Skeleton.Input active />
+                      <Skeleton.Input active style={{ minWidth : 'auto' , width : '50px' }} />
+                  </InfoBox>
+                  <InfoBox loading>
+                      <Skeleton.Input active />
+                      <Skeleton.Input active style={{ minWidth : 'auto' , width : '50px' }} />
+                  </InfoBox>
+                  <InfoBox loading>
+                      <Skeleton.Input active />
+                      <Skeleton.Input active style={{ minWidth : 'auto' , width : '50px' }} />
+                  </InfoBox>
+                  <InfoBox loading>
+                      <Skeleton.Input active />
+                      <Skeleton.Input active style={{ minWidth : 'auto' , width : '50px' }} />
+                  </InfoBox>
+              </div>
+          </UserInfoContainer>
+          :
     <UserInfoContainer>
         {contextHolder}
         <h3>اطلاعات کاربری</h3>
@@ -107,39 +152,34 @@ export const UserInfoBox = ({ userData }) => {
             <UserInfoBoxHeader fileuploaded={(fileUploaded || uploadError) ? 'true' : null}
                 uploaderror={uploadError ? 'occur' : null}>
                 <UserBoldInfoContainer>
-                    <InfoContainer bold BoxName='نام' UserData={userData}
+                    <InfoContainer bold BoxName='نام' UserData={MeQuery?.data?.data}
                      BoxDataName='first_name' />
                      <InfoContainer bold BoxName='نام خانوادگی'
-                      BoxDataName='last_name' UserData={userData} />
+                      BoxDataName='last_name' UserData={MeQuery?.data?.data} />
                     </UserBoldInfoContainer>
                 <Upload
                     name="avatar"
                     listType="picture-card"
-                    // listType="picture"
                     className="avatar-uploader"
                     defaultFileList={fileList}
                     maxCount={1}
-
                     onRemove={() => setFileList([])}
-                    // showUploadList={false}
-                    // action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
                     beforeUpload={beforeUpload}
                     onChange={FileUploadHandler}>
                     آپلود پروفایل
-                    
                 </Upload>
             </UserInfoBoxHeader>
-            <InfoContainer BoxName='شماره تلفن' UserData={userData}
+            <InfoContainer BoxName='شماره تلفن' UserData={MeQuery?.data?.data}
                      BoxDataName='phone_number' />
-            <InfoContainer BoxName='ایمیل' UserData={userData}
+            <InfoContainer BoxName='ایمیل' UserData={MeQuery?.data?.data}
                      BoxDataName='email' />
-            <InfoContainer BoxName='جنسیت' UserData={userData}
+            <InfoContainer BoxName='جنسیت' UserData={MeQuery?.data?.data}
                      BoxDataName='gender' />
-            <InfoContainer BoxName='آدرس محل سکونت' UserData={userData}
+            <InfoContainer BoxName='آدرس محل سکونت' UserData={MeQuery?.data?.data}
                      BoxDataName='address' />
-            <InfoContainer BoxName='ملیت' UserData={userData}
+            <InfoContainer BoxName='ملیت' UserData={MeQuery?.data?.data} regions={regions}
                      BoxDataName='nationality' />
-            <InfoContainer BoxName='استان محل سکونت' UserData={userData}
+            <InfoContainer BoxName='استان محل سکونت' UserData={MeQuery?.data?.data} regions={regions}
                      BoxDataName='province' />
         </div>
     </UserInfoContainer>

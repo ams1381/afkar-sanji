@@ -241,6 +241,31 @@ export const QuestionWithAnswerContainer = styled.div`
         font-family : IRANSans;
     }
 `
+export const OptionalItemContainer = styled.label`
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: row;
+  background: #FFFFFF;
+  border: 2px dotted rgb(217, 217, 217);
+  color: var(--Neutral-Gray9);
+  border-radius: 2px;
+  align-items: center;
+  padding: 4px 8px;
+  word-break: break-word;
+  min-height: 40px;
+  cursor : pointer;
+
+  & p
+  {
+    margin-right : 0.5rem;
+    direction: rtl;
+    user-select : none;
+  }
+  .ant-checkbox-inner
+  {
+    border-radius: 2px !important;
+  }
+`
 export const TextAnswerInputBox = styled(Input)`
     border: 1px solid #D9D9D9;
     background: white;

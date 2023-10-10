@@ -90,7 +90,7 @@ export const Header = ({SetSideBar , goToFolders , Questionnaire , cookies , loa
             </ConfigProvider>
         {goToFolders ?  <QuestionnaireDirectoryContainer>
             <QuestionnaireDirectoryPath>
-              <QuestionnaireNameInput style={{ marginRight : 10 , fontSize : 14 , color : '#000000D9' }} 
+              <QuestionnaireNameInput style={{ marginRight : 10 , fontSize : 14 , color : '#000000D9' }}
               ref={QuestionnaireNameInputRef} questionnairePanel='active'
                value={QuestionnaireName} onKeyDown={e => e.key == 'Enter' ? QuestionnaireRenameConfirmHandler() : ''}
                onChange={QuestionnaireNameChangeHandler} disabled={!RenameState} /> 
@@ -109,7 +109,7 @@ export const Header = ({SetSideBar , goToFolders , Questionnaire , cookies , loa
                 open={QuestionnairePopoverState}
                 onOpenChange={() => SetQuestionnairePopoverState(false)}>
                 </Popover>
-                <FolderPopoverToggle style={{ marginRight : RenameState ? 10 : 8 }}
+                <FolderPopoverToggle style={{ marginRight : RenameState ? 10 : 0 }}
                 onClick={RenameState ? QuestionnaireRenameConfirmHandler : 
                   () => SetQuestionnairePopoverState(!QuestionnairePopoverState)}>
                   {RenameState ? <Icon name='GrayCheck' /> : <Icon name='Menu' />}

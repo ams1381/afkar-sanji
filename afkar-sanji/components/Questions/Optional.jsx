@@ -1,11 +1,15 @@
-import { OptionalAnswerBlockContainer, QuestionTitle } from '@/styles/questionnairePanel/QuestionComponent';
+import {
+  OptionalAnswerBlockContainer,
+  OptionalItemContainer,
+  QuestionTitle
+} from '@/styles/questionnairePanel/QuestionComponent';
 import { ChoseOption, OtherOptionHandler } from '@/utilities/AnswerStore';
 import { Checkbox, Input } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 
-const shuffleArray = (array) => {
+export const shuffleArray = (array) => {
     const shuffledArray = [...array];
     for (let i = shuffledArray.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -46,7 +50,6 @@ const OptionalComponent = ({ QuestionInfo }) => {
            ChoseOptionsArray : selectedValues ,
            other_text : otherInputValue
         }))
-        
       }
   },[selectedValues , otherInputValue])
   useEffect(() => {
@@ -122,7 +125,7 @@ const OptionalComponent = ({ QuestionInfo }) => {
   return (
     <OptionalAnswerBlockContainer vertical={QuestionInfo.is_vertical ? 'active' : null}>
       {QuestionOptions.map(item => (
-        <label className='OptionalAnswerItemContainer' key={item.id}>
+        <OptionalItemContainer key={item.id}>
           <Checkbox
             value={item.text}
             onChange={() => handleCheckboxChange(item)}
@@ -135,7 +138,7 @@ const OptionalComponent = ({ QuestionInfo }) => {
              placeholder='چیزی بنویسید' value={otherInputValue} />
             : <p>{cleanText(item.text)}</p>
             }</>}
-        </label>
+        </OptionalItemContainer>
       ))}
     </OptionalAnswerBlockContainer>
   );

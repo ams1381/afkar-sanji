@@ -10,11 +10,20 @@ import QuestionerHeader from '@/components/common/QuestionerHeader';
 import { useRouter } from 'next/router';
 import { UserInfoBox } from '@/components/Questioner/Profile/UserInfo';
 import { JobInfo } from '@/components/Questioner/Profile/JobInfo';
+import {axiosInstance} from "@/utilities/axios";
+import {useQuery} from "@tanstack/react-query";
+import {Skeleton} from "antd";
+import {EditInfoBox, InfoBox} from "@/styles/Questioner/profile";
 
-const Profile = ({ cookies , userData , regions}) => {
+const Profile = ({ cookies , meData , regions}) => {
     const [ logoutPopOver , switchPopover ] = useState(false);
     const [ RightDrawerOpen , setRightDrawerOpen ] = useState(false);
-    // ant-cascader-menu-item-expand-icon
+    axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + cookies?.access_token;
+    const  MeQuery = useQuery(['QuestionnaireRetrieve'],
+        async () => await axiosInstance.get('/user-api/users/me/'),{
+            refetchOnWindowFocus : false
+        })
+
     return (
         <>
             <style global jsx>{`
@@ -35,14 +44,16 @@ const Profile = ({ cookies , userData , regions}) => {
             </Head>
             <PageBox>
                 <CommonDrawer RightDrawerOpen={RightDrawerOpen} setRightDrawerOpen={setRightDrawerOpen} />
-                <main style={{ width : RightDrawerOpen ? '80%' : '100%', transition : '0.3s' }}>
-                    <QuestionerHeader pageName='profile' />
-                    <QuestionerPageContainer>
-                        <QuestionerContentBox>
-                            <UserInfoBox userData={userData} />
-                            <JobInfo regions={regions} userData={userData} />
-                        </QuestionerContentBox>
-                    </QuestionerPageContainer>
+                <main style={{ width : RightDrawerOpen ? '84%' : '100%', transition : '0.3s' }}>
+                        <>
+                        <QuestionerHeader pageName='profile' meData={meData}  />
+                        <QuestionerPageContainer>
+                            <QuestionerContentBox>
+                                <UserInfoBox MeQuery={MeQuery}  regions={regions} />
+                                <JobInfo regions={regions} MeQuery={MeQuery} />
+                            </QuestionerContentBox>
+                        </QuestionerPageContainer>
+                        </>
                 </main>
             </PageBox>
         </>
@@ -53,7 +64,8 @@ export default Profile;
 export async function getServerSideProps(context) {
     const { req } = context;
     const cookies = req.headers.cookie;
-
+    let regionsData;
+    let MeData;
     // Check if cookies are present
     if (cookies) {
         // Parse the cookies
@@ -63,19 +75,33 @@ export async function getServerSideProps(context) {
             return acc;
         }, {});
         // /user-api/nested-countries/
-        let regionsRes  =  await
-            fetch('https://mah-api.ariomotion.com/user-api/nested-countries/',
-                {
-                    headers: {
-                        Authorization: `Bearer ${parsedCookies.access_token}`,
-                    },
-                })
-        const data = await regionsRes.json();
+        try
+        {
+            let regionsRes  =  await
+                fetch('https://mah-api.ariomotion.com/user-api/nested-countries/',
+                    {
+                        headers: {
+                            Authorization: `Bearer ${parsedCookies.access_token}`,
+                        },
+                    })
+            let MeResponse = await fetch('https://mah-api.ariomotion.com/user-api/users/me/',{
+                headers : {
+                    Authorization: `Bearer ${parsedCookies.access_token}`,
+                }
+            })
+                MeData = await  MeResponse.json();
+              regionsData = await regionsRes.json();
+        }
+        catch (err)
+        {
+
+        }
         return {
             props: {
                 // Pass the cookies as props to the component
                 cookies: parsedCookies,
-                regions : data
+                regions : regionsData ? regionsData : null ,
+                meData : MeData ? MeData : null
             },
         };
     }

@@ -13,7 +13,7 @@ const QuestionSlice =  createSlice({
         initialQuestionsSetter : (state,action) => {
             // state.data = action.payload.map(item => item.question ? {/ question : item.question } : '');
             state.data.length = 0;
-            action.payload.forEach(item => {
+            action.payload?.forEach(item => {
                 if(item.question)
                     state.data.push({ question : item.question })
             })  

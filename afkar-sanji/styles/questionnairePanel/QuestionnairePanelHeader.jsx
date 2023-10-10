@@ -97,6 +97,7 @@ export const QuestionnaireDirectoryPath = styled.div`
     // margin-left: 0.5rem;
     align-items: center;
     display : flex;
+    font-size: 14px;
 
     & span 
     {
@@ -106,6 +107,7 @@ export const QuestionnaireDirectoryPath = styled.div`
     & p 
     {
         font-weight: 700;
+        margin-right: 8px;
     }
     & a 
     {

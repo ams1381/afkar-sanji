@@ -2,7 +2,7 @@ import { LoginErrorMessage } from '@/styles/auth/Login'
 import { AddQuestionnaireModalInput, ModalButtonsContainer, ModalContentContainer } from '@/styles/folders/Popup'
 import { themeContext } from '@/utilities/ThemeContext'
 import { axiosInstance } from '@/utilities/axios'
-import { Button, ConfigProvider, Modal } from 'antd'
+import {Button, ConfigProvider, message, Modal} from 'antd'
 import React, { useState } from 'react'
 
 const AddQuestionnairePopUp = ({ AddQuestionnaireModal , FolderReload , folders , 
@@ -10,7 +10,7 @@ const AddQuestionnairePopUp = ({ AddQuestionnaireModal , FolderReload , folders 
   const [ ErrMessage , SetErrMessage ] = useState(null);
   const [ NewQuestionnaireName , setNewQuestionnaireName ] = useState(null);
   const [ OperatingState , SetOperatingState ] = useState(false);
-
+  const [ messageApi , messageContext ] = message.useMessage();
 
     const AddQuestionnaireHandler = async () => {
         SetOperatingState(true);
@@ -20,17 +20,27 @@ const AddQuestionnairePopUp = ({ AddQuestionnaireModal , FolderReload , folders 
             SetOperatingState(false);
             return
         }
-        await axiosInstance.post('/question-api/questionnaires/',{ name : NewQuestionnaireName , folder: folders[SelectedFolderNumber].id });
-        folders.push({})
-        setQuestionnaireModalState(false);
-        FolderReload();
-        SetOperatingState(false);
+        try {
+            await axiosInstance.post('/question-api/questionnaires/',{ name : NewQuestionnaireName , folder: folders[SelectedFolderNumber].id });
+            folders.push({})
+            setQuestionnaireModalState(false);
+            FolderReload();
+            SetOperatingState(false);
+        }
+        catch (err) {
+            SetOperatingState(false);
+            if(err?.response?.data)
+                messageApi.error({
+                    content : Object.values(err?.response?.data)[0]
+                })
+        }
     }
     const CancelPopup = () => {
         setQuestionnaireModalState(false)
     }
   return (
     <ConfigProvider theme={themeContext}>
+        {messageContext}
     <Modal open={AddQuestionnaireModal} 
             preserve={false}
             destroyOnClose={true}

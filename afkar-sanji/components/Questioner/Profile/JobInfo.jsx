@@ -7,41 +7,9 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import {convertDate, convertToRegularTime} from "@/components/QuestionnairePanel/SettingPanel";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
-const options = [
-    {
-      value: 'zhejiang',
-      label: 'تهران',
-      children: [
-        {
-          value: 'hangzhou',
-          label: 'کرج',
-          children: [
-            {
-              value: 'xihu',
-              label: 'اوشاخلاری ',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      value: 'jiangsu',
-      label: 'Jiangsu',
-      children: [
-        {
-          value: 'nanjing',
-          label: 'Nanjing',
-          children: [
-            {
-              value: 'zhonghuamen',
-              label: 'Zhong Hua Men',
-            },
-          ],
-        },
-      ],
-    },
-  ];
-export const JobInfo = ({ Countries , userData , regions }) => {
+import { Skeleton } from 'antd'
+
+export const JobInfo = ({ Countries , userData ,MeQuery , regions }) => {
     const [ selectedRegions , setSelectedRegions ] = useState(null);
     const [ RegionError , setRegionError ] = useState(false);
     const [ countriesData , setCountriesData ] = useState(regions[0].provinces?.map(ProvinceItem => ({
@@ -59,16 +27,9 @@ export const JobInfo = ({ Countries , userData , regions }) => {
     const [ RegionLoading , setRegionLoading ] = useState(false);
     const [ userInfoMessage , userInfoMessageContext ] = message.useMessage();
 
-    useEffect(() => {
-        // let test = async () => {
-        //     await
-        //     axiosInstance.post('/user-api/countries/1/provinces/4/cities/1/districts/',{ name : 'تست 1' })
-        // }
-        // test()
-    },[])
 
     const CascaderSelectHandler = async (SelectedList) => {
-        console.log(SelectedList)
+
         if(!SelectedList)
             return
         if(SelectedList.length == 3)
@@ -83,7 +44,6 @@ export const JobInfo = ({ Countries , userData , regions }) => {
             })
         }
         catch (err) {
-            console.log(err)
             setRegionLoading(false)
             setRegionError(true)
             if(err?.response?.data)
@@ -99,6 +59,28 @@ export const JobInfo = ({ Countries , userData , regions }) => {
     const { SHOW_CHILD } = Cascader;
 
   return (
+      MeQuery.isLoading ?
+          <UserInfoContainer>
+              <Skeleton.Input active />
+              <div style={{ marginTop : 12 }}>
+                  <InfoBox bold loading>
+                      <div className='last_update_container'>
+                          <Skeleton.Input active />
+                      </div>
+                      <Skeleton.Button />
+                  </InfoBox>
+              </div>
+              <LocationSelectorContainer loading>
+                  <Skeleton.Input active />
+                  <div style={{ marginTop : 10 }}>
+                      <Skeleton.Input active style={{ minWidth : 'auto' , width : '250px' }} />
+                  </div>
+                  <ConfirmButtonContainer>
+                      <Skeleton.Input active style={{ minWidth : 'auto' , width : '50px' }}/>
+                  </ConfirmButtonContainer>
+              </LocationSelectorContainer>
+          </UserInfoContainer>
+          :
     <UserInfoContainer>
         {userInfoMessageContext}
         <h3>اطلاعات شغلی</h3>
@@ -107,9 +89,8 @@ export const JobInfo = ({ Countries , userData , regions }) => {
                <div className='last_update_container'>
                    <span>رزومه </span>
                    <span style={{ display : 'flex' , gap : 5 }}>
-                       {digitsEnToFa(convertDate(convertToRegularTime(userData.updated_at).split(' ')[0],'jalali'))}
+                       {digitsEnToFa(convertDate(convertToRegularTime(MeQuery?.data?.data?.updated_at).split(' ')[0],'jalali'))}
                        <p>:آخرین به روزرسانی</p>
-
                    </span>
                </div>
                 <Link href={'/'}>
@@ -122,12 +103,13 @@ export const JobInfo = ({ Countries , userData , regions }) => {
         <LocationSelectorContainer>
             <p>منطقه پرسشگری</p>
             <Cascader options={countriesData}
-             // showSearch
-              defaultValue={[
-                  userData.prefered_districts[0].province.name ,
-                  userData.prefered_districts[0].city.name ,
-                  userData.prefered_districts[0].name
-              ]}
+             showSearch
+                      // multiple
+              defaultValue={MeQuery?.data?.data?.prefered_districts?.length ? [
+                  MeQuery?.data?.data?.prefered_districts[0].province.name ,
+                  MeQuery?.data?.data?.prefered_districts[0].city.name ,
+                  MeQuery?.data?.data?.prefered_districts[0].name
+              ] : null}
              onChange={CascaderSelectHandler}
               status={RegionError ? 'error' : null}
              showCheckedStrategy={SHOW_CHILD}

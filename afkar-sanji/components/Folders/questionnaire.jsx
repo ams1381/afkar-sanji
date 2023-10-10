@@ -69,7 +69,11 @@ const QuestionnaireBox = ({Questionnaire , FolderReload , folderNumber}) => {
      <QuestionnaireDiv>
         <Badge.Ribbon className={BadgeStyle['QuestionnaireBadge']} color={Questionnaire.is_active ? "green" : "red"} text={Questionnaire.is_active ? 'فعال' : 'غیر فعال'}  
             style={{
-                marginTop : 30 , fontFamily : 'IRANSans' , fontSize : 13 , color : '#00000040' , height : 24 , display : 'flex'
+                marginTop : 30 , fontFamily : 'IRANSans' ,
+                fontSize : 13 , color : '#00000040' ,
+                height : 24 ,
+                borderRadius : 2 ,
+                display : 'flex'
                 }}>
          <QuestionnaireHeader>
              {Questionnaire ? <QuestionnaireNameContainer>

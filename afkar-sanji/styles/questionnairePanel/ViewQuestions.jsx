@@ -253,10 +253,13 @@ export const PreviewPageContainer = styled.div`
  
 `
 export const PreviewPageHeader = styled.div`
-    width : 100%;
-    display : flex;
-    background: white;
-    justify-content : center;
+      width: 100%;
+      display: flex;
+      background: white;
+      justify-content: center;
+      height: 44px;
+      z-index: 3333;
+      align-items: center;
 
     .ant-progress 
     {
@@ -298,7 +301,7 @@ export const PreviewQuestionComponent = styled(QuestionComponent)`
 `
 export const TimerContainer = styled.div`
     text-align: center;
-    height: 50px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -307,6 +310,7 @@ export const TimerContainer = styled.div`
     color: white;
     border-radius: 2px;
     width: 86px;
-    left: 30px;
-    top: 74px;
+    left: 10px;
+    top: 4PX;
+
 `

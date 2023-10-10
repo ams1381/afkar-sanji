@@ -6,48 +6,6 @@ import { QuestionComponentContainer, QuestionTitle , QuestionDescription } from 
 import { customfont } from './IRANSans Regular-normal';
 import { digitsEnToFa } from '@persian-tools/persian-tools';
 
-function convertSvgToBase64Jpeg(svg) {
-  return new Promise((resolve, reject) => {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-
-    // Set the canvas dimensions based on the SVG size
-    canvas.width = 30; // Adjust width as needed
-    canvas.height = 30; // Adjust height as needed
-
-    // Fill the canvas with a white background
-    ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    const img = new Image();
-
-    // Convert the SVG data to a data URL
-    const svgBlob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
-    const url = URL.createObjectURL(svgBlob);
-
-    // Set the Image src to the SVG data URL
-    img.src = url;
-
-    // When the image loads, draw it on the canvas
-    img.onload = function () {
-      ctx.drawImage(img, 0, 0);
-
-      // Convert canvas content to a base64-encoded JPEG image
-      const base64Jpeg = canvas.toDataURL('image/jpeg');
-
-      // Cleanup
-      URL.revokeObjectURL(url);
-
-      // Resolve with the base64-encoded JPEG data
-      resolve(base64Jpeg);
-    };
-
-    // Handle image load error
-    img.onerror = function (error) {
-      reject(error);
-    };
-  });
-}
 function extractArrayAfterChildQuestions(arr) {
   const result = [];
   let previousQuestion = null;
@@ -77,56 +35,13 @@ function extractArrayAfterChildQuestions(arr) {
 }
 const regex = /(<([^>]+)>)/gi;
 
-// export const PdfGenerator = async () => {
-//   try {
-//     const base64Jpeg = await convertSvgToBase64Jpeg(LikeIconString);
-//     console.table('like',await convertSvgToBase64Jpeg(LikeIconString) ,
-//     'dislike', await convertSvgToBase64Jpeg(DislikeIConString),
-//     'Smile',await convertSvgToBase64Jpeg(SmileIconString),
-//     'Star',await convertSvgToBase64Jpeg(StartIConString))
-//     const a4Width = 595.28;
-//     const a4Height = 841.89;
-//     const doc = new jsPDF('p', 'pt', [a4Width, a4Height]);
-//      doc.addFileToVFS(
-//   "IRANSans Regular-normal.ttf",
-//   customfont
-// );
-// doc.addFont(
-//   "IRANSans Regular-normal.ttf",
-//   "IRANSans",
-//   "normal"
-// );
-// doc.setTextColor(0, 0, 0);
-// doc.setFont("IRANSans");
-//     doc.addPage()
-//     doc.setTextColor(0, 0, 0);
-//     doc.setLineWidth(1)
-//     doc.setDrawColor(0);
-//     doc.setFillColor(0 , 0 , 0);
-//     let array = [0 , 1 ,2 , 3]
-//     array.forEach(item => {
-//       doc.addImage(base64Jpeg, 'JPEG', item * 10, 0, 15, 15);
-//     })
-//     // for(let i = 0; i < 5 ; i ++)
-//       console.log(base64Jpeg)
-//     // doc.save('safafaf.pdf');
-//   } catch (error) {
-//     console.error('Error generating PDF:', error);
-//   }
-// }
 export const PdfGenerator = async (questionnaire) => {
   // let QuestionsComponents = ''
   try 
   {
 
    let { data } = await axiosInstance.get(`/question-api/questionnaires/${questionnaire.uuid}/`)
-  
 
-  // console.log(data)
-
-  // Set canvas dimensions
-  // const canvas = document.createElement('canvas');
-  // const context = canvas.getContext('2d');
   const a4Width = 595.28;
   const a4Height = 841.89;
   const maxBoxWidth = a4Width * 0.95;  
@@ -339,7 +254,7 @@ export const PdfGenerator = async (questionnaire) => {
   }
 });
 
-pdf.save('exported.pdf');
+pdf.save(`${questionnaire.name}.pdf`);
   }
   catch(err)
   {

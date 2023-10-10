@@ -7,8 +7,6 @@ import { ClearSearchInputButton, QuestionDesignTitle, QuestionDesignBox,
 } from '@/styles/questionnairePanel/QuestionDesignPanel';
 import { Icon } from '@/styles/icons';
 import { QuestionItem } from './QuestionItem';
-import QuestionComponent from '../Questions/Question';
-import WelcomeComponent from '../Questions/Welcome';
 import { axiosInstance } from '@/utilities/axios';
 import QuestionStore, { AddQuestion, AddThanks, AddWelcome, ChildQuestionAdder,
    ChildQuestionReorder, NonQuestionSetter, QuestionReorder, QuestionSorter } from '@/utilities/QuestionStore';
@@ -51,22 +49,12 @@ export function moveItem(arr, prevIndex, newIndex) {
 const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
   const QuestionDataDispatcher = useDispatch();
   const [ SearchResult , SetSearchResult ] = useState([]);
-  const [ QuestionToPreview , SetQuestionToPreview ] = useState(null);
-  const [ QuestionsReload , SetQuestionsReloaded ] = useState(false);
   const [ActiveQuestion, setActiveQuestion] = useState(null);
   const [ SavedMessage , contextHolder] = message.useMessage();
-  const dndContainer = useRef();
   const regex = /(<([^>]+)>)/gi;
   const  AllQuestion = useSelector(s => s.reducer.data);
-  const [ QuestionsNewSort , setQuestionsNewSort ] = useState(null);
-  // const [ defaultQuestionsOrder , setDefaultQuestionsOrder ] = useState(Questionnaire.questions)
-  let defaultQuestionsOrder;
-  // console.log(QuestionsNewSort)
   const NonQuestions = useSelector(s => s.reducer.nonQuestionData);
-  // const SearchBoxContainer = useRef();
-  //  const { setNodeRef, isOver } = useDroppable({
-  //   id: 'question-list-droppable',
-  // });
+
   const sortableOptions = {
     animation: 150,
     group: 'nested',
@@ -147,20 +135,13 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
             childQuestionIndex : event.newDraggableIndex  , 
             prevIndex : event.oldDraggableIndex
           }))
-          // console.log(document.querySelector(`.QuestionItem${DraggedQuestionID}`))
          
           if(!DraggedQuestion?.question.newFace)
           await axiosInstance.patch(`/question-api/questionnaires/${Questionnaire.uuid}/${DraggedQuestion?.question.url_prefix}/${DraggedQuestionID}/`,
           { group : DroppedGroupQuestionID , placement : event.newDraggableIndex + 1});
           AllQuestionsData.find(item => item.question.id == DroppedGroupQuestionID).question.child_questions.splice(event.newDraggableIndex, 0 ,copiedDraggedQuestion);
-          // console.log(AllQuestionsData)
-          // QuestionDataDispatcher(QuestionReorder({ newPlacementArray : AllQuestionsData }))
           QuestionDataDispatcher(QuestionSorter())
-          // QuestionDataDispatcher(ChildQuestionReorder({ ParentQuestionID : DroppedGroupQuestionID }))
-          // QuestionnaireReloader();
 
-
-          // document.getElementById('question' + DroppedGroupQuestionID).style.width = '100%'
         }
         
        catch(err)
@@ -193,15 +174,10 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
         // event.dragged.style.width = '100%';
         event.dragged.firstElementChild.firstElementChild.style.width = '50%'
       }
-        
-      // console.log(event)
       return true;
     }
   };
-  // useEffect(() => {
-  //   QuestionDataDispatcher(QuestionReorder({ newPlacementArray : QuestionsNewSort.map(item => ({ question : JSON.parse(JSON.strin) })) }))
-  //   QuestionDataDispatcher(QuestionSorter())
-  // },[QuestionsNewSort])
+
   useEffect(() => {
     if(Questionnaire)
     {
@@ -237,7 +213,7 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
         id : item.question.id
       }) : '')
       search_array.forEach((item,index) => !item ? search_array.splice(index,1)  : '')
-      
+       search_array = search_array.filter(SearchItem => typeof SearchItem == 'object')
       SetSearchResult(search_array)
      }
   }
@@ -247,7 +223,7 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
       'QuestionID' : SelectedQuestion.question.id ,
        'QuestionType' : SelectedQuestion.question.question_type }
       );
-     document.querySelector(`.QuestionItem${QuestionID}`)?.scrollIntoView({ behavior : 'smooth' });
+     document.querySelector(`.QuestionItem${QuestionID}`)?.scrollIntoView({ behavior : 'smooth' , block : 'nearest' });
   }
 
   const AddWelcomeHandler = () => {
@@ -300,8 +276,11 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                 style={{ width : '100%' , height : '100%' , direction : 'rtl' , fontFamily : 'IRANSans' }}
                 onSearch={SearchQuestionHandler}
                 notFoundContent={null}
-                
-                filterOption={(_, option) => option ? option.label : ''}/>
+                filterOption={(_, option) => {
+                  if(option.label)
+                    return option
+                }}
+                />
                 </> : <Skeleton.Input active />}
           </QuestionSearchContainer>
         { (AllQuestion && NonQuestions) ? <div className='QuestionDesignRightContainer' >
