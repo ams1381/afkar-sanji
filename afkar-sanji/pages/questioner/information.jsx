@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 // style
 import {Container, Form, FromItem, Row, Title, TextAreaCom} from 'styles/questioner/information'
 import {TextAnswerInputBox} from 'styles/questionnairePanel/QuestionComponent'
@@ -10,19 +10,76 @@ import {themeContext} from "@/utilities/ThemeContext";
 import {message, Select} from 'antd';
 import {Button, ConfigProvider} from "antd";
 import {axiosInstance} from "@/utilities/axios";
+import {yearDete} from "@/utilities/data/date";
+import {useQuery} from "@tanstack/react-query";
+import {informationSchema} from "@/utilities/validators/information";
+
 
 export default function () {
+    const [userData, setUserData] = useState([
+        {
+            first_name: undefined,
+            last_name: undefined,
+            email: undefined,
+            gender: undefined,
+            address: undefined,
+            nationality: undefined,
+            province: undefined
+        }
+    ])
+
+
+    // const [errors, setErrors] = useState([]);
+    // useEffect(() => {
+    //     setErrors([]);
+    //     let errorsValus = [];
+    //     let result = informationSchema.validate(object, {abortEarly: false});
+    //     if (result.error?.details?.length > 0) errorsValus.push(errors)
+    //     setErrors(errorsValus);
+    // }, [userData]);
+
+
+    const [errors, setErrors] = useState([]);
+    useEffect(() => {
+        setErrors([]);
+        const result = informationSchema.validate(
+            userData
+        );
+        console.log(result)
+        // setErrors(
+        //     result.error?.details?.length > 0
+        //         ? result.error?.details?.map((err) => err.message)
+        //         : []
+        // );
+    }, [userData]);
+
+    useEffect(() => {
+        console.log(userData)
+    }, [userData]);
+
+
+    useEffect(() => {
+        errors.forEach(err => {
+            message.error('casdgfnh')
+        })
+    }, [errors]);
+
+
     // state for values
-    const [data, setData] = useState([])
+    // const [userData, setUserData] = useState([])
     const [name, setName] = useState('')
     const [family, setFamily] = useState('')
     const [email, setEmail] = useState('')
+    const [countrySelect, setcountrySelect] = useState('')
+    const [provinceSelect, setprovinceSelect] = useState('')
     const [gender, setGender] = useState('')
     const [address, setAddress] = useState('')
     const [country, setCountry] = useState('')
     const [province, setProvince] = useState('')
     const [loadingState, setLoadingState] = useState(false)
+    const [isOk, setIsOk] = useState(false)
     const [isDisable, setIsDisable] = useState(false)
+    const [year, setYear] = useState(yearDete)
     const [genders, setGenders] = useState([{
         value: 'f', label: 'زن',
     }, {
@@ -31,32 +88,32 @@ export default function () {
     // email validation
     const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
 
-    useEffect(() => {
-        axiosInstance.get('/user-api/users/me/').then(res => {
-            setData(res?.data)
-            setName(res?.data?.first_name)
-            setFamily(res?.data?.last_name)
-            setEmail(res?.data?.email)
-            setGender(res?.data?.gender)
-            setAddress(res?.data?.address)
-            // setCountry(data?.nationality)
-            // setProvince(data?.province)
-        })
-    }, []);
 
+    const {data, isLoading, error, refetch} = useQuery(['Me'],
+        async () => await axiosInstance.get('/user-api/users/me/'))
+    // useEffect(() => {
+    //     setUserData(data?.data)
+    //     setName(data?.data?.first_name)
+    //     setFamily(data?.data?.last_name)
+    //     setEmail(data?.data?.email)
+    //     setGender(data?.data?.gender)
+    //     setAddress(data?.data?.address)
+    // }, [data]);
 
-    // check change inputs
     useEffect(() => {
         if (
             name !== data?.first_name ||
             family !== data?.last_name ||
+            gender !== data?.gender ||
             email !== data?.email ||
             address !== data?.address ||
             country !== data?.natinality ||
             province !== data?.province
         ) {
+            setIsOk(true)
             setIsDisable(true);
         } else {
+            setIsOk(false)
             setIsDisable(false);
         }
     }, [name,
@@ -64,7 +121,12 @@ export default function () {
         email,
         address,
         country,
-        province]);
+        province, gender]);
+
+
+    useEffect(() => {
+
+    }, []);
 
 
     const submit = (e) => {
@@ -78,21 +140,20 @@ export default function () {
         fromData.append('nationality', '1')
         fromData.append('province', '1')
         // if state was ok send req
-        if (!name && !family || !gender || !address || !province) message.error('شما همه اطلاعات اجباری را پر نکرده اید');
         if (!emailRegex.test(email)) message.error('ایمیل وارد شده نامعتبر است');
-        else {
+        if (isOk)
             setLoadingState(true)
-            axiosInstance.patch('/user-api/users/me/', fromData).then(res => {
-                message.success('با موفقیت انجام شد')
-                // get again
-                getUserData()
-                // false loading
-                setLoadingState(false)
-            }).catch(err => {
+        axiosInstance.patch('/user-api/users/me/', fromData).then(res => {
+            message.success('با موفقیت انجام شد')
+            // false loading
+            setLoadingState(false)
+        }).catch(err => {
+            if (err === 400) {
                 message.error('مشکلی پیش آمده داریم بررسی میکنیم')
-                setLoadingState(false)
-            })
-        }
+            }
+            setLoadingState(false)
+        })
+
     }
     return (<Container>
         <Title>لطفا اطلاعات خود را کامل‌کنید</Title>
@@ -109,13 +170,10 @@ export default function () {
             </Row>
 
             <Row direction={'rtl'}>
-                {/*<FromItem>*/}
-                {/*    <div className="title">نام کاربری</div>*/}
-                {/*    <InputCom/>*/}
-                {/*</FromItem>*/}
                 <FromItem>
                     <div className="title">ایمیل</div>
-                    <InputCom value={email} onChange={(e) => setEmail(e?.target?.value)} type={'email'}/>
+                    <InputCom value={email} onChange={(e) => setEmail(e?.target?.value)}
+                              type={'email'}/>
                 </FromItem>
             </Row>
 
@@ -144,17 +202,43 @@ export default function () {
             <Row direction={'rtl'}>
                 <FromItem>
                     <div className="title">ملیت</div>
-                    <TextAnswerInputBox value={country} onChange={(e) => setCountry(e?.target?.value)}/>
+                    <Select
+                        style={{
+                            width: '100%',
+                            height: '40px',
+                            textAlign: 'right',
+                            padding: '0',
+                            boxShadow: 'none',
+                            direction: 'rtl'
+                        }}
+                        placeholder={'انتخاب کنید'}
+                        options={year}
+                        onChange={(e) => setcountrySelect(e)}
+                    />
                 </FromItem>
                 <FromItem>
                     <div className="title">استان محل سکونت</div>
-                    <TextAnswerInputBox required value={province}
-                                        onChange={(e) => setProvince(e?.target?.value)}/>
+                    <Select
+                        style={{
+                            width: '100%',
+                            height: '40px',
+                            textAlign: 'right',
+                            padding: '0',
+                            boxShadow: 'none',
+                            direction: 'rtl'
+                        }}
+
+                        placeholder={'انتخاب کنید'}
+                        options={year}
+                        onChange={(e) => setprovinceSelect(e)}
+                    />
+                    {/*<TextAnswerInputBox required value={province}*/}
+                    {/*                    onChange={(e) => setProvince(e?.target?.value)}/>*/}
                 </FromItem>
             </Row>
             <ConfigProvider theme={themeContext}>
                 <Button onClick={submit} type='submit'
-                        loading={loadingState}  className={StyleModules['confirm_button']}
+                        loading={loadingState} className={StyleModules['confirm_button']}
                         type="primary">
                     ارسال اطلاعات
                 </Button>
@@ -164,7 +248,7 @@ export default function () {
 }
 
 export async function getServerSideProps(context) {
-    const { req } = context;
+    const {req} = context;
     const cookies = req.headers.cookie;
 
     // Check if cookies are present

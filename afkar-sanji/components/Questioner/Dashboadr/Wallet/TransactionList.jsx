@@ -103,6 +103,7 @@ export default function ({data, loading, setFilterParams}) {
                 menu={{
                     items
                 }}
+                trigger={'click'}
                 placement="bottomRight"
             >
                 <FilterBox style={{

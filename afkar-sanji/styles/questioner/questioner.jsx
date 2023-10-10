@@ -66,6 +66,7 @@ export const QuestionBox = styled.div`
   height: 90%;
   position: relative;
   padding: 40px;
+  
 `
 
 export const ImageWallpaper = styled.img`

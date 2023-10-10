@@ -11,8 +11,25 @@ export const educationalSchema = Joi.object({
 export const skillsSchema = Joi.object({
     level: Joi.string().required(),
     field: Joi.string().required(),
-
 }).unknown();
+
+export const achievementsSchema = Joi.object({
+    field: Joi.string().required(),
+    year: Joi.string().required()
+})
+
+
+export const workBackgroundstsSchema = Joi.object({
+    position: Joi.string().required(),
+    company: Joi.string().required(),
+    start_date: Joi.string().required()
+})
+
+export const researchHistoriestsSchema = Joi.object({
+    field: Joi.string().required(),
+    year: Joi.string().required(),
+    link: Joi.string().required()
+})
 
 // export default Joi.object({
 //     first_name: Joi.string().required().messages({ 'string.base': 'نام شما خالی است' }),

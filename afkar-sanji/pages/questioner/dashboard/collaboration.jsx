@@ -18,7 +18,7 @@ import {
     CollaborationHeader,
     FilterBox
 } from "@/styles/questioner/dashboard/Collaboration/collaboration";
-import {Input, Space} from 'antd';
+import {Input, Skeleton, Space} from 'antd';
 import {AudioOutlined} from '@ant-design/icons';
 import {TimePickerContainer} from "@/styles/questioner/dashboard/Collaboration/collaboration";
 import {Icon} from "@/styles/icons";
@@ -31,6 +31,8 @@ import DatePicker from "react-multi-date-picker";
 // icon
 import filter from 'public/Icons/Arrow Sort Down Lines.svg'
 import CollaborationItem from "@/components/Questioner/Dashboadr/Collaboration/CollaborationItem";
+import {useQuery} from "@tanstack/react-query";
+import {axiosInstance} from "@/utilities/axios";
 
 const {Search} = Input;
 const suffix = (
@@ -45,8 +47,8 @@ const onSearch = (value, _e, info) => console.log(info?.source, value);
 export default function ({cookies}) {
     const [logoutPopOver, switchPopover] = useState(false);
     const [RightDrawerOpen, setRightDrawerOpen] = useState(true);
-    const [ StartDate , setStartDate ] = useState('');
-    const [ EndDate , setEndDate ] = useState('')
+    const [StartDate, setStartDate] = useState('');
+    const [EndDate, setEndDate] = useState('')
     const DateFilterHandler = async (_, filterDate) => {
         // console.log(filterDate.validatedValue)
         if (!filterDate.validatedValue?.length) {
@@ -67,6 +69,9 @@ export default function ({cookies}) {
             console.log(err)
         }
     }
+
+    const {data, isLoading, error, refetch} = useQuery(['Interview'],
+        async () => await axiosInstance.get('/interview-api/interviews/'))
 
     return (
         <PageBox>
@@ -109,23 +114,18 @@ export default function ({cookies}) {
                                 />
                             </CollaborationHeader>
                             <CollaborationBody>
-                                <CollaborationItem/>
-                                <CollaborationItem/>
-                                <CollaborationItem/>
-                                <CollaborationItem/>
-                                <CollaborationItem/>
-                                <CollaborationItem/>
-                                <CollaborationItem/>
-                                <CollaborationItem/>
-                                <CollaborationItem/>
-                                <CollaborationItem/>
-                                <CollaborationItem/>
-                                <CollaborationItem/>
-                                <CollaborationItem/>
-                                <CollaborationItem/>
-                                <CollaborationItem/>
-                                <CollaborationItem/>
-                                <CollaborationItem/>
+                                {isLoading && (
+                                    <>
+                                        <Skeleton.Input style={{width: '100%', height: '100px'}}/>
+                                        <Skeleton.Input style={{width: '100%', height: '100px'}}/>
+                                        <Skeleton.Input style={{width: '100%', height: '100px'}}/>
+                                        <Skeleton.Input style={{width: '100%', height: '100px'}}/>
+                                        <Skeleton.Input style={{width: '100%', height: '100px'}}/>
+                                    </>
+                                )}
+                                {data?.data?.results ? data?.data?.results.map((interview, index) => {
+                                    return <CollaborationItem data={interview} key={interview?.id}/>
+                                }) : ""}
                             </CollaborationBody>
                         </Collaboration>
                     </QuestionerContentBox>

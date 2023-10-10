@@ -37,23 +37,13 @@ export default function ({cookies, wallet}) {
         transaction_created_at_to: undefined,
         amount_ordering: undefined
     })
-    // const [amount, setAmount] = useState('')
-    const [data, setData] = useState()
-    const [isLoading, setIsLoading] = useState(false)
-    // const {data, isLoading, error, refetch} = useQuery(['Wallet'],
-    //     async () => await axiosInstance.get(`/wallet-api/wallet/my-wallet/?amount_ordering=${amount}`))
-    const getWalletData = () => {
-        setIsLoading(true)
-        axiosInstance.get(`/wallet-api/wallet/my-wallet/${SetQueryParams(filterParams)}`).then(res => {
-            setData(res?.data)
-            setIsLoading(false)
-        })
-    }
+
+    const {data, isLoading, error, refetch} = useQuery(['Wallet'],
+        async () => await axiosInstance.get(`/wallet-api/wallet/my-wallet/${SetQueryParams(filterParams)}`))
 
     useEffect(() => {
-        getWalletData()
+        refetch()
     }, [filterParams]);
-
 
     return (
         <PageBox>
@@ -75,12 +65,12 @@ export default function ({cookies, wallet}) {
                                 </Button>
                             </WalletHeader>
                             <WalletContainer>
-                                <Bank filterParams={filterParams} setFilterParams={setFilterParams} data={data}
+                                <Bank filterParams={filterParams} setFilterParams={setFilterParams} data={data?.data}
                                       loading={isLoading}/>
-                                <Statistics filterParams={filterParams} setFilterParams={setFilterParams} data={data}
+                                <Statistics filterParams={filterParams} setFilterParams={setFilterParams} data={data?.data}
                                             loading={isLoading}/>
                                 <TransactionList filterParams={filterParams} setFilterParams={setFilterParams}
-                                                 data={data} loading={isLoading}/>
+                                                 data={data?.data} loading={isLoading}/>
                             </WalletContainer>
                         </Container>
                     </QuestionerContentBox>

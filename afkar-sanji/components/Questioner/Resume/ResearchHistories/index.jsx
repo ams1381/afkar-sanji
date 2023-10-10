@@ -8,29 +8,43 @@ import {
     ResumeInputCom
 } from "@/styles/questioner/resume/resume";
 import {Button, message, Select} from "antd";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import add from "@/public/Icons/addBlue.svg";
 import StyleModules from "@/styles/auth/LoginStyles.module.css";
+import {workBackgroundstsSchema} from "@/utilities/validators/resumeMaker";
 
 export default function ({year, setGender, research_histories,setResearch_histories}) {
 
-    // research_histories
+    const [data, setData] = useState([{link: undefined, year: undefined,field:undefined}
+    ])
+
+    const [errors, setErrors] = useState([]);
+    useEffect(() => {
+        setErrors([]);
+        let errorsValus = [];
+        data.forEach(object => {
+            let result = workBackgroundstsSchema.validate(object, {abortEarly: false});
+            if (result.error?.details?.length > 0) errorsValus.push(errors)
+        })
+        setErrors(errorsValus);
+    }, [data]);
+
     function addResearch_histories() {
-        setResearch_histories(prevItems => [...prevItems, {id: prevItems.length + 1}]);
+        setData(prevItems => [...prevItems, {link: undefined, year: undefined,field:undefined}]);
         message.success('با موفقیت اضافه شد')
     }
     function removeResearch_histories(id) {
-        setResearch_histories(prevItems => prevItems.filter(item => item.id !== id));
+        setData(prevItems => prevItems.filter((item,index) => index !== id));
         message.success('با موفقیت حذف شد')
     }
 
     return (
         <>
             <FromStepScroll>
-                {research_histories.map(item => (
+                {data.map((item,index) => (
                     <FromResumeItem key={item.id}>
-                        {item.id !== 1 && <img
-                            onClick={() => removeResearch_histories(item.id)}
+                        {index + 1 !== 1 && <img
+                            onClick={() => removeResearch_histories(index)}
                             className="close"
                             src={close.src}
                             alt=""
@@ -63,12 +77,12 @@ export default function ({year, setGender, research_histories,setResearch_histor
                 ))}
             </FromStepScroll>
             <ButtonContainer justify={`flex-end`}>
-                <AddBtn onClick={addResearch_histories}>
+                <AddBtn disabled={errors.length ? true : false} onClick={addResearch_histories}>
                     <h2 className={`text`}>افزودن</h2>
                     <img src={add.src} alt="" className="icon"/>
                 </AddBtn>
             </ButtonContainer>
-            <Button typeof='submit'
+            <Button disabled={errors.length ? true : false} typeof='submit'
                     className={StyleModules['confirm_button']}
                     type="primary" >
                 اتمام

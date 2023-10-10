@@ -7,31 +7,57 @@ import {
     ButtonContainer, AddBtn
 } from "@/styles/questioner/resume/resume";
 import {Button, message, Select} from "antd";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import add from "@/public/Icons/addBlue.svg";
 import StyleModules from "@/styles/auth/LoginStyles.module.css";
+import {achievementsSchema, workBackgroundstsSchema} from "@/utilities/validators/resumeMaker";
 
 export default function ({setWork_backgrounds, setCurrent,
                              setTitle, year, setGender, work_backgrounds}) {
 
-    // work
+
+    const [data, setData] = useState([{position: undefined, company: undefined,start_date:undefined}
+    ])
+
+    const [errors, setErrors] = useState([]);
+    useEffect(() => {
+        setErrors([]);
+        let errorsValus = [];
+        data.forEach(object => {
+            let result = workBackgroundstsSchema.validate(object, {abortEarly: false});
+            if (result.error?.details?.length > 0) errorsValus.push(errors)
+        })
+        setErrors(errorsValus);
+    }, [data]);
+
+
     function addWork() {
-        setWork_backgrounds(prevItems => [...prevItems, {id: prevItems.length + 1}]);
+        setData(prevItems => [...prevItems, {position: undefined, company: undefined,start_date:undefined}]);
         message.success('با موفقیت اضافه شد')
     }
 
     function removeWork(id) {
-        setWork_backgrounds(prevItems => prevItems.filter(item => item.id !== id));
+        setData(prevItems => prevItems.filter((item,index) => index !== id));
         message.success('با موفقیت حذف شد')
     }
+
+
+    const submit = () => {
+        setCurrent(4)
+        setTitle('سابقه پژوهشی')
+    }
+
+    useEffect(() => {
+        console.log(data)
+    }, [data]);
 
     return (
         <>
             <FromStepScroll>
-                {work_backgrounds.map(item => (
-                    <FromResumeItem key={item.id}>
-                        {item.id !== 1 && <img
-                            onClick={() => removeWork(item.id)}
+                {data.map((item,index) => (
+                    <FromResumeItem key={index}>
+                        {index + 1 !== 1 && <img
+                            onClick={() => removeWork(index)}
                             className="close"
                             src={close.src}
                             alt=""
@@ -49,30 +75,39 @@ export default function ({setWork_backgrounds, setCurrent,
                                 }}
                                 placeholder={'انتخاب کنید'}
                                 options={year}
-                                onChange={(e) => setGender(e)}
+                                onChange={e => setData(prevData => {
+                                    const updatedData = [...prevData];
+                                    updatedData[index].start_date = e;
+                                    return updatedData;
+                                })}
                             />
                         </ResumeInputCom> <ResumeInputCom>
                         <div className="title">لینک</div>
-                        <InputCom direction="ltr" placeholder={`https://google.com`}/>
+                        <InputCom value={data?.company}   onChange={e => setData(prevData => {
+                            const updatedData = [...prevData];
+                            updatedData[index].company = e?.target?.value;
+                            return updatedData;
+                        })} direction="ltr" placeholder={`https://google.com`}/>
                     </ResumeInputCom>
                         <ResumeInputCom>
                             <div className="title">عنوان</div>
-                            <InputCom direction="rtl" placeholder={`وارد کنید`}/>
+                            <InputCom value={data?.position}   onChange={e => setData(prevData => {
+                                const updatedData = [...prevData];
+                                updatedData[index].position = e?.target?.value;
+                                return updatedData;
+                            })} direction="rtl" placeholder={`وارد کنید`}/>
                         </ResumeInputCom>
                     </FromResumeItem>
                 ))}
             </FromStepScroll>
             <ButtonContainer justify={`flex-end`}>
-                <AddBtn onClick={addWork}>
+                <AddBtn disabled={errors.length ? true : false} onClick={addWork}>
                     <h2 className={`text`}>افزودن</h2>
                     <img src={add.src} alt="" className="icon"/>
                 </AddBtn>
             </ButtonContainer>
-            <Button typeof='submit'
-                    onClick={() => {
-                        setCurrent(4)
-                        setTitle('سابقه پژوهشی')
-                    }}
+            <Button disabled={errors.length ? true : false} typeof='submit'
+                    onClick={submit}
                     className={StyleModules['confirm_button']}
                     type="primary">
                 بعدی

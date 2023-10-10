@@ -17,15 +17,12 @@ import {liListData} from "@/utilities/data/questioner";
 import {Button} from 'antd';
 
 const Questioner = () => {
-    // router
-    const router = useRouter()
     return (<Container>
         <QuestionBox>
             <Header>
                 <RightHeader>
                     <p>ثبت درخواست پرسشگری</p>
                     <h2>با جمع‌آوری دیدگاه‌های مختلف کسب درآمد کنید!</h2>
-
                     <Button className={`bottom`}
                     >
                         <Link href={'/questioner/information'}>
@@ -33,7 +30,6 @@ const Questioner = () => {
                             تکمیل اطلاعات
                         </Link>
                     </Button>
-
                 </RightHeader>
                 <LeftHeader>
                     {liListData?.map(item => (<li key={item?.id}>

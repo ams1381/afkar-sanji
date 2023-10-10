@@ -113,7 +113,6 @@ const FileUpload = ({ QuestionInfo }) => {
           className="upload-list-inline"
           listType="picture"
           multiple={false}
-          
           method={null}
           maxCount={1}
           onPreview={handlePreview}
@@ -136,7 +135,7 @@ const FileUpload = ({ QuestionInfo }) => {
           </QuestionFileUploadContainer>
   )
 }
-const beforeUpload = (file) => {
+export const beforeUpload = (file) => {
   return new Promise((resolve, reject) => {
     console.log(ImageOrVideo)
     const ImageOrVideo = file.type === 'image/jpeg' || file.type === 'video/mkv' || file.type === 'video/mp4'

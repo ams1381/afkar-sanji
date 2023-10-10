@@ -19,6 +19,7 @@ import UploaderIcon from 'public/Icons/wrapper.svg'
 import {Button, message, Upload} from 'antd';
 import StyleModules from "@/styles/auth/LoginStyles.module.css";
 import {axiosInstance} from "@/utilities/axios";
+import {beforeUpload} from "@/components/QuestionnairePanel/Question Components/Common/FileUpload";
 
 
 export default function () {
@@ -35,14 +36,17 @@ export default function () {
         },
         onChange(info) {
             if (info.file.status !== 'uploading') {
+                console.log(info?.fileList[0]?.originFileObj)
+                console.log('================================')
+                console.log(info?.file)
+                setFile(info?.fileList[0]?.originFileObj)
                 setFileSize(info.file)
                 const sizeInBytes = info.file.size;
                 const sizeInMegabytes = sizeInBytes / (1024 * 1024);
                 setFileSize(`${sizeInMegabytes.toFixed(2)}`);
             }
             if (info.file.status === 'done') {
-                console.log(info)
-                setFile(info?.fileList[0]?.originFileObj)
+                // setFile(info?.file)
                 message.success(`با موفقیت آپلود شد`);
             } else if (info.file.status === 'error') {
                 message.error(`با شکست مواجه شد `);
@@ -53,16 +57,20 @@ export default function () {
     const submit = () => {
         let formData = new FormData()
         formData.append('linkedin', link.trim() || '')
-        formData.append('file', '' )
+        formData.append('file', file)
+
+        console.log(Object.fromEntries(formData))
         // send req
-        axiosInstance.post('/user-api/users/3/resume/', formData, {headers:{
+        axiosInstance.post('/user-api/users/3/resume/', formData, {
+            headers: {
                 'Content-Type': 'multipart/form-data'
-            }}).then(res => {
+            }
+        }).then(res => {
             message.success('موفقیت آمیز بود')
         }).catch(err => {
             message.error('مشکلی پیش آمده است   ')
         })
-       router.push(`/questioner/resume/make/?resume_pk=1`)
+        // router.push(`/questioner/resume/make/?resume_pk=1`)
     }
 
     return (
@@ -118,7 +126,13 @@ export default function () {
                             {!fileSize && ''}
                         </UploaderHeader>
                         <Upload {...props} maxCount={1}
-                                showUploadList={false}>
+                                className="upload-list-inline"
+                                listType="picture"
+                                multiple={false}
+                                method={null}
+                                beforeUpload={beforeUpload}
+                            // onRemove={()}
+                                maxCount={1}>
                             <ButtonUploader disabled={false}>
                                 <p className="text">آپلود</p>
                                 <img src={UploaderIcon?.src} alt=""/>

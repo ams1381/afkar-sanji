@@ -82,7 +82,7 @@ export const CollaborationItemRight = styled.div`
   display: flex;
   flex-direction: column;
   gap: 13px;
-  text-align: right;
+  direction: rtl;
   
   > .title {
     color: var(--Neutral-Gray9);
@@ -101,6 +101,7 @@ export const CollaborationItemRight = styled.div`
     font-weight: 400;
     line-height: 30px; 
     position: relative;
+    width: fit-content;
     
     &::before {
       position: absolute;
@@ -108,7 +109,7 @@ export const CollaborationItemRight = styled.div`
       width: 6px;
       height: 6px;
       border-radius: 100px;
-      background: var(--primary-color);
+      background: ${p => p.color};
       border: none;
       outline: none;
       left: -10px;

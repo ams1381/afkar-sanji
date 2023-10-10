@@ -27,6 +27,19 @@ export default function ({data, setFilterParams}) {
         ]
     });
 
+    useEffect(() => {
+        setChartData(
+            {
+                datasets: [
+                    {
+                        data: [data?.answering, data?.interviewing],
+                        backgroundColor: ['#52C41A', '#1890FF']
+                    }
+                ]
+            }
+        )
+    }, [data]);
+
     return (
         <CharContainer>
 

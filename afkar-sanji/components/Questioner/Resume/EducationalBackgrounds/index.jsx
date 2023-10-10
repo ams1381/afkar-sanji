@@ -9,13 +9,34 @@ import add from "@/public/Icons/addBlue.svg";
 import StyleModules from "@/styles/auth/LoginStyles.module.css";
 import {educationalSchema} from "@/utilities/validators/resumeMaker";
 import {axiosInstance} from "@/utilities/axios";
+import {useQuery} from "@tanstack/react-query";
+import axios from "axios";
 
 export default function ({
-                             setSelectedEducation, educations, year, setGender, setCurrent, setTitle,
+                             educations, year, setCurrent, setTitle,
+                             edu_type,
+                             setEdu_type
                          }) {
-    const [data, setData] = useState([{
-        university: undefined, end_date: undefined, start_date: undefined, degree: undefined, edu_type: undefined
-    }]);
+
+    const [isData, setIsData] = useState([])
+    useEffect(() => {
+        axiosInstance.get('/user-api/users/3/resume/1/educational-backgrounds/').then(res => {
+            setIsData(res?.data)
+        })
+    }, []);
+
+    const [data, setData] = useState([]);
+    useEffect(() => {
+        setData(isData.length ? isData : [{
+            university: undefined,
+            field: undefined,
+            end_date: undefined,
+            start_date: undefined,
+            degree: undefined,
+            edu_type: undefined
+        }])
+    }, [data]);
+
 
     const [errors, setErrors] = useState([]);
     useEffect(() => {
@@ -29,19 +50,24 @@ export default function ({
         setErrors(errorsValus);
     }, [data]);
 
-
     function addEducational() {
-        if (errors.length > 0) message.error('اطلاعات فعلی شما کامل نیست')
-        else {
-            setData(prevItems => [...prevItems, {
-                university: undefined,
-                end_date: undefined,
-                start_date: undefined,
-                degree: undefined,
-                edu_type: undefined
-            }]);
-            message.success('با موفقیت اضافه شد')
-        }
+        if (errors.length > 0) message.error('اطلاعات فعلی شما کامل نیست');
+        axiosInstance.post('user-api/users/3/resume/1/educational-backgrounds/', data[data.length - 1]).then(res => {
+            console.log(res)
+            if (res?.status === 201) return
+        }).catch(err => {
+            message.error('از بک انده')
+        })
+
+        setData(prevItems => [...prevItems, {
+            university: undefined,
+            end_date: undefined,
+            start_date: undefined,
+            degree: undefined,
+            edu_type: undefined
+        }]);
+        message.success('با موفقیت اضافه شد')
+
     }
 
 
@@ -53,16 +79,9 @@ export default function ({
     }
 
     const educationHandler = () => {
-        // let formData = new FormData()
-        // formData.append(JSON.stringify(data))
-
-        axiosInstance.post('user-api/users/3/resume/1/educational-backgrounds/', JSON.stringify(data)).then(res => {
-            console.log(res)
-            if (res?.status === 201) setCurrent(p => p + 1)
-        }).catch(err => {
-            message.error('از بک انده')
-        })
+        setCurrent(p => p + 1)
     }
+
 
     return (<>
             <FromStepScroll>
@@ -144,14 +163,38 @@ export default function ({
                             src={close.src}
                             alt=""
                         />}
+                        <ResumeInputCom>
+                            <div className="title">نوع تحصیلات</div>
+                            <Select
+                                style={{
+                                    width: '100%',
+                                    height: '40px',
+                                    textAlign: 'right',
+                                    padding: '0',
+                                    boxShadow: 'none',
+                                    direction: 'rtl'
+                                }}
+                                placeholder={'PHD : مثال'}
+                                options={[
+                                    {value: 'u', label: 'دانشگاهی'},
+                                    {value: 'h', label: 'حوزوی'},
+                                    {value: 'o', label: 'سایر'},
+                                ]}
+                                onChange={e => setData(prevData => {
+                                    const updatedData = [...prevData];
+                                    updatedData[index].edu_type = e;
+                                    return updatedData;
+                                })}
+                            />
+                        </ResumeInputCom>
                         <ResumeInputCom style={{
                             width: '100%'
                         }}>
                             <div className="title">رشته</div>
                             <InputCom direction="rtl"
-                                      value={data[index].edu_type} onChange={e => setData(prevData => {
+                                      value={data[index].field} onChange={e => setData(prevData => {
                                 const updatedData = [...prevData];
-                                updatedData[index].edu_type = e?.target?.value;
+                                updatedData[index].field = e?.target?.value;
                                 return updatedData;
                             })}
                                       placeholder="مثال: زبان انگلیسی، زبان عربی و"/>
