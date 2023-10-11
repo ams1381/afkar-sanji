@@ -24,32 +24,8 @@ axiosInstance.interceptors.request.use(function (config) {
     // Do something with request error
     return Promise.reject(error);
 });
-function extractTokensFromCookie(cookieString) {
-    const cookiePairs = cookieString.split(';');
-    let csrfToken = null;
-    let tokenString = null;
 
-    for (const pair of cookiePairs) {
-        const trimmedPair = pair.trim();
-        if (trimmedPair.startsWith('csrftoken=')) {
-            csrfToken = trimmedPair.split('=')[1];
-        } else if (trimmedPair.startsWith('token=')) {
-            tokenString = trimmedPair.split('=')[1];
-        }
-    }
-    console.log(csrfToken, tokenString)
-    return { csrfToken, tokenString };
-}
 
-function parseTokenString(tokenString) {
-    // Assuming tokenString is Base64 encoded, decode it
-    const decodedTokenString = atob(tokenString);
-
-    // Assuming tokenString contains JSON with access and refresh tokens
-    const tokens = JSON.parse(decodedTokenString);
-
-    return tokens;
-}
 axiosInstance.interceptors.response.use(function (response) {
     return response;
 }, async function  (error) {

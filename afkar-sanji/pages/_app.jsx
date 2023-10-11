@@ -26,7 +26,6 @@ export default function App({ Component, pageProps , cookies }) {
         window.location.pathname = '/auth'
         return;
       }
-      console.log(pageProps?.cookies?.access_token + '        ' + pageProps?.cookies?.refresh_token )
       axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + pageProps?.cookies?.access_token;
       axiosInstance.defaults.refresh_token = pageProps?.cookies?.refresh_token;
       try
