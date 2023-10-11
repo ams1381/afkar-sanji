@@ -46,10 +46,10 @@ export default function App({ Component, pageProps , cookies }) {
     }
     useEffect(() => {
       // ['/auth', ].includes(router.pathname)
-      if(router.pathname !== '/auth' 
+      if(router.pathname !== '/auth'
       && router.pathname !== '/404' &&
       router.pathname !== '/403' &&
-      router.pathname != '/505' 
+      router.pathname != '/505'
       && router.pathname !== '/auth/otpSms'
        && !router.pathname.includes('answer-page'))
           authentication();
@@ -64,18 +64,18 @@ export default function App({ Component, pageProps , cookies }) {
 
     <QueryClientProvider client={queryClient}>
       <ProgressBarLoading />
-      { readyToRender ? <Component {...pageProps} userData={UserData} /> : 
+      { readyToRender ? <Component {...pageProps} userData={UserData} /> :
       <div style={{ display : 'flex' , alignItems : 'center' , justifyContent : 'center' , height : '100vh' }}>
-      <ThreeDots 
-          height="80" 
-          width="80" 
+      <ThreeDots
+          height="80"
+          width="80"
           radius="9"
-          color="#5360ED" 
+          color="#5360ED"
           ariaLabel="three-dots-loading"
           wrapperStyle={{}}
           wrapperClassName=""
           visible={true}
-          /> 
+          />
       </div>}
       </QueryClientProvider>
   </AuthContextProvider> 

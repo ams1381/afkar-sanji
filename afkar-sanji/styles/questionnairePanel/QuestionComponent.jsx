@@ -1,7 +1,6 @@
 import { Input } from "antd";
 import { styled } from "styled-components";
 
-
 export const QuestionComponentContainer = styled.div`
     width: ${p => p.mobilepreview ? '100%' : '90%'};
     margin: 0.55rem auto;
@@ -276,7 +275,6 @@ export const TextAnswerInputBox = styled(Input)`
     padding: 8px 12px 8px 12px;
     border-radius: 2px;
     font-family: 'IRANSans';
-    direction: rtl;
 
     &:focus
     {

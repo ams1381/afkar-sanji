@@ -10,7 +10,8 @@ let refreshToken;
 
 export const axiosInstance = axios.create({
     headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        // 'Content-Type': 'multipart/form-data'
     }
 });
 export const SetRefreshToken =(RefreshToken) => {
