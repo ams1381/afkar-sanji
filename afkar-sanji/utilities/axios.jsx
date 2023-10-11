@@ -24,7 +24,32 @@ axiosInstance.interceptors.request.use(function (config) {
     // Do something with request error
     return Promise.reject(error);
 });
+function extractTokensFromCookie(cookieString) {
+    const cookiePairs = cookieString.split(';');
+    let csrfToken = null;
+    let tokenString = null;
 
+    for (const pair of cookiePairs) {
+        const trimmedPair = pair.trim();
+        if (trimmedPair.startsWith('csrftoken=')) {
+            csrfToken = trimmedPair.split('=')[1];
+        } else if (trimmedPair.startsWith('token=')) {
+            tokenString = trimmedPair.split('=')[1];
+        }
+    }
+    console.log(csrfToken, tokenString)
+    return { csrfToken, tokenString };
+}
+
+function parseTokenString(tokenString) {
+    // Assuming tokenString is Base64 encoded, decode it
+    const decodedTokenString = atob(tokenString);
+
+    // Assuming tokenString contains JSON with access and refresh tokens
+    const tokens = JSON.parse(decodedTokenString);
+
+    return tokens;
+}
 axiosInstance.interceptors.response.use(function (response) {
     return response;
 }, async function  (error) {
@@ -35,23 +60,12 @@ axiosInstance.interceptors.response.use(function (response) {
         case 401:
             try
             {
-                // console.log(getCookie('refresh_token'))
-                // const originalConfig = error.config;
-                // let { data } = await axios.post('/user-api/auth/refresh-token/', { refresh : getItem('refresh')},{
-                //   'Authorization' : axiosInstance.defaults.headers['Authorization']
-                // })
-                // let { data }  = await axiosInstance.post('/user-api/auth/refresh-token/', { refresh : getItem('refresh')} );
-                // setItem('cookie',data.access);
-                // setItem('refresh',data.refresh)
-                // axiosInstance.defaults.headers['Authorization'] = data.access;
-                // axiosInstance.request(error.config)
-                // return Promise.reject(error);
+                await axios.post('/user-api/auth/refresh-token/', { refresh : axiosInstance.defaults.refresh_token })
+                window.location.reload()
             }
             catch(err)
             {
-                console.log(err)
-                return Promise.reject(error);
-                // window.location.pathname = '/auth'
+                window.location.pathname = '/auth';
             }
             break;
         case 403:

@@ -127,7 +127,6 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
     Dispatcher({ ACTION: ToggleName, NewToggleValue: e });
     SetSettingChanged(true)
 
-    // console.log(QuestionnaireData,e, ToggleName)
   }
   const CancelEditHandler = () => {
     Dispatcher({ ACTION: 'reset_questionnaire', Resetvalue: Questionnaire })
@@ -265,6 +264,12 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
           </div>
         </QuestionnaireDatePickerContainer> */}
         <QuestionnaireDatePickerContainer>
+          <div className='picker_header' onClick={e => ToggleCheckBoxHandler(!QuestionnaireData.is_active, 'is_active')}>
+            <p>فعال سازی پرسشنامه</p>
+            <Switch checked={QuestionnaireData.is_active} />
+          </div>
+        </QuestionnaireDatePickerContainer>
+        <QuestionnaireDatePickerContainer>
           <div className='picker_header' onClick={e => ToggleCheckBoxHandler(!QuestionnaireData.show_number, 'show_number')}>
             <p>عدم نمایش شماره سوال</p>
             <Switch checked={!QuestionnaireData.show_number} />
@@ -363,6 +368,11 @@ const QuestionnaireReducerFunction = (State,ACTION) => {
       return {
         ...State,
         previous_button : !ACTION.NewToggleValue
+      }
+    case 'is_active':
+      return {
+        ...State ,
+        is_active : !ACTION.NewToggleValue
       }
     case 'reset_questionnaire':
       return ACTION.Resetvalue

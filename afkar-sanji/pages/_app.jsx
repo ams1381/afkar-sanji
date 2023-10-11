@@ -26,18 +26,22 @@ export default function App({ Component, pageProps , cookies }) {
         window.location.pathname = '/auth'
         return;
       }
+      console.log(pageProps?.cookies?.access_token + '        ' + pageProps?.cookies?.refresh_token )
       axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + pageProps?.cookies?.access_token;
+      axiosInstance.defaults.refresh_token = pageProps?.cookies?.refresh_token;
       try
       {
         let { data } = await axiosInstance.get('/user-api/users/me/');
+
         setUserData(data)
         setReadyToRender(true)
         return
       }
       catch(err)
       {
-        if(err?.response?.status ==  401)
-          router.push('/auth');
+        if(err?.response?.status ==  500)
+            window.location.pathname = '/500'
+          // router.push('/auth');
         // else if(err?.response?.status == 500)
         //   window.location.pathname = '/500'
         return
