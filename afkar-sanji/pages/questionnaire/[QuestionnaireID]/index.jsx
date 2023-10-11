@@ -11,7 +11,7 @@ import SettingPanel from '@/components/QuestionnairePanel/SettingPanel';
 import QuestionDesignPanel from '@/components/QuestionnairePanel/QuestionDesignPanel';
 import ProgressBarLoading from '@/styles/ProgressBarLoading';
 import { Provider } from 'react-redux';
-import QuestionStore from '@/utilities/QuestionStore';
+import QuestionStore from '@/utilities/stores/QuestionStore';
 import { message } from 'antd';
 import { useQuery } from '@tanstack/react-query';
 import { CommonDrawer } from '@/components/common/CommonDrawer';

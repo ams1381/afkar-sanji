@@ -1,5 +1,5 @@
 import { QuestionDescriptionContainer , DescriptionTextField} from '@/styles/questionnairePanel/QuestionSetting'
-import { ChangeDescriptionHandler } from '@/utilities/QuestionStore'
+import { ChangeDescriptionHandler } from '@/utilities/stores/QuestionStore'
 import { Checkbox, Switch } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'

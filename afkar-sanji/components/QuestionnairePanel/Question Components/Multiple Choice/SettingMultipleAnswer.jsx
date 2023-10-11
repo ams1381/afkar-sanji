@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { AlphabetNumberContainer, ToggleContainer } from '@/styles/questionnairePanel/QuestionSetting';
 import ToggleCheckBoxItem from '../Common/Toggle';
-import { ChangeToggleHandler , ChangeMinOrMaxAnswerHandler, OptionAdder, OptionRemoverByText, DeleteInputError } from '@/utilities/QuestionStore';
+import { ChangeToggleHandler , ChangeMinOrMaxAnswerHandler, OptionAdder, OptionRemoverByText, DeleteInputError } from '@/utilities/stores/QuestionStore';
 import { Checkbox, Input, InputNumber, Switch } from 'antd';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';

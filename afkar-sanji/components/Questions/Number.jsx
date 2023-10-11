@@ -1,5 +1,5 @@
 import { NumberInputContainer } from '@/styles/questionnairePanel/QuestionComponent'
-import { ChangeInputAnswer } from '@/utilities/AnswerStore'
+import { ChangeInputAnswer } from '@/utilities/stores/AnswerStore'
 import { digitsEnToFa, digitsFaToEn } from '@persian-tools/persian-tools'
 import { Input, InputNumber } from 'antd'
 import React, { useEffect } from 'react'

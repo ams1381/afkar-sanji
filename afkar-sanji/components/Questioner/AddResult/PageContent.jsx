@@ -5,7 +5,7 @@ import {SubComponentGenerator} from "@/components/Questioner/AddResult/QuestionS
 import {Button, message} from "antd";
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {setAnswerSetArray, setInitialAnswerSet} from "@/utilities/AnswerStore";
+import {setAnswerSetArray, setInitialAnswerSet} from "@/utilities/stores/AnswerStore";
 import axios from "axios";
 import {AnswerSetFormDataConverter} from "@/utilities/FormData";
 import Link from "next/link";

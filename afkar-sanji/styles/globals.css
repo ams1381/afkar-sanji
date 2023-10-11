@@ -325,17 +325,17 @@ input:-webkit-autofill:active {
     margin-left: 76% !important;
 }
 
-.ant-select-selector {
-    font-family: 'IRANSans' !important;
-    display: flex !important;
-    padding: 8px 12px !important;
-    align-items: center !important;
-    gap: 4px !important;
-    border-radius: 2px !important;
-    border: 1px solid var(--login-input-default-border) !important;
-    background: #FFF !important;
-    direction: ltr !important;
-}
+/*.ant-select-selector {*/
+/*    font-family: 'IRANSans' !important;*/
+/*    display: flex !important;*/
+/*    padding: 8px 12px !important;*/
+/*    align-items: center !important;*/
+/*    gap: 4px !important;*/
+/*    border-radius: 2px !important;*/
+/*    border: 1px solid var(--login-input-default-border) !important;*/
+/*    background: #FFF !important;*/
+/*    direction: ltr !important;*/
+/*}*/
 /*step*/
 
 

@@ -8,7 +8,7 @@ import {Button} from "antd";
 import {QuestionContainer} from "@/styles/Result/AddResult";
 import {SubComponentGenerator} from "@/components/Questioner/AddResult/QuestionSubCompGenerator";
 import {useDispatch} from "react-redux";
-import {setAnswerSetArray} from "@/utilities/AnswerStore";
+import {setAnswerSetArray} from "@/utilities/stores/AnswerStore";
 
 
 export const MovableModal = ({ ModalAnswerSet , setOpenResultModal , answerSetData }) => {

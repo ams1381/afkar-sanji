@@ -1,5 +1,5 @@
 import { AlphabetNumberContainer, ToggleContainer } from '@/styles/questionnairePanel/QuestionSetting'
-import { ChangeMinOrMaxAnswerHandler, ChangeToggleHandler } from '@/utilities/QuestionStore';
+import { ChangeMinOrMaxAnswerHandler, ChangeToggleHandler } from '@/utilities/stores/QuestionStore';
 import { InputNumber, Switch } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux';

@@ -39,7 +39,10 @@ export default function ({cookies, wallet}) {
     })
 
     const {data, isLoading, error, refetch} = useQuery(['Wallet'],
-        async () => await axiosInstance.get(`/wallet-api/wallet/my-wallet/${SetQueryParams(filterParams)}`))
+        async () => await axiosInstance.get(`/wallet-api/wallet/my-wallet/${SetQueryParams(filterParams)}`)
+    ,{
+        refetchOnWindowFocus : false
+        })
 
     useEffect(() => {
         refetch()

@@ -34,7 +34,7 @@ export const QuestionerHeader = ({ pageName , meData }) => {
           <Popover
               content={<div style={{ padding : '4px 0' }}>
                   <LogoutPopoverItem>
-                      <Link href={'/'}>پروفایل کابری</Link>
+                      <Link href={'/'}>پروفایل کاربری</Link>
                   </LogoutPopoverItem>
                   <LogoutPopoverItem>
                       <p>خروج</p>

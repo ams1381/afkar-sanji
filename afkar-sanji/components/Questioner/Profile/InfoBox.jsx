@@ -7,16 +7,14 @@ import { useState } from 'react'
 import {message, Select} from 'antd'
 import { axiosInstance } from '@/utilities/axios'
 
-export const InfoContainer = ({ BoxName , BoxDataName , UserData , bold , regions}) => {
+export const InfoContainer = ({ BoxName , BoxDataName ,MeQuery , UserData , bold , regions}) => {
     const [ editState , setEditState ] = useState(false);
     const [ userInfoMessage , userInfoMessageContext ] = message.useMessage();
     const [ InputData , setInputData ] = useState(UserData[BoxDataName]);
     const [ ErrorOccured , setErrorOccured ] = useState(false);
 
-    // regions[0].provinces
     const EditHandler = async () => {
       setEditState(false)
-
       try 
       {
           if(regions)
@@ -32,6 +30,7 @@ export const InfoContainer = ({ BoxName , BoxDataName , UserData , bold , region
           [BoxDataName]: InputData  // Use computed property name here
         };
         await axiosInstance.patch('/user-api/users/me/',dataToUpdate)
+          MeQuery.refetch()
       }
       catch(err)
       {

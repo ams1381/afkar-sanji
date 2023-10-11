@@ -1,7 +1,7 @@
 import React from 'react'
 import ViewQuestions from './view-questions'
 import { Provider } from 'react-redux'
-import AnswerStore from '@/utilities/AnswerStore'
+import AnswerStore from '@/utilities/stores/AnswerStore'
 import Head from 'next/head'
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
@@ -10,7 +10,7 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import axios from 'axios'
 import { baseURL } from '@/utilities/axios'
-import QuestionStore from '@/utilities/QuestionStore'
+import QuestionStore from '@/utilities/stores/QuestionStore'
 
 const AnswerPage = () => {
   const router = useRouter();

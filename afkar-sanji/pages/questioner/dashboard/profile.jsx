@@ -46,7 +46,7 @@ const Profile = ({ cookies , meData , regions}) => {
                 <CommonDrawer RightDrawerOpen={RightDrawerOpen} setRightDrawerOpen={setRightDrawerOpen} />
                 <main style={{ width : RightDrawerOpen ? '84%' : '100%', transition : '0.3s' }}>
                         <>
-                        <QuestionerHeader pageName='profile' meData={meData}  />
+                        <QuestionerHeader pageName='profile' meData={MeQuery?.data?.data}  />
                         <QuestionerPageContainer>
                             <QuestionerContentBox>
                                 <UserInfoBox MeQuery={MeQuery}  regions={regions} />

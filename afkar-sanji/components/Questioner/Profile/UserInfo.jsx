@@ -7,7 +7,7 @@ import {message, Skeleton, Upload} from 'antd'
 import React, {useEffect, useState} from 'react'
 import { InfoContainer } from './InfoBox';
 import {digitsEnToFa} from "@persian-tools/persian-tools";
-import {UploadFileHandler} from "@/utilities/QuestionStore";
+import {UploadFileHandler} from "@/utilities/stores/QuestionStore";
 import {beforeUpload, detectFileFormat} from "@/components/QuestionnairePanel/Question Components/Common/FileUpload";
 import {axiosInstance} from "@/utilities/axios";
 
@@ -24,7 +24,6 @@ export const UserInfoBox = ({ MeQuery , regions }) => {
             thumbUrl : 'https://mah-api.ariomotion.com' + MeQuery?.data?.data?.avatar
         }]
         : null);
-    // console.log(fileList)
     useEffect(() => {
         // console.log(MeQuery?.data?.data)
         if(MeQuery.data && MeQuery.data.data?.avatar)
@@ -39,7 +38,6 @@ export const UserInfoBox = ({ MeQuery , regions }) => {
         }
 
     },[MeQuery?.data?.data])
-    console.log(fileList)
     const FileUploadHandler = async (file, fileList , event) => {
 
         try
@@ -49,6 +47,7 @@ export const UserInfoBox = ({ MeQuery , regions }) => {
             setFileUploaded(null)
             setUploadError(false)
             await axiosInstance.patch('/user-api/users/me/',{ avatar : null })
+            MeQuery.refetch()
             return
         }
         if(detectFileFormat(file.file?.name) != 'Picture')
@@ -100,6 +99,7 @@ export const UserInfoBox = ({ MeQuery , regions }) => {
             formData.append('avatar',file.file);
             axiosInstance.defaults.headers['Content-Type'] = 'multipart/form-data';
             await axiosInstance.patch('/user-api/users/me/',formData)
+            MeQuery.refetch();
         }
        catch (err)
        {
@@ -112,7 +112,7 @@ export const UserInfoBox = ({ MeQuery , regions }) => {
       MeQuery.isLoading ?
           <UserInfoContainer>
               {contextHolder}
-              <h3>اطلاعات کاربری</h3>
+              <Skeleton.Input active />
               <div style={{ marginTop : 12 }}>
                   <UserInfoBoxHeader fileuploaded={(fileUploaded || uploadError) ? 'true' : null}
                                      uploaderror={uploadError ? 'occur' : null}>
@@ -169,17 +169,17 @@ export const UserInfoBox = ({ MeQuery , regions }) => {
                     آپلود پروفایل
                 </Upload>
             </UserInfoBoxHeader>
-            <InfoContainer BoxName='شماره تلفن' UserData={MeQuery?.data?.data}
+            <InfoContainer BoxName='شماره تلفن' MeQuery={MeQuery} UserData={MeQuery?.data?.data}
                      BoxDataName='phone_number' />
-            <InfoContainer BoxName='ایمیل' UserData={MeQuery?.data?.data}
+            <InfoContainer BoxName='ایمیل' MeQuery={MeQuery} UserData={MeQuery?.data?.data}
                      BoxDataName='email' />
-            <InfoContainer BoxName='جنسیت' UserData={MeQuery?.data?.data}
+            <InfoContainer BoxName='جنسیت' MeQuery={MeQuery} UserData={MeQuery?.data?.data}
                      BoxDataName='gender' />
-            <InfoContainer BoxName='آدرس محل سکونت' UserData={MeQuery?.data?.data}
+            <InfoContainer BoxName='آدرس محل سکونت' MeQuery={MeQuery} UserData={MeQuery?.data?.data}
                      BoxDataName='address' />
-            <InfoContainer BoxName='ملیت' UserData={MeQuery?.data?.data} regions={regions}
+            <InfoContainer BoxName='ملیت' MeQuery={MeQuery} UserData={MeQuery?.data?.data} regions={regions}
                      BoxDataName='nationality' />
-            <InfoContainer BoxName='استان محل سکونت' UserData={MeQuery?.data?.data} regions={regions}
+            <InfoContainer BoxName='استان محل سکونت' MeQuery={MeQuery} UserData={MeQuery?.data?.data} regions={regions}
                      BoxDataName='province' />
         </div>
     </UserInfoContainer>

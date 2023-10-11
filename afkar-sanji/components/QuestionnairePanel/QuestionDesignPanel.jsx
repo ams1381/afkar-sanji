@@ -9,9 +9,9 @@ import { Icon } from '@/styles/icons';
 import { QuestionItem } from './QuestionItem';
 import { axiosInstance } from '@/utilities/axios';
 import QuestionStore, { AddQuestion, AddThanks, AddWelcome, ChildQuestionAdder,
-   ChildQuestionReorder, NonQuestionSetter, QuestionReorder, QuestionSorter } from '@/utilities/QuestionStore';
+   ChildQuestionReorder, NonQuestionSetter, QuestionReorder, QuestionSorter } from '@/utilities/stores/QuestionStore';
 import { useDispatch } from 'react-redux';
-import { initialQuestionsSetter } from '@/utilities/QuestionStore';
+import { initialQuestionsSetter } from '@/utilities/stores/QuestionStore';
 import { useSelector } from 'react-redux';
 import { ReactSortable } from 'react-sortablejs';
 

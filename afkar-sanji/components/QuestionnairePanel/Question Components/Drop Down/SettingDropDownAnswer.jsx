@@ -1,5 +1,5 @@
 import { AlphabetNumberContainer, ToggleContainer } from '@/styles/questionnairePanel/QuestionSetting';
-import { ChangeToggleHandler , ChangeMinMaxHandler, OptionsAlphaBeticalSorter, ChangeMinOrMaxAnswerHandler } from '@/utilities/QuestionStore';
+import { ChangeToggleHandler , ChangeMinMaxHandler, OptionsAlphaBeticalSorter, ChangeMinOrMaxAnswerHandler } from '@/utilities/stores/QuestionStore';
 import { Checkbox, InputNumber, Switch } from 'antd';
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';

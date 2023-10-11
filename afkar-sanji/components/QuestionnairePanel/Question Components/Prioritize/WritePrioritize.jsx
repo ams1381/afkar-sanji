@@ -1,7 +1,7 @@
 import { Icon } from '@/styles/icons'
 import { InputOptionsContainer, OptionalInputItem ,
   AddOptionButton, OptionWritingContainer} from '@/styles/questionnairePanel/QuestionDesignPanel';
-import { DeleteOptionsError, OptionAdder, OptionModifier, OptionRemover } from '@/utilities/QuestionStore';
+import { DeleteOptionsError, OptionAdder, OptionModifier, OptionRemover } from '@/utilities/stores/QuestionStore';
 import React from 'react'
 import { useEffect , useState} from 'react';
 import { useSelector } from 'react-redux';

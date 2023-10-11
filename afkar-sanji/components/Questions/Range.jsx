@@ -1,7 +1,7 @@
 import { QuestionnaireBodyStat } from '@/styles/folders/Questionnaire'
 import { RangeLabelText, RangeQuestionAnswerItem, QuestionRangeLabel,
   RangeQuestionContainer, RangeQuestionLabelContainer , RangeQuestion} from '@/styles/questionnairePanel/QuestionComponent'
-import { NumberSelect } from '@/utilities/AnswerStore'
+import { NumberSelect } from '@/utilities/stores/AnswerStore'
 import { digitsEnToFa } from '@persian-tools/persian-tools'
 import PN from 'persian-number'
 import React, { useEffect, useRef, useState } from 'react'

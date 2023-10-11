@@ -1,6 +1,6 @@
 import { Icon } from '@/styles/icons'
 import { EmailInputContainer } from '@/styles/questionnairePanel/QuestionComponent'
-import { ChangeInputAnswer } from '@/utilities/AnswerStore'
+import { ChangeInputAnswer } from '@/utilities/stores/AnswerStore'
 import { Input } from 'antd'
 import React from 'react'
 import { useEffect } from 'react'

@@ -1,5 +1,5 @@
 import { EmailInputContainer } from '@/styles/questionnairePanel/QuestionComponent'
-import { ChangeInputAnswer } from '@/utilities/AnswerStore'
+import { ChangeInputAnswer } from '@/utilities/stores/AnswerStore'
 import { Input } from 'antd'
 import React, { useEffect } from 'react'
 import { useState } from 'react'

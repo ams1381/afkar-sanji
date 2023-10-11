@@ -2,7 +2,7 @@ import { InputNumber, Select } from 'antd';
 import { AlphabetNumberContainer, TextAnswerSettingContainer } from '@/styles/questionnairePanel/QuestionSetting';
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux';
-import { ChangeAnswerPattern, ChangeMinOrMaxAnswerHandler } from '@/utilities/QuestionStore';
+import { ChangeAnswerPattern, ChangeMinOrMaxAnswerHandler } from '@/utilities/stores/QuestionStore';
 import { useSelector } from 'react-redux';
 
 const SettingQWanswer = ({ QuestionInfo }) => {

@@ -3,7 +3,7 @@ import { ToggleContainer } from '@/styles/questionnairePanel/QuestionSetting';
 import ToggleCheckBoxItem from '../Common/Toggle';
 import { Checkbox, Switch } from 'antd';
 import { useDispatch } from 'react-redux';
-import { ChangeToggleHandler } from '@/utilities/QuestionStore';
+import { ChangeToggleHandler } from '@/utilities/stores/QuestionStore';
 import { CommonSetting } from '../Common/CommonSetting';
 
 export const SettingPrioritize = ({ QuestionInfo }) => {

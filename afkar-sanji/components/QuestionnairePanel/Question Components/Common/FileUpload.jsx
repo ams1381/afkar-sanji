@@ -1,6 +1,6 @@
 import { Icon } from '@/styles/icons'
 import { QuestionFileUploadContainer } from '@/styles/questionnairePanel/QuestionSetting'
-import { RemoveFileHandler, UploadFileHandler } from '@/utilities/QuestionStore'
+import { RemoveFileHandler, UploadFileHandler } from '@/utilities/stores/QuestionStore'
 import { digitsEnToFa } from '@persian-tools/persian-tools'
 import { Button, Upload , message} from 'antd'
 import React, { useEffect, useState } from 'react'

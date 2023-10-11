@@ -6,7 +6,7 @@ import {ScrollByDrag} from "@/components/ResultPage/ResultBody";
 import { lazy } from 'react';
 import {MovableModal} from "@/components/Questioner/Result/MovableModal";
 import {Provider} from "react-redux";
-import AnswerStore from "@/utilities/AnswerStore";
+import AnswerStore from "@/utilities/stores/AnswerStore";
 // import ReactModal from 'react-modal-resizable-draggable';
 
 export const QuestionerResultTable = ({ ResultQuery , QuestionsArray , SetCurrentPage , setSelectedRows ,TableColumns , SelectedRows , TableData  }) => {

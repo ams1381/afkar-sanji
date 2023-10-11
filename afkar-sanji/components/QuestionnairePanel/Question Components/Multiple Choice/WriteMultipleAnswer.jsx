@@ -1,7 +1,7 @@
 import { Icon } from '@/styles/icons'
 import { InputOptionsContainer, OptionalInputItem ,
   AddOptionButton, OptionWritingContainer} from '@/styles/questionnairePanel/QuestionDesignPanel';
-import { DeleteOptionsError, OptionAdder, OptionModifier, OptionRemover, ReorderOptions } from '@/utilities/QuestionStore';
+import { DeleteOptionsError, OptionAdder, OptionModifier, OptionRemover, ReorderOptions } from '@/utilities/stores/QuestionStore';
 import React from 'react'
 import { DragDropContext , Droppable , Draggable } from '@hello-pangea/dnd';
 import { useDispatch } from 'react-redux';

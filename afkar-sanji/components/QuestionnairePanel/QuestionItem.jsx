@@ -19,10 +19,10 @@ import { AddQuestion, ChangeErrorData, ChangeNameHandler, ChangeToggleHandler, C
   ChildQuestionReplace, 
   DeleteNonQuestionHandler, 
   DeleteQuestionHandler, DuplicateQuestionHandler, QuestionReorder, 
-  QuestionSorter, RemoveFileHandler, SwitchIntoGroups, finalizer } from '@/utilities/QuestionStore';
+  QuestionSorter, RemoveFileHandler, SwitchIntoGroups, finalizer } from '@/utilities/stores/QuestionStore';
 import { SettingSectionProvider } from './Question Components/SettingSectionProvider';
 import { WritingSectionProvider } from './Question Components/WritingSectionProvider';
-import { ChangeQuestionType } from '@/utilities/QuestionStore';
+import { ChangeQuestionType } from '@/utilities/stores/QuestionStore';
 import { form_data_convertor } from '@/utilities/FormData';
 import { digitsEnToFa } from '@persian-tools/persian-tools';
 import { ReactSortable } from 'react-sortablejs';

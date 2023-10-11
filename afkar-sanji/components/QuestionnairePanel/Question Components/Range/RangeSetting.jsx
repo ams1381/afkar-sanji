@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { CommonSetting } from '../Common/CommonSetting';
 import { Checkbox, Divider, Switch } from 'antd';
 import { ToggleContainer } from '@/styles/questionnairePanel/QuestionSetting';
-import { ChangeMinOrMaxAnswerHandler } from '@/utilities/QuestionStore';
+import { ChangeMinOrMaxAnswerHandler } from '@/utilities/stores/QuestionStore';
 
 export const RangeSetting = ({ QuestionInfo }) => {
     const dispatcher = useDispatch();

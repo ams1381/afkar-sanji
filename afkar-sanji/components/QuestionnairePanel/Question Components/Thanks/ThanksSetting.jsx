@@ -1,5 +1,5 @@
 import { ToggleContainer } from '@/styles/questionnairePanel/QuestionSetting';
-import { ChangeToggleHandler } from '@/utilities/QuestionStore';
+import { ChangeToggleHandler } from '@/utilities/stores/QuestionStore';
 import { Switch } from 'antd'
 import React from 'react'
 import { useDispatch } from 'react-redux'

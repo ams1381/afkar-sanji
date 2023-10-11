@@ -1,4 +1,4 @@
-import { ChangeDegreeHandler, ChangeLabelHandler } from '@/utilities/QuestionStore';
+import { ChangeDegreeHandler, ChangeLabelHandler } from '@/utilities/stores/QuestionStore';
 import { Input, Slider } from 'antd';
 import React from 'react'
 import { useDispatch } from 'react-redux';

@@ -2,7 +2,7 @@ import { DegreeShapeContainer, ShapeSelectorContainer, ToggleContainer } from '@
 import { Checkbox, Switch } from 'antd'
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { ChangeDegreeShapeHandler } from '@/utilities/QuestionStore'
+import { ChangeDegreeShapeHandler } from '@/utilities/stores/QuestionStore'
 import { CommonSetting } from '../Common/CommonSetting'
 
 export const RateQuestionSetting = ({ QuestionInfo }) => {

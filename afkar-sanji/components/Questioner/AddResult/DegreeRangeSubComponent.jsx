@@ -4,7 +4,7 @@ import {DegreeItemsContainer} from "@/styles/Result/AddResult";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
 import {useEffect, useState} from "react";
 import {useDispatch} from "react-redux";
-import {NumberSelect} from "@/utilities/AnswerStore";
+import {NumberSelect} from "@/utilities/stores/AnswerStore";
 
 export const DegreeRangeSubComponent = ({ QuestionData , answerSet}) => {
     const [ SelectedItem , SetSelectedItem ] = useState(null);

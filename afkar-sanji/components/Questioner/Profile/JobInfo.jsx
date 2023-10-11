@@ -12,7 +12,7 @@ import { Skeleton } from 'antd'
 export const JobInfo = ({ Countries , userData ,MeQuery , regions }) => {
     const [ selectedRegions , setSelectedRegions ] = useState(null);
     const [ RegionError , setRegionError ] = useState(false);
-    const [ countriesData , setCountriesData ] = useState(regions[0].provinces?.map(ProvinceItem => ({
+    const [ countriesData , setCountriesData ] = useState(regions ? regions[0].provinces?.map(ProvinceItem => ({
         label : ProvinceItem.name ,
         value : ProvinceItem.id ,
         children : ProvinceItem.cities.map(CityItem => ({
@@ -23,7 +23,7 @@ export const JobInfo = ({ Countries , userData ,MeQuery , regions }) => {
                 value : DistrictItem.id
             }))
         }))
-    })));
+    })) : []);
     const [ RegionLoading , setRegionLoading ] = useState(false);
     const [ userInfoMessage , userInfoMessageContext ] = message.useMessage();
 

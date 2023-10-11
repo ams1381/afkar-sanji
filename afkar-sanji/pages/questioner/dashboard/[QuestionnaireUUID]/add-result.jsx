@@ -9,7 +9,7 @@ import {Button} from "antd";
 import {AddResultFooter, QuestionContainer, QuestionsContainer} from "@/styles/Result/AddResult";
 import {SubComponentGenerator} from "@/components/Questioner/AddResult/QuestionSubCompGenerator";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
-import AnswerStore from "@/utilities/AnswerStore";
+import AnswerStore from "@/utilities/stores/AnswerStore";
 import {Provider} from "react-redux";
 import {PageContent} from "@/components/Questioner/AddResult/PageContent";
 

@@ -1,6 +1,6 @@
 import { QuestionWithAnswerContainer, TextAnswerInputBox } from '@/styles/questionnairePanel/QuestionComponent';
 import { ClearSearchInputButton } from '@/styles/questionnairePanel/QuestionDesignPanel';
-import { ChangeInputAnswer } from '@/utilities/AnswerStore';
+import { ChangeInputAnswer } from '@/utilities/stores/AnswerStore';
 import React, { useState } from 'react'
 import { useEffect } from 'react';
 import { useDispatch , useSelector} from 'react-redux';

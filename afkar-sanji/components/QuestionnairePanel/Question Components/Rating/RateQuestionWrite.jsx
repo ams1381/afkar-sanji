@@ -1,4 +1,4 @@
-import { ChangeDegreeHandler } from '@/utilities/QuestionStore';
+import { ChangeDegreeHandler } from '@/utilities/stores/QuestionStore';
 import { Slider } from 'antd'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';

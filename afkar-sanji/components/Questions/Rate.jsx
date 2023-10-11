@@ -1,6 +1,6 @@
 import { Icon } from '@/styles/icons'
 import { RateContainer } from '@/styles/questionnairePanel/QuestionComponent'
-import { NumberSelect } from '@/utilities/AnswerStore'
+import { NumberSelect } from '@/utilities/stores/AnswerStore'
 import { Rate } from 'antd'
 import persianNumberMin from 'persian-number'
 import React, { useEffect } from 'react'

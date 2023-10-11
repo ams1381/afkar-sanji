@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { DropDownContainer } from '@/styles/questionnairePanel/QuestionComponent'
 import { styled } from 'styled-components'
 import { useDispatch , useSelector } from 'react-redux'
-import { ChoseOption } from '@/utilities/AnswerStore'
+import { ChoseOption } from '@/utilities/stores/AnswerStore'
 
 const shuffleArray = (array) => {
     const shuffledArray = [...array];

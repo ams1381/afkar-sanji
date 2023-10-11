@@ -16,7 +16,7 @@ import SwiperCore, { Navigation } from 'swiper/core';
 import ProgressBarLoading from '@/styles/ProgressBarLoading';
 import TopBarProgress from 'react-topbar-progress-indicator';
 import { Provider, useSelector } from 'react-redux';
-import AnswerStore, { setInitialAnswerSet } from '@/utilities/AnswerStore';
+import AnswerStore, { setInitialAnswerSet } from '@/utilities/stores/AnswerStore';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { AnswerSetFormDataConverter } from '@/utilities/FormData';

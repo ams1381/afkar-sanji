@@ -1,6 +1,6 @@
 import {Input, InputNumber} from "antd";
 import {InputAnswerContainer} from "@/styles/Result/AddResult";
-import {ChangeInputAnswer} from "@/utilities/AnswerStore";
+import {ChangeInputAnswer} from "@/utilities/stores/AnswerStore";
 import {digitsFaToEn} from "@persian-tools/persian-tools";
 import {useDispatch} from "react-redux";
 import {useEffect, useState} from "react";

@@ -3,7 +3,7 @@ import {
   OptionalItemContainer,
   QuestionTitle
 } from '@/styles/questionnairePanel/QuestionComponent';
-import { ChoseOption, OtherOptionHandler } from '@/utilities/AnswerStore';
+import { ChoseOption, OtherOptionHandler } from '@/utilities/stores/AnswerStore';
 import { Checkbox, Input } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { DragDropContext , Droppable , Draggable } from '@hello-pangea/dnd';
 import { useDrag } from 'react-dnd'
 import { useDispatch  , useSelector} from 'react-redux';
-import { SortOptions } from '@/utilities/AnswerStore';
+import { SortOptions } from '@/utilities/stores/AnswerStore';
 
 
 const Prioritize = ({ QuestionInfo }) => {
