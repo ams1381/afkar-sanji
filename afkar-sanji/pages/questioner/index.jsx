@@ -15,36 +15,46 @@ import backGround from 'public/Images/Group 1 1.png'
 import {liListData} from "@/utilities/data/questioner";
 // ant design
 import {Button} from 'antd';
+// motion
+import { AnimatePresence,motion } from 'framer-motion';
+
 
 const Questioner = () => {
-    return (<Container>
-        <QuestionBox>
-            <Header>
-                <RightHeader>
-                    <p>ثبت درخواست پرسشگری</p>
-                    <h2>با جمع‌آوری دیدگاه‌های مختلف کسب درآمد کنید!</h2>
-                    <Button className={`bottom`}
-                    >
-                        <Link href={'/questioner/information'}>
-                            <img src={arrowRightIcon?.src}/>
-                            تکمیل اطلاعات
-                        </Link>
-                    </Button>
-                </RightHeader>
-                <LeftHeader>
-                    {liListData?.map(item => (<li key={item?.id}>
-                        <img className={`icon`} src={item?.icon} alt=""/>
-                        <div className="text">{item?.text}</div>
-                    </li>))}
-                </LeftHeader>
-            </Header>
-            <AfterBox/>
-            <ImageWallpaper
-                src={backGround?.src} alt={''}/>
-        </QuestionBox>
-        <Image width={28}
-               height={28} className={'close'} src={closeIcon?.src} alt={'بستن'}/>
-    </Container>)
+    return (
+        <AnimatePresence>
+            <motion.div transition={{duration: 1}} initial={{y: 220}} animate={{y: 0}}>
+                <Container>
+                    <QuestionBox>
+                        <Header>
+                            <RightHeader>
+                                <p>ثبت درخواست پرسشگری</p>
+                                <h2>با جمع‌آوری دیدگاه‌های مختلف کسب درآمد کنید!</h2>
+                                <Button className={`bottom`}
+                                >
+                                    <Link href={'/questioner/information'}>
+                                        <img src={arrowRightIcon?.src}/>
+                                        تکمیل اطلاعات
+                                    </Link>
+                                </Button>
+                            </RightHeader>
+                            <LeftHeader>
+                                {liListData?.map(item => (<li key={item?.id}>
+                                    <img className={`icon`} src={item?.icon} alt=""/>
+                                    <div className="text">{item?.text}</div>
+                                </li>))}
+                            </LeftHeader>
+                        </Header>
+                        <AfterBox/>
+                        <ImageWallpaper
+                            src={backGround?.src} alt={''}/>
+                    </QuestionBox>
+                    <Image width={28}
+                           height={28} className={'close'} src={closeIcon?.src} alt={'بستن'}/>
+                </Container>
+            </motion.div>
+        </AnimatePresence>
+
+    )
 }
 
 export default Questioner

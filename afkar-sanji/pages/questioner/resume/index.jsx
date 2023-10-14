@@ -20,14 +20,20 @@ import {Button, message, Upload} from 'antd';
 import StyleModules from "@/styles/auth/LoginStyles.module.css";
 import {axiosInstance} from "@/utilities/axios";
 import {beforeUpload} from "@/components/QuestionnairePanel/Question Components/Common/FileUpload";
+// motion
+import {AnimatePresence, motion} from 'framer-motion';
+// style
+import {LeftLight, RightLight} from "@/styles/auth/Login";
+import {digitsEnToFa} from "@persian-tools/persian-tools";
 
 
-export default function () {
+export default function ({meData}) {
+    console.log(meData)
     const [file, setFile] = useState()
     const [fileSize, setFileSize] = useState(null)
     const [link, setLink] = useState('')
+    const [isUpload, setIsUpload] = useState(false)
     const router = useRouter()
-
 
     const props = {
         name: 'file',
@@ -36,9 +42,6 @@ export default function () {
         },
         onChange(info) {
             if (info.file.status !== 'uploading') {
-                console.log(info?.fileList[0]?.originFileObj)
-                console.log('================================')
-                console.log(info?.file)
                 setFile(info?.fileList[0]?.originFileObj)
                 setFileSize(info.file)
                 const sizeInBytes = info.file.size;
@@ -47,6 +50,7 @@ export default function () {
             }
             if (info.file.status === 'done') {
                 // setFile(info?.file)
+                setIsUpload(true)
                 message.success(`با موفقیت آپلود شد`);
             } else if (info.file.status === 'error') {
                 message.error(`با شکست مواجه شد `);
@@ -57,90 +61,107 @@ export default function () {
     const submit = () => {
         let formData = new FormData()
         formData.append('linkedin', link.trim() || '')
-        formData.append('file', file)
-
-        console.log(Object.fromEntries(formData))
+        formData.append('file', '')
         // send req
-        axiosInstance.post('/user-api/users/3/resume/', formData, {
+        axiosInstance.post(`/user-api/users/${meData?.id}/resume/`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
         }).then(res => {
             message.success('موفقیت آمیز بود')
-        }).catch(err => {
-            message.error('مشکلی پیش آمده است   ')
+            router.push(`/questioner/resume/make/`)
+        }).catch(error => {
+            const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
+            message.error(ERROR_MESSAGE)
         })
-        // router.push(`/questioner/resume/make/?resume_pk=1`)
     }
 
     return (
         <>
-            <Header>
-                <div className="title">نحوه‌ی تحویل رزومه‌ی خود را انتخاب کنید</div>
-                <div className="caption">حداقل یک مورد را کامل کنید</div>
-            </Header>
-            <Container>
-                <ResumeBox padding={'true'}>
-                    <Email>
-                        <img className={'icon'} src={Linkedin?.src} alt=""/>
-                        <div className="email">
-                            <div className="title">لینک پروفایل لینکدین</div>
-                            <InputCom onChange={(e) => setLink(e?.target?.value)} value={link} direction={'ltr'}
-                                      placeholder={'linkedin.com'}/>
-                        </div>
-                    </Email>
-                </ResumeBox>
-                <ResumeBox style={{
-                    position: 'relativ'
-                }} scale={1.1}>
-                    <ResumeBg>
-                        <div className="one"></div>
-                        <div className="two"></div>
-                        <div className="three"></div>
-                        <div className="four"></div>
-                        <div className="five"></div>
-                    </ResumeBg>
-                    <CreateResume>
-                        <div className="resume">
-                            <div className="title">رزومه‌ی خود را در اینجا بنویسید</div>
-                            <div className="caption">
-                                (پیشنهاد ما)
-                            </div>
-                        </div>
+            <RightLight/>
+            <LeftLight/>
+            <AnimatePresence>
+                <motion.div transition={{duration: 1}} initial={{y: 220}} animate={{y: 0}}>
+                    <RightLight/>
+                    <LeftLight/>
+                    <Header>
+                        <div className="title">نحوه‌ی تحویل رزومه‌ی خود را انتخاب کنید</div>
+                        <div className="caption">حداقل یک مورد را کامل کنید</div>
+                    </Header>
+                    <Container>
+                        <ResumeBox padding={'true'}>
+                            <Email>
+                                <img className={'icon'} src={Linkedin?.src} alt=""/>
+                                <div className="email">
+                                    <div className="title">لینک پروفایل لینکدین</div>
+                                    <InputCom onChange={(e) => setLink(e?.target?.value)} value={link} direction={'ltr'}
+                                              placeholder={'linkedin.com'}/>
+                                </div>
+                            </Email>
+                        </ResumeBox>
+                        <ResumeBox style={{
+                            position: 'relative'
+                        }} scale={1}>
+                            <ResumeBg>
+                                <div className="one"></div>
+                                <div className="two"></div>
+                                <div className="three"></div>
+                                <div className="four"></div>
+                                <div className="five"></div>
+                            </ResumeBg>
+                            <CreateResume>
+                                <div className="resume">
+                                    <div className="title">رزومه‌ی خود را در اینجا بنویسید</div>
+                                    <div className="caption">
+                                        (پیشنهاد ما)
+                                    </div>
+                                </div>
 
-                        <div className={`button`}>
-                            <Button onClick={submit} typeof='submit'
-                                    className={StyleModules['confirm_button']}
-                                    type="primary">
-                                ورود به روزمه‌ساز
-                            </Button>
-                        </div>
+                                <div className={`button`}>
+                                    <Button onClick={submit} typeof='submit'
+                                            className={StyleModules['confirm_button']}
+                                            type="primary">
+                                        ورود به روزمه‌ساز
+                                    </Button>
+                                </div>
+                            </CreateResume>
+                        </ResumeBox>
+                        <ResumeBox padding={'true'}>
+                            <Uploader>
+                                <UploaderHeader>
+                                    <div className="title">فایل رزومه‌ی خود را آپلود کنید</div>
+                                    <div className={`fileSize`}>حداکثر حجم فایل: ۲۰ مگابایت</div>
+                                </UploaderHeader>
+                                <Upload {...props} maxCount={1}
+                                        className="upload-list-inline"
+                                        listType="picture"
+                                        multiple={false}
+                                        method={null}
+                                        accept={'.pdf'}
+                                        beforeUpload={file => {
+                                            if (file.type !== 'application/pdf') {
+                                                message.error('فقط فایل پی دی اف قابل بارگذاری است');
+                                                return false;
+                                            }
+                                            return true;
+                                        }}
+                                        onRemove={() => {
+                                            setIsUpload(false)
+                                        }}
+                                        maxCount={1}>
+                                    {isUpload ? ('') : (
+                                        <ButtonUploader disabled={false}>
+                                            <p className="text">آپلود</p>
+                                            <img src={UploaderIcon?.src} alt=""/>
+                                        </ButtonUploader>
+                                    )}
+                                </Upload>
+                            </Uploader>
+                        </ResumeBox>
+                    </Container>
+                </motion.div>
+            </AnimatePresence>
 
-                    </CreateResume>
-                </ResumeBox>
-                <ResumeBox padding={'true'}>
-                    <Uploader>
-                        <UploaderHeader>
-                            <div className="title">فایل رزومه‌ی خود را آپلود کنید</div>
-                            {fileSize && <div className="fileSize">حداکثر حجم فایل: {fileSize} مگابایت</div>}
-                            {!fileSize && ''}
-                        </UploaderHeader>
-                        <Upload {...props} maxCount={1}
-                                className="upload-list-inline"
-                                listType="picture"
-                                multiple={false}
-                                method={null}
-                                beforeUpload={beforeUpload}
-                            // onRemove={()}
-                                maxCount={1}>
-                            <ButtonUploader disabled={false}>
-                                <p className="text">آپلود</p>
-                                <img src={UploaderIcon?.src} alt=""/>
-                            </ButtonUploader>
-                        </Upload>
-                    </Uploader>
-                </ResumeBox>
-            </Container>
         </>
 
     )
@@ -149,7 +170,7 @@ export default function () {
 export async function getServerSideProps(context) {
     const {req} = context;
     const cookies = req.headers.cookie;
-
+    let MeData
     // Check if cookies are present
     if (cookies) {
         // Parse the cookies
@@ -158,10 +179,17 @@ export async function getServerSideProps(context) {
             acc[key] = decodeURIComponent(value);
             return acc;
         }, {});
+        let MeResponse = await fetch('https://mah-api.ariomotion.com/user-api/users/me/', {
+            headers: {
+                Authorization: `Bearer ${parsedCookies.access_token}`,
+            }
+        })
+        MeData = await MeResponse.json();
         return {
             props: {
                 // Pass the cookies as props to the component
                 cookies: parsedCookies,
+                meData: MeData ? MeData : null
             },
         };
     }

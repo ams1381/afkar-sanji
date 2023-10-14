@@ -2,101 +2,142 @@ import close from "@/public/Icons/Close.svg";
 import {
     FromResumeItem, InputCom, ResumeInputCom, FromStepScroll, ButtonContainer, AddBtn
 } from "@/styles/questioner/resume/resume";
-import {Button, message, Select} from "antd";
+import {Button, message, Select, Skeleton} from "antd";
 import React, {useEffect, useState} from "react";
 import add from "@/public/Icons/addBlue.svg";
 import StyleModules from "@/styles/auth/LoginStyles.module.css";
 import {educationalSchema, skillsSchema} from "@/utilities/validators/resumeMaker";
+import {axiosInstance} from "@/utilities/axios";
+import {digitsEnToFa} from "@persian-tools/persian-tools";
 
 
 export default function ({
-                             score, setCurrent, setTitle
+                             score, setCurrent, setTitle, me
                          }) {
 
-    const [data, setData] = useState([{
-        level: undefined, field: undefined
-    }]);
+    const [skillsData, setSkillsData] = useState([]);
+    const [isLoading, setIsLoading] = useState(false)
+
+    const getData = () => {
+        setIsLoading(true)
+        axiosInstance.get(`/user-api/users/${me?.id}/resume/${me?.resume?.id}/skills/`).then(res => {
+            setSkillsData([...res?.data,
+                {
+                    level: undefined, field: undefined
+                }
+            ])
+            setIsLoading(false)
+        })
+    }
+
+    useEffect(() => {
+        getData()
+    }, []);
 
     const [errors, setErrors] = useState([]);
     useEffect(() => {
         setErrors([]);
         let errorsValus = [];
-        data.forEach(object => {
+        skillsData.forEach(object => {
             let result = skillsSchema.validate(object, {abortEarly: false});
             if (result.error?.details?.length > 0) errorsValus.push(errors)
         })
         setErrors(errorsValus);
-    }, [data]);
+    }, [skillsData]);
 
-    // skills
     function addSkills() {
-        if (errors.length > 0) message.error('اطلاعات فعلی شما کامل نیست')
-        else
-            setData(prevItems => [...prevItems, {
-                level: undefined, field: undefined
-            }]);
-        message.success('با موفقیت اضافه شد')
+        axiosInstance.post(`user-api/users/${me?.id}/resume/${me?.resume?.id}/skills/`, skillsData[skillsData.length - 1]).then(res => {
+            if (res?.status === 201) {
+                setSkillsData([...skillsData, {
+                    level: undefined, field: undefined
+                }]);
+                message.success('با موفقیت اضافه شد')
+            }
+        }).catch(error => {
+            const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
+            message.error(ERROR_MESSAGE)
+        })
     }
 
-    function removeSkills(id) {
-        setData(prevItems => prevItems.filter((item, index) => index !== id));
-        message.success('با موفقیت حذف شد')
+    async function removeSkills(id) {
+        if (id) {
+            await axiosInstance.delete(`/user-api/users/${me?.id}/resume/${me?.resume?.id}/skills/${id}/`).then(res => {
+                if (res?.status === 204) {
+                    message.error('حذف شد')
+                    setSkillsData(skillsData.filter(item => item.id !== id))
+                }
+            })
+        } else {
+            setSkillsData(prevItems => prevItems.filter((item, index) => index !== id));
+            message.success('با موفقیت حذف شد')
+        }
+
     }
 
     function submit() {
-        if (errors.length > 0) return
-        else
-            setCurrent(p => p + 1)
+        setCurrent(p => p + 1)
         setTitle('افتخارات')
     }
 
-
     return (<>
-            <FromStepScroll>
-                {data?.map((item, index) => (<FromResumeItem key={index}>
-                    {index + 1 !== 1 && <img
-                        onClick={() => removeSkills(index)}
-                        className="close"
-                        src={close.src}
-                        alt=""
-                    />}
-                    <ResumeInputCom>
-                        <div className="title">سطح</div>
-                        <Select
-                            style={{
-                                width: '100%',
-                                height: '40px',
-                                textAlign: 'right',
-                                padding: '0',
-                                boxShadow: 'none',
-                                direction: 'rtl'
-                            }}
-                            placeholder='از ۱ تا ۱۰'
-                            options={score}
-                            onChange={e => setData(prevData => {
+            {isLoading ? (
+                <div style={{
+                    display: 'flex',
+                    alignItems: "center",
+                    gap: '20px', flexWrap: 'wrap'
+                }}>
+                    <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '312px'}}/>
+                    <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '313px'}}/>
+                </div>
+            ) : (
+                <FromStepScroll>
+                    {skillsData?.map((item, index) => (<FromResumeItem key={index}>
+                        {index > 0 && index + 1 !== skillsData.length && <img
+                            onClick={() => removeSkills(item?.id || '')}
+                            className="close"
+                            src={close.src}
+                            alt=""
+                        />}
+                        <ResumeInputCom>
+                            <div className="title">سطح مهارت</div>
+                            <Select
+                                style={{
+                                    width: '100%',
+                                    height: '40px',
+                                    textAlign: 'right',
+                                    padding: '0',
+                                    boxShadow: 'none',
+                                    direction: 'rtl'
+                                }}
+                                placeholder='از ۱ تا ۱۰'
+                                options={score}
+                                value={skillsData[index]?.level}
+                                onChange={e => setSkillsData(prevData => {
+                                    const updatedData = [...prevData];
+                                    updatedData[index].level = e;
+                                    return updatedData;
+                                })}
+                            />
+                        </ResumeInputCom>
+                        <ResumeInputCom>
+                            <div className="title">نام مهارت</div>
+                            <InputCom value={skillsData[index]?.field} onChange={e => setSkillsData(prevData => {
                                 const updatedData = [...prevData];
-                                updatedData[index].level = e;
+                                updatedData[index].field = e?.target?.value;
                                 return updatedData;
-                            })}
-                        />
-                    </ResumeInputCom>
-                    <ResumeInputCom>
-                        <div className="title">نام مهارت</div>
-                        <InputCom value={data?.field} onChange={e => setData(prevData => {
-                            const updatedData = [...prevData];
-                            updatedData[index].field = e?.target?.value;
-                            return updatedData;
-                        })} direction="rtl" placeholder="مثال: زبان انگلیسی، زبان عربی و"/>
-                    </ResumeInputCom>
-                </FromResumeItem>))}
-            </FromStepScroll>
+                            })} direction="rtl" placeholder='مثال: ریاضی‌محض'/>
+                        </ResumeInputCom>
+                    </FromResumeItem>))}
+                </FromStepScroll>
+            )}
+
             <ButtonContainer justify={`flex-end`}>
-                <AddBtn disabled={errors.length ? true : false} onClick={addSkills}>
+                <AddBtn disabled={skillsData.some(skill => !skill.level || !skill.field)} onClick={addSkills}>
                     <h2 className={`text`}>افزودن</h2>
                     <img src={add.src} alt="" className="icon"/>
                 </AddBtn>
             </ButtonContainer>
-            <Button disabled={errors.length ? true : false} typeof='submit'
+            <Button disabled={skillsData.length < 2} typeof='submit'
                     onClick={submit}
                     className={StyleModules['confirm_button']}
                     type="primary">

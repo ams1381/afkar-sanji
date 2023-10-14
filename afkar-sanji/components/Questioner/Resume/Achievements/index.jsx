@@ -7,110 +7,154 @@ import {
     InputCom,
     ResumeInputCom
 } from "@/styles/questioner/resume/resume";
-import {Button, message, Select} from "antd";
+import {Button, message, Select, Skeleton} from "antd";
 import React, {useEffect, useState} from "react";
 import add from "@/public/Icons/addBlue.svg";
 import StyleModules from "@/styles/auth/LoginStyles.module.css";
 import {achievementsSchema, skillsSchema} from "@/utilities/validators/resumeMaker";
+import {axiosInstance} from "@/utilities/axios";
 
 export default function ({
-                             setAchievements, setCurrent,
-                             setTitle, year, achievements,
-                             setGender
+                             setCurrent,
+                             setTitle, year, me
                          }) {
 
-    const [data, setData] = useState([{field: undefined, year: undefined,}
-    ])
+
+    const [resumeData, setResumeData] = useState([]);
+    const [isLoading, setIsLoading] = useState(false)
+
+    const getData = () => {
+        setIsLoading(true)
+        axiosInstance.get(`/user-api/users/${me?.id}/resume/${me?.resume?.id}/achievements/`).then(res => {
+            setResumeData([...res?.data,
+                {
+                    field: undefined, year: undefined, link: 'http://link.com'
+                }
+            ])
+            setIsLoading(false)
+        })
+    }
+
+    useEffect(() => {
+        getData()
+    }, []);
+    //
+    // const [data, setData] = useState([{field: undefined, year: undefined, link: undefined}
+    // ])
+
 
     const [errors, setErrors] = useState([]);
     useEffect(() => {
         setErrors([]);
         let errorsValus = [];
-        data.forEach(object => {
+        resumeData.forEach(object => {
             let result = achievementsSchema.validate(object, {abortEarly: false});
             if (result.error?.details?.length > 0) errorsValus.push(errors)
         })
         setErrors(errorsValus);
-    }, [data]);
+    }, [resumeData]);
 
     function addAchievements() {
-        if (errors.length > 0) message.error('اطلاعات فعلی شما کامل نیست')
-        else
-            setData(prevItems => [...prevItems, {field: undefined, year: undefined,}]);
-        message.success('با موفقیت اضافه شد')
+        axiosInstance.post(`user-api/users/${me?.id}/resume/${me?.resume?.id}/achievements/`, resumeData[resumeData.length - 1]).then(res => {
+            if (res?.status === 201) {
+                setResumeData([...resumeData, {
+                    field: undefined, year: undefined, link: 'http://link.com'
+                }]);
+                message.success('با موفقیت اضافه شد')
+            }
+        }).catch(error => {
+            const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
+            message.error(ERROR_MESSAGE)
+        })
     }
 
-    function removeAchievements(id) {
-        setData(prevItems => prevItems.filter((item,index) => index !== id));
-        message.success('با موفقیت حذف شد')
+   async function removeAchievements(id) {
+        if (id) {
+            await axiosInstance.delete(`/user-api/users/${me?.id}/resume/${me?.resume?.id}/achievements/${id}/`).then(res => {
+                if (res?.status === 204) {
+                    message.error('حذف شد')
+                    setResumeData(resumeData.filter(item => item.id !== id))
+                }
+            })
+        }
     }
 
 
     const submit = () => {
-        if (errors.length > 0) return
-        else
-            setCurrent(3)
+        setCurrent(3)
         setTitle('سابقه شغلی')
     }
 
     return (
         <>
-            <FromStepScroll>
-                {data?.map((item, index) => (
-                    <FromResumeItem key={item.id}>
+            {isLoading ? (
+                <div style={{
+                    display: 'flex',
+                    alignItems: "center",
+                    gap: '20px', flexWrap: 'wrap'
+                }}>
+                    <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '202px'}}/>
+                    <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '202px'}}/> <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '202px'}}/>
+                </div>
+            ) : (
+                <FromStepScroll>
+                    {resumeData?.map((item, index) => (
+                        <FromResumeItem key={item.id}>
 
-                        {index + 1 !== 1 && <img
-                            onClick={() => removeAchievements(index)}
-                            className="close"
-                            src={close.src}
-                            alt=""
-                        />}
-                        <ResumeInputCom>
-                            <div className="title">سال دریافت</div>
-                            <Select
-                                style={{
-                                    width: '100%',
-                                    height: '40px',
-                                    textAlign: 'right',
-                                    padding: '0',
-                                    boxShadow: 'none',
-                                    direction: 'rtl'
-                                }}
-                                placeholder={'انتخاب کنید'}
-                                options={year}
-                                onChange={e => setData(prevData => {
-                                    const updatedData = [...prevData];
-                                    updatedData[index].year = e;
-                                    return updatedData;
-                                })}
-                            />
-                        </ResumeInputCom>
-                        <ResumeInputCom>
-                            <div className="title">مرکز دریافت</div>
-                            <InputCom value={data?.field} onChange={e => setData(prevData => {
+                            {index > 0 && index + 1 !== resumeData.length && <img
+                                onClick={() => removeAchievements(item.id || '')}
+                                className="close"
+                                src={close.src}
+                                alt=""
+                            />}
+                            <ResumeInputCom>
+                                <div className="title">سال دریافت</div>
+                                <Select
+                                    style={{
+                                        width: '100%',
+                                        height: '40px',
+                                        textAlign: 'right',
+                                        padding: '0',
+                                        boxShadow: 'none',
+                                        direction: 'rtl'
+                                    }}
+                                    placeholder={'انتخاب کنید'}
+                                    options={year}
+                                    value={resumeData[index]?.year}
+                                    onChange={e => setResumeData(prevData => {
+                                        const updatedData = [...prevData];
+                                        updatedData[index].year = e;
+                                        return updatedData;
+                                    })}
+                                />
+                            </ResumeInputCom>
+                            <ResumeInputCom>
+                                <div className="title">مرکز دریافت</div>
+                                <InputCom value={resumeData[index]?.link} onChange={e => setResumeData(prevData => {
                                     const updatedData = [...prevData];
                                     updatedData[index].field = e?.target?.value;
                                     return updatedData;
                                 })} direction="rtl" placeholder={`مثال: وزارت علوم`}/>
-                        </ResumeInputCom>
-                        <ResumeInputCom>
-                            <div className="title">نوع افتخار</div>
-                            <InputCom value={data?.field} onChange={e => setData(prevData => {
+                            </ResumeInputCom>
+                            <ResumeInputCom>
+                                <div className="title">نوع افتخار</div>
+                                <InputCom value={resumeData[index]?.field} onChange={e => setResumeData(prevData => {
                                     const updatedData = [...prevData];
                                     updatedData[index].field = e?.target?.value;
                                     return updatedData;
                                 })} direction="rtl" placeholder={`مثال: دریافت جایزه‌ی زکریا`}/>
-                        </ResumeInputCom>
-                    </FromResumeItem>
-                ))}
-            </FromStepScroll>
+                            </ResumeInputCom>
+                        </FromResumeItem>
+                    ))}
+                </FromStepScroll>
+            )}
             <ButtonContainer justify={`flex-end`}>
-                <AddBtn disabled={errors.length ? true : false} onClick={addAchievements}>
+                <AddBtn disabled={!resumeData[resumeData.length - 1]?.year || !resumeData[resumeData.length - 1]?.field || !resumeData[resumeData.length - 1]?.link} onClick={addAchievements}>
                     <h2 className={`text`}>افزودن</h2>
                     <img src={add.src} alt="" className="icon"/>
                 </AddBtn>
             </ButtonContainer>
-            <Button disabled={errors.length ? true : false} typeof='submit'
+            <Button disabled={resumeData.length < 2} typeof='submit'
                     onClick={submit}
                     className={StyleModules['confirm_button']}
                     type="primary">

@@ -13,7 +13,10 @@ import {axiosInstance} from "@/utilities/axios";
 import {yearDete} from "@/utilities/data/date";
 import {useQuery} from "@tanstack/react-query";
 import {informationSchema} from "@/utilities/validators/information";
-
+// motion
+import {AnimatePresence, motion} from 'framer-motion';
+// style
+import {LeftLight, RightLight} from "@/styles/auth/Login";
 
 export default function () {
     const [userData, setUserData] = useState([
@@ -155,96 +158,110 @@ export default function () {
         })
 
     }
-    return (<Container>
-        <Title>لطفا اطلاعات خود را کامل‌کنید</Title>
-        <Form>
-            <Row direction={'rtl'}>
-                <FromItem>
-                    <div className="title">نام</div>
-                    <InputCom required value={name} onChange={(e) => setName(e?.target?.value)}/>
-                </FromItem>
-                <FromItem>
-                    <div className="title">نام خانوادگی</div>
-                    <InputCom required value={family} onChange={(e) => setFamily(e?.target?.value)}/>
-                </FromItem>
-            </Row>
+    return (
+        <>
+            <RightLight/>
+            <LeftLight/>
+            <AnimatePresence>
+                <motion.div transition={{duration: 1}} initial={{y: 220}} animate={{y: 0}}>
+                    <Container>
+                        <Title>لطفا اطلاعات خود را کامل‌کنید</Title>
+                        <Form>
+                            <Row direction={'rtl'}>
+                                <FromItem>
+                                    <div className="title">نام</div>
+                                    <InputCom required value={name} onChange={(e) => setName(e?.target?.value)}/>
+                                </FromItem>
+                                <FromItem>
+                                    <div className="title">نام خانوادگی</div>
+                                    <InputCom required value={family} onChange={(e) => setFamily(e?.target?.value)}/>
+                                </FromItem>
+                            </Row>
 
-            <Row direction={'rtl'}>
-                <FromItem>
-                    <div className="title">ایمیل</div>
-                    <InputCom value={email} onChange={(e) => setEmail(e?.target?.value)}
-                              type={'email'}/>
-                </FromItem>
-            </Row>
+                            <Row direction={'rtl'}>
+                                <FromItem>
+                                    <div className="title">ایمیل</div>
+                                    <InputCom value={email} onChange={(e) => setEmail(e?.target?.value)}
+                                              type={'email'}/>
+                                </FromItem>
+                            </Row>
 
-            <Row direction={'rtl'}>
-                <FromItem>
-                    <div className="title">جنسیت</div>
-                    <Select
-                        style={{
-                            width: '100%', textAlign: 'right', height: '40px', padding: '0', boxShadow: 'none'
-                        }}
-                        placeholder={'انتخاب کنید'}
-                        options={genders}
-                        onChange={(e) => setGender(e)}
-                    />
-                </FromItem>
-            </Row>
+                            <Row direction={'rtl'}>
+                                <FromItem>
+                                    <div className="title">جنسیت</div>
+                                    <Select
+                                        style={{
+                                            width: '100%',
+                                            textAlign: 'right',
+                                            height: '40px',
+                                            padding: '0',
+                                            boxShadow: 'none'
+                                        }}
+                                        placeholder={'انتخاب کنید'}
+                                        options={genders}
+                                        onChange={(e) => setGender(e)}
+                                    />
+                                </FromItem>
+                            </Row>
 
-            <Row direction={'rtl'}>
-                <FromItem>
-                    <div className="title">آدرس محل سکونت</div>
-                    <TextAreaCom required value={address} onChange={(e) => setAddress(e?.target?.value)}
-                                 direction={`rtl`} placeholder="آدرس خود را بنویسید"/>
-                </FromItem>
-            </Row>
+                            <Row direction={'rtl'}>
+                                <FromItem>
+                                    <div className="title">آدرس محل سکونت</div>
+                                    <TextAreaCom required value={address} onChange={(e) => setAddress(e?.target?.value)}
+                                                 direction={`rtl`} placeholder="آدرس خود را بنویسید"/>
+                                </FromItem>
+                            </Row>
 
-            <Row direction={'rtl'}>
-                <FromItem>
-                    <div className="title">ملیت</div>
-                    <Select
-                        style={{
-                            width: '100%',
-                            height: '40px',
-                            textAlign: 'right',
-                            padding: '0',
-                            boxShadow: 'none',
-                            direction: 'rtl'
-                        }}
-                        placeholder={'انتخاب کنید'}
-                        options={year}
-                        onChange={(e) => setcountrySelect(e)}
-                    />
-                </FromItem>
-                <FromItem>
-                    <div className="title">استان محل سکونت</div>
-                    <Select
-                        style={{
-                            width: '100%',
-                            height: '40px',
-                            textAlign: 'right',
-                            padding: '0',
-                            boxShadow: 'none',
-                            direction: 'rtl'
-                        }}
+                            <Row direction={'rtl'}>
+                                <FromItem>
+                                    <div className="title">ملیت</div>
+                                    <Select
+                                        style={{
+                                            width: '100%',
+                                            height: '40px',
+                                            textAlign: 'right',
+                                            padding: '0',
+                                            boxShadow: 'none',
+                                            direction: 'rtl'
+                                        }}
+                                        placeholder={'انتخاب کنید'}
+                                        options={year}
+                                        onChange={(e) => setcountrySelect(e)}
+                                    />
+                                </FromItem>
+                                <FromItem>
+                                    <div className="title">استان محل سکونت</div>
+                                    <Select
+                                        style={{
+                                            width: '100%',
+                                            height: '40px',
+                                            textAlign: 'right',
+                                            padding: '0',
+                                            boxShadow: 'none',
+                                            direction: 'rtl'
+                                        }}
 
-                        placeholder={'انتخاب کنید'}
-                        options={year}
-                        onChange={(e) => setprovinceSelect(e)}
-                    />
-                    {/*<TextAnswerInputBox required value={province}*/}
-                    {/*                    onChange={(e) => setProvince(e?.target?.value)}/>*/}
-                </FromItem>
-            </Row>
-            <ConfigProvider theme={themeContext}>
-                <Button onClick={submit} type='submit'
-                        loading={loadingState} className={StyleModules['confirm_button']}
-                        type="primary">
-                    ارسال اطلاعات
-                </Button>
-            </ConfigProvider>
-        </Form>
-    </Container>)
+                                        placeholder={'انتخاب کنید'}
+                                        options={year}
+                                        onChange={(e) => setprovinceSelect(e)}
+                                    />
+                                    {/*<TextAnswerInputBox required value={province}*/}
+                                    {/*                    onChange={(e) => setProvince(e?.target?.value)}/>*/}
+                                </FromItem>
+                            </Row>
+                            <ConfigProvider theme={themeContext}>
+                                <Button onClick={submit} type='submit'
+                                        loading={loadingState} className={StyleModules['confirm_button']}
+                                        type="primary">
+                                    ارسال اطلاعات
+                                </Button>
+                            </ConfigProvider>
+                        </Form>
+                    </Container>
+                </motion.div>
+            </AnimatePresence>
+        </>
+    )
 }
 
 export async function getServerSideProps(context) {
