@@ -1,11 +1,12 @@
 import {QuestionOptionsContainer} from "@/styles/Result/AddResult";
 import {OptionalItemContainer} from "@/styles/questionnairePanel/QuestionComponent";
-import {Checkbox} from "antd";
-import {useEffect, useState} from "react";
+import {Checkbox, Input} from "antd";
+import React, {useEffect, useState} from "react";
 import {useDispatch} from "react-redux";
 import {shuffleArray} from "@/components/Questions/Optional";
+import {ChoseOption} from "@/utilities/stores/AnswerStore";
 
-export const OptionalSubComponent = ({ QuestionData , answerSet }) => {
+export const OptionalSubComponent = ({ QuestionData , answerSet , setErrorQuestions , ErrorQuestions , loadableAnswer }) => {
     const [selectedValues, setSelectedValues] = useState([]);
     const dispatcher = useDispatch();
     const [showInput, setShowInput] = useState(false);
@@ -15,6 +16,7 @@ export const OptionalSubComponent = ({ QuestionData , answerSet }) => {
     const cleanText = (text) => {
         return text?.replace(regex, '');
     };
+
     useEffect(() => {
         if(QuestionData.is_random_options)
         {
@@ -26,19 +28,37 @@ export const OptionalSubComponent = ({ QuestionData , answerSet }) => {
 
     },[QuestionData])
     useEffect(() => {
-        if(answerSet && answerSet?.answers?.length)
-        {
+            // console.log(answerSet?.find(item => item.question === QuestionData.id))
 
-            let selected_options_array = answerSet?.answers.find(item => item.question === QuestionData.id).answer?.selected_options;
-            setSelectedValues(QuestionData.options.filter(OptionItem => selected_options_array?.includes(OptionItem.id)));
-            if(answerSet.answers.find(item => item.question === QuestionData.id).answer?.other_text)
+            if(answerSet.find(item => item.question === QuestionData.id) && loadableAnswer)
             {
+                if(!answerSet?.find(item => item.question === QuestionData.id)?.answer?.selected_options)
+                    return
+                    let selected_options_array = answerSet?.find(item => item.question === QuestionData.id).answer.selected_options
+                        .map(SelectedOption => ({
+                            id : SelectedOption ,
+                            text : QuestionData.options.find(item => item.id == SelectedOption).text
+                        }));
 
-                setShowInput(true);
-                setOtherInputValue(answerSet.find(item => item.question == QuestionInfo.id).answer?.other_text)
+                    setSelectedValues(selected_options_array);
+                    if(answerSet.find(item => item.question === QuestionData.id).answer?.other_text)
+                    {
+
+                        setShowInput(true);
+                        setOtherInputValue(answerSet.find(item => item.question == QuestionData.id).answer?.other_text)
+                    }
             }
-        }
-    },[])
+    },[QuestionData])
+
+    useEffect(() => {
+
+            dispatcher(ChoseOption({
+                QuestionID : QuestionData.id ,
+                ChoseOptionsArray : selectedValues ,
+                other_text : otherInputValue
+            }))
+
+    },[selectedValues , otherInputValue])
     const handleCheckboxChange = (item) => {
         const max_selected_options = QuestionData.max_selected_options || 1;
         const cleanedValue = cleanText(item.text);
@@ -92,17 +112,29 @@ export const OptionalSubComponent = ({ QuestionData , answerSet }) => {
             setShowInput(false);
             setOtherInputValue("");
         }
-
+        let ErrorQuestionArray = [...ErrorQuestions]
+        // console.log(selectedValues)
+        // dispatcher(ChoseOption({
+        //     QuestionID : QuestionData.id ,
+        //     ChoseOptionsArray : selectedValues ,
+        //     other_text : otherInputValue
+        // }))
+        setErrorQuestions(ErrorQuestionArray.filter(item => item != QuestionData.id))
     };
     return <QuestionOptionsContainer>
         {
-            QuestionData.options.map((item) => <OptionalItemContainer style={{ fontWeight : 700 , color : 'black' }}>
+            QuestionData.options.map((item) => <OptionalItemContainer key={item.id} id={item.id} style={{ fontWeight : 700 , color : 'black' }}>
                 <Checkbox
                     value={item.text}
                     onChange={() => handleCheckboxChange(item)}
                     key={item.id}
-                    checked={selectedValues.some(val => val.id === item.id)}  />
-                <p>{item.text != 'null' ? item.text?.replace(regex,'') : ''}</p>
+                    checked={selectedValues.some(val => val.id ? val.id === item.id : val === item.id)}  />
+                {item.text !== 'null' &&
+                    <>{(item.text?.replace(regex,'') === 'سایر' && showInput) ? <Input onChange={(e) => setOtherInputValue(e.target.value)}
+                                                                                       placeholder='چیزی بنویسید' value={otherInputValue} />
+                        : <p>{cleanText(item.text)}</p>
+                    }</>}
+
             </OptionalItemContainer>)
         }
     </QuestionOptionsContainer>

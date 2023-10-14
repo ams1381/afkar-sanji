@@ -1,5 +1,10 @@
 import {QuestionerContentBox, QuestionerPageContainer} from "@/styles/common";
-import {AddResultFooter, QuestionContainer, QuestionsContainer} from "@/styles/Result/AddResult";
+import {
+    AddResultFooter, DegreeItemsContainer, InputAnswerContainer,
+    QuestionContainer,
+    QuestionOptionsContainer,
+    QuestionsContainer
+} from "@/styles/Result/AddResult";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
 import {SubComponentGenerator} from "@/components/Questioner/AddResult/QuestionSubCompGenerator";
 import {Button, message} from "antd";
@@ -10,29 +15,24 @@ import axios from "axios";
 import {AnswerSetFormDataConverter} from "@/utilities/FormData";
 import Link from "next/link";
 import {useRouter} from "next/router";
+import { Skeleton } from "antd"
+import {OptionalItemContainer} from "@/styles/questionnairePanel/QuestionComponent";
 
-
-export const PageContent = ({ questionnaire , answerSet}) => {
+export const PageContent = ({ questionnaire }) => {
     const dispatcher = useDispatch();
     const router = useRouter();
     const [ messageApi , messageContext ] = message.useMessage();
-    const AnswerSetsArray = useSelector(state => state.reducer.AnswerSet);
     const [ AnswerConfirmLoading , setAnswerConfirmLoading ] = useState(false)
     const [ ErrorQuestions , setErrorQuestions ] = useState([]);
-    // console.log(AnswerSetsArray)
+    let AnswerSetsArray = useSelector(state => state.reducer.AnswerSet);
     useEffect(() => {
-        if(answerSet) {
-            dispatcher(setAnswerSetArray({ AnswerSetArray : answerSet.answers }))
-        }
-        else {
+        if(questionnaire)
             dispatcher(setInitialAnswerSet({
                 Questions : questionnaire.questions
             }))
-        }
-    },[])
+    },[questionnaire])
     const ConfirmAnswerHandler = async () => {
-
-        let AnswerSet = answerSet ? answerSet.answers : AnswerSetsArray;
+        let AnswerSet = AnswerSetsArray;
 
         let FileQuestionQuestions = AnswerSet.map(item => {
             if(item.file)
@@ -51,48 +51,52 @@ export const PageContent = ({ questionnaire , answerSet}) => {
         {
             setAnswerConfirmLoading(true)
             let CreatedAnswerSet;
-            if(!answerSet) {
+            // if(!answerSet) {
                 let { data } = await axios.post(`/question-api/questionnaires/${questionnaire.uuid}/answer-sets/`);
                 CreatedAnswerSet = data;
-            }
+            // }
 
             if(FileQuestionQuestions && FileQuestionQuestions.length)
-                await axios.post(`/question-api/questionnaires/${questionnaire.uuid}/answer-sets/${answerSet ? answerSet.id : CreatedAnswerSet.id}/add-answer/`,
+                await axios.post(`/question-api/questionnaires/${questionnaire.uuid}/answer-sets/${CreatedAnswerSet.id}/add-answer/`,
                     AnswerSetFormDataConverter(FileQuestionQuestions),{
                     'Content-Type' : 'multipart/form-data'
                 })
-            await axios.post(`/question-api/questionnaires/${questionnaire.uuid}/answer-sets/${answerSet ? answerSet.id : CreatedAnswerSet.id}/add-answer/`,
+            await axios.post(`/question-api/questionnaires/${questionnaire.uuid}/answer-sets/${CreatedAnswerSet.id}/add-answer/`,
                 CopiedQuestionAnswerSet)
         }
         catch(err)
         {
             setAnswerConfirmLoading(false)
+            if(err.response?.data?.questionnaire)
+            {
+                messageApi.error({
+                    content : 'پرسشنامه فعال نیست یا امکان پاسخ دهی به آن وجود ندارد',
+                    style : {
+                        fontFamily : 'IRANSans'
+                    }
+                })
+                return
+            }
             if(err.response?.data)
             {
                 let ErrorsArray = err.response?.data.map(item => {
                     if(Object.keys(item).length)
-                        return Object.keys(item)
+                        return Object.keys(item)[0]
                 })
                 ErrorsArray.forEach(ErrorItem => {
                     if(ErrorItem) {
                         let QuestionElement = document.getElementById('question' + ErrorItem)
                         QuestionElement.scrollIntoView({behavior: 'smooth'});
 
-                        // Wait for the scroll to complete (you can adjust the delay based on your requirements)
                         setTimeout(() => {
-                            // Calculate the desired position for the element in the viewport (e.g., to center it)
                             const desiredOffset = window.innerHeight / 2 - QuestionElement.clientHeight / 2;
-
-                            // Adjust the scroll position to center the element in the viewport
                             window.scrollTo({
                                 top: QuestionElement.offsetTop - desiredOffset,
                                 behavior: 'smooth'
                             });
                         }, 500);
-
                     }
                 })
-
                 setErrorQuestions(ErrorsArray)
                 err.response.data?.forEach((item) => {
                     if(item && Object.values(item).length)
@@ -107,28 +111,30 @@ export const PageContent = ({ questionnaire , answerSet}) => {
 
         }
         setAnswerConfirmLoading(false)
-        router.push(`../${questionnaire.uuid}/questioner-result`);
+        // router.push(`../${questionnaire.uuid}/questioner-result`);
     }
-    return <QuestionerPageContainer>
+    return questionnaire ? <QuestionerPageContainer>
         {messageContext}
         <QuestionerContentBox style={{ flexDirection : 'column' }}>
             <QuestionsContainer>
-                {
+                 { (questionnaire && questionnaire.questions && AnswerSetsArray?.length) &&
                     questionnaire.questions.map(item => item?.question &&
                         <QuestionContainer error={ErrorQuestions.find(ErrorItem => ErrorItem == item.question.id) ? 'active' : null}
                                id={'question' + item.question.id}>
                             <div className='question_header'>
                                 <span>
                                     { digitsEnToFa(item.question.placement) + '.' }
+
                                 </span>
-                                <p>
+                                <p style={{ fontWeight : item?.question.question_type == 'group' ? 700 : 200 }}>
                                     {item.question.title}
                                 </p>
+                                { item.question.is_required ? '*' : '' }
                             </div>
-                            <p>
+                            <p className={'question_description'}>
                                 {item.question.description}
                             </p>
-                            {SubComponentGenerator(item.question,answerSet,setErrorQuestions,ErrorQuestions)}
+                            {SubComponentGenerator(item.question,setErrorQuestions,ErrorQuestions,AnswerSetsArray)}
                         </QuestionContainer>)
                 }
             </QuestionsContainer>
@@ -145,6 +151,96 @@ export const PageContent = ({ questionnaire , answerSet}) => {
 
             </AddResultFooter>
         </QuestionerContentBox>
+    </QuestionerPageContainer> : <QuestionerPageContainer>
+        <QuestionerContentBox style={{ flexDirection : 'column' }}>
+            <QuestionsContainer>
+                <QuestionContainer>
+                    <div className='question_header'>
+                        <Skeleton.Input active style={{ height : 20 }} />
+                    </div>
+                    <p className={'question_description'}>
+                        <Skeleton.Input active style={{ height : 20 , minWidth : 200 , width : 200 }} />
+                    </p>
+                    <QuestionOptionsContainer>
+                        <OptionalItemContainer style={{ gap : 6 }}>
+                            <Skeleton.Input active style={{ height : 20 , minWidth : 20 , width : 20 }} />
+                            <Skeleton.Input active style={{ height : 20  }} />
+                        </OptionalItemContainer>
+                        <OptionalItemContainer style={{ gap : 6 }}>
+                            <Skeleton.Input active style={{ height : 20 , minWidth : 20 , width : 20 }} />
+                            <Skeleton.Input active style={{ height : 20  }} />
+                        </OptionalItemContainer>
+                        <OptionalItemContainer style={{ gap : 6 }}>
+                            <Skeleton.Input active style={{ height : 20 , minWidth : 20 , width : 20 }} />
+                            <Skeleton.Input active style={{ height : 20  }} />
+                        </OptionalItemContainer>
+                    </QuestionOptionsContainer>
+                </QuestionContainer>
+                <QuestionContainer>
+                    <div className='question_header'>
+                        <Skeleton.Input active style={{ height : 20 }} />
+                    </div>
+                    <p className={'question_description'}>
+                        <Skeleton.Input active style={{ height : 20 , minWidth : 200 , width : 200 }} />
+                    </p>
+                    <InputAnswerContainer>
+                        <Skeleton.Input active style={{ width : '100%' }} />
+                    </InputAnswerContainer>
+                </QuestionContainer>
+                <QuestionContainer>
+                    <div className='question_header'>
+                        <Skeleton.Input active style={{ height : 20 }} />
+                    </div>
+                    <p className={'question_description'}>
+                        <Skeleton.Input active style={{ height : 20 , minWidth : 200 , width : 200 }} />
+                    </p>
+                    <DegreeItemsContainer>
+                        <OptionalItemContainer style={{ gap : 6 }}>
+                            <Skeleton.Input active style={{ height : 20 , minWidth : 20 , width : 20 }} />
+                            <Skeleton.Input active style={{ height : 20 , minWidth : 'auto' , width : '100%' }} />
+                        </OptionalItemContainer>
+                        <OptionalItemContainer style={{ gap : 6 }}>
+                            <Skeleton.Input active style={{ height : 20 , minWidth : 20 , width : 20 }} />
+                            <Skeleton.Input active style={{ height : 20 , minWidth : 'auto' , width : '100%' }} />
+                        </OptionalItemContainer>
+                        <OptionalItemContainer style={{ gap : 6 }}>
+                            <Skeleton.Input active style={{ height : 20 , minWidth : 20 , width : 20 }} />
+                            <Skeleton.Input active style={{ height : 20 , minWidth : 'auto' , width : '100%' }} />
+                        </OptionalItemContainer>
+                    </DegreeItemsContainer>
+                </QuestionContainer>
+                <QuestionContainer>
+                    <div className='question_header'>
+                        <Skeleton.Input active style={{ height : 20 }} />
+                    </div>
+                    <p className={'question_description'}>
+                        <Skeleton.Input active style={{ height : 20 , minWidth : 200 , width : 200 }} />
+                    </p>
+                    <InputAnswerContainer>
+                        <Skeleton.Input active style={{ width : '100%' }} />
+                    </InputAnswerContainer>
+                </QuestionContainer>
+                <QuestionContainer>
+                    <div className='question_header'>
+                        <Skeleton.Input active style={{ height : 20 }} />
+                    </div>
+                    <p className={'question_description'}>
+                        <Skeleton.Input active style={{ height : 20 , minWidth : 200 , width : 200 }} />
+                    </p>
+                    <QuestionOptionsContainer>
+                        <OptionalItemContainer style={{ gap : 6 }}>
+                            <Skeleton.Input active style={{ height : 20 , minWidth : 20 , width : 20 }} />
+                            <Skeleton.Input active style={{ height : 20  }} />
+                        </OptionalItemContainer>
+                        <OptionalItemContainer style={{ gap : 6 }}>
+                            <Skeleton.Input active style={{ height : 20 , minWidth : 20 , width : 20 }} />
+                            <Skeleton.Input active style={{ height : 20  }} />
+                        </OptionalItemContainer>
+                    </QuestionOptionsContainer>
+                </QuestionContainer>
+            </QuestionsContainer>
+        </QuestionerContentBox>
+
     </QuestionerPageContainer>
 
 }

@@ -74,15 +74,17 @@ export const QuestionTypeFilterContent = ({ setSelectedTypeFilter , SelectedType
         <p>متنی با پاسخ</p>
         <Checkbox checked={SelectedTypeFilter.find(item => item === 'text_answer')} />
     </div>
-        <div className={'filter_type_item'} onClick={() => {
+        <div className={'filter_type_item all'} onClick={() => {
             if(SelectedTypeFilter.length == 12)
                 setSelectedTypeFilter([])
             else
             setSelectedTypeFilter(['optional', 'link', 'email_field', 'group', 'sort',
                 'no_answer', 'text_answer', 'file', 'drop_down', 'number_answer', 'integer_range', 'integer_selective'])
         }}>
-            <p>همه گزینه ها</p>
-            <Checkbox checked={SelectedTypeFilter.length == 12} />
+            <div className={'filter_type_item'}>
+                <p>همه</p>
+                <Checkbox checked={SelectedTypeFilter.length == 12} />
+            </div>
         </div>
     </QuestionTypeFilterContainer>
 }
@@ -98,19 +100,17 @@ export const QuestionerResultHead = ({ questionnaireQuery , SetCurrentPage ,
             {
                 SelectedRows.forEach(async (row) => {
                     await axiosInstance.delete(`/question-api/questionnaires/${questionnaireQuery.data?.data?.uuid}/answer-sets/${row}/`)
-
                     // ResultQuery?.refetch()
                 })
                 if(SelectedRows.length == ResultQuery?.data?.data?.results.length || ResultQuery?.data?.data?.results.length == 1)
                 {
                     SetCurrentPage(CurrentPage - 1)
                 }
-
                 setTimeout(() => {
                     setDeleteRowState(false);
                     setSelectedRows([])
+                    ResultQuery.refetch()
                 },1500)
-                // SelectedRows(false);
             }
         }
         catch(err)
@@ -132,20 +132,18 @@ export const QuestionerResultHead = ({ questionnaireQuery , SetCurrentPage ,
     }
     return questionnaireQuery.isLoading ?
         <QuestionerResultHeader>
-            <Skeleton.Input />
+            <Skeleton.Input active />
             <QuestionerResultChangerContainer>
                 <RowSelectorContainer>
                     <label>
-                        <Skeleton.Input />
+                        <Skeleton.Input active />
                     </label>
-                    {/*<DeleteRowButton>*/}
-                        <Skeleton.Button style={{ width : '100px' , minWidth : '100px' }} />
-                    {/*</DeleteRowButton>*/}
+                        <Skeleton.Button active style={{ width : '50px' , minWidth : '50px' }} />
                 </RowSelectorContainer>
                 <QuestionTypeSelector open={QuestionTypeSelectorPopover ? 'active' : null}>
-                    <Skeleton.Input />
+                    <Skeleton.Input active style={{ width : '100px' , minWidth : '100px' }} />
                 </QuestionTypeSelector>
-                <Skeleton.Input />
+                <Skeleton.Input active style={{ width : '120px' , minWidth : '120px' }} />
 
             </QuestionerResultChangerContainer>
 
@@ -158,8 +156,14 @@ export const QuestionerResultHead = ({ questionnaireQuery , SetCurrentPage ,
                 <label>
                     <p>انتخاب همه</p>
                     <Checkbox
-                        onClick={e => e ?
-                            setSelectedRows(ResultQuery?.data?.data?.results.map(item => item.id)) : setSelectedRows([])}
+                        // onClick={e => e.target.value == 'on' ?
+                        //     setSelectedRows(ResultQuery?.data?.data?.results.map(item => item.id)) : setSelectedRows([])}
+                        onClick={() => {
+                            if(ResultQuery?.data?.data?.results?.length == SelectedRows.length)
+                                setSelectedRows([])
+                            else
+                                setSelectedRows(ResultQuery?.data?.data?.results.map(item => item.id))
+                        }}
                         checked={ResultQuery?.data?.data?.results?.length == SelectedRows.length}/>
                 </label>
                 <RemovePopup DeleteState={DeleteRowState} onOkay={DeleteRowHandler}

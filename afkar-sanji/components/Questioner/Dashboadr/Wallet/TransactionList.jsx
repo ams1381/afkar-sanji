@@ -121,7 +121,7 @@ export default function ({data, loading, setFilterParams}) {
             <Skeleton.Input style={{width: '100%', height: '100px'}} loading active/>
         </>)}
 
-        {data?.transactions?.map((item, index) => {
+        {[5,5,5,5,5,5]?.map((item, index) => {
             return <TransactionItem data={item} key={item?.id}/>
         })}
 

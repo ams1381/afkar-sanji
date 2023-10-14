@@ -34,20 +34,33 @@ export const UserInfoBox = ({ MeQuery , regions }) => {
                 url: 'https://mah-api.ariomotion.com' + MeQuery?.data?.data?.avatar,
                 thumbUrl : 'https://mah-api.ariomotion.com' + MeQuery?.data?.data?.avatar
             }])
-            // setFileUploaded(true)
+            setFileUploaded(true)
         }
 
     },[MeQuery?.data?.data])
     const FileUploadHandler = async (file, fileList , event) => {
-
         try
         {
-        if(!file.fileList?.length)
+        if(file?.file?.status === 'removed')
         {
             setFileUploaded(null)
+            setFileList([])
             setUploadError(false)
-            await axiosInstance.patch('/user-api/users/me/',{ avatar : null })
-            MeQuery.refetch()
+            axiosInstance.defaults.headers['Content-Type'] = 'application/json';
+            try
+            {
+                await axiosInstance.patch('/user-api/users/me/',{ avatar : null })
+                MeQuery.refetch()
+            }
+            catch (err) {
+                messageApi.error({
+                    content : `در حذف کردن پروفایل مشکلی پیش آمد`,
+                    style: {
+                        fontFamily: 'IRANSans',
+                        direction: 'rtl'
+                    }
+                })
+            }
             return
         }
         if(detectFileFormat(file.file?.name) != 'Picture')
@@ -103,13 +116,20 @@ export const UserInfoBox = ({ MeQuery , regions }) => {
         }
        catch (err)
        {
-           messageApi.error({
-               content : 'مشکل در آپلود پروفایل'
-           })
+           if(err?.response?.status == 500)
+               messageApi.error({
+                   content : 'مشکل در آپلود پروفایل'
+               })
+           else if(err?.response?.status == 401)
+           {
+               setTimeout(() => {
+                   MeQuery.refetch();
+               },1000)
+           }
        }
     }
   return (
-      MeQuery.isLoading ?
+      (MeQuery.error || MeQuery.isLoading) ?
           <UserInfoContainer>
               {contextHolder}
               <Skeleton.Input active />
@@ -152,16 +172,16 @@ export const UserInfoBox = ({ MeQuery , regions }) => {
             <UserInfoBoxHeader fileuploaded={(fileUploaded || uploadError) ? 'true' : null}
                 uploaderror={uploadError ? 'occur' : null}>
                 <UserBoldInfoContainer>
-                    <InfoContainer bold BoxName='نام' UserData={MeQuery?.data?.data}
+                    <InfoContainer MeQuery={MeQuery}  bold BoxName='نام' UserData={MeQuery?.data?.data}
                      BoxDataName='first_name' />
-                     <InfoContainer bold BoxName='نام خانوادگی'
+                     <InfoContainer MeQuery={MeQuery}  bold BoxName='نام خانوادگی'
                       BoxDataName='last_name' UserData={MeQuery?.data?.data} />
                     </UserBoldInfoContainer>
                 <Upload
                     name="avatar"
                     listType="picture-card"
                     className="avatar-uploader"
-                    defaultFileList={fileList}
+                    fileList={fileList}
                     maxCount={1}
                     onRemove={() => setFileList([])}
                     beforeUpload={beforeUpload}
@@ -178,9 +198,9 @@ export const UserInfoBox = ({ MeQuery , regions }) => {
             <InfoContainer BoxName='آدرس محل سکونت' MeQuery={MeQuery} UserData={MeQuery?.data?.data}
                      BoxDataName='address' />
             <InfoContainer BoxName='ملیت' MeQuery={MeQuery} UserData={MeQuery?.data?.data} regions={regions}
-                     BoxDataName='nationality' />
+                            BoxDataName='nationality'/>
             <InfoContainer BoxName='استان محل سکونت' MeQuery={MeQuery} UserData={MeQuery?.data?.data} regions={regions}
-                     BoxDataName='province' />
+                            BoxDataName='province'/>
         </div>
     </UserInfoContainer>
   )

@@ -258,6 +258,8 @@ export const QuestionItem = ({  ActiveQuestion, provided , childPlacement ,setAc
     }
     catch(err)
     {
+        if(err?.response?.status == 401)
+            return
       if(err.response)
       {
         QuestionDispatcher(ChangeErrorData({ 
@@ -369,6 +371,8 @@ export const QuestionItem = ({  ActiveQuestion, provided , childPlacement ,setAc
     }
     catch(err)
     {
+        if(err?.response?.status == 401)
+            return
       if(err.response)
       {   
         QuestionDispatcher(ChangeErrorData({ 

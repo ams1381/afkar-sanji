@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import {PageBox, QuestionerPageContainer} from "@/styles/common";
 import {CommonDrawer} from "@/components/common/CommonDrawer";
 import {Button, Checkbox, Select} from "antd";
-import {DeleteRowButton} from "@/styles/Result/ResultPage";
+import {DeleteRowButton, ResultBodyContainer, ResultTableContainer} from "@/styles/Result/ResultPage";
 import {Icon} from "@/styles/icons";
 import QuestionerHeader from "@/components/common/QuestionerHeader";
 import {
@@ -37,7 +37,7 @@ const QuestionerResult = ({ meData }) => {
             },
         ],
     });
-
+    // console.log(ResultQuery.error)
     // useEffect(() => {
     //     if(ResultQuery.error && ResultQuery.error?.response?.status == 404)
     //         SetCurrentPage(CurrentPage - 1)
@@ -55,7 +55,7 @@ const QuestionerResult = ({ meData }) => {
         </Head>
         <PageBox>
             <CommonDrawer RightDrawerOpen={RightDrawerOpen} setRightDrawerOpen={setRightDrawerOpen} />
-            <main style={{ width : RightDrawerOpen ? '80%' : '100%', transition : '0.3s' }}>
+            <main style={{ width : RightDrawerOpen ? '84%' : '100%', transition : '0.3s' }}>
                 <QuestionerHeader pageName='result' meData={meData} />
                 <QuestionerPageContainer style={{ height : '100vh' , overflow : 'hidden' , maxHeight : '690px' }}>
                         <QuestionerResultHead SelectedRows={SelectedRows}
@@ -63,9 +63,16 @@ const QuestionerResult = ({ meData }) => {
                           SetCurrentPage={SetCurrentPage}    ResultQuery={ResultQuery}
                           SelectedTypeFilter={SelectedTypeFilter} setSelectedTypeFilter={setSelectedTypeFilter}
                           questionnaireQuery={QuestionnaireQuery}/>
-                        <QuestionerResultBody SetCurrentPage={SetCurrentPage} ResultQuery={ResultQuery}
-                          SelectedRows={SelectedRows} setSelectedRows={setSelectedRows}
-                          SelectedTypeFilter={SelectedTypeFilter} QuestionnaireQuery={QuestionnaireQuery} />
+                    { ResultQuery.error && ResultQuery.error.response?.status == 500 ?
+                        <ResultBodyContainer error={'active'}  style={{ height : '85%'  }}>
+                            <ResultTableContainer >
+                                <p>مشکل سمت سرور</p>
+                            </ResultTableContainer>
+                        </ResultBodyContainer>
+                        : <QuestionerResultBody SetCurrentPage={SetCurrentPage} ResultQuery={ResultQuery}
+                               SelectedRows={SelectedRows} setSelectedRows={setSelectedRows}
+                               SelectedTypeFilter={SelectedTypeFilter}
+                               QuestionnaireQuery={QuestionnaireQuery}/>}
                 </QuestionerPageContainer>
             </main>
         </PageBox>

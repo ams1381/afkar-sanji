@@ -2,11 +2,9 @@ import '@/styles/globals.css';
 import AuthContextProvider, { AuthContext } from '@/utilities/AuthContext';
 import { axiosInstance } from '@/utilities/axios';
 import { message } from 'antd';
-import { useLocalStorage } from '@/utilities/useLocalStorage'
 import { useRouter } from 'next/router'
 import { useContext, useEffect, useState } from 'react'
 import { QueryClientProvider , QueryClient} from '@tanstack/react-query'
-import axios from 'axios'
 import { beforeUnloadHandler } from './questionnaire/[QuestionnaireID]'
 import { setCookie } from 'react-use-cookie'
 import { ThreeDots } from 'react-loader-spinner'
@@ -14,13 +12,13 @@ import ProgressBarLoading from "@/styles/ProgressBarLoading";
 
 const queryClient = new QueryClient()
 
-export default function App({ Component, pageProps , cookies }) {
+export default function App({ Component, pageProps }) {
   const router = useRouter();
   const [ MessageApi , MessageContext ] = message.useMessage();
   const [ readyToRender , setReadyToRender ] = useState(false);
   const [ UserData , setUserData ]= useState(null);
   // const [ phoneNum, setPhoneNumber ] = useCookie('numberPhone', null);
-   
+
     const authentication = async () => {
       if (!pageProps.cookies || !pageProps.cookies.access_token) {
         window.location.pathname = '/auth'
@@ -39,14 +37,22 @@ export default function App({ Component, pageProps , cookies }) {
       catch(err)
       {
         if(err?.response?.status ==  500)
-            window.location.pathname = '/500'
-          // router.push('/auth');
-        // else if(err?.response?.status == 500)
-        //   window.location.pathname = '/500'
-        return
+          MessageApi.error({
+            content : 'مشکل سمت سرور'
+          })
+        else
+        {
+          setTimeout(() => {
+            if(pageProps?.cookies?.access_token != axiosInstance.defaults.headers['Authorization'])
+            {
+              setReadyToRender(true)
+            }
+          },1000)
+        }
+        // return
       }
-      
     }
+    // console.log(readyToRender)
     useEffect(() => {
       // ['/auth', ].includes(router.pathname)
       if(router.pathname !== '/auth'
@@ -67,8 +73,11 @@ export default function App({ Component, pageProps , cookies }) {
 
     <QueryClientProvider client={queryClient}>
       <ProgressBarLoading />
-      { readyToRender ? <Component {...pageProps} userData={UserData} /> :
+      { readyToRender ? <>
+      <Component {...pageProps} userData={UserData} />
+      </>:
       <div style={{ display : 'flex' , alignItems : 'center' , justifyContent : 'center' , height : '100vh' }}>
+        {MessageContext}
       <ThreeDots
           height="80"
           width="80"

@@ -154,11 +154,11 @@ export const WelcomeComponentContainer = styled.div`
     {
         margin : 0.2rem auto;
     }
-    & p::first-child 
+    & p:first-child 
     {
         font-size: 16px;
     }
-    & p::last-child
+    & p:last-child
     {
         font-size : 14px;
     }
@@ -593,6 +593,10 @@ export const FileQuestionContainer = styled.div`
     {
         filter: invert(37%) sepia(74%) saturate(1045%) hue-rotate(210deg) brightness(91%) contrast(105%);
     }
+  .ant-upload-list-item
+  {
+    border-radius: 2px !important;
+  }
 `
 export const NumberInputContainer = styled.div`
     margin-top: 12px;

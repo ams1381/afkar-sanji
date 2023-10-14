@@ -4,6 +4,7 @@ import {TransactionBody, TransactionHead, TransactionItem} from "@/styles/questi
 // icons
 import upIcon from 'public/Icons/Arrow Up.svg'
 import downIcon from 'public/Icons/ArrowDownRed.svg'
+import {digitsEnToFa} from "@persian-tools/persian-tools";
 
 
 export default function ({data}) {
@@ -14,13 +15,14 @@ export default function ({data}) {
         <TransactionItem>
             <TransactionHead>
                 <div className={`date`}>
-                    <div>{date}</div>
+                    <div>dsvs</div>
                 </div>
                 <div className={`title`}>پرکردن پرس‌نامه</div>
             </TransactionHead>
             <TransactionBody success={data?.transaction_type === 'i' ? '#52C41A' : '#FF4D4F'}>
                 <div className="text">
-                    {data?.amount?.toLocaleString('fa-IR')}
+                    {/*{data?.amount?.toLocaleString('fa-IR')}*/}
+                    { digitsEnToFa(3000) }
                 </div>
                 {data?.transaction_type === 'i' && (
                     <img src={upIcon?.src} alt=""/>

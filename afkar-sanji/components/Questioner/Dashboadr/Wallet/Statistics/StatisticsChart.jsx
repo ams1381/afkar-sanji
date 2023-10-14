@@ -21,7 +21,7 @@ export default function ({data, setFilterParams}) {
     const [chartData, setChartData] = useState({
         datasets: [
             {
-                data: [data?.answering, data?.interviewing],
+                data: [50, 60],
                 backgroundColor: ['#52C41A', '#1890FF']
             }
         ]
@@ -32,7 +32,7 @@ export default function ({data, setFilterParams}) {
             {
                 datasets: [
                     {
-                        data: [data?.answering, data?.interviewing],
+                        data: [40, 90],
                         backgroundColor: ['#52C41A', '#1890FF']
                     }
                 ]

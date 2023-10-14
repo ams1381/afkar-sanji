@@ -11,19 +11,29 @@ import { useRouter } from 'next/router';
 import { UserInfoBox } from '@/components/Questioner/Profile/UserInfo';
 import { JobInfo } from '@/components/Questioner/Profile/JobInfo';
 import {axiosInstance} from "@/utilities/axios";
-import {useQuery} from "@tanstack/react-query";
+import {useQueries, useQuery} from "@tanstack/react-query";
 import {Skeleton} from "antd";
 import {EditInfoBox, InfoBox} from "@/styles/Questioner/profile";
 
-const Profile = ({ cookies , meData , regions}) => {
+const Profile = () => {
     const [ logoutPopOver , switchPopover ] = useState(false);
     const [ RightDrawerOpen , setRightDrawerOpen ] = useState(false);
-    axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + cookies?.access_token;
-    const  MeQuery = useQuery(['QuestionnaireRetrieve'],
-        async () => await axiosInstance.get('/user-api/users/me/'),{
-            refetchOnWindowFocus : false
-        })
-
+    // axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + cookies?.access_token;
+    const [ MeQuery , regions ] = useQueries({
+        queries: [
+            {
+                queryKey: ['MeQuery'],
+                queryFn: async () => await axiosInstance.get(`/user-api/users/me/`),
+                refetchOnWindowFocus : false
+            },
+            {
+                queryKey: ['regions'],
+                queryFn: async () =>
+                    await axiosInstance.get(`/user-api/nested-countries/`) ,
+                refetchOnWindowFocus : false
+            },
+        ],
+    });
     return (
         <>
             <style global jsx>{`
@@ -35,6 +45,14 @@ const Profile = ({ cookies , meData , regions}) => {
                 {
                   transform: rotate(180deg);
                 }
+                  .ant-select-dropdown.css-dev-only-do-not-override-byeoj0, .ant-select-dropdown.css-17a39f8
+                  {
+                    width: 370px !important;
+                  }
+                  .ant-cascader-checkbox-inner , .ant-select-selection-item
+                  {
+                    border-radius: 2px !important;
+                  }
         `}</style>
             <Head>
                 <title>Afkar Sanji | Profile</title>
@@ -49,8 +67,8 @@ const Profile = ({ cookies , meData , regions}) => {
                         <QuestionerHeader pageName='profile' meData={MeQuery?.data?.data}  />
                         <QuestionerPageContainer>
                             <QuestionerContentBox>
-                                <UserInfoBox MeQuery={MeQuery}  regions={regions} />
-                                <JobInfo regions={regions} MeQuery={MeQuery} />
+                                <UserInfoBox MeQuery={MeQuery}  regions={regions?.data?.data} />
+                                <JobInfo regions={regions?.data?.data} MeQuery={MeQuery} />
                             </QuestionerContentBox>
                         </QuestionerPageContainer>
                         </>

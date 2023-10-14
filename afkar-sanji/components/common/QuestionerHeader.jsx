@@ -34,7 +34,7 @@ export const QuestionerHeader = ({ pageName , meData }) => {
           <Popover
               content={<div style={{ padding : '4px 0' }}>
                   <LogoutPopoverItem>
-                      <Link href={'/'}>پروفایل کاربری</Link>
+                      <Link href={'/questioner/dashboard/profile/'}>پروفایل کاربری</Link>
                   </LogoutPopoverItem>
                   <LogoutPopoverItem>
                       <p>خروج</p>
@@ -49,7 +49,8 @@ export const QuestionerHeader = ({ pageName , meData }) => {
                 style={{width : 190}}
                 >
                     <HeaderAvatarButton onClick={() => switchPopover(!logoutPopOver)}>
-                        <img src={'https://mah-api.ariomotion.com' + meData.avatar} />
+                        { meData.avatar ? <img src={'https://mah-api.ariomotion.com' + meData.avatar}/> :
+                        <Icon name={'User'} className={'user_icon'} />}
                         <p>{meData.first_name}</p>
                     </HeaderAvatarButton>
                 </Popover>

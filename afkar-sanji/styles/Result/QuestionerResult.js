@@ -61,6 +61,10 @@ export const QuestionTypeSelector = styled.div`
 `
 export const QuestionTypeFilterContainer = styled.div`
     padding : 4px 0;
+    gap: 4px;
+    display: flex;
+    flex-direction: column;
+    width: 160px;
   
     .filter_type_item
     {
@@ -72,6 +76,11 @@ export const QuestionTypeFilterContainer = styled.div`
       align-items: center;
       justify-content: flex-end;
       cursor: pointer;
+    }
+    .filter_type_item.all
+    {
+      padding: 8px 8px 8px 3px;
+      border-top: 1px solid var(--conditional-divider, rgba(0, 0, 0, 0.06));
     }
       & .filter_type_item .ant-checkbox-inner
       {
@@ -99,7 +108,19 @@ export const ModalHeader = styled.div`
     cursor: pointer;
     filter: invert(0%) sepia(2%) saturate(7499%) hue-rotate(210deg) brightness(8%) contrast(97%);
   }
-}
+`
+export const ModalBody = styled.div`
+  overflow: auto;
+  max-width: 500px;
+  max-height: 500px;
+  gap: 24px;
+  display: flex;
+  flex-direction: column;
+  
+  &::-webkit-scrollbar
+  {
+    width : 0;
+  }
 `
 export const ModalEditButton = styled(UserAvatarLogout)`
       width: auto;
@@ -124,5 +145,28 @@ export const ModalFooter = styled.div`
   box-shadow: 0px 1px 0px 0px #F0F0F0 inset;
   align-items: center;
   padding: 0 24px;
-}
+  cursor: grab;
+`
+export const ModalSubComponentContainer = styled.div`
+    display: flex;
+    gap : 6px;
+    margin-top: 8px;
+    font-size: 14px;
+  .sort_item
+  {
+    display: flex;
+    font-size: 12px;
+    gap: 10px;
+  }
+  .sort_item span
+  {
+    color : var(--primary-color);
+  }
+`
+export const NoAnswerBoxContainer = styled.div`
+  padding: 10px 12px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--Error-color);
+  border: 1px solid var(--Error-color);
 `

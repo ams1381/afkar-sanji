@@ -40,7 +40,7 @@ export default function Home({ cookies }) {
   const FolderNameInput = useRef(null);
   const [ ChangeFolderName , SetChangeFolderNameState ] = useState(false);
   const [ FolderName , SetFolderName ] = useState(null);
-  axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + cookies?.access_token;
+  // axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + cookies?.access_token;
   const { data , isLoading, error , refetch } = useQuery(['FolderFetch'],
   async () => await axiosInstance.get('/user-api/folders/'))
 

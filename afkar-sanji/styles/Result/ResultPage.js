@@ -3,6 +3,9 @@ import { styled } from "styled-components";
 
 export const ResultBodyContainer = styled.div`
     margin-top : 10px;
+   display: ${p => p.error ? 'flex' : 'block'};
+   align-items: center;
+   justify-content: center;
     .date_filter
     {
         width: 45%;
@@ -89,6 +92,7 @@ export const ResultBodyContainer = styled.div`
     }
 `
 export const ResultTableContainer = styled.div`
+  
     & .ant-table
     {
         margin-top : 10px;
@@ -100,9 +104,6 @@ export const ResultTableContainer = styled.div`
         background: white;
         width: 336px;
         //height: 640px;
-        overflow: scroll;
-        max-width: 500px;
-        max-height: 500px;
         z-index: 3333;
         box-shadow: rgba(0, 0, 0, 0.05) 0px 9px 28px 8px, rgba(0, 0, 0, 0.08) 0px 6px 16px 0px, rgba(0, 0, 0, 0.12) 0px 3px 6px -4px;
       }
@@ -344,6 +345,22 @@ export const EmptyResultContainer = styled.div`
     {
         background : var(--primary-color);
     }
+    .ant-table-cell
+    {
+      font-weight: 300 !important;
+      border-radius: 2px !important;
+    }
+    .question_title_cell
+    {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+  .question_title_cell p
+  {
+    margin-top: 0 !important;
+  }
 `
 export const ResultButton = styled.button`
     background: #FEFEFE;

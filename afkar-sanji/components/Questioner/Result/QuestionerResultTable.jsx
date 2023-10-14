@@ -9,7 +9,8 @@ import {Provider} from "react-redux";
 import AnswerStore from "@/utilities/stores/AnswerStore";
 // import ReactModal from 'react-modal-resizable-draggable';
 
-export const QuestionerResultTable = ({ ResultQuery , QuestionsArray , SetCurrentPage , setSelectedRows ,TableColumns , SelectedRows , TableData  }) => {
+export const QuestionerResultTable = ({ ResultQuery , QuestionnaireQuery , QuestionsArray , SetCurrentPage ,
+          setSelectedRows ,TableColumns , SelectedRows , TableData  }) => {
     const [ openResultModal , setOpenResultModal ] = useState(false);
     const [ ModalAnswerSet , setModalAnswerSet ] = useState([]);
     const MarkdownPreview = lazy(() => import('react-modal-resizable-draggable'));
@@ -18,7 +19,7 @@ export const QuestionerResultTable = ({ ResultQuery , QuestionsArray , SetCurren
     const modalRef = useRef(null);
     // const [ selectedRows , setSelectedRows ] = useState([6870]);
     const tableRef = useRef(null);
-    // console.log(selectedRows)
+
     useEffect(() => {
         if(tableRef.current)
             ScrollByDrag();
@@ -28,7 +29,8 @@ export const QuestionerResultTable = ({ ResultQuery , QuestionsArray , SetCurren
     return  <>
         { openResultModal ?
            <Provider store={AnswerStore}>
-               <MovableModal ModalAnswerSet={ModalAnswerSet} openResultModal={openResultModal}
+               <MovableModal QuestionnaireUUID={QuestionnaireQuery.data?.data?.uuid}
+                 ResultQuery={ResultQuery}  ModalAnswerSet={ModalAnswerSet} openResultModal={openResultModal}
           setOpenResultModal={setOpenResultModal} />
            </Provider>  : '' }
         <Table
@@ -72,6 +74,7 @@ export const QuestionerResultTable = ({ ResultQuery , QuestionsArray , SetCurren
                 },
                 // hideSelectAll : true,
                 columnWidth : 112,
+                fixed : true,
                 renderCell :
                     (checked, record, index, originNode) => {
                        return <div className='order_cell' style={{ gap : 0 }}>

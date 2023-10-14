@@ -43,21 +43,14 @@ const Prioritize = ({ QuestionInfo }) => {
     setSortedOptionArray(reorderedItems);
     // console.log(reorderedItems)
     if(QuestionsAnswerSet && QuestionsAnswerSet.length)
-      dispatcher(SortOptions({ QuestionID : QuestionInfo.id , NewOptionsArray : reorderedItems.map((item,index) => ({ id : item.id , placement : index + 1 })) }))
+      dispatcher(SortOptions({
+        QuestionID : QuestionInfo.id , NewOptionsArray : reorderedItems.map((item,index) => ({ id : item.id , placement : index + 1 })) }))
   };
-  const onDragStartHandler = (E) => {
-  } 
-  const getItemStyle = (isDragging, draggableStyle) => ({
-    ...draggableStyle,
-    userSelect: 'none',
-    position: 'static',
-    // padding: 8 * 2,
-    // margin: `0 0 8px 0`,
-    // background: isDragging ? 'lightgreen' : 'red',    
-  });
+
+
   return (
     <OptionsContainer>
-    <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStartHandler}>
+    <DragDropContext onDragEnd={onDragEnd} >
       <Droppable droppableId='prioritize_droppable'>
         {(droppableProvided, droppableSnapshot) => (
           <OptionalAnswerBlockContainer
@@ -74,13 +67,9 @@ const Prioritize = ({ QuestionInfo }) => {
                 {(draggableProvided, draggableSnapshot) => (
                   <div
                     ref={draggableProvided.innerRef}
+
                     {...draggableProvided.draggableProps}
-                    {...draggableProvided.dragHandleProps}
-                    // style={getItemStyle(
-                    //   draggableSnapshot.isDragging,
-                    //   draggableProvided.draggableProps.style
-                    // )}
-                  >
+                    {...draggableProvided.dragHandleProps}>
                     <label
                       className='OptionalAnswerItemContainer Prioritize'
                       style={{ cursor: 'pointer' }}

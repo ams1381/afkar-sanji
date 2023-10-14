@@ -3,7 +3,7 @@ import {Tooltip, Upload} from "antd";
 import {Icon} from "@/styles/icons";
 import {QuestionTypeIcon} from "@/utilities/QuestionTypes";
 import React from "react";
-
+const regex = /(<([^>]+)>)/gi;
 export const TableColumnGenerator = (QuestionsArray,ResultData,resultMessage,regex,SelectedTypeFilter) => {
     let ColumnsArray =  (QuestionsArray?.map(item =>  !SelectedTypeFilter.length || SelectedTypeFilter.length == 12 ?  ({
         title : <Tooltip
@@ -27,6 +27,7 @@ export const TableColumnGenerator = (QuestionsArray,ResultData,resultMessage,reg
                 { QuestionTypeIcon(item.question?.question_type) }
             </div>
         </Tooltip>,
+
         render : (Answer) => {
             if(!Answer)
                 return
@@ -48,6 +49,7 @@ export const TableColumnGenerator = (QuestionsArray,ResultData,resultMessage,reg
         width : 340,
         dataIndex : item.question?.title,
         // key : item.question?.id ,
+        fixed : 'top' ,
         align : 'center' ,
         ellipsis: true,
         children : item?.question?.question_type == 'group' ?
@@ -126,7 +128,7 @@ export const TableColumnGenerator = (QuestionsArray,ResultData,resultMessage,reg
                 </Tooltip> ,
                 align : 'center' ,
                 // key : option.text?.id,
-                width : 53,
+                width : 83,
                 ellipsis: true,
                 dataIndex : option.text
             }))
@@ -252,7 +254,7 @@ export const TableColumnGenerator = (QuestionsArray,ResultData,resultMessage,reg
                 </Tooltip> ,
                 align : 'center' ,
                 // key : option.text?.id,
-                width : 53,
+                width : 83,
                 ellipsis: true,
                 dataIndex : option.text
             }))
@@ -354,7 +356,7 @@ export const TableColumnGenerator = (QuestionsArray,ResultData,resultMessage,reg
                             align : 'center' ,
                             // key : option?.id,
                             ellipsis: true,
-                            width : 53,
+                            width : 83,
                             dataIndex : option?.text
                         }))
                     }) : null)
@@ -372,7 +374,6 @@ export const TableColumnGenerator = (QuestionsArray,ResultData,resultMessage,reg
     })
 
     ColumnsArray = ColumnsArray.filter(item => (Array.isArray(item.children) && !item.children.length) ? null : item);
-
     return ColumnsArray;
 }
 export const TableDataGenerator = (ResultData,QuestionnaireQuery) => {

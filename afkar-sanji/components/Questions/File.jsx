@@ -7,17 +7,15 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 
-const convertFileObjectToFile = (fileObject, newFileName) =>
+export const convertFileObjectToFile = (fileObject, newFileName) =>
   new File([fileObject], newFileName, { type: fileObject.type });
 
 export const FileQuestionComponent = ({ QuestionInfo }) => {
   const dispatcher = useDispatch();
   const QuestionsAnswerSet = useSelector(state => state.reducer.AnswerSet)
   const [FileAnswer, setFileAnswer] = useState([]);
-  const [previewVisible, setPreviewVisible] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const [ uploadError , setUploadError ] = useState(false);
-  const [previewImage, setPreviewImage] = useState('');
   const [ fileUploadedState , setFileUploadedState ] = useState(false);
 
   const FileAnswerHandler = (info) => {
@@ -87,9 +85,6 @@ export const FileQuestionComponent = ({ QuestionInfo }) => {
   }, [QuestionInfo?.id])
 
 
-  const handleCancel = () => {
-    setPreviewVisible(false);
-  };
 
   return (
     <FileQuestionContainer uploaderror={uploadError ? 'occur' : null} fileUploaded={fileUploadedState  ? 'active' : null}>
@@ -119,13 +114,10 @@ export const FileQuestionComponent = ({ QuestionInfo }) => {
       >
         <Button icon={<Icon name='Upload' style={{ width: 12 }} />}>کلیک برای آپلود</Button>
       </Upload>
-      {/* <Modal visible={previewVisible} footer={null} onCancel={handleCancel}>
-        <img alt="Preview" style={{ width: '100%' }} src={previewImage} />
-      </Modal> */}
     </FileQuestionContainer>
   );
 }
-const beforeUpload = (file) => {
+export const beforeUpload = (file) => {
   return new Promise((resolve, reject) => {
     console.log(ImageOrVideo)
     const ImageOrVideo = file.type === 'image/jpeg' || file.type === 'video/mkv' || file.type === 'video/mp4'

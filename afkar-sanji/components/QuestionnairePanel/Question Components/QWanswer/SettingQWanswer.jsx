@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { ChangeAnswerPattern, ChangeMinOrMaxAnswerHandler } from '@/utilities/stores/QuestionStore';
 import { useSelector } from 'react-redux';
+import {CommonSetting} from "@/components/QuestionnairePanel/Question Components/Common/CommonSetting";
 
 const SettingQWanswer = ({ QuestionInfo }) => {
   const dispatcher = useDispatch();
@@ -71,6 +72,7 @@ const SettingQWanswer = ({ QuestionInfo }) => {
               <p>حداکثر</p>
           </label>
         </AlphabetNumberContainer> : ''}
+        <CommonSetting QuestionInfo={QuestionInfo} />
     </TextAnswerSettingContainer>
   )
 }

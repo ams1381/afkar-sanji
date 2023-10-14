@@ -11,10 +11,12 @@ import { useState } from 'react'
 import axios from 'axios'
 import { baseURL } from '@/utilities/axios'
 import QuestionStore from '@/utilities/stores/QuestionStore'
+import {PreviewPage, PreviewPageContainer, PreviewQuestionsContainer} from "@/styles/questionnairePanel/ViewQuestions";
 
 const AnswerPage = () => {
   const router = useRouter();
-  const [ AnswerSetID , setAnswerSetID ] = useState(null)
+  const [ AnswerSetID , setAnswerSetID ] = useState(null);
+  const [ AnswerSetError , setAnswerSetError ] = useState(null);
   // console.log(data)
   useEffect(() => {
     const answerSetCreator = async () => {
@@ -25,7 +27,10 @@ const AnswerPage = () => {
       }
       catch(err)
       {
-
+        if(err.response?.status == 400)
+          setAnswerSetError('پرسشنامه فعال نیست یا زمان پاسخ دادن به آن فرا نرسیده')
+        else if(err.response?.status  == 500)
+          setAnswerSetError('مشکل سمت سرور')
       }
     }
     if(router.query.QuestionnaireID)
@@ -37,9 +42,15 @@ const AnswerPage = () => {
     <Head>
       <title>Answer Page</title>
       </Head>
-     {AnswerSetID && <Provider store={AnswerStore}>
-        <ViewQuestions answerSetID={AnswerSetID} />
-      </Provider>}
+     {AnswerSetID ? <Provider store={AnswerStore}>
+       <ViewQuestions answerSetID={AnswerSetID}/>
+      </Provider> : <PreviewPage>
+         <PreviewPageContainer style={{ justifyContent : 'center' }}>
+         <PreviewQuestionsContainer style={{ textAlign : 'center' }}>
+         <p>{AnswerSetError}</p>
+       </PreviewQuestionsContainer>
+       </PreviewPageContainer>
+       </PreviewPage>}
     </>
     
     

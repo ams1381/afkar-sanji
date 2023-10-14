@@ -21,7 +21,12 @@ export const QuestionContainer = styled.div`
     word-break: break-word;
     padding: 12px;
     transition: 0.3s;
-
+    .question_description
+    {
+      font-size: 14px;
+      margin-top: 4px;
+      color: var(--Neutral-Gray9);
+    }
     border: ${
       p => p.error ? '1px solid var(--Error-color)' : 'none'
     };
@@ -31,12 +36,18 @@ export const QuestionContainer = styled.div`
   .question_header
   {
     display: flex;
+    color: var(--Neutral-Gray9);
     gap: 8px;
   }
-  .question_header span
+  .question_header span , .question_title
   {
     color: var(--Neutral-Gray9);
   }
+  .question_header span
+  {
+    white-space: nowrap;
+  }
+  
 `
 export const QuestionOptionsContainer = styled.div`
     display: flex;
@@ -51,6 +62,10 @@ export const InputAnswerContainer = styled.div`
         margin-top: 26px;
         width: 100% !important;
       }
+  .ant-skeleton.ant-skeleton-element
+  {
+    width : 100%;
+  }
   & input
   {
     font-family: 'IRANSANS' !important; 

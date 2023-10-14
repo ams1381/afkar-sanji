@@ -89,7 +89,7 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
         }
         else
         {
-          axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + cookies?.access_token;
+          // axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + cookies?.access_token;
           let  response =  await axiosInstance.get(`/question-api/questionnaires/${router?.query?.QuestionnaireID}/`);
           data = response.data;
         }          

@@ -28,12 +28,12 @@ const QuestionnairePanel = ({ cookies }) => {
     const [ SideState , SetSideState ] = useState('question_design');
     const [ QuestionnaireReloader , SetQuestionnaireReloader ] = useState(false);
     const [ RightDrawerOpen , setRightDrawerOpen ] = useState(false);
-    axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + cookies?.access_token;
+    // axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + cookies?.access_token;
     const { data , isLoading , refetch , error , isFetched} = useQuery(['QuestionnaireRetrieve'],
     async () => await axiosInstance.get(`/question-api/questionnaires/${router?.query?.QuestionnaireID}/`),{
       refetchOnWindowFocus : false
     })
-    
+    console.log('check')
     if(error && error?.response)
     {
       if(error?.response.status == 404)

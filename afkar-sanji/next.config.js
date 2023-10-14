@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
+    devIndicators: {
+        buildActivity: false
+    },
   reactStrictMode: true,
   compiler: {
     // Enables the styled-components SWC transform

@@ -42,9 +42,7 @@ export function convertToRegularTime(dateTimeString) {
 
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
-
 const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
-  const [DateValue, SetDateValue] = useState(null);
   const [QuestionnaireData, Dispatcher] = useReducer(QuestionnaireReducerFunction, Questionnaire);
   const [messageApi, contextHolder] = message.useMessage();
   const { getItem , setItem } = useLocalStorage();
@@ -185,12 +183,6 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
           </div>
           <div className='picker_container date_picker' >
             <DatePicker  format=" YYYY/MM/DD HH:mm:ss "
-              // value={[
-              //   new DateObject({ calendar: persian })
-              //   .setDate(
-              //     (convertDate(convertStringToDate(QuestionnaireData.pub_date)[0],'jalali') + ' ' +
-              //      convertStringToDate(QuestionnaireData.pub_date)[1]))
-              // ]}
               disabled={!DateActive}
               rangeHover
               dateSeparator="تا" 
@@ -265,8 +257,8 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
         </QuestionnaireDatePickerContainer> */}
         <QuestionnaireDatePickerContainer>
           <div className='picker_header' onClick={e => ToggleCheckBoxHandler(!QuestionnaireData.is_active, 'is_active')}>
-            <p>فعال سازی پرسشنامه</p>
-            <Switch checked={QuestionnaireData.is_active} />
+            <p>غیر فعال سازی موقت</p>
+            <Switch checked={!QuestionnaireData.is_active} />
           </div>
         </QuestionnaireDatePickerContainer>
         <QuestionnaireDatePickerContainer>
@@ -319,9 +311,7 @@ export const convertDate = (inputDate, dateType) => {
 
   return inputDate; // Return input date if no conversion needed
 };
-// const convertToGregorian 
 const QuestionnaireReducerFunction = (State,ACTION) => {
-
   switch(ACTION.ACTION)
   {
     case 'Date Cleared' :
@@ -372,7 +362,7 @@ const QuestionnaireReducerFunction = (State,ACTION) => {
     case 'is_active':
       return {
         ...State ,
-        is_active : !ACTION.NewToggleValue
+        is_active : ACTION.NewToggleValue
       }
     case 'reset_questionnaire':
       return ACTION.Resetvalue
@@ -392,28 +382,4 @@ function convertPersianDateTimeToISO(persianDateTime) {
   const gregorianDateTime = moment(englishDateTime, 'jYYYY/jMM/jDD HH:mm:ss').locale('en').format('YYYY-MM-DD HH:mm:ss');
 
   return `${gregorianDateTime}+04:30`;
-}
-function convertPersianDateToMultiTimerPickerDateObject(persianDate) {
-  // Convert Persian digits to Western Arabic digits
-  const westernDigits = persianDate.replace(/[۰-۹]/g, (d) => String.fromCharCode(d.charCodeAt(0) - 1728));
-
-  // Split the date and time components
-  const [dateStr, timeStr] = westernDigits.split(' ');
-
-  // Extract year, month, and day components
-  const [year, month, day] = dateStr.split('/').map(Number);
-
-  // Extract hour and minute components
-  const [hour, minute] = timeStr.split(':').map(Number);
-
-  // Create the date object for the multi-timer picker format
-  const dateObject = {
-    year,
-    month,
-    day,
-    hour,
-    minute,
-  };
-
-  return dateObject;
 }

@@ -7,15 +7,22 @@ import {useEffect, useState} from "react";
 import TextArea from "antd/lib/input/TextArea";
 
 
-export const InputSubComponent = ({ QuestionData , answerSet , ErrorQuestions , setErrorQuestions }) => {
+export const InputSubComponent = ({ QuestionData , answerSet , ErrorQuestions , setErrorQuestions , loadableAnswer }) => {
     const dispatcher = useDispatch();
     const [ InputValue , setInputValue ] = useState(null);
     useEffect(() => {
-        if(answerSet && answerSet?.answers.length)
+        if(answerSet.find(item => item.question == QuestionData.id) && loadableAnswer)
         {
-            if(answerSet?.answers.find(item => item.question == QuestionData.id).answer)
-                setInputValue(answerSet?.answers.find(item => item.question == QuestionData.id).answer[QuestionData.question_type])
+            if(answerSet.find(item => item.question == QuestionData.id).answer[QuestionData.question_type])
+                 setInputValue(digitsFaToEn(answerSet.find(item => item.question == QuestionData.id).answer[QuestionData.question_type]))
         }
+        // if(answerSet && answerSet?.answers?.length)
+        // {
+        //     if(answerSet?.answers.find(item => item.question_id === QuestionData.id))
+        //     {
+        //         setInputValue(answerSet?.answers.find(item => item.question_id == QuestionData.id).answer)
+        //     }
+        // }
     },[QuestionData.id])
     const ChangeInputHandler = (e) => {
         if(QuestionData.pattern.includes('english_letters'))
@@ -23,7 +30,7 @@ export const InputSubComponent = ({ QuestionData , answerSet , ErrorQuestions , 
             const inputValue = event.target.value;
             const cleanedValue = inputValue.replace(/[^a-zA-Z]/g, '');
 
-            setTextAnswer(cleanedValue)
+            setInputValue(cleanedValue)
             let ErrorQuestionArray = [...ErrorQuestions]
             setErrorQuestions(ErrorQuestionArray.filter(item => item !== QuestionData.id))
         }
@@ -31,24 +38,18 @@ export const InputSubComponent = ({ QuestionData , answerSet , ErrorQuestions , 
         {
             const inputValue = event.target.value;
             const cleanedValue = inputValue.replace(/[^0-9]/g, '');
-            setTextAnswer(cleanedValue)
+            setInputValue(cleanedValue)
             let ErrorQuestionArray = [...ErrorQuestions]
             setErrorQuestions(ErrorQuestionArray.filter(item => item !== QuestionData.id))
         }
-        else if(QuestionData.pattern.includes('mobile_number') || QuestionData.pattern.includes('phone_number'))
-        {
-            const inputValue = event.target.value;
 
-        }
         else
         {
-            e.target.value ? SetShowClearButtonState(true) : false ;
-            setTextAnswer(e.target.value)
+            // e.target.value ? SetShowClearButtonState(true) : false ;
+            setInputValue(e.target.value)
             let ErrorQuestionArray = [...ErrorQuestions]
-            setErrorQuestions(ErrorQuestionArray.filter(item => item !== QuestionData.id))
+            setErrorQuestions(ErrorQuestionArray.filter(item => item != QuestionData.id))
         }
-
-
         dispatcher(ChangeInputAnswer({
             QuestionID : QuestionData.id ,
             InputName : QuestionData.question_type ,
@@ -61,6 +62,7 @@ export const InputSubComponent = ({ QuestionData , answerSet , ErrorQuestions , 
             {QuestionData.question_type == 'number_answer' ?
                 <InputNumber min={QuestionData.min} max={QuestionData.max}
                      value={InputValue}        onChange={(e) => {
+                    setInputValue(e.toString())
                     dispatcher(ChangeInputAnswer({
                         QuestionID : QuestionData.id ,
                         InputName : 'number_answer' ,

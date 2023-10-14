@@ -33,6 +33,7 @@ export const SkeletonTable = ({ columns, rowCount }) => {
         columns={Array.from({ length : columns }).map((column,index) => {
           return {
             ...column,
+            width : (index % 2) === 0 ? 100 : 70 ,
             render: function renderPlaceholder() {
               return (
                 <Skeleton

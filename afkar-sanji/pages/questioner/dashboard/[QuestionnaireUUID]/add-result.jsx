@@ -12,11 +12,28 @@ import {digitsEnToFa} from "@persian-tools/persian-tools";
 import AnswerStore from "@/utilities/stores/AnswerStore";
 import {Provider} from "react-redux";
 import {PageContent} from "@/components/Questioner/AddResult/PageContent";
+import {useQueries} from "@tanstack/react-query";
+import {useRouter} from "next/router";
 
-const AddResultPage = ({ questionnaire }) => {
+const AddResultPage = ({ questionnaire , meData }) => {
+    const router = useRouter()
+    const [ MeQuery , QuestionnaireQuery ] = useQueries({
+        queries: [
+            {
+                queryKey: ['MeQuery'],
+                queryFn: async () => await axiosInstance.get(`/user-api/users/me/`),
+                refetchOnWindowFocus : false
+            },
+            {
+                queryKey: ['QuestionnaireQuery'],
+                queryFn: async () =>
+                    await axiosInstance.get(`/question-api/questionnaires/${router.query.QuestionnaireUUID}`) ,
+                refetchOnWindowFocus : false
+            },
+        ],
+    });
     const [ RightDrawerOpen , setRightDrawerOpen ] = useState(false);
 
-    console.log(questionnaire)
     return <>
         <Head>
             <title>Afkar Sanji | Add Result</title>
@@ -27,9 +44,9 @@ const AddResultPage = ({ questionnaire }) => {
         <PageBox>
             <Provider store={AnswerStore}>
                 <CommonDrawer RightDrawerOpen={RightDrawerOpen} setRightDrawerOpen={setRightDrawerOpen} />
-                <main style={{ width : RightDrawerOpen ? '80%' : '100%', transition : '0.3s' }}>
-                    <QuestionerHeader pageName='add-result' />
-                    <PageContent questionnaire={questionnaire} />
+                <main style={{ width : RightDrawerOpen ? '84%' : '100%', transition : '0.3s' }}>
+                    <QuestionerHeader pageName='add-result' meData={MeQuery?.data?.data} />
+                    <PageContent questionnaire={QuestionnaireQuery?.data?.data} />
                 </main>
             </Provider>
         </PageBox>
@@ -40,6 +57,7 @@ export default AddResultPage;
 export async function getServerSideProps(context) {
     const { req } = context;
     const cookies = req.headers.cookie;
+    let QuestionnaireData , MeData;
 
     if (cookies) {
         // Parse the cookies
@@ -48,19 +66,32 @@ export async function getServerSideProps(context) {
             acc[key] = decodeURIComponent(value);
             return acc;
         }, {});
-        let response  =  await
-            fetch('https://mah-api.ariomotion.com/question-api/questionnaires/' + context.query.QuestionnaireUUID.replace('}',''),
-                {
-                    headers: {
-                        Authorization: `Bearer ${parsedCookies.access_token}`,
-                    },
-                })
-        const data = await response.json();
+        try
+        {
+            let QuestionnaireResponse  =  await
+                fetch('https://mah-api.ariomotion.com/question-api/questionnaires/' + context.query.QuestionnaireUUID.replace('}',''),
+                    {
+                        headers: {
+                            Authorization: `Bearer ${parsedCookies.access_token}`,
+                        },
+                    })
+             QuestionnaireData = await QuestionnaireResponse.json();
+            let MeResponse = await fetch('https://mah-api.ariomotion.com/user-api/users/me/',{
+                headers : {
+                    Authorization: `Bearer ${parsedCookies.access_token}`,
+                }
+            })
+            MeData = await  MeResponse.json();
+        }
+        catch (err) {
+
+        }
 
         return {
             props: {
                 cookies: parsedCookies,
-                questionnaire : data
+                questionnaire : QuestionnaireData ? QuestionnaireData : null,
+                meData : MeData ? MeData : null
             },
         };
     }

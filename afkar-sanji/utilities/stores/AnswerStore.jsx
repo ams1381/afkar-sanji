@@ -11,7 +11,7 @@ const AnswerSetSlice =  createSlice({
         setInitialAnswerSet : (state , action) => {
             const { Questions } = action.payload;
             state.AnswerSet.length = 0;
-            Questions.forEach((QuestionItem) => {
+            Questions?.forEach((QuestionItem) => {
                 if(!QuestionItem || !QuestionItem.question)
                     return
                 if(QuestionItem.question && QuestionItem.question.child_questions)
@@ -33,12 +33,44 @@ const AnswerSetSlice =  createSlice({
             })
         },
         setAnswerSetArray : (state , action) => {
-            const { AnswerSetArray } = action.payload;
-            let JSONAnswerSetArray = JSON.parse(JSON.stringify(AnswerSetArray))
-            JSONAnswerSetArray.forEach(item => {
-                if(!item.answer)
-                    item.answer = { };
-            })
+            const { AnswerSetArray , QuestionsArray } = action.payload;
+            let JSONAnswerSetArray = JSON.parse(JSON.stringify(AnswerSetArray));
+            console.log(JSONAnswerSetArray)
+            JSONAnswerSetArray = JSONAnswerSetArray.map(item => ({
+                question : item.question_id ,
+                answer : (item.question_type == 'optional') ? item.answer.options ? {
+                        selected_options : item.answer.options ? item.answer.options.map(OptionItem => OptionItem.id) : [],
+                        other_text : item.answer.other_text ? item.answer.other_text : null
+                    } : {} : (item.question_type == 'drop_down') ? (item.answer.options && item.answer.options.length) ?
+                    {
+                        selected_options: item.answer?.length ? item.answer.map(OptionItem => OptionItem.id) : []
+                    } : {}
+                    :  (item.question_type == 'sort') ?
+                        {
+                            sorted_options : item.answer.map((SortItem,index) => ({
+                                id : SortItem.id ,
+                                placement : index + 1
+                            }))
+                        }
+                        : item.question_type == 'email_field' ? {
+                        email_field : item.answer
+                    } :
+                    item.question_type == 'integer_range' ? item.answer ? {
+                        integer_range : item.answer
+                    } : {} :
+                    item.question_type == 'integer_selective' ? item.answer ? {
+                            integer_selective : item.answer
+                        } : {} :
+                    item.question_type == 'number_answer' ? item.answer ? {
+                            number_answer : item.answer
+                        } : {}
+                    : item.question_type == 'link' ? item.answer ? {
+                        link : item.answer
+                    } : {} : {},
+
+                file : item.file
+            }))
+
             state.AnswerSet = JSONAnswerSetArray;
         } ,
         ChangeInputAnswer : (state , action) => {
@@ -92,6 +124,7 @@ const AnswerSetSlice =  createSlice({
         },
         NumberSelect : (state , action) => {
             const { QuestionID , NumberValue , NumberName } = action.payload;
+
             state.AnswerSet.find(item => item.question == QuestionID).answer[NumberName] = NumberValue;
         },
         FileUploadHandler : (state , action) => {

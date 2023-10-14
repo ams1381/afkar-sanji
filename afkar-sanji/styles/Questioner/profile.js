@@ -4,6 +4,8 @@ export const UserInfoBoxHeader = styled.div`
   display : flex;
   justify-content: space-between;
   margin-bottom: 12px;
+  max-height: 110px;
+  overflow: hidden;
   gap: 12px;
   .ant-upload-list
   {
@@ -27,13 +29,13 @@ export const UserInfoBoxHeader = styled.div`
     height : 100% !important;
     margin-block : 0 !important;
   }
-  .ant-upload-list-item.ant-upload-list-item-success
+  .ant-upload-list-item.ant-upload-list-item-success , .ant-upload-list-item.ant-upload-list-item-uploading
   {
     border-radius: 2px !important;
   }
 `
 export const UserInfoContainer = styled.div`   
-    width: 45%;
+    width: 50%;
     text-align: right;
   
     .ant-upload-wrapper.avatar-uploader
@@ -46,6 +48,7 @@ export const UserInfoContainer = styled.div`
         margin-bottom : 0 !important;
         margin-inline-end : 0 !important;
         height : 100% !important;
+        overflow: hidden !important;
     }
       .ant-upload-list-item-container
       {
@@ -93,12 +96,18 @@ export const EditInfoBox = styled.div`
   {
     border : none !important;
     border-radius: 2px !important;
-  
+    background: none !important;
    
+  }
+  //editstate
+  .ant-select-arrow i
+  {
+    transition: 0.3s;
+    filter : ${p => !p.editstate ? 'invert(1%) sepia(0%) saturate(6%) hue-rotate(54deg) brightness(130%) contrast(100%)' : 'none' };
   }
 `
 export const UserBoldInfoContainer = styled.div`
-    gap: 10px;
+    gap: 12px;
     width: 100%;
     display: flex;
     flex-direction: column;

@@ -362,8 +362,16 @@ export const HeaderAvatarButton = styled(UserAvatarLogout)`
   color: var(--primary-color);
   width: auto;
   
+  &:hover
+  {
+    background: linear-gradient(0deg, rgba(83, 96, 237, 0.20) 0%, rgba(83, 96, 237, 0.20) 100%), var(--Surface, #FEFEFE);
+  }
   & img
   {
     max-width: 30px;
+  }
+  .user_icon
+  {
+    filter: invert(45%) sepia(70%) saturate(5831%) hue-rotate(226deg) brightness(97%) contrast(91%);
   }
 `

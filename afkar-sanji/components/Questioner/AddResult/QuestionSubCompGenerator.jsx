@@ -6,42 +6,52 @@ import {InputSubComponent} from "@/components/Questioner/AddResult/InputSubCompo
 import {DegreeRangeSubComponent} from "@/components/Questioner/AddResult/DegreeRangeSubComponent";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
 import React from "react";
+import {useSelector} from "react-redux";
+import {SortSubComponent} from "@/components/Questioner/AddResult/SortSubComponent";
+import {FileSubComponent} from "@/components/Questioner/AddResult/FileSubComponent";
 
-export const SubComponentGenerator = (QuestionData,answerSet,setErrorQuestions,ErrorQuestions) => {
+export const SubComponentGenerator = (QuestionData,setErrorQuestions,ErrorQuestions,AnswerSetsArray,loadableAnswer) => {
+
     switch (QuestionData.question_type)
     {
         case 'optional':
         case 'drop_down':
-            return <OptionalSubComponent QuestionData={QuestionData} answerSet={answerSet}
+            return <OptionalSubComponent QuestionData={QuestionData} loadableAnswer={loadableAnswer} answerSet={AnswerSetsArray}
                      ErrorQuestions={ErrorQuestions}  setErrorQuestions={setErrorQuestions}/>
+        case 'file':
+            return <FileSubComponent QuestionData={QuestionData} loadableAnswer={loadableAnswer} answerSet={AnswerSetsArray}
+                     ErrorQuestions={ErrorQuestions} loadableAnswer={loadableAnswer} setErrorQuestions={setErrorQuestions}/>
         case 'link':
         case 'email_field':
         case 'text_answer':
         case 'number_answer':
             return <InputSubComponent QuestionData={QuestionData} setErrorQuestions={setErrorQuestions}
-                      ErrorQuestions={ErrorQuestions} answerSet={answerSet} />
+                      ErrorQuestions={ErrorQuestions} loadableAnswer={loadableAnswer} answerSet={AnswerSetsArray} />
         case 'integer_selective':
         case 'integer_range':
-           return <DegreeRangeSubComponent QuestionData={QuestionData}
-               ErrorQuestions={ErrorQuestions} answerSet={answerSet} />
+           return <DegreeRangeSubComponent QuestionData={QuestionData} setErrorQuestions={setErrorQuestions}
+               ErrorQuestions={ErrorQuestions} loadableAnswer={loadableAnswer} answerSet={AnswerSetsArray} />
+        case 'sort':
+            return <SortSubComponent QuestionData={QuestionData} setErrorQuestions={setErrorQuestions}
+                 ErrorQuestions={ErrorQuestions} loadableAnswer={loadableAnswer} answerSet={AnswerSetsArray}/>
         case 'group':
-            QuestionData.child_questions.forEach(ChildQuestion => {
-              return  <QuestionContainer error={ErrorQuestions.find(ErrorItem => ErrorItem == ChildQuestion.question.id) ? 'active' : null}
+           return   QuestionData.child_questions.map((ChildQuestion,index) =>
+               <QuestionContainer key={ChildQuestion.question.id} error={ErrorQuestions.find(ErrorItem => ErrorItem == ChildQuestion.question.id) ? 'active' : null}
                                    id={'question' + ChildQuestion.question.id}>
                     <div className='question_header'>
                                 <span>
-                                    { digitsEnToFa(ChildQuestion.question.placement) + '.' }
+                                    { digitsEnToFa( (index + 1) + '-' + QuestionData.placement ) + '.' }
                                 </span>
                         <p>
                             {ChildQuestion.question.title}
                         </p>
+                        { ChildQuestion.question.is_required ? '*' : '' }
                     </div>
-                    <p>
+                    <p className={'question_description'}>
                         {ChildQuestion.question.description}
                     </p>
-                    {SubComponentGenerator(ChildQuestion.question,answerSet,setErrorQuestions,ErrorQuestions)}
+                    {SubComponentGenerator(ChildQuestion.question,setErrorQuestions,ErrorQuestions,AnswerSetsArray,loadableAnswer)}
                 </QuestionContainer>
-            })
-            break;
+            )
     }
 }

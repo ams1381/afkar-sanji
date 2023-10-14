@@ -6,12 +6,14 @@ import { digitsEnToFa } from '@persian-tools/persian-tools'
 import { useState } from 'react'
 import {message, Select} from 'antd'
 import { axiosInstance } from '@/utilities/axios'
+import {TailSpin} from "react-loader-spinner";
 
 export const InfoContainer = ({ BoxName , BoxDataName ,MeQuery , UserData , bold , regions}) => {
     const [ editState , setEditState ] = useState(false);
     const [ userInfoMessage , userInfoMessageContext ] = message.useMessage();
     const [ InputData , setInputData ] = useState(UserData[BoxDataName]);
     const [ ErrorOccured , setErrorOccured ] = useState(false);
+    const [ EditLoadingState , setEditLoadingState ] = useState(false);
 
     const EditHandler = async () => {
       setEditState(false)
@@ -29,11 +31,14 @@ export const InfoContainer = ({ BoxName , BoxDataName ,MeQuery , UserData , bold
         const dataToUpdate = {
           [BoxDataName]: InputData  // Use computed property name here
         };
+          setEditLoadingState(true)
         await axiosInstance.patch('/user-api/users/me/',dataToUpdate)
-          MeQuery.refetch()
+          MeQuery?.refetch()
+          setEditLoadingState(false)
       }
       catch(err)
       {
+          setEditLoadingState(false)
         if(err?.response?.data)
         {
             userInfoMessage.error({
@@ -52,10 +57,11 @@ export const InfoContainer = ({ BoxName , BoxDataName ,MeQuery , UserData , bold
     <InfoBox bold={bold} error={ErrorOccured ? 'active' : null}>
         <p>{BoxName}</p>
         {userInfoMessageContext}
-        <EditInfoBox >
+        <EditInfoBox editstate={editState}>
             { BoxDataName == 'gender' ?
                 <Select
                     disabled={!editState}
+                    suffixIcon={<Icon name={'suffixIcon'} style={{ width : 11 }} />}
                     value={InputData == 'm' ? { label : 'مرد' , value : 'm' } : { label : 'زن' , value : 'f' }}
                     onChange={(e) => setInputData(e)}
                     options={[
@@ -69,6 +75,7 @@ export const InfoContainer = ({ BoxName , BoxDataName ,MeQuery , UserData , bold
                     regions && <Select
                         disabled={!editState}
                         showSearch
+                        suffixIcon={<Icon name={'suffixIcon'} style={{ width : 11 }} />}
                         placeholder="استان محل سکونت را انتخاب کنید"
                         filterOption={(input, option) =>
                             (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
@@ -93,6 +100,8 @@ export const InfoContainer = ({ BoxName , BoxDataName ,MeQuery , UserData , bold
                         regions && <Select
                             disabled={!editState}
                             showSearch
+                            suffixIcon={<Icon name={'suffixIcon'} style={{ width : 11 }} />}
+                            placeholder={'ملیت را انتخاب کنید'}
                             filterOption={(input, option) =>
                                 (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
                             value={InputData ? {
@@ -110,7 +119,7 @@ export const InfoContainer = ({ BoxName , BoxDataName ,MeQuery , UserData , bold
                             }))}>
                             استان محل سکونت
                         </Select>
-                : <input style={{pointerEvents: editState ? 'all' : 'none'}}
+                : <input style={{pointerEvents: editState ? 'all' : 'none'}} autoFocus
                     value={InputData ? digitsEnToFa(InputData) : ''}
 
                     onChange={(e) => {
@@ -118,7 +127,24 @@ export const InfoContainer = ({ BoxName , BoxDataName ,MeQuery , UserData , bold
                         setInputData(e.target.value)
                     }}/>}
             { !editState ? <Icon name='ProfilePen' onClick={() => setEditState(true)} />
-            : <Icon name='GrayCheck' onClick={() => EditHandler()} />}
+            :
+               <>
+                   { EditLoadingState ? <TailSpin
+                           height="10"
+                           width="10"
+                           color="black"
+                           ariaLabel="tail-spin-loading"
+                           radius="1"
+                           wrapperStyle={{}}
+                           wrapperClass=""
+                           visible={true}
+                       />
+                       :<>
+                           <Icon name='GrayClose' onClick={() => setEditState(false)}
+                                 style={{width: 13, filter: 'brightness(0.6)'}}/>
+                           <Icon name='GrayCheck' onClick={() => EditHandler()}/>
+                       </> }
+               </>}
 
         </EditInfoBox>
     </InfoBox>

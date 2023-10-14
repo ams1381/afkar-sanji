@@ -8,16 +8,19 @@ import { useState } from 'react';
 import {convertDate, convertToRegularTime} from "@/components/QuestionnairePanel/SettingPanel";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
 import { Skeleton } from 'antd'
+import {Icon} from "@/styles/icons";
 
 export const JobInfo = ({ Countries , userData ,MeQuery , regions }) => {
     const [ selectedRegions , setSelectedRegions ] = useState(null);
     const [ RegionError , setRegionError ] = useState(false);
-    const [ countriesData , setCountriesData ] = useState(regions ? regions[0].provinces?.map(ProvinceItem => ({
+    const [ countriesData , setCountriesData ] = useState(regions ? regions[0]?.provinces?.map(ProvinceItem => ({
         label : ProvinceItem.name ,
         value : ProvinceItem.id ,
+        disabled: !ProvinceItem.cities.length,
         children : ProvinceItem.cities.map(CityItem => ({
             label : CityItem.name ,
             value : CityItem.id ,
+            disabled: !ProvinceItem.cities.length,
             children : CityItem.districts.map(DistrictItem => ({
                 label : DistrictItem.name ,
                 value : DistrictItem.id
@@ -29,11 +32,43 @@ export const JobInfo = ({ Countries , userData ,MeQuery , regions }) => {
 
 
     const CascaderSelectHandler = async (SelectedList) => {
+        if(!regions)
+            return
 
+        let DistrictsArray = [];
+        SelectedList.forEach(SelectedItem => {
+            if(SelectedItem.length == 1)
+            {
+                regions[0].provinces.find(item => item.id == SelectedItem[0]).cities.forEach(CityItem => {
+                    CityItem.districts.forEach(DistrictItem => {
+                        DistrictsArray.push(DistrictItem.id);
+                    })
+                })
+            }
+            else if(SelectedItem.length == 2)
+            {
+                regions[0].provinces.find(item => item.id == SelectedItem[0]).cities.
+                find(CityItem => CityItem.id == SelectedItem[1]).districts.forEach(DistrictItem => {
+                    DistrictsArray.push(DistrictItem.id)
+                })
+            }
+            else if(SelectedItem.length == 3)
+            {
+                if(SelectedItem.every=(item => typeof item == 'string'))
+                {
+                    console.log(SelectedItem[0],regions[0].provinces.find(item => item.name == SelectedItem[0]))
+                    DistrictsArray.push(regions[0].provinces.find(item => item.name == SelectedItem[0]).cities.
+                    find(CityItem => CityItem.name == SelectedItem[1]).districts.find(DistrictItem => DistrictItem.name == SelectedItem[2]).id)
+                }
+                else
+                    DistrictsArray.push(regions[0].provinces.find(item => item.id == SelectedItem[0]).cities.
+                    find(CityItem => CityItem.id == SelectedItem[1]).districts.find(DistrictItem => DistrictItem.id == SelectedItem[2]).id)
+            }
+        })
         if(!SelectedList)
             return
-        if(SelectedList.length == 3)
-        setSelectedRegions([SelectedList[2]])
+        // if(SelectedList.length == 3)
+        setSelectedRegions(DistrictsArray)
         setRegionError(false)
     }
     const RegionConfirmHandler = async () => {
@@ -59,7 +94,7 @@ export const JobInfo = ({ Countries , userData ,MeQuery , regions }) => {
     const { SHOW_CHILD } = Cascader;
 
   return (
-      MeQuery.isLoading ?
+      (MeQuery.error || MeQuery.isLoading) ?
           <UserInfoContainer>
               <Skeleton.Input active />
               <div style={{ marginTop : 12 }}>
@@ -89,7 +124,9 @@ export const JobInfo = ({ Countries , userData ,MeQuery , regions }) => {
                <div className='last_update_container'>
                    <span>رزومه </span>
                    <span style={{ display : 'flex' , gap : 5 }}>
-                       {digitsEnToFa(convertDate(convertToRegularTime(MeQuery?.data?.data?.updated_at).split(' ')[0],'jalali'))}
+                       {
+                           MeQuery?.data?.data?.updated_at ? digitsEnToFa(convertDate(convertToRegularTime(MeQuery?.data?.data?.updated_at).split(' ')[0],'jalali'))
+                           : ''}
                        <p>:آخرین به روزرسانی</p>
                    </span>
                </div>
@@ -104,15 +141,18 @@ export const JobInfo = ({ Countries , userData ,MeQuery , regions }) => {
             <p>منطقه پرسشگری</p>
             <Cascader options={countriesData}
              showSearch
-                      // multiple
-              defaultValue={MeQuery?.data?.data?.prefered_districts?.length ? [
-                  MeQuery?.data?.data?.prefered_districts[0].province.name ,
-                  MeQuery?.data?.data?.prefered_districts[0].city.name ,
-                  MeQuery?.data?.data?.prefered_districts[0].name
-              ] : null}
+                      multiple
+              defaultValue={MeQuery?.data?.data?.prefered_districts?.length ?  MeQuery?.data?.data?.prefered_districts?.map(item => [
+                  item.province.name ,
+                  item.city.name ,
+                  item.name
+              ]) : null}
              onChange={CascaderSelectHandler}
+              // displayRender={(label, selectedOptions) => console.log(label, selectedOptions)}
+              // tagRender={(label , onClose , value) => console.log(label , onClose , value)}
               status={RegionError ? 'error' : null}
-             showCheckedStrategy={SHOW_CHILD}
+             showCheckedStrategy={Cascader.SHOW_PARENT}
+              suffixIcon={<Icon name={'suffixIcon'} style={{ width : 11 }} />}
               placement={'bottomRight'}
              placeholder="انتخاب کنید" />
 
