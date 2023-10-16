@@ -6,7 +6,7 @@ import {
     MakeHead,
 } from "@/styles/questioner/resume/resume";
 // component
-import Step from 'components/Questioner/Resume/Step'
+import Step from '@/components/Questioner/Resume/Step'
 import BgSlide from "@/components/common/BgSlide";
 import {yearDete, educationsMenu, lavelMenu, edu_type} from '@/utilities/data/date'
 import Achievements from "@/components/Questioner/Resume/Achievements";
@@ -23,18 +23,18 @@ export default function ({meData}) {
     const [research_histories, setResearch_histories] = useState([{id: 1}])
     const [current, setCurrent] = useState(0);
     const [loading, setLoading] = useState(false)
-    const [title, setTitle] = useState('سوابق تحصیلی')
+    const [title, setTitle] = useState('سوابق تحصیلی خود را در این بخش وارد کنید')
     const [year, setYear] = useState(yearDete)
     const [educations, setEducations] = useState(educationsMenu)
     const [score, setScore] = useState(lavelMenu)
     const [gender, setGender] = useState('')
     const [edu_type, setEdu_type] = useState(edu_types)
     const listStatus = {
-        0: 'سوابق تحصیلی',
-        1: 'مهارت',
-        2: 'افتخارات',
-        3: 'سابقه شغلی',
-        4: 'سابقه پژوهشی',
+        0: 'سوابق تحصیلی خود را در این بخش وارد کنید',
+        1: 'مهارت‌های خود را در این بخش وارد کنید',
+        2: "افتخارات مرتبط با پرسش‌گری را در این بخش اضافه کنید",
+        3:'سوابق شغلی مرتبط با پرسش‌گری را در این بخش اضافه کنید',
+        4: 'اگر در پژوهشی شرکت داشتید در این بخش وارد کنید',
     }
 
     const onChange = (value) => {
@@ -51,7 +51,7 @@ export default function ({meData}) {
                 <Step current={current} onChange={onChange}/>
                 <MakeHead>
                     <div className="title">رزومه‌ساز ماح</div>
-                    <div className="caption"> {title} خود را در این بخش وارد کنید</div>
+                    <div className="caption">{title}</div>
                 </MakeHead>
                 <Container>
                     <FromStep>

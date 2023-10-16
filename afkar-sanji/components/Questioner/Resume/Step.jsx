@@ -7,6 +7,8 @@ export default function ({current, onChange}) {
                   onChange={onChange}
                   direction="vertical"
                   style={{height: '100vh'}}
+                  responsive={true}
+                  status={'process'}
                   items={[
                       {
                           title: <StepText>

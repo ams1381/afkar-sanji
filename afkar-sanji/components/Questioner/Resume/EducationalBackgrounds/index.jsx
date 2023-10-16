@@ -10,6 +10,8 @@ import StyleModules from "@/styles/auth/LoginStyles.module.css";
 import {educationalSchema} from "@/utilities/validators/resumeMaker";
 import {axiosInstance} from "@/utilities/axios";
 import {useQuery} from "@tanstack/react-query";
+// icon
+import arrowDownIcon from '@/public/Icons/selectDown.svg'
 
 
 export default function ({
@@ -90,7 +92,7 @@ export default function ({
 
     const educationHandler = () => {
         setCurrent(p => p + 1)
-        setTitle('مهارت های')
+        setTitle('مهارت‌های خود را در این بخش وارد کنید')
     }
 
     return (
@@ -113,6 +115,8 @@ export default function ({
                                 <ResumeInputCom>
                                     <div className="title">مقطع مدرک</div>
                                     <Select
+                                        suffixIcon={<img src={arrowDownIcon?.src} />}
+                                        className={'ant-select-selector'}
                                         style={{
                                             width: '100%',
                                             height: '40px',
@@ -134,6 +138,7 @@ export default function ({
                                 <ResumeInputCom>
                                     <div className="title">سال پایان</div>
                                     <Select
+                                        suffixIcon={<img src={arrowDownIcon?.src} />}
                                         style={{
                                             width: '100%',
                                             height: '40px',
@@ -155,6 +160,7 @@ export default function ({
                                 <ResumeInputCom>
                                     <div className="title">سال شروع</div>
                                     <Select
+                                        suffixIcon={<img src={arrowDownIcon?.src} />}
                                         style={{
                                             width: '100%',
                                             height: '40px',
@@ -190,31 +196,6 @@ export default function ({
                                     src={close.src}
                                     alt=""
                                 />}
-                                {/*<ResumeInputCom>*/}
-                                {/*    <div className="title">نوع تحصیلات</div>*/}
-                                {/*    <Select*/}
-                                {/*        style={{*/}
-                                {/*            width: '100%',*/}
-                                {/*            height: '40px',*/}
-                                {/*            textAlign: 'right',*/}
-                                {/*            padding: '0',*/}
-                                {/*            boxShadow: 'none',*/}
-                                {/*            direction: 'rtl'*/}
-                                {/*        }}*/}
-                                {/*        placeholder={'PHD : مثال'}*/}
-                                {/*        options={[*/}
-                                {/*            {value: 'u', label: 'دانشگاهی'},*/}
-                                {/*            {value: 'h', label: 'حوزوی'},*/}
-                                {/*            {value: 'o', label: 'سایر'},*/}
-                                {/*        ]}*/}
-                                {/*        value={resumeData[index]?.edu_type || ''}*/}
-                                {/*        onChange={e => setResumeData(prevData => {*/}
-                                {/*            const updatedData = [...prevData];*/}
-                                {/*            updatedData[index].edu_type = e;*/}
-                                {/*            return updatedData;*/}
-                                {/*        })}*/}
-                                {/*    />*/}
-                                {/*</ResumeInputCom>*/}
                                 <ResumeInputCom style={{
                                     width: '100%',
                                     display: 'flex',

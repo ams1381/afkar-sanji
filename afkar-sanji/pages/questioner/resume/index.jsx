@@ -15,6 +15,7 @@ import ResumeBox from "@/components/Questioner/Resume/ResumeBox";
 // icons
 import Linkedin from 'public/Icons/2.svg'
 import UploaderIcon from 'public/Icons/wrapper.svg'
+import closeIcon from "public/Icons/Dismiss.svg";
 // ant design
 import {Button, message, Upload} from 'antd';
 import StyleModules from "@/styles/auth/LoginStyles.module.css";
@@ -25,10 +26,10 @@ import {AnimatePresence, motion} from 'framer-motion';
 // style
 import {LeftLight, RightLight} from "@/styles/auth/Login";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
+import Image from "next/image";
 
 
 export default function ({meData}) {
-    console.log(meData)
     const [file, setFile] = useState()
     const [fileSize, setFileSize] = useState(null)
     const [link, setLink] = useState('')
@@ -42,7 +43,7 @@ export default function ({meData}) {
         },
         onChange(info) {
             if (info.file.status !== 'uploading') {
-                setFile(info?.fileList[0]?.originFileObj)
+                setFile(info?.file?.originFileObj)
                 setFileSize(info.file)
                 const sizeInBytes = info.file.size;
                 const sizeInMegabytes = sizeInBytes / (1024 * 1024);
@@ -61,7 +62,7 @@ export default function ({meData}) {
     const submit = () => {
         let formData = new FormData()
         formData.append('linkedin', link.trim() || '')
-        formData.append('file', '')
+        formData.append('file', file)
         // send req
         axiosInstance.post(`/user-api/users/${meData?.id}/resume/`, formData, {
             headers: {
@@ -82,8 +83,19 @@ export default function ({meData}) {
             <LeftLight/>
             <AnimatePresence>
                 <motion.div transition={{duration: 1}} initial={{y: 220}} animate={{y: 0}}>
-                    <RightLight/>
-                    <LeftLight/>
+                    <Image
+                        width={28}
+                        height={28}
+                        className={"close"}
+                        src={closeIcon?.src}
+                        alt={"بستن"}
+                        style={{
+                            position: 'absolute',
+                            top: '20px',
+                            right: '20px',
+                            cursor: 'pointer',
+                        }}
+                    />
                     <Header>
                         <div className="title">نحوه‌ی تحویل رزومه‌ی خود را انتخاب کنید</div>
                         <div className="caption">حداقل یک مورد را کامل کنید</div>
@@ -158,8 +170,10 @@ export default function ({meData}) {
                                 </Upload>
                             </Uploader>
                         </ResumeBox>
+
                     </Container>
                 </motion.div>
+
             </AnimatePresence>
 
         </>

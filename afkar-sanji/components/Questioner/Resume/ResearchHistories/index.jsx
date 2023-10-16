@@ -13,6 +13,8 @@ import add from "@/public/Icons/addBlue.svg";
 import StyleModules from "@/styles/auth/LoginStyles.module.css";
 import {researchHistoriestsSchema, workBackgroundstsSchema} from "@/utilities/validators/resumeMaker";
 import {axiosInstance} from "@/utilities/axios";
+// icon
+import arrowDownIcon from '@/public/Icons/selectDown.svg'
 
 export default function ({year, setGender, me}) {
 
@@ -99,6 +101,7 @@ export default function ({year, setGender, me}) {
                             <ResumeInputCom>
                                 <div className="title">سال پژوهش</div>
                                 <Select
+                                    suffixIcon={<img src={arrowDownIcon?.src} />}
                                     style={{
                                         width: '100%',
                                         height: '40px',

@@ -13,6 +13,8 @@ import add from "@/public/Icons/addBlue.svg";
 import StyleModules from "@/styles/auth/LoginStyles.module.css";
 import {achievementsSchema, skillsSchema} from "@/utilities/validators/resumeMaker";
 import {axiosInstance} from "@/utilities/axios";
+// icon
+import arrowDownIcon from '@/public/Icons/selectDown.svg'
 
 export default function ({
                              setCurrent,
@@ -28,7 +30,7 @@ export default function ({
         axiosInstance.get(`/user-api/users/${me?.id}/resume/${me?.resume?.id}/achievements/`).then(res => {
             setResumeData([...res?.data,
                 {
-                    field: undefined, year: undefined, link: 'http://link.com'
+                    field: undefined, year: undefined, institute: undefined
                 }
             ])
             setIsLoading(false)
@@ -38,10 +40,6 @@ export default function ({
     useEffect(() => {
         getData()
     }, []);
-    //
-    // const [data, setData] = useState([{field: undefined, year: undefined, link: undefined}
-    // ])
-
 
     const [errors, setErrors] = useState([]);
     useEffect(() => {
@@ -58,7 +56,7 @@ export default function ({
         axiosInstance.post(`user-api/users/${me?.id}/resume/${me?.resume?.id}/achievements/`, resumeData[resumeData.length - 1]).then(res => {
             if (res?.status === 201) {
                 setResumeData([...resumeData, {
-                    field: undefined, year: undefined, link: 'http://link.com'
+                    field: undefined, year: undefined, institute: undefined
                 }]);
                 message.success('با موفقیت اضافه شد')
             }
@@ -82,7 +80,7 @@ export default function ({
 
     const submit = () => {
         setCurrent(3)
-        setTitle('سابقه شغلی')
+        setTitle('سوابق شغلی مرتبط با پرسش‌گری را در این بخش اضافه کنید')
     }
 
     return (
@@ -110,6 +108,7 @@ export default function ({
                             <ResumeInputCom>
                                 <div className="title">سال دریافت</div>
                                 <Select
+                                    suffixIcon={<img src={arrowDownIcon?.src} />}
                                     style={{
                                         width: '100%',
                                         height: '40px',
@@ -130,9 +129,9 @@ export default function ({
                             </ResumeInputCom>
                             <ResumeInputCom>
                                 <div className="title">مرکز دریافت</div>
-                                <InputCom value={resumeData[index]?.link} onChange={e => setResumeData(prevData => {
+                                <InputCom value={resumeData[index]?.institute} onChange={e => setResumeData(prevData => {
                                     const updatedData = [...prevData];
-                                    updatedData[index].field = e?.target?.value;
+                                    updatedData[index].institute = e?.target?.value;
                                     return updatedData;
                                 })} direction="rtl" placeholder={`مثال: وزارت علوم`}/>
                             </ResumeInputCom>
@@ -149,7 +148,7 @@ export default function ({
                 </FromStepScroll>
             )}
             <ButtonContainer justify={`flex-end`}>
-                <AddBtn disabled={!resumeData[resumeData.length - 1]?.year || !resumeData[resumeData.length - 1]?.field || !resumeData[resumeData.length - 1]?.link} onClick={addAchievements}>
+                <AddBtn disabled={!resumeData[resumeData.length - 1]?.year || !resumeData[resumeData.length - 1]?.field || !resumeData[resumeData.length - 1]?.institute} onClick={addAchievements}>
                     <h2 className={`text`}>افزودن</h2>
                     <img src={add.src} alt="" className="icon"/>
                 </AddBtn>

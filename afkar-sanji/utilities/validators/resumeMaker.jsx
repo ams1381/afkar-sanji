@@ -17,7 +17,7 @@ export const skillsSchema = Joi.object({
 export const achievementsSchema = Joi.object({
     field: Joi.string().required(),
     year: Joi.string().required(),
-    link: Joi.string().required()
+    institute: Joi.string().required()
 })
 
 

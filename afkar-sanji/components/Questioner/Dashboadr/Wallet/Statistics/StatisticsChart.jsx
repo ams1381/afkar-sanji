@@ -14,6 +14,7 @@ import Chart from 'chart.js/auto';
 // icon
 import income from 'public/Icons/ArrowGren.svg'
 import cost from 'public/Icons/Arrow Circle Down.svg'
+import {digitsEnToFa} from "@persian-tools/persian-tools";
 
 export default function ({data, setFilterParams}) {
     const [incomeActive, setIncomeActive] = useState(false)
@@ -21,7 +22,7 @@ export default function ({data, setFilterParams}) {
     const [chartData, setChartData] = useState({
         datasets: [
             {
-                data: [data?.answering, data?.interviewing],
+                data: [data?.plot?.answering, data?.plot?.interviewing],
                 backgroundColor: ['#52C41A', '#1890FF']
             }
         ]
@@ -32,7 +33,7 @@ export default function ({data, setFilterParams}) {
             {
                 datasets: [
                     {
-                        data: [data?.answering, data?.interviewing],
+                        data: [data?.plot?.answering, data?.plot?.interviewing],
                         backgroundColor: ['#52C41A', '#1890FF']
                     }
                 ]
@@ -89,7 +90,7 @@ export default function ({data, setFilterParams}) {
                 </ChartFilter>
                 <ChartBox>
                     <Doughnut data={chartData}/>
-                    <div className="text">۲،۴۲۱،۵۳۱</div>
+                    <div className="text">{digitsEnToFa(data?.balance)}</div>
                 </ChartBox>
             </ChartBody>
         </CharContainer>

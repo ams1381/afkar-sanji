@@ -9,7 +9,8 @@ import StyleModules from "@/styles/auth/LoginStyles.module.css";
 import {educationalSchema, skillsSchema} from "@/utilities/validators/resumeMaker";
 import {axiosInstance} from "@/utilities/axios";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
-
+// icon
+import arrowDownIcon from '@/public/Icons/selectDown.svg'
 
 export default function ({
                              score, setCurrent, setTitle, me
@@ -76,7 +77,7 @@ export default function ({
 
     function submit() {
         setCurrent(p => p + 1)
-        setTitle('افتخارات')
+        setTitle("افتخارات مرتبط با پرسش‌گری را در این بخش اضافه کنید")
     }
 
     return (<>
@@ -101,6 +102,7 @@ export default function ({
                         <ResumeInputCom>
                             <div className="title">سطح مهارت</div>
                             <Select
+                                suffixIcon={<img src={arrowDownIcon?.src} />}
                                 style={{
                                     width: '100%',
                                     height: '40px',
