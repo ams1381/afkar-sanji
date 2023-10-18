@@ -36,6 +36,7 @@ export default function ({meData}) {
     const [link, setLink] = useState('')
     const [isUpload, setIsUpload] = useState(false)
     const router = useRouter()
+    const [loading,setLoading] = useState(false)
 
     const props = {
         name: 'file',
@@ -64,6 +65,7 @@ export default function ({meData}) {
         let formData = new FormData()
         formData.append('linkedin', link.trim() || '')
         formData.append('file', file)
+        setLoading(true)
         // send req
         axiosInstance.post(`/user-api/users/${meData?.id}/resume/`, formData, {
             headers: {
@@ -72,9 +74,11 @@ export default function ({meData}) {
         }).then(res => {
             message.success('موفقیت آمیز بود')
             router.push(`/questioner/resume/make/`)
+            setLoading(false)
         }).catch(error => {
             const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
             message.error(ERROR_MESSAGE)
+            setLoading(false)
         })
     }
 
@@ -133,7 +137,7 @@ export default function ({meData}) {
                                     </div>
 
                                     <div className={`button`}>
-                                        <Button onClick={submit} typeof='submit'
+                                        <Button loading={loading} onClick={submit} typeof='submit'
                                                 className={StyleModules['confirm_button']}
                                                 type="primary">
                                             ورود به روزمه‌ساز

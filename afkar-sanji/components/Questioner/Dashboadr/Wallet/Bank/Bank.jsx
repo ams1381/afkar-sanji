@@ -42,7 +42,7 @@ export default function ({loading, data}) {
         await axiosInstance.patch('/wallet-api/wallet/my-wallet/', {
             IBAN: IBAN.trim(),
         }).then(res => {
-            console.log(res)
+            message.success('موفقیت آمیز بود')
         }).catch(err => {
             message.error(err?.response?.data[Object.keys(err?.response?.data)[0]])
         })
@@ -65,7 +65,7 @@ export default function ({loading, data}) {
         await axiosInstance.patch('/wallet-api/wallet/my-wallet/', {
             card_number: card_number.trim()
         }).then(res => {
-            console.log(res)
+            message.success('موفقیت آمیز بود')
         }).catch(err => {
             message.error(err?.response?.data[Object.keys(err?.response?.data)[0]])
         })
