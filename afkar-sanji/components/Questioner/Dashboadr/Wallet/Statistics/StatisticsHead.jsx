@@ -9,8 +9,18 @@ export default function ({loading, data}) {
                 <Skeleton.Input style={{width: '100%', height: '65px'}}/>
             ) : (
                 <StatisticsHead>
-                    <div className={`text`}>{digitsEnToFa(data?.balance)}</div>
-                    <div className={`text`}>موجودی</div>
+                    {data?.balance ? (
+                        <>
+                            <div className={`text`}>{digitsEnToFa(data?.balance)}</div>
+                            <div className={`text`}>موجودی</div>
+                        </>
+                    ) : (
+                        <>
+                        <div className={`text`}>خالی است</div>
+                        <div className={`text`}>موجودی</div>
+                        </>
+                    )}
+
                 </StatisticsHead>
             )}
 

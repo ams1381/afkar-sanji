@@ -38,7 +38,6 @@ export default function () {
     }, []);
 
     const [country, setCountry] = useState([])
-    const [provinceId, setProvinceId] = useState([])
     const [provinceList, setProvinceList] = useState([])
     const [formData, setFormData] = useState({
         first_name: '',
@@ -63,29 +62,24 @@ export default function () {
     }, [userData]);
 
     useEffect(() => {
-        axiosInstance.get('/user-api/countries/').then(res => {
-            const formattedArray = res?.data.map(item => ({
+        axiosInstance.get('/user-api/nested-countries/').then(res => {
+            const formattedArrayCountry = res?.data.map((item, index) => ({
                 value: item.id,
-                label: item.name
+                label: item.name,
             }))
-            setCountry(formattedArray)
+            res?.data?.map(item => {
+                const formattedArrayProvince = item?.provinces?.map((item, index) => ({
+                    value: item.id,
+                    label: item.name,
+                }))
+                setProvinceList(formattedArrayProvince)
+            })
+            setCountry(formattedArrayCountry)
         })
     }, []);
-
-    useEffect(() => {
-        axiosInstance.get(`/user-api/countries/2/provinces/`).then(res => {
-            const formattedArray = res?.data.map(item => ({
-                value: item.id,
-                label: item.name
-            }))
-            setProvinceList(formattedArray)
-        })
-    }, []);
-
 
     // email validation
     const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
-
 
     const handleSubmit = () => {
         if (emailRegex.test(formData?.email))
@@ -232,7 +226,6 @@ export default function () {
                                         placeholder={"انتخاب کنید"}
                                         onChange={(e) => {
                                             setFormData({...formData, nationality: e});
-                                            setProvinceId(e ? e : 2)
                                         }}
                                     />
                                 </FromItem>

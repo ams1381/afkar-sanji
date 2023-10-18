@@ -27,6 +27,7 @@ import {AnimatePresence, motion} from 'framer-motion';
 import {LeftLight, RightLight} from "@/styles/auth/Login";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
 import Image from "next/image";
+import arrowRightIcon from "@/public/Icons/Chevron Double.svg";
 
 
 export default function ({meData}) {
@@ -101,85 +102,109 @@ export default function ({meData}) {
                         <div className="caption">حداقل یک مورد را کامل کنید</div>
                     </Header>
                     <Container>
-                        <ResumeBox padding={'true'}>
-                            <Email>
-                                <img className={'icon'} src={Linkedin?.src} alt=""/>
-                                <div className="email">
-                                    <div className="title">لینک پروفایل لینکدین</div>
-                                    <InputCom onChange={(e) => setLink(e?.target?.value)} value={link} direction={'ltr'}
-                                              placeholder={'linkedin.com'}/>
-                                </div>
-                            </Email>
-                        </ResumeBox>
-                        <ResumeBox style={{
-                            position: 'relative'
-                        }} scale={1}>
-                            <ResumeBg>
-                                <div className="one"></div>
-                                <div className="two"></div>
-                                <div className="three"></div>
-                                <div className="four"></div>
-                                <div className="five"></div>
-                            </ResumeBg>
-                            <CreateResume>
-                                <div className="resume">
-                                    <div className="title">رزومه‌ی خود را در اینجا بنویسید</div>
-                                    <div className="caption">
-                                        (پیشنهاد ما)
+                        <div className={`container_box`}>
+                            <ResumeBox padding={'true'}>
+                                <Email>
+                                    <img className={'icon'} src={Linkedin?.src} alt=""/>
+                                    <div className="email">
+                                        <div className="title">لینک پروفایل لینکدین</div>
+                                        <InputCom onChange={(e) => setLink(e?.target?.value)} value={link}
+                                                  direction={'ltr'}
+                                                  placeholder={'linkedin.com'}/>
                                     </div>
-                                </div>
+                                </Email>
+                            </ResumeBox>
+                            <ResumeBox style={{
+                                position: 'relative'
+                            }} scale={1}>
+                                <ResumeBg>
+                                    <div className="one"></div>
+                                    <div className="two"></div>
+                                    <div className="three"></div>
+                                    <div className="four"></div>
+                                    <div className="five"></div>
+                                </ResumeBg>
+                                <CreateResume>
+                                    <div className="resume">
+                                        <div className="title">رزومه‌ی خود را در اینجا بنویسید</div>
+                                        <div className="caption">
+                                            (پیشنهاد ما)
+                                        </div>
+                                    </div>
 
-                                <div className={`button`}>
-                                    <Button onClick={submit} typeof='submit'
-                                            className={StyleModules['confirm_button']}
-                                            type="primary">
-                                        ورود به روزمه‌ساز
-                                    </Button>
-                                </div>
-                            </CreateResume>
-                        </ResumeBox>
-                        <ResumeBox padding={'true'}>
-                            <Uploader>
-                                <UploaderHeader>
-                                    <div className="title">فایل رزومه‌ی خود را آپلود کنید</div>
-                                    <div className={`fileSize`}>حداکثر حجم فایل: ۲۰ مگابایت</div>
-                                </UploaderHeader>
-                                <Upload {...props} maxCount={1}
-                                        className="upload-list-inline"
-                                        listType="picture"
-                                        multiple={false}
-                                        method={null}
-                                        accept={'.pdf'}
-                                        beforeUpload={file => {
-                                            if (file.type !== 'application/pdf') {
-                                                message.error('فقط فایل پی دی اف قابل بارگذاری است');
-                                                return false;
-                                            }
-                                            return true;
-                                        }}
-                                        onRemove={() => {
-                                            setIsUpload(false)
-                                        }}
-                                        maxCount={1}>
-                                    {isUpload ? ('') : (
-                                        <ButtonUploader disabled={false}>
-                                            <p className="text">آپلود</p>
-                                            <img src={UploaderIcon?.src} alt=""/>
-                                        </ButtonUploader>
-                                    )}
-                                </Upload>
-                            </Uploader>
-                        </ResumeBox>
+                                    <div className={`button`}>
+                                        <Button onClick={submit} typeof='submit'
+                                                className={StyleModules['confirm_button']}
+                                                type="primary">
+                                            ورود به روزمه‌ساز
+                                        </Button>
+                                    </div>
+                                </CreateResume>
+                            </ResumeBox>
+                            <ResumeBox padding={'true'}>
+                                <Uploader>
+                                    <UploaderHeader>
+                                        <div className="title">فایل رزومه‌ی خود را آپلود کنید</div>
+                                        <div className={`fileSize`}>حداکثر حجم فایل: ۲۰ مگابایت</div>
+                                    </UploaderHeader>
+                                    <Upload {...props} maxCount={1}
+                                            className="upload-list-inline"
+                                            listType="picture"
+                                            multiple={false}
+                                            method={null}
+                                            accept={'.pdf'}
+                                            beforeUpload={file => {
+                                                if (file.type !== 'application/pdf') {
+                                                    message.error('فقط فایل پی دی اف قابل بارگذاری است');
+                                                    return false;
+                                                }
+                                                return true;
+                                            }}
+                                            onRemove={() => {
+                                                setIsUpload(false)
+                                            }}
+                                            maxCount={1}>
+                                        {isUpload ? ('') : (
+                                            <ButtonUploader disabled={false}>
+                                                <p className="text">آپلود</p>
+                                                <img src={UploaderIcon?.src} alt=""/>
+                                            </ButtonUploader>
+                                        )}
+                                    </Upload>
+                                </Uploader>
+                            </ResumeBox>
+                        </div>
+                        <div style={{
+                            marginRight: '0',
+                            width: '100%',
+                            display: 'flex',
+                            justifyContent: ' end'
+                        }}>
+                            <Button
+                                style={{
+                                    marginTop: '100px',
+                                    padding: '0 15px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '5px'
+                                }}
+                                className={`bottom`}
+                                onClick={() => router.push("/questioner/information")}
+                            >
+                                تکمیل اطلاعات
+                                <img src={arrowRightIcon?.src}/>
 
+                            </Button>
+                        </div>
                     </Container>
                 </motion.div>
-
             </AnimatePresence>
 
         </>
 
     )
 }
+
 
 export async function getServerSideProps(context) {
     const {req} = context;

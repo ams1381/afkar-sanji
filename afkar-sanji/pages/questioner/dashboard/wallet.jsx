@@ -1,11 +1,8 @@
 import {
-    HeaderContainer, HeaderComponent, QuestionerPageContainer
-    , UserAvatarLogout, PageBox, QuestionerContentBox
+     QuestionerPageContainer
+    , PageBox, QuestionerContentBox
 } from '@/styles/common';
-import {
-    QuestionnaireDirectoryContainer, QuestionnaireDirectoryPath
-} from '@/styles/questionnairePanel/QuestionnairePanelHeader';
-import Head from 'next/head';
+
 import React, {useEffect} from 'react'
 import {useState} from 'react';
 import {CommonDrawer} from '@/components/common/CommonDrawer';
@@ -14,21 +11,18 @@ import {useRouter} from 'next/router';
 // style
 import {WalletHeader, Refresh, Title, Container, WalletContainer} from "@/styles/questioner/dashboard/Wallet/wallet";
 // antd
-import {Button, Skeleton, Statistic} from "antd";
+import {Button,} from "antd";
 // icon
 import refresh from 'public/Icons/Arrow Counterclockwise.svg'
-import wallet from 'public/Icons/Wallet2.svg'
 // component
 import TransactionList from "@/components/Questioner/Dashboadr/Wallet/TransactionList";
 import Statistics from "@/components/Questioner/Dashboadr/Wallet/Statistics/Statistics";
 import Bank from "@/components/Questioner/Dashboadr/Wallet/Bank/Bank"
 import {axiosInstance} from "@/utilities/axios";
-import axios from "axios";
 import {useQuery} from "@tanstack/react-query";
 import SetQueryParams from "@/utilities/filtering/filter";
 
-export default function ({cookies, wallet}) {
-    const [logoutPopOver, switchPopover] = useState(false);
+export default function ({wallet}) {
     const [RightDrawerOpen, setRightDrawerOpen] = useState(true);
     const router = useRouter()
     const [filterParams, setFilterParams] = useState({

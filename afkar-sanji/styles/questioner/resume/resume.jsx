@@ -8,15 +8,26 @@ export const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: row;
-  width: 100%;
+  flex-direction: column;
   height: 60vh;
   gap: 60px;
-  margin-top: 50px;
   position: relative;
+  width: 1140px;
+  margin: 50px auto;
+
+  & .container_box {
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 60px;
+    display: flex;
+    margin-top: 120px;
+  }
 
   @media screen and (max-width: 768px) {
-    flex-direction: column;
+    .container_box {
+      flex-direction: column;
+    }
   }
 
   .ant-select-selector {

@@ -74,6 +74,7 @@ const Questioner = () => {
             src={closeIcon?.src}
             alt={"بستن"}
           />
+
         </Container>
       </motion.div>
     </AnimatePresence>
