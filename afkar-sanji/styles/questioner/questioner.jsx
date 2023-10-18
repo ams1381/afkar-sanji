@@ -99,7 +99,7 @@ export const Header = styled.div`
   //align-items: center;
   flex-direction: row;
   gap: 40px;
-  padding-top: 20px;
+  padding-top: 40px;
   z-index: 2;
 
   @media screen and (max-width: 768px) {

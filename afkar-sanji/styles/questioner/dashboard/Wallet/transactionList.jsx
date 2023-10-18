@@ -1,10 +1,17 @@
 import {styled} from "styled-components";
 
 export const TransactionContainer = styled.div`
-  display: flex;
-  flex-direction: column;
   width: 33%;
-  gap: 12px;
+  height: 65vh;
+
+  & .transactioContainer {
+    margin-top: 24px;
+    max-height: 100%;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
 `
 
 export const FilterParent = styled.div`
@@ -12,5 +19,9 @@ export const FilterParent = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+  
+  & .rmdp-container {
+    width: 100%;
+  }
 `
 

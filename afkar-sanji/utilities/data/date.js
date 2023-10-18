@@ -77,9 +77,4 @@ export const lavelMenu = [
     {value: '3', label: '۳'},
     {value: '4', label: '۴'},
     {value: '5', label: '۵'},
-    {value: '6', label: '۶'},
-    {value: '7', label: '۷'},
-    {value: '8', label: '۸'},
-    {value: '9', label: '۹'},
-    {value: '10', label: '۱۰'},
 ]

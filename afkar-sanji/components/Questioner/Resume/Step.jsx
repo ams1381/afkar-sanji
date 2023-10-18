@@ -1,12 +1,14 @@
 import {StepForm, StepText} from "@/styles/questioner/resume/resume";
 
-export default function ({current,onChange}){
+
+export default function ({current, onChange}) {
     return (
         <StepForm current={current}
                   onChange={onChange}
                   direction="vertical"
                   style={{height: '100vh'}}
-                  // TODO
+                  responsive={true}
+                  status={'process'}
                   items={[
                       {
                           title: <StepText>

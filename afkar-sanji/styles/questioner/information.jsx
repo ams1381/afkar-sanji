@@ -8,7 +8,9 @@ export const Container = styled.div`
   justify-content: center;
   flex-direction: column;
   height: 100vh;
-  margin-bottom: 80px;
+  margin-bottom: 60px;
+  
+ 
 `
 
 export const Title = styled.h2`
@@ -33,13 +35,14 @@ export const Form = styled.form`
   border: 1px solid #D9D9D9;
   background: #FEFEFE;
   gap: 24px;
+  
 `
 
 
 export const Row = styled.div`
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 12px;
   width: 100%;
   direction: ${p => p.direction};
 `
@@ -49,9 +52,14 @@ export const FromItem = styled.div`
   > .title {
     color: var(--Neutral-Gray9);
     font-size: 16px;
+    margin-bottom: 12px;
     font-style: normal;
     font-weight: 500;
     line-height: 30px; 
+  }
+
+  & .ant-select-selector {
+    border-radius: 2px !important;
   }
 `
 

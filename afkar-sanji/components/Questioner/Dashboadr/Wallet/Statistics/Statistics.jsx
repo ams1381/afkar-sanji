@@ -13,7 +13,7 @@ export default function ({loading,data,setFilterParams}) {
             {loading ? (
                 <Skeleton.Input style={{width: '100%', height: '418px'}}/>
             ) : (
-                <StatisticsChart data={data?.plot} setFilterParams={setFilterParams} />
+                <StatisticsChart data={data} setFilterParams={setFilterParams} />
             )}
         </StatisticsContainer>
 

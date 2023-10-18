@@ -1,250 +1,272 @@
 import React, {useEffect, useState} from "react";
 // style
-import {Container, Form, FromItem, Row, Title, TextAreaCom} from 'styles/questioner/information'
-import {TextAnswerInputBox} from 'styles/questionnairePanel/QuestionComponent'
+import {
+    Container,
+    Form,
+    FromItem,
+    Row,
+    Title,
+    TextAreaCom,
+} from "@/styles/questioner/information";
+import {TextAnswerInputBox} from "styles/questionnairePanel/QuestionComponent";
 import StyleModules from "@/styles/auth/LoginStyles.module.css";
 import {InputCom} from "@/styles/questioner/resume/resume";
 // context
 import {themeContext} from "@/utilities/ThemeContext";
 // antd
-import {message, Select} from 'antd';
+import {message, Select} from "antd";
 import {Button, ConfigProvider} from "antd";
 import {axiosInstance} from "@/utilities/axios";
 import {yearDete} from "@/utilities/data/date";
 import {useQuery} from "@tanstack/react-query";
 import {informationSchema} from "@/utilities/validators/information";
-
+// motion
+import {AnimatePresence, motion} from "framer-motion";
+// style
+import {LeftLight, RightLight} from "@/styles/auth/Login";
+// icon 
+import arrowDownIcon from '@/public/Icons/selectDown.svg'
+import Image from "next/image";
+import closeIcon from "@/public/Icons/Dismiss.svg";
 
 export default function () {
-    const [userData, setUserData] = useState([
-        {
-            first_name: undefined,
-            last_name: undefined,
-            email: undefined,
-            gender: undefined,
-            address: undefined,
-            nationality: undefined,
-            province: undefined
-        }
-    ])
-
-
-    // const [errors, setErrors] = useState([]);
-    // useEffect(() => {
-    //     setErrors([]);
-    //     let errorsValus = [];
-    //     let result = informationSchema.validate(object, {abortEarly: false});
-    //     if (result.error?.details?.length > 0) errorsValus.push(errors)
-    //     setErrors(errorsValus);
-    // }, [userData]);
-
-
-    const [errors, setErrors] = useState([]);
+    const [userData, setUserData] = useState();
     useEffect(() => {
-        setErrors([]);
-        const result = informationSchema.validate(
-            userData
-        );
-        console.log(result)
-        // setErrors(
-        //     result.error?.details?.length > 0
-        //         ? result.error?.details?.map((err) => err.message)
-        //         : []
-        // );
+        axiosInstance.get("/user-api/users/me/").then((res) => {
+            setUserData(res?.data);
+        });
+    }, []);
+
+    const [country, setCountry] = useState([])
+    const [provinceList, setProvinceList] = useState([])
+    const [formData, setFormData] = useState({
+        first_name: '',
+        last_name: '',
+        gender: '',
+        email: '',
+        address: '',
+        nationality: '',
+        province: '',
+    });
+
+    useEffect(() => {
+        setFormData({
+            first_name: userData?.first_name,
+            last_name: userData?.last_name,
+            gender: userData?.gender,
+            email: userData?.email,
+            address: userData?.address,
+            nationality: userData?.nationality,
+            province: userData?.province,
+        });
     }, [userData]);
 
     useEffect(() => {
-        console.log(userData)
-    }, [userData]);
-
-
-    useEffect(() => {
-        errors.forEach(err => {
-            message.error('casdgfnh')
+        axiosInstance.get('/user-api/nested-countries/').then(res => {
+            const formattedArrayCountry = res?.data.map((item, index) => ({
+                value: item.id,
+                label: item.name,
+            }))
+            res?.data?.map(item => {
+                const formattedArrayProvince = item?.provinces?.map((item, index) => ({
+                    value: item.id,
+                    label: item.name,
+                }))
+                setProvinceList(formattedArrayProvince)
+            })
+            setCountry(formattedArrayCountry)
         })
-    }, [errors]);
+    }, []);
 
-
-    // state for values
-    // const [userData, setUserData] = useState([])
-    const [name, setName] = useState('')
-    const [family, setFamily] = useState('')
-    const [email, setEmail] = useState('')
-    const [countrySelect, setcountrySelect] = useState('')
-    const [provinceSelect, setprovinceSelect] = useState('')
-    const [gender, setGender] = useState('')
-    const [address, setAddress] = useState('')
-    const [country, setCountry] = useState('')
-    const [province, setProvince] = useState('')
-    const [loadingState, setLoadingState] = useState(false)
-    const [isOk, setIsOk] = useState(false)
-    const [isDisable, setIsDisable] = useState(false)
-    const [year, setYear] = useState(yearDete)
-    const [genders, setGenders] = useState([{
-        value: 'f', label: 'زن',
-    }, {
-        value: 'm', label: 'مرد',
-    },])
     // email validation
     const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
 
-
-    const {data, isLoading, error, refetch} = useQuery(['Me'],
-        async () => await axiosInstance.get('/user-api/users/me/'))
-    // useEffect(() => {
-    //     setUserData(data?.data)
-    //     setName(data?.data?.first_name)
-    //     setFamily(data?.data?.last_name)
-    //     setEmail(data?.data?.email)
-    //     setGender(data?.data?.gender)
-    //     setAddress(data?.data?.address)
-    // }, [data]);
-
-    useEffect(() => {
-        if (
-            name !== data?.first_name ||
-            family !== data?.last_name ||
-            gender !== data?.gender ||
-            email !== data?.email ||
-            address !== data?.address ||
-            country !== data?.natinality ||
-            province !== data?.province
-        ) {
-            setIsOk(true)
-            setIsDisable(true);
-        } else {
-            setIsOk(false)
-            setIsDisable(false);
-        }
-    }, [name,
-        family,
-        email,
-        address,
-        country,
-        province, gender]);
-
-
-    useEffect(() => {
-
-    }, []);
-
-
-    const submit = (e) => {
-        let fromData = new FormData()
-        // append
-        fromData.append('first_name', name)
-        fromData.append('last_name', family)
-        fromData.append('gender', gender)
-        fromData.append('email', email)
-        fromData.append('address', address)
-        fromData.append('nationality', '1')
-        fromData.append('province', '1')
-        // if state was ok send req
-        if (!emailRegex.test(email)) message.error('ایمیل وارد شده نامعتبر است');
-        if (isOk)
-            setLoadingState(true)
-        axiosInstance.patch('/user-api/users/me/', fromData).then(res => {
-            message.success('با موفقیت انجام شد')
-            // false loading
-            setLoadingState(false)
-        }).catch(err => {
-            if (err === 400) {
-                message.error('مشکلی پیش آمده داریم بررسی میکنیم')
-            }
-            setLoadingState(false)
-        })
-
+    const handleSubmit = () => {
+        if (emailRegex.test(formData?.email))
+            axiosInstance.patch('/user-api/users/me/', formData).then(res => {
+                if (res?.status === 200) message.success('با موفقیت انجام شد')
+            }).catch(error => {
+                const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
+                message.error(ERROR_MESSAGE)
+            })
+        else message.error('ایمیل وارد شده نامعتبر است')
     }
-    return (<Container>
-        <Title>لطفا اطلاعات خود را کامل‌کنید</Title>
-        <Form>
-            <Row direction={'rtl'}>
-                <FromItem>
-                    <div className="title">نام</div>
-                    <InputCom required value={name} onChange={(e) => setName(e?.target?.value)}/>
-                </FromItem>
-                <FromItem>
-                    <div className="title">نام خانوادگی</div>
-                    <InputCom required value={family} onChange={(e) => setFamily(e?.target?.value)}/>
-                </FromItem>
-            </Row>
 
-            <Row direction={'rtl'}>
-                <FromItem>
-                    <div className="title">ایمیل</div>
-                    <InputCom value={email} onChange={(e) => setEmail(e?.target?.value)}
-                              type={'email'}/>
-                </FromItem>
-            </Row>
-
-            <Row direction={'rtl'}>
-                <FromItem>
-                    <div className="title">جنسیت</div>
-                    <Select
+    return (
+        <>
+            <RightLight/>
+            <LeftLight/>
+            <AnimatePresence>
+                <motion.div
+                    transition={{duration: 1}}
+                    initial={{y: 220}}
+                    animate={{y: 0}}
+                >
+                    <Image
+                        width={28}
+                        height={28}
+                        className={"close"}
+                        src={closeIcon?.src}
+                        alt={"بستن"}
                         style={{
-                            width: '100%', textAlign: 'right', height: '40px', padding: '0', boxShadow: 'none'
+                            position: 'absolute',
+                            top: '20px',
+                            right: '20px',
+                            cursor: 'pointer',
                         }}
-                        placeholder={'انتخاب کنید'}
-                        options={genders}
-                        onChange={(e) => setGender(e)}
                     />
-                </FromItem>
-            </Row>
+                    <Container>
+                        <Title>لطفا اطلاعات خود را کامل‌کنید</Title>
+                        <Form>
+                            <Row direction={"rtl"}>
+                                <FromItem>
+                                    <div className="title">نام</div>
+                                    <InputCom
+                                        value={formData.first_name}
+                                        onChange={(e) => {
+                                            setFormData({
+                                                ...formData,
+                                                first_name: e?.target?.value,
+                                            });
 
-            <Row direction={'rtl'}>
-                <FromItem>
-                    <div className="title">آدرس محل سکونت</div>
-                    <TextAreaCom required value={address} onChange={(e) => setAddress(e?.target?.value)}
-                                 direction={`rtl`} placeholder="آدرس خود را بنویسید"/>
-                </FromItem>
-            </Row>
+                                        }}
+                                        required
+                                    />
+                                </FromItem>
+                                <FromItem>
+                                    <div className="title">نام خانوادگی</div>
+                                    <InputCom
+                                        required
+                                        value={formData.last_name}
+                                        onChange={(e) => {
+                                            setFormData({
+                                                ...formData,
+                                                last_name: e?.target?.value,
+                                            });
+                                        }}
+                                    />
+                                </FromItem>
+                            </Row>
 
-            <Row direction={'rtl'}>
-                <FromItem>
-                    <div className="title">ملیت</div>
-                    <Select
-                        style={{
-                            width: '100%',
-                            height: '40px',
-                            textAlign: 'right',
-                            padding: '0',
-                            boxShadow: 'none',
-                            direction: 'rtl'
-                        }}
-                        placeholder={'انتخاب کنید'}
-                        options={year}
-                        onChange={(e) => setcountrySelect(e)}
-                    />
-                </FromItem>
-                <FromItem>
-                    <div className="title">استان محل سکونت</div>
-                    <Select
-                        style={{
-                            width: '100%',
-                            height: '40px',
-                            textAlign: 'right',
-                            padding: '0',
-                            boxShadow: 'none',
-                            direction: 'rtl'
-                        }}
+                            <Row direction={"rtl"}>
+                                <FromItem>
+                                    <div className="title">ایمیل</div>
+                                    <InputCom
+                                        value={formData.email}
+                                        onChange={(e) => {
+                                            setFormData({
+                                                ...formData,
+                                                email: e?.target?.value,
+                                            });
+                                        }}
+                                        type={"email"}
+                                    />
+                                </FromItem>
+                            </Row>
 
-                        placeholder={'انتخاب کنید'}
-                        options={year}
-                        onChange={(e) => setprovinceSelect(e)}
-                    />
-                    {/*<TextAnswerInputBox required value={province}*/}
-                    {/*                    onChange={(e) => setProvince(e?.target?.value)}/>*/}
-                </FromItem>
-            </Row>
-            <ConfigProvider theme={themeContext}>
-                <Button onClick={submit} type='submit'
-                        loading={loadingState} className={StyleModules['confirm_button']}
-                        type="primary">
-                    ارسال اطلاعات
-                </Button>
-            </ConfigProvider>
-        </Form>
-    </Container>)
+                            <Row direction={"rtl"}>
+                                <FromItem>
+                                    <div className="title">جنسیت</div>
+                                    <Select
+                                        suffixIcon={<img src={arrowDownIcon?.src}/>}
+                                        options={[
+                                            {value: "f", label: "زن"},
+                                            {value: "m", label: "مرد"},
+                                        ]}
+                                        value={formData.gender}
+                                        onChange={(e) => {
+                                            setFormData({...formData, gender: e});
+                                        }}
+                                        style={{
+                                            width: "100%",
+                                            textAlign: "right",
+                                            height: "40px",
+                                            padding: "0",
+                                            boxShadow: "none",
+                                        }}
+                                        placeholder={"انتخاب کنید"}
+                                    />
+                                </FromItem>
+                            </Row>
+
+                            <Row direction={"rtl"}>
+                                <FromItem>
+                                    <div className="title">آدرس محل سکونت</div>
+                                    <TextAreaCom
+                                        value={formData.address}
+                                        onChange={(e) => {
+                                            setFormData({
+                                                ...formData,
+                                                address: e?.target?.value,
+                                            });
+                                        }}
+                                        required
+                                        direction={`rtl`}
+                                        placeholder="آدرس خود را بنویسید"
+                                    />
+                                </FromItem>
+                            </Row>
+
+                            <Row direction={"rtl"}>
+                                <FromItem>
+                                    <div className="title">ملیت</div>
+                                    <Select
+                                        options={country}
+                                        className={'notBorder'}
+                                        suffixIcon={<img src={arrowDownIcon?.src}/>}
+                                        value={formData?.nationality}
+                                        style={{
+                                            width: "100%",
+                                            height: "40px",
+                                            textAlign: "right",
+                                            padding: "0",
+                                            boxShadow: "none",
+                                            direction: "rtl",
+                                        }}
+                                        placeholder={"انتخاب کنید"}
+                                        onChange={(e) => {
+                                            setFormData({...formData, nationality: e});
+                                        }}
+                                    />
+                                </FromItem>
+                                <FromItem>
+                                    <div className="title">استان محل سکونت</div>
+                                    <Select
+                                        className={'notBorder'}
+                                        suffixIcon={<img src={arrowDownIcon?.src}/>}
+                                        options={provinceList}
+                                        value={formData.province}
+                                        onChange={(e) => {
+                                            setFormData({...formData, province: e});
+                                        }}
+                                        style={{
+                                            width: "100%",
+                                            height: "40px",
+                                            textAlign: "right",
+                                            padding: "0",
+                                            boxShadow: "none",
+                                            direction: "rtl",
+                                        }}
+                                        placeholder={"انتخاب کنید"}
+                                    />
+                                </FromItem>
+                            </Row>
+                            <ConfigProvider theme={themeContext}>
+                                <Button
+                                    onClick={handleSubmit}
+                                    style={{marginTop: '0px'}}
+                                    className={StyleModules["confirm_button"]}
+                                    type="primary"
+                                >
+                                    ارسال اطلاعات
+                                </Button>
+                            </ConfigProvider>
+                        </Form>
+                    </Container>
+                </motion.div>
+            </AnimatePresence>
+        </>
+    );
 }
 
 export async function getServerSideProps(context) {
@@ -254,8 +276,8 @@ export async function getServerSideProps(context) {
     // Check if cookies are present
     if (cookies) {
         // Parse the cookies
-        const parsedCookies = cookies.split(';').reduce((acc, cookie) => {
-            const [key, value] = cookie.trim().split('=');
+        const parsedCookies = cookies.split(";").reduce((acc, cookie) => {
+            const [key, value] = cookie.trim().split("=");
             acc[key] = decodeURIComponent(value);
             return acc;
         }, {});
@@ -270,7 +292,7 @@ export async function getServerSideProps(context) {
     return {
         redirect: {
             permanent: false,
-            destination: "/auth"
-        }
+            destination: "/auth",
+        },
     };
 }

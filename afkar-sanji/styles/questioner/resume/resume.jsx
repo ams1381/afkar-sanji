@@ -3,17 +3,35 @@ import {Input, Button,Steps,Select} from "antd";
 // style
 import {styled} from "styled-components";
 
+
 export const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: row;
-  width: 100%;
+  flex-direction: column;
   height: 60vh;
   gap: 60px;
+  position: relative;
+  width: 1140px;
+  margin: 50px auto;
+
+  & .container_box {
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 60px;
+    display: flex;
+    margin-top: 120px;
+  }
 
   @media screen and (max-width: 768px) {
-    flex-direction: column;
+    .container_box {
+      flex-direction: column;
+    }
+  }
+
+  .ant-select-selector {
+    border-radius: 2px !important;
   }
 `
 
@@ -280,6 +298,7 @@ export const StepText = styled.span`
 // step
 export const FromStep = styled.form`
   width: 646px;
+  margin-top: 50px;
   
   > .title {
     color: #000;
@@ -377,7 +396,7 @@ export const AddBtn = styled(Button)`
 export const ResumeInputCom = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 12px;
   flex: 1 0 0;
   width: 100%;
 

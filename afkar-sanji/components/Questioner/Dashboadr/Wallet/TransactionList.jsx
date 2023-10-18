@@ -18,6 +18,7 @@ import {digitsFaToEn} from "@persian-tools/persian-tools";
 import iconUp from 'public/Icons/icon2Fil.svg'
 import iconDownUp from 'public/Icons/iconFil.svg'
 import iconDownFil from 'public/Icons/iconDownFil.svg'
+import {EmptyBox} from "@/components/Questioner/Dashboadr/Wallet/Statistics/StatisticsChart";
 
 export default function ({data, loading, setFilterParams}) {
     const [open, setOpen] = useState(false);
@@ -82,11 +83,12 @@ export default function ({data, loading, setFilterParams}) {
 
     return (<TransactionContainer>
         <FilterParent>
-            <DatePicker format="YYYY-MM-DD"
+            <DatePicker disabled={data} format="YYYY-MM-DD"
                         onChange={DateFilterHandler}
                         render={(value, openCalendar) => {
                             return (<TimePickerContainer style={{
-                                width: '115%'
+                                background:'#fff',
+                                width:'100%'
                             }} active={'active'}>
                                 <input value={value} onClick={openCalendar}
                                        placeholder='انتخاب تاریخ' readOnly/>
@@ -100,6 +102,7 @@ export default function ({data, loading, setFilterParams}) {
                         locale={persian_fa}
             />
             <Dropdown
+                disabled={data}
                 menu={{
                     items
                 }}
@@ -114,16 +117,20 @@ export default function ({data, loading, setFilterParams}) {
             </Dropdown>
         </FilterParent>
         {loading && (<>
+            <div className="transactioContainer">
             <Skeleton.Input style={{width: '100%', height: '100px'}} loading active/>
             <Skeleton.Input style={{width: '100%', height: '100px'}} loading active/>
             <Skeleton.Input style={{width: '100%', height: '100px'}} loading active/>
             <Skeleton.Input style={{width: '100%', height: '100px'}} loading active/>
             <Skeleton.Input style={{width: '100%', height: '100px'}} loading active/>
+            </div>
         </>)}
-
-        {[5,5,5,5,5,5]?.map((item, index) => {
-            return <TransactionItem data={item} key={item?.id}/>
-        })}
-
+        <div className="transactioContainer">
+            {data?.transactions?.length ? data?.transactions?.map((item, index) => {
+                return <TransactionItem data={item} key={item?.id}/>
+            }) : (
+                <EmptyBox>خالی است</EmptyBox>
+            )}
+        </div>
     </TransactionContainer>)
 }
