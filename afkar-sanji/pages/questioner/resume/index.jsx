@@ -1,14 +1,8 @@
-import React, {useEffect, useState, useMemo} from "react";
+import React, {useEffect, useState, useMemo, useRef} from "react";
 import {useRouter} from "next/router";
 // style
 import {
-    ButtonUploader,
-    Container, CreateResume,
-    Email,
-    Header,
-    InputCom, ResumeBg,
-    Uploader,
-    UploaderHeader
+    ButtonUploader, Container, CreateResume, Email, Header, InputCom, ResumeBg, Uploader, UploaderHeader
 } from "@/styles/questioner/resume/resume";
 // component
 import ResumeBox from "@/components/Questioner/Resume/ResumeBox";
@@ -16,11 +10,12 @@ import ResumeBox from "@/components/Questioner/Resume/ResumeBox";
 import Linkedin from 'public/Icons/2.svg'
 import UploaderIcon from 'public/Icons/wrapper.svg'
 import closeIcon from "public/Icons/Dismiss.svg";
+import arrowUrl from 'public/Icons/arrowUrl.svg'
 // ant design
-import {Button, message, Upload} from 'antd';
+import {Button, Radio, message, Upload} from 'antd';
 import StyleModules from "@/styles/auth/LoginStyles.module.css";
 import {axiosInstance} from "@/utilities/axios";
-import {beforeUpload} from "@/components/QuestionnairePanel/Question Components/Common/FileUpload";
+import {Input, Space} from 'antd';
 // motion
 import {AnimatePresence, motion} from 'framer-motion';
 // style
@@ -28,62 +23,118 @@ import {LeftLight, RightLight} from "@/styles/auth/Login";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
 import Image from "next/image";
 import arrowRightIcon from "@/public/Icons/Chevron Double.svg";
+import {ResumeActiveBox, BtnCom} from '@/styles/questioner/resume/resume'
+import {useQuery} from "@tanstack/react-query";
 
-
-export default function ({meData}) {
-    const [file, setFile] = useState()
+const {Search} = Input;
+export default function ({meData, cookies}) {
+    const [file,setFile] = useState(null)
     const [fileSize, setFileSize] = useState(null)
     const [link, setLink] = useState('')
     const [isUpload, setIsUpload] = useState(false)
     const router = useRouter()
-    const [loading,setLoading] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [uploadOk, setUploadOk] = useState(false);
+    const [isHaveResume, setIsHaveResume] = useState(false);
+    const [resumeData, setResumeData] = useState([])
+
+    const status = useRef(true);
+    useEffect(() => {
+        if (status.current) {
+            let formData = new FormData()
+            formData.append('linkedin', '')
+            if (meData?.resume === null) {
+                axiosInstance.post(`/user-api/users/${meData?.id}/resume/`, formData)
+                    .then(res => {
+                        return true
+                    })
+                    .catch(error => {
+                        message.error('مشکلی پیش آمده است')
+                    });
+
+            }
+        }
+        status.current = false;
+    }, []);
+
+    const resumeHandler = (method, type, value, is_file) => {
+        let formData = new FormData()
+        formData.append(type, value)
+        if (method === 'patch') {
+            axiosInstance.patch(`/user-api/users/${meData?.id}/resume/${meData?.resume?.id}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then(res => {
+                message.success('موفقیت آمیز بود')
+                setLoading(false)
+            }).catch(error => {
+                const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
+                message.error(ERROR_MESSAGE)
+                setLoading(false)
+            })
+            if (is_file) {
+                setIsUpload(true)
+            }
+
+        }
+
+        if (method === 'post') {
+            // send req
+            axiosInstance.post(`/user-api/users/${meData?.id}/resume/`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then(res => {
+                message.success('موفقیت آمیز بود')
+                setLoading(false)
+            }).catch(error => {
+                const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
+                message.error(ERROR_MESSAGE)
+                setLoading(false)
+            })
+            setIsUpload(true)
+            message.success(`با موفقیت آپلود شد`);
+        }
+    }
+
+    useEffect(() => {
+        if (meData?.resume !== null) {
+            if (meData?.resume?.is_empty) {
+                setIsHaveResume(true);
+            } else {
+                setIsHaveResume(false);
+            }
+        }
+    }, [isHaveResume]);
 
     const props = {
-        name: 'file',
-        headers: {
+        name: 'file', headers: {
             'Content-Type': 'multipart/form-data'
-        },
-        onChange(info) {
+        }, onChange(info) {
             if (info.file.status !== 'uploading') {
-                setFile(info?.file?.originFileObj)
-                setFileSize(info.file)
                 const sizeInBytes = info.file.size;
                 const sizeInMegabytes = sizeInBytes / (1024 * 1024);
                 setFileSize(`${sizeInMegabytes.toFixed(2)}`);
             }
-            if (info.file.status === 'done') {
-                // setFile(info?.file)
-                setIsUpload(true)
-                message.success(`با موفقیت آپلود شد`);
-            } else if (info.file.status === 'error') {
-                message.error(`با شکست مواجه شد `);
+            if (info.file.status === 'done' && uploadOk) {
+                resumeHandler('patch', 'file', info?.file?.originFileObj, true)
             }
         },
     };
 
-    const submit = () => {
-        let formData = new FormData()
-        formData.append('linkedin', link.trim() || '')
-        formData.append('file', file)
-        setLoading(true)
-        // send req
-        axiosInstance.post(`/user-api/users/${meData?.id}/resume/`, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
+    const urlHandler = () => {
+        if (link.length > 0) {
+            if (meData?.resume?.id) {
+                resumeHandler('patch', 'linkedin', link.trim(), false)
             }
-        }).then(res => {
-            message.success('موفقیت آمیز بود')
-            router.push(`/questioner/resume/make/`)
-            setLoading(false)
-        }).catch(error => {
-            const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
-            message.error(ERROR_MESSAGE)
-            setLoading(false)
-        })
+
+        } else {
+            message.info('لطفا لینک را وارد کنید')
+        }
     }
 
-    return (
-        <>
+    return (<>
             <RightLight/>
             <LeftLight/>
             <AnimatePresence>
@@ -95,15 +146,12 @@ export default function ({meData}) {
                         src={closeIcon?.src}
                         alt={"بستن"}
                         style={{
-                            position: 'absolute',
-                            top: '20px',
-                            right: '20px',
-                            cursor: 'pointer',
+                            position: 'absolute', top: '20px', right: '20px', cursor: 'pointer',
                         }}
                     />
                     <Header>
                         <div className="title">نحوه‌ی تحویل رزومه‌ی خود را انتخاب کنید</div>
-                        <div className="caption">حداقل یک مورد را کامل کنید</div>
+                        <div className="caption">رزومه‌ساز ماح اجباری هست</div>
                     </Header>
                     <Container>
                         <div className={`container_box`}>
@@ -112,15 +160,28 @@ export default function ({meData}) {
                                     <img className={'icon'} src={Linkedin?.src} alt=""/>
                                     <div className="email">
                                         <div className="title">لینک پروفایل لینکدین</div>
-                                        <InputCom onChange={(e) => setLink(e?.target?.value)} value={link}
-                                                  direction={'ltr'}
-                                                  placeholder={'linkedin.com'}/>
+                                        <div style={{
+                                            display: 'flex', alignItems: 'center', flexDirection: 'row-reverse'
+                                        }} className={''}>
+                                            <BtnCom onClick={urlHandler}>
+                                                <img style={{
+                                                    transform: 'rotate(-180deg)'
+                                                }} src={arrowUrl?.src} alt=""/>
+                                            </BtnCom>
+                                            <InputCom
+                                                onChange={(e) => setLink(e?.target?.value)} value={link}
+                                                direction={'ltr'}
+                                                placeholder={'linkedin.com'}/>
+                                        </div>
                                     </div>
                                 </Email>
                             </ResumeBox>
                             <ResumeBox style={{
                                 position: 'relative'
                             }} scale={1}>
+                                {meData?.resume && !meData?.resume?.is_empty && (<ResumeActiveBox>
+                                    <div className="text">رزومه‌ شما با موفقیت ایجاد شد</div>
+                                </ResumeActiveBox>)}
                                 <ResumeBg>
                                     <div className="one"></div>
                                     <div className="two"></div>
@@ -137,7 +198,7 @@ export default function ({meData}) {
                                     </div>
 
                                     <div className={`button`}>
-                                        <Button loading={loading} onClick={submit} typeof='submit'
+                                        <Button onClick={() => router.push(`/questioner/resume/make/`)} typeof='submit'
                                                 className={StyleModules['confirm_button']}
                                                 type="primary">
                                             ورود به روزمه‌ساز
@@ -151,40 +212,40 @@ export default function ({meData}) {
                                         <div className="title">فایل رزومه‌ی خود را آپلود کنید</div>
                                         <div className={`fileSize`}>حداکثر حجم فایل: ۲۰ مگابایت</div>
                                     </UploaderHeader>
-                                    <Upload {...props} maxCount={1}
+                                    <Upload {...props}
+                                            maxCount={1}
                                             className="upload-list-inline"
                                             listType="picture"
                                             multiple={false}
                                             method={null}
-                                            accept={'.pdf'}
+                                            accept=".pdf,image/*"
                                             beforeUpload={file => {
-                                                if (file.type !== 'application/pdf') {
-                                                    message.error('فقط فایل پی دی اف قابل بارگذاری است');
+                                                const isImageOrPDF = file.type.includes('pdf') || file.type.includes('image/');
+                                                if (!isImageOrPDF) {
+                                                    message.error('فقط فایل پی دی اف یا تصویر قابل بارگذاری است');
+                                                    setUploadOk(false);
                                                     return false;
                                                 }
+                                                setUploadOk(true);
                                                 return true;
                                             }}
                                             onRemove={() => {
-                                                setIsUpload(false)
+                                                setIsUpload(false);
                                             }}
-                                            maxCount={1}>
-                                        {isUpload ? ('') : (
-                                            <ButtonUploader disabled={false}>
-                                                <p className="text">آپلود</p>
-                                                <img src={UploaderIcon?.src} alt=""/>
-                                            </ButtonUploader>
-                                        )}
+                                    >
+                                        {isUpload ? ('') : (<ButtonUploader disabled={false}>
+                                            <p className="text">آپلود</p>
+                                            <img src={UploaderIcon?.src} alt=""/>
+                                        </ButtonUploader>)}
                                     </Upload>
                                 </Uploader>
                             </ResumeBox>
                         </div>
                         <div style={{
-                            marginRight: '0',
-                            width: '100%',
-                            display: 'flex',
-                            justifyContent: ' end'
+                            marginRight: '0', width: '100%', display: 'flex', justifyContent: ' end'
                         }}>
                             <Button
+                                disabled={isHaveResume}
                                 style={{
                                     marginTop: '100px',
                                     padding: '0 15px',
@@ -231,16 +292,14 @@ export async function getServerSideProps(context) {
         return {
             props: {
                 // Pass the cookies as props to the component
-                cookies: parsedCookies,
-                meData: MeData ? MeData : null
+                cookies: parsedCookies, meData: MeData ? MeData : null
             },
         };
     }
 
     return {
         redirect: {
-            permanent: false,
-            destination: "/auth"
+            permanent: false, destination: "/auth"
         }
     };
 }

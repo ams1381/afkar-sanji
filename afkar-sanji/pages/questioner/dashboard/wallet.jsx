@@ -13,7 +13,8 @@ import {WalletHeader, Refresh, Title, Container, WalletContainer} from "@/styles
 // antd
 import {Button,} from "antd";
 // icon
-import refresh from 'public/Icons/Arrow Counterclockwise.svg'
+import refresh from '@/public/Icons/ArrowCounterclockwise.svg'
+
 // component
 import TransactionList from "@/components/Questioner/Dashboadr/Wallet/TransactionList";
 import Statistics from "@/components/Questioner/Dashboadr/Wallet/Statistics/Statistics";
@@ -21,16 +22,24 @@ import Bank from "@/components/Questioner/Dashboadr/Wallet/Bank/Bank"
 import {axiosInstance} from "@/utilities/axios";
 import {useQuery} from "@tanstack/react-query";
 import SetQueryParams from "@/utilities/filtering/filter";
+import {Icon} from "@/styles/icons";
 
-export default function ({wallet}) {
+export default function () {
     const [RightDrawerOpen, setRightDrawerOpen] = useState(true);
     const router = useRouter()
+    const [meData,setMeData] = useState([])
     const [filterParams, setFilterParams] = useState({
         transaction_type: undefined,
         transaction_created_at_from: undefined,
         transaction_created_at_to: undefined,
         amount_ordering: undefined
     })
+    // get me
+    useEffect(() => {
+        axiosInstance.get('/user-api/users/me/').then(res => {
+            setMeData(res?.data)
+        })
+    }, []);
 
     const {data, isLoading, error, refetch} = useQuery(['Wallet'],
         async () => await axiosInstance.get(`/wallet-api/wallet/my-wallet/${SetQueryParams(filterParams)}`)
@@ -46,19 +55,19 @@ export default function ({wallet}) {
         <PageBox>
             <CommonDrawer RightDrawerOpen={RightDrawerOpen} setRightDrawerOpen={setRightDrawerOpen}/>
             <main style={{width: RightDrawerOpen ? '80%' : '100%', transition: '0.3s'}}>
-                <QuestionerHeader pageName='profile'/>
+                <QuestionerHeader meData={meData} pageName='profile'/>
                 <QuestionerPageContainer>
                     <QuestionerContentBox>
                         <Container>
                             <WalletHeader>
                                 <Refresh onClick={() => router.reload()}>
-                                    <img src={refresh?.src} alt="رفرش"/>
+                                    <Icon name={'ArrowCounterclockwise'} />
                                 </Refresh>
                                 <Title>کیف پول</Title>
                                 <Button className={`flex notBorder`} typeof='submit'
                                         type="primary">
                                     شارژ کیف‌پول
-                                    <img src={wallet?.src} alt=""/>
+                                    <Icon name={'Wallet2'} />
                                 </Button>
                             </WalletHeader>
                             <WalletContainer>

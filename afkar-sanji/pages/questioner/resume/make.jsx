@@ -22,7 +22,6 @@ export default function ({meData}) {
     const [work_backgrounds, setWork_backgrounds] = useState([{id: 1}])
     const [research_histories, setResearch_histories] = useState([{id: 1}])
     const [current, setCurrent] = useState(0);
-    const [loading, setLoading] = useState(false)
     const [title, setTitle] = useState('سوابق تحصیلی خود را در این بخش وارد کنید')
     const [year, setYear] = useState(yearDete)
     const [educations, setEducations] = useState(educationsMenu)

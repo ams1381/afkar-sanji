@@ -11,7 +11,7 @@ export default function ({loading, data}) {
                 <StatisticsHead>
                     {data?.balance ? (
                         <>
-                            <div className={`text`}>{digitsEnToFa(data?.balance)}</div>
+                            <div className={`text`}>{data?.balance.toLocaleString('fa-IR')}</div>
                             <div className={`text`}>موجودی</div>
                         </>
                     ) : (

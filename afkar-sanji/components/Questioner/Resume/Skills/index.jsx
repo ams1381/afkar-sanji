@@ -11,6 +11,7 @@ import {axiosInstance} from "@/utilities/axios";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
 // icon
 import arrowDownIcon from '@/public/Icons/selectDown.svg'
+import editIcon from "@/public/Icons/editEesume.svg";
 
 export default function ({
                              score, setCurrent, setTitle, me
@@ -49,7 +50,7 @@ export default function ({
     function addSkills() {
         axiosInstance.post(`user-api/users/${me?.id}/resume/${me?.resume?.id}/skills/`, skillsData[skillsData.length - 1]).then(res => {
             if (res?.status === 201) {
-                setSkillsData([...skillsData, {
+                setSkillsData([...skillsData.slice(0, skillsData.length - 1), res.data, {
                     level: undefined, field: undefined
                 }]);
                 message.success('با موفقیت اضافه شد')
@@ -72,8 +73,51 @@ export default function ({
             setSkillsData(prevItems => prevItems.filter((item, index) => index !== id));
             message.success('با موفقیت حذف شد')
         }
-
     }
+
+    const editEducation = async (id) => {
+        try {
+            const updatedItem = skillsData.find(item => item.id === id);
+            const index = skillsData.findIndex(item => item.id === id);
+
+            const response = await axiosInstance.put(`/user-api/users/${me?.id}/resume/${me?.resume?.id}/skills/${id}/`, updatedItem);
+            if (response.status === 200) {
+                setSkillsData(prevData => {
+                    return prevData.map(item => {
+                        if (item.id === id) {
+                            return response.data;
+                        }
+                        return item;
+                    });
+                });
+                message.success('با موفقیت ویرایش شد');
+            }
+        } catch (error) {
+            const errorMessage = error.response?.data[Object.keys(error.response.data)[0]][0];
+            message.error(errorMessage);
+        }
+    };
+
+    // const editEducation = async (id) => {
+    //     try {
+    //         const updatedItem = skillsData.find(item => item.id === id);
+    //         const index = skillsData.findIndex(item => item.id === id);
+    //
+    //         const response = await axiosInstance.put(`/user-api/users/${me?.id}/resume/${me?.resume?.id}/skills/${id}/`, updatedItem);
+    //         if (response.status === 200) {
+    //             setSkillsData(prevData => {
+    //                 const newData = [...prevData];
+    //                 newData.splice(index, 1);
+    //                 newData.unshift(response.data);
+    //                 return newData;
+    //             });
+    //             message.success('با موفقیت ویرایش شد');
+    //         }
+    //     } catch (error) {
+    //         const errorMessage = error.response?.data[Object.keys(error.response.data)[0]][0];
+    //         message.error(errorMessage);
+    //     }
+    // };
 
     function submit() {
         setCurrent(p => p + 1)
@@ -97,6 +141,12 @@ export default function ({
                             onClick={() => removeSkills(item?.id || '')}
                             className="close"
                             src={close.src}
+                            alt=""
+                        />}
+                        {skillsData.length && index !== skillsData.length - 1 && <img
+                            onClick={() => editEducation(item.id || '')}
+                            className="close"
+                            src={editIcon.src}
                             alt=""
                         />}
                         <ResumeInputCom>

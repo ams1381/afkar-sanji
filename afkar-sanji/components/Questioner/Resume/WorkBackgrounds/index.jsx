@@ -14,6 +14,7 @@ import {achievementsSchema, workBackgroundstsSchema} from "@/utilities/validator
 import {axiosInstance} from "@/utilities/axios";
 // icon
 import arrowDownIcon from '@/public/Icons/selectDown.svg'
+import editIcon from "@/public/Icons/editEesume.svg";
 
 export default function ({
                              setCurrent,
@@ -54,21 +55,21 @@ export default function ({
     function addWork() {
         axiosInstance.post(`user-api/users/${me?.id}/resume/${me?.resume?.id}/work-backgrounds/`, workData[workData.length - 1]).then(res => {
             if (res?.status === 201) {
-                setWorkData([...workData, {
+                setWorkData([...workData.slice(0, workData.length - 1), res.data, {
                     position: undefined, company: undefined, start_date: undefined, end_date: undefined
                 }]);
                 message.success('با موفقیت اضافه شد')
             }
         }).catch(error => {
-            console.log(error)
-            // const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
-            message.error('مشکلی پیش آمد')
+            const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
+            message.error(ERROR_MESSAGE)
         })
-        // setWorkData(prevItems => [...prevItems, {position: undefined, company: undefined, start_date: undefined,end_date:undefined}]);
-        // message.success('با موفقیت اضافه شد')
+
     }
 
     async function removeWork(id) {
+        console.log(id)
+        console.log(`/user-api/users/${me?.id}/resume/${me?.resume?.id}/skills/${id}/`)
         if (id) {
             await axiosInstance.delete(`/user-api/users/${me?.id}/resume/${me?.resume?.id}/work-backgrounds/${id}/`).then(res => {
                 if (res?.status === 204) {
@@ -77,14 +78,65 @@ export default function ({
                 }
             })
         } else {
-            const index = workData.findIndex(item => item.id === id);
-            const updatedData = [...workData];
-            updatedData.splice(index, 1);
-            setWorkData(updatedData);
+            setWorkData(prevItems => prevItems.filter((item, index) => index !== id));
+            message.success('با موفقیت حذف شد')
         }
-        // setWorkData(prevItems => prevItems.filter((item, index) => index !== id));
-        // message.success('با موفقیت حذف شد')
+
+
+
+        // if (id) {
+            // await axiosInstance.delete(`/user-api/users/${me?.id}/resume/${me?.resume?.id}/educational-backgrounds/${id}/`).then(res => {
+            //     if (res?.status === 204) {
+            //         message.error('حذف شد')
+            //         setWorkData(workData.filter(item => item.id !== id))
+            //     }
+            // })
+                // .catch(error => {
+                //     const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
+                //     message.error(ERROR_MESSAGE)
+                // })
+        // }
+        // if (id) {
+        //     console.log(id)
+        //     // await axiosInstance.delete(`/user-api/users/${me?.id}/resume/${me?.resume?.id}/work-backgrounds/${id}/`).then(res => {
+        //     //     if (res?.status === 204) {
+        //     //         message.error('حذف شد')
+        //     //         setWorkData(workData.filter(item => item.id !== id))
+        //     //     }
+        //     // })
+        // } else {
+        //     const index = workData.findIndex(item => item.id === id);
+        //     const updatedData = [...workData];
+        //     updatedData.splice(index, 1);
+        //     setWorkData(updatedData);
+        // }
+        // // setWorkData(prevItems => prevItems.filter((item, index) => index !== id));
+        // // message.success('با موفقیت حذف شد')
     }
+
+
+    const editEducation = async (id) => {
+        try {
+            const updatedItem = workData.find(item => item.id === id);
+            const index = workData.findIndex(item => item.id === id);
+
+            const response = await axiosInstance.put(`/user-api/users/${me?.id}/resume/${me?.resume?.id}/work-backgrounds/${id}/`, updatedItem);
+            if (response.status === 200) {
+                setWorkData(prevData => {
+                    return prevData.map(item => {
+                        if (item.id === id) {
+                            return response.data;
+                        }
+                        return item;
+                    });
+                });
+                message.success('با موفقیت ویرایش شد');
+            }
+        } catch (error) {
+            const errorMessage = error.response?.data[Object.keys(error.response.data)[0]][0];
+            message.error(errorMessage);
+        }
+    };
 
 
     const submit = () => {
@@ -110,9 +162,16 @@ export default function ({
                     {workData.map((item, index) => (
                         <FromResumeItem key={index}>
                             {(index > 0 && index + 1 !== workData.length) && <img
-                                onClick={() => removeWork(index)}
+                                onClick={() => removeWork(item?.id)}
                                 className="close"
                                 src={close.src}
+                                alt=""
+                            />}
+
+                            {workData.length && index !== workData.length - 1 && <img
+                                onClick={() => editEducation(item?.id)}
+                                className="close"
+                                src={editIcon.src}
                                 alt=""
                             />}
                             <ResumeInputCom>

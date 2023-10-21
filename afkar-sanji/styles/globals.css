@@ -325,6 +325,10 @@ input:-webkit-autofill:active {
     margin-left: 76% !important;
 }
 
+.ant-input-group-wrapper.ant-input-search.css-dev-only-do-not-override-pr0fja {
+    background: red !important;
+}
+
 /*.ant-select-selector {*/
 /*    font-family: 'IRANSans' !important;*/
 /*    display: flex !important;*/

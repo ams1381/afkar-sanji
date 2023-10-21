@@ -82,14 +82,12 @@ export default function () {
     const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
 
     const handleSubmit = () => {
-        if (emailRegex.test(formData?.email))
-            axiosInstance.patch('/user-api/users/me/', formData).then(res => {
-                if (res?.status === 200) message.success('با موفقیت انجام شد')
-            }).catch(error => {
-                const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
-                message.error(ERROR_MESSAGE)
-            })
-        else message.error('ایمیل وارد شده نامعتبر است')
+        axiosInstance.patch('/user-api/users/me/', formData).then(res => {
+            if (res?.status === 200) message.success('با موفقیت انجام شد')
+        }).catch(error => {
+            const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
+            message.error(ERROR_MESSAGE)
+        })
     }
 
     return (

@@ -47,9 +47,9 @@ axiosInstance.interceptors.response.use(function (response) {
         case 403:
             window.location.pathname = '/403'
             break;
-        case 404:
-            window.location.pathname = '/404'
-            break;
+        // case 404:
+        //     window.location.pathname = '/404'
+        //     break;
         case 500:
             // window.location.pathname = '/500'
             break;
