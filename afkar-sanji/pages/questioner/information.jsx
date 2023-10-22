@@ -11,11 +11,11 @@ import {themeContext} from "@/utilities/ThemeContext";
 import {message, Select} from "antd";
 import {Button, ConfigProvider} from "antd";
 import {axiosInstance} from "@/utilities/axios";
-// motion
+
 import {AnimatePresence, motion} from "framer-motion";
-// style
+
 import {LeftLight, RightLight} from "@/styles/auth/Login";
-// icon 
+
 import arrowDownIcon from '@/public/Icons/selectDown.svg'
 import Image from "next/image";
 import closeIcon from "@/public/Icons/Dismiss.svg";
