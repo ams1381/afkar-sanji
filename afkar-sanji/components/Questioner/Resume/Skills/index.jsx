@@ -1,6 +1,6 @@
 import close from "@/public/Icons/Close.svg";
 import {
-    FromResumeItem, InputCom, ResumeInputCom, FromStepScroll, ButtonContainer, AddBtn
+    FromResumeItem, InputCom, ResumeInputCom, FromStepScroll, ButtonContainer, AddBtn, BtnComponent
 } from "@/styles/questioner/resume/resume";
 import {Button, message, Select, Skeleton} from "antd";
 import React, {useEffect, useState} from "react";
@@ -137,22 +137,28 @@ export default function ({
             ) : (
                 <FromStepScroll>
                     {skillsData?.map((item, index) => (<FromResumeItem key={index}>
-                        {index > 0 && index + 1 !== skillsData.length && <img
-                            onClick={() => removeSkills(item?.id || '')}
-                            className="close"
-                            src={close.src}
-                            alt=""
-                        />}
-                        {skillsData.length && index !== skillsData.length - 1 && <img
-                            onClick={() => editEducation(item.id || '')}
-                            className="close"
-                            src={editIcon.src}
-                            alt=""
-                        />}
+                        {index > 0 && index + 1 !== skillsData.length && <BtnComponent>
+                            <img
+                                onClick={() => removeSkills(item?.id || '')}
+                                className="close"
+                                src={close.src}
+                                alt=""
+                            />
+                        </BtnComponent>
+                        }
+                        {skillsData.length && index !== skillsData.length - 1 && <BtnComponent>
+                            <img
+                                onClick={() => editEducation(item.id || '')}
+                                className="close"
+                                src={editIcon.src}
+                                alt=""
+                            />
+                        </BtnComponent>
+                        }
                         <ResumeInputCom>
                             <div className="title">سطح مهارت</div>
                             <Select
-                                suffixIcon={<img src={arrowDownIcon?.src} />}
+                                suffixIcon={<img src={arrowDownIcon?.src}/>}
                                 style={{
                                     width: '100%',
                                     height: '40px',
@@ -184,9 +190,9 @@ export default function ({
             )}
 
             <ButtonContainer justify={`flex-end`}>
-                <AddBtn disabled={skillsData.some(skill => !skill.level || !skill.field)} onClick={addSkills}>
+                <AddBtn color={skillsData.some(skill => !skill.level || !skill.field) ? '#D9D9D9' : 'var(--primary-color)'} disabled={skillsData.some(skill => !skill.level || !skill.field)} onClick={addSkills}>
                     <h2 className={`text`}>افزودن</h2>
-                    <img src={add.src} alt="" className="icon"/>
+                    <img style={{opacity: skillsData.some(skill => !skill.level || !skill.field) ? '0.2' : '1'}} src={add.src} alt="" className="icon"/>
                 </AddBtn>
             </ButtonContainer>
             <Button disabled={skillsData.length < 2} typeof='submit'

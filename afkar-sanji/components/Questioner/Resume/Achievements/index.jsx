@@ -1,6 +1,6 @@
 import close from "@/public/Icons/Close.svg";
 import {
-    AddBtn,
+    AddBtn, BtnComponent,
     ButtonContainer,
     FromResumeItem,
     FromStepScroll,
@@ -67,7 +67,7 @@ export default function ({
         })
     }
 
-   async function removeAchievements(id) {
+    async function removeAchievements(id) {
 
         if (id) {
             await axiosInstance.delete(`/user-api/users/${me?.id}/resume/${me?.resume?.id}/achievements/${id}/`).then(res => {
@@ -118,30 +118,37 @@ export default function ({
                     gap: '20px', flexWrap: 'wrap'
                 }}>
                     <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '202px'}}/>
-                    <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '202px'}}/> <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '202px'}}/>
+                    <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '202px'}}/> <Skeleton.Input
+                    active style={{height: '40px', minWidth: 'auto', width: '202px'}}/>
                 </div>
             ) : (
                 <FromStepScroll>
                     {resumeData?.map((item, index) => (
                         <FromResumeItem key={item.id}>
 
-                            {index > 0 && index + 1 !== resumeData.length && <img
-                                onClick={() => removeAchievements(item.id || '')}
-                                className="close"
-                                src={close.src}
-                                alt=""
-                            />}
+                            {index > 0 && index + 1 !== resumeData.length && <BtnComponent>
+                                <img
+                                    onClick={() => removeAchievements(item.id || '')}
+                                    className="close"
+                                    src={close.src}
+                                    alt=""
+                                />
+                            </BtnComponent>
+                            }
 
-                            {resumeData.length && index !== resumeData.length - 1 && <img
-                                onClick={() => editEducation(item.id || '')}
-                                className="close"
-                                src={editIcon.src}
-                                alt=""
-                            />}
+                            {resumeData.length && index !== resumeData.length - 1 && <BtnComponent>
+                                <img
+                                    onClick={() => editEducation(item.id || '')}
+                                    className="close"
+                                    src={editIcon.src}
+                                    alt=""
+                                />
+                            </BtnComponent>
+                            }
                             <ResumeInputCom>
                                 <div className="title">سال دریافت</div>
                                 <Select
-                                    suffixIcon={<img src={arrowDownIcon?.src} />}
+                                    suffixIcon={<img src={arrowDownIcon?.src}/>}
                                     style={{
                                         width: '100%',
                                         height: '40px',
@@ -162,11 +169,12 @@ export default function ({
                             </ResumeInputCom>
                             <ResumeInputCom>
                                 <div className="title">مرکز دریافت</div>
-                                <InputCom value={resumeData[index]?.institute} onChange={e => setResumeData(prevData => {
-                                    const updatedData = [...prevData];
-                                    updatedData[index].institute = e?.target?.value;
-                                    return updatedData;
-                                })} direction="rtl" placeholder={`مثال: وزارت علوم`}/>
+                                <InputCom value={resumeData[index]?.institute}
+                                          onChange={e => setResumeData(prevData => {
+                                              const updatedData = [...prevData];
+                                              updatedData[index].institute = e?.target?.value;
+                                              return updatedData;
+                                          })} direction="rtl" placeholder={`مثال: وزارت علوم`}/>
                             </ResumeInputCom>
                             <ResumeInputCom>
                                 <div className="title">نوع افتخار</div>
@@ -181,9 +189,14 @@ export default function ({
                 </FromStepScroll>
             )}
             <ButtonContainer justify={`flex-end`}>
-                <AddBtn disabled={!resumeData[resumeData.length - 1]?.year || !resumeData[resumeData.length - 1]?.field || !resumeData[resumeData.length - 1]?.institute} onClick={addAchievements}>
+                <AddBtn
+                    color={!resumeData[resumeData.length - 1]?.year || !resumeData[resumeData.length - 1]?.field || !resumeData[resumeData.length - 1]?.institute ? '#D9D9D9' : 'var(--primary-color)'}
+                    disabled={!resumeData[resumeData.length - 1]?.year || !resumeData[resumeData.length - 1]?.field || !resumeData[resumeData.length - 1]?.institute}
+                    onClick={addAchievements}>
                     <h2 className={`text`}>افزودن</h2>
-                    <img src={add.src} alt="" className="icon"/>
+                    <img
+                        style={{opacity: !resumeData[resumeData.length - 1]?.year || !resumeData[resumeData.length - 1]?.field || !resumeData[resumeData.length - 1]?.institute ? '0.2' : '1'}}
+                        src={add.src} alt="" className="icon"/>
                 </AddBtn>
             </ButtonContainer>
             <Button disabled={resumeData.length < 2} typeof='submit'

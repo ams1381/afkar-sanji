@@ -21,7 +21,7 @@ import {AnimatePresence, motion} from 'framer-motion';
 export default function ({meData}) {
     const [work_backgrounds, setWork_backgrounds] = useState([{id: 1}])
     const [research_histories, setResearch_histories] = useState([{id: 1}])
-    const [current, setCurrent] = useState(0);
+    const [current, setCurrent] = useState(4);
     const [title, setTitle] = useState('سوابق تحصیلی خود را در این بخش وارد کنید')
     const [year, setYear] = useState(yearDete)
     const [educations, setEducations] = useState(educationsMenu)
@@ -94,7 +94,7 @@ export default function ({meData}) {
                         </>)}
                         {current === 4 && (<>
                             <div className="title"> : سابقه پژوهشی ۵</div>
-                            <ResearchHistories me={meData} research_histories={research_histories} setGender={setGender}
+                            <ResearchHistories  me={meData} research_histories={research_histories} setGender={setGender}
                                                setResearch_histories={setResearch_histories} year={year}/>
                         </>)}
                     </FromStep>

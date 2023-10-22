@@ -1,17 +1,11 @@
 import {
-    HeaderContainer, HeaderComponent, QuestionerPageContainer
-    , UserAvatarLogout, PageBox, QuestionerContentBox
+    QuestionerPageContainer
+    , PageBox, QuestionerContentBox
 } from '@/styles/common';
-import {
-    QuestionnaireDirectoryContainer, QuestionnaireDirectoryPath
-} from '@/styles/questionnairePanel/QuestionnairePanelHeader';
-import Head from 'next/head';
 import React, {useEffect} from 'react'
 import {useState} from 'react';
 import {CommonDrawer} from '@/components/common/CommonDrawer';
 import QuestionerHeader from '@/components/common/QuestionerHeader';
-import {useRouter} from 'next/router';
-// style
 import {
     Collaboration,
     CollaborationBody,
@@ -28,21 +22,13 @@ import {digitsFaToEn} from "@persian-tools/persian-tools";
 import persian_fa from 'react-date-object/locales/persian_fa';
 import persian from 'react-date-object/calendars/persian';
 import DatePicker from "react-multi-date-picker";
-// icon
 import filter from 'public/Icons/Arrow Sort Down Lines.svg'
 import CollaborationItem from "@/components/Questioner/Dashboadr/Collaboration/CollaborationItem";
 import {useQuery} from "@tanstack/react-query";
 import {axiosInstance} from "@/utilities/axios";
 
 const {Search} = Input;
-const suffix = (
-    <AudioOutlined
-        style={{
-            fontSize: 16,
-            color: '#1677ff',
-        }}
-    />
-);
+
 const onSearch = (value, _e, info) => console.log(info?.source, value);
 export default function ({cookies}) {
     const [logoutPopOver, switchPopover] = useState(false);
