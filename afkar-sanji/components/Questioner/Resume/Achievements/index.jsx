@@ -15,6 +15,7 @@ import {achievementsSchema, skillsSchema} from "@/utilities/validators/resumeMak
 import {axiosInstance} from "@/utilities/axios";
 // icon
 import arrowDownIcon from '@/public/Icons/selectDown.svg'
+import editIcon from "@/public/Icons/editEesume.svg";
 
 export default function ({
                              setCurrent,
@@ -55,7 +56,7 @@ export default function ({
     function addAchievements() {
         axiosInstance.post(`user-api/users/${me?.id}/resume/${me?.resume?.id}/achievements/`, resumeData[resumeData.length - 1]).then(res => {
             if (res?.status === 201) {
-                setResumeData([...resumeData, {
+                setResumeData([...resumeData.slice(0, resumeData.length - 1), res.data, {
                     field: undefined, year: undefined, institute: undefined
                 }]);
                 message.success('با موفقیت اضافه شد')
@@ -67,6 +68,7 @@ export default function ({
     }
 
    async function removeAchievements(id) {
+
         if (id) {
             await axiosInstance.delete(`/user-api/users/${me?.id}/resume/${me?.resume?.id}/achievements/${id}/`).then(res => {
                 if (res?.status === 204) {
@@ -76,6 +78,30 @@ export default function ({
             })
         }
     }
+
+
+    const editEducation = async (id) => {
+        try {
+            const updatedItem = resumeData.find(item => item.id === id);
+            const index = resumeData.findIndex(item => item.id === id);
+
+            const response = await axiosInstance.put(`/user-api/users/${me?.id}/resume/${me?.resume?.id}/achievements/${id}/`, updatedItem);
+            if (response.status === 200) {
+                setResumeData(prevData => {
+                    return prevData.map(item => {
+                        if (item.id === id) {
+                            return response.data;
+                        }
+                        return item;
+                    });
+                });
+                message.success('با موفقیت ویرایش شد');
+            }
+        } catch (error) {
+            const errorMessage = error.response?.data[Object.keys(error.response.data)[0]][0];
+            message.error(errorMessage);
+        }
+    };
 
 
     const submit = () => {
@@ -103,6 +129,13 @@ export default function ({
                                 onClick={() => removeAchievements(item.id || '')}
                                 className="close"
                                 src={close.src}
+                                alt=""
+                            />}
+
+                            {resumeData.length && index !== resumeData.length - 1 && <img
+                                onClick={() => editEducation(item.id || '')}
+                                className="close"
+                                src={editIcon.src}
                                 alt=""
                             />}
                             <ResumeInputCom>

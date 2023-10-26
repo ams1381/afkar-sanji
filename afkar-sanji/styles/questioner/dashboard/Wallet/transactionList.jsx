@@ -2,7 +2,7 @@ import {styled} from "styled-components";
 
 export const TransactionContainer = styled.div`
   width: 33%;
-  height: 65vh;
+  height: 60vh;
 
   & .transactioContainer {
     margin-top: 24px;

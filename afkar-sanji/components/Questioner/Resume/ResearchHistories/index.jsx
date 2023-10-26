@@ -1,4 +1,5 @@
 import close from "@/public/Icons/Close.svg";
+import {useRouter} from "next/router";
 import {
     AddBtn,
     ButtonContainer,
@@ -15,10 +16,12 @@ import {researchHistoriestsSchema, workBackgroundstsSchema} from "@/utilities/va
 import {axiosInstance} from "@/utilities/axios";
 // icon
 import arrowDownIcon from '@/public/Icons/selectDown.svg'
+import editIcon from "@/public/Icons/editEesume.svg";
+
 
 export default function ({year, setGender, me}) {
 
-
+    const router = useRouter()
     const [resumeData, setResumeData] = useState([]);
     const [isLoading, setIsLoading] = useState(false)
     const getData = () => {
@@ -51,7 +54,7 @@ export default function ({year, setGender, me}) {
     function addResearch_histories() {
         axiosInstance.post(`user-api/users/${me?.id}/resume/${me?.resume?.id}/research-histories/`, resumeData[resumeData.length - 1]).then(res => {
             if (res?.status === 201) {
-                setResumeData([...resumeData, {
+                setResumeData([...resumeData.slice(0, resumeData.length - 1), res.data, {
                     link: undefined, year: undefined, field: undefined
                 }]);
                 message.success('با موفقیت اضافه شد')
@@ -76,6 +79,29 @@ export default function ({year, setGender, me}) {
         }
     }
 
+    const editEducation = async (id) => {
+        try {
+            const updatedItem = resumeData.find(item => item.id === id);
+            const index = resumeData.findIndex(item => item.id === id);
+
+            const response = await axiosInstance.put(`/user-api/users/${me?.id}/resume/${me?.resume?.id}/research-histories/${id}/`, updatedItem);
+            if (response.status === 200) {
+                setResumeData(prevData => {
+                    return prevData.map(item => {
+                        if (item.id === id) {
+                            return response.data;
+                        }
+                        return item;
+                    });
+                });
+                message.success('با موفقیت ویرایش شد');
+            }
+        } catch (error) {
+            const errorMessage = error.response?.data[Object.keys(error.response.data)[0]][0];
+            message.error(errorMessage);
+        }
+    };
+
     return (
         <>
             {isLoading ? (
@@ -98,10 +124,17 @@ export default function ({year, setGender, me}) {
                                 src={close.src}
                                 alt=""
                             />}
+
+                            {resumeData.length && index !== resumeData.length - 1 && <img
+                                onClick={() => editEducation(item.id || '')}
+                                className="close"
+                                src={editIcon.src}
+                                alt=""
+                            />}
                             <ResumeInputCom>
                                 <div className="title">سال پژوهش</div>
                                 <Select
-                                    suffixIcon={<img src={arrowDownIcon?.src} />}
+                                    suffixIcon={<img src={arrowDownIcon?.src}/>}
                                     style={{
                                         width: '100%',
                                         height: '40px',
@@ -150,7 +183,7 @@ export default function ({year, setGender, me}) {
                     <img src={add.src} alt="" className="icon"/>
                 </AddBtn>
             </ButtonContainer>
-            <Button disabled={resumeData.length < 2} typeof='submit'
+            <Button onClick={() => router.push('/questioner/resume')} disabled={resumeData.length < 2} typeof='submit'
                     className={StyleModules['confirm_button']}
                     type="primary">
                 اتمام

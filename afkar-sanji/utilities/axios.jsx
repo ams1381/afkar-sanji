@@ -7,6 +7,7 @@ import { getCookie } from "react-use-cookie";
 axios.defaults.baseURL = '/api'
 let refreshToken;
 
+
 export const axiosInstance = axios.create({
     headers: {
         'Content-Type': 'application/json',
@@ -17,8 +18,10 @@ export const SetRefreshToken =(RefreshToken) => {
     refreshToken = RefreshToken;
 }
 axiosInstance.interceptors.request.use(function (config) {
+    // Do something before reis sent
     return config;
 }, function (error) {
+    // Do something with request error
     return Promise.reject(error);
 });
 
@@ -33,30 +36,12 @@ axiosInstance.interceptors.response.use(function (response) {
         case 401:
             try
             {
-
-                // console.log('before change' ,error.config )
-                let { data } = await axios.post('/user-api/auth/refresh-token/', { refresh : axiosInstance.defaults.refresh_token })
-                // console.log(data)
-                // let errorConfig = error.config;
-                error.config.headers['Authorization'] = 'Bearer ' + data.access;
-                // Update the refresh token in the error config
-                error.config.refresh_token = data.refresh;
-                // Update the default headers for future requests
-                axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + data.access;
-                // Update the refresh token in the Axios instance
-                axiosInstance.refresh_token = data.refresh;
-                // errorConfig.headers['Authorization'] = data.access;
-                // errorConfig.refresh_token = data.refresh;
-                // console.log(errorConfig.headers['Authorization'] == error.config.headers['Authorization'])
-                // console.log('after change' ,errorConfig  )
-                // axiosInstance.request(error.config)
-                // console.log(errorConfig)
-                // window.location.reload()
+                await axios.post('/user-api/auth/refresh-token/', { refresh : axiosInstance.defaults.refresh_token })
+                window.location.reload()
             }
             catch(err)
             {
-                console.log(err)
-                // window.location.pathname = '/auth';
+                window.location.pathname = '/auth';
             }
             break;
         case 403:

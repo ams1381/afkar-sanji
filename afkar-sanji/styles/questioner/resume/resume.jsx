@@ -158,6 +158,22 @@ export const InputCom = styled(Input)`
   direction: ${p => p.direction};
 `
 
+export const BtnCom = styled(Button)`
+  border-radius: 0px 2px 2px 0px;
+  border-top: 1px solid var(--neutral-5, #D9D9D9);
+  border-right: 1px solid var(--neutral-5, #D9D9D9);
+  border-bottom: 1px solid var(--neutral-5, #D9D9D9);
+  background: var(--neutral-2, #FAFAFA);
+  height:42px;
+  width:45px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  line-height:42px;
+  transform:rotate(180deg);
+`
+
+
 // resume
 export const CreateResume = styled.div`
   display: flex;
@@ -295,7 +311,6 @@ export const StepText = styled.span`
   line-height: 30px;
 `
 
-// step
 export const FromStep = styled.form`
   width: 646px;
   margin-top: 50px;
@@ -410,4 +425,25 @@ export const ResumeInputCom = styled.div`
   }
 `
 
-// step
+export const ResumeActiveBox = styled.div`
+  display: flex;
+  width: 331px;
+  height: 182px;
+  padding: 24px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+  border: 3px solid var(--primary-color);
+  background: rgba(83, 96, 237, 0.05);
+  backdrop-filter: blur(4px);
+  position: absolute;
+  z-index: 2;
+  
+  & .text {
+    color: var(--primary-color);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 24px;
+  }
+`

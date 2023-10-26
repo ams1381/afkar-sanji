@@ -83,7 +83,7 @@ export default function ({data, loading, setFilterParams}) {
 
     return (<TransactionContainer>
         <FilterParent>
-            <DatePicker disabled={data} format="YYYY-MM-DD"
+            <DatePicker disabled={!data?.transactions?.length} format="YYYY-MM-DD"
                         onChange={DateFilterHandler}
                         render={(value, openCalendar) => {
                             return (<TimePickerContainer style={{
@@ -102,7 +102,7 @@ export default function ({data, loading, setFilterParams}) {
                         locale={persian_fa}
             />
             <Dropdown
-                disabled={data}
+                disabled={!data?.transactions?.length}
                 menu={{
                     items
                 }}
