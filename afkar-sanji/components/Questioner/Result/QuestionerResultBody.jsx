@@ -8,25 +8,29 @@ import {
 } from "@/styles/Result/ResultPage";
 import {QuestionerResultTable} from "@/components/Questioner/Result/QuestionerResultTable";
 import {TableColumnGenerator, TableDataGenerator} from "@/components/Questioner/Result/TableConfigGenerator";
-import {SkeletonTable} from "@/components/ResultPage/ResultBody";
+import {ScrollByDrag, SkeletonTable} from "@/components/ResultPage/ResultBody";
 import EmptyImage from "@/public/Images/empty-image.png";
 import Link from "next/link";
 import {Icon} from "@/styles/icons";
 import {QuestionTypeIcon} from "@/utilities/QuestionTypes";
 const regex = /(<([^>]+)>)/gi;
-export const QuestionerResultBody = ({ ResultQuery , SetCurrentPage , SelectedTypeFilter , QuestionnaireQuery , setSelectedRows , SelectedRows }) => {
+export const QuestionerResultBody = ({ ResultQuery , PageSize , setPageSize , SetCurrentPage , SelectedTypeFilter , QuestionnaireQuery , setSelectedRows , SelectedRows }) => {
     let [ TableColumns , setTableColumns ] = useState(null);
     let [ ResultData , setResultData ] = useState(null);
     const [ resultMessage , contextHolder] = message.useMessage();
     let [ TableData , setTableData ] = useState(null);
     const [ deleteRowState , setDeleteRowState ] = useState(false);
-    // const [ selectedRows , setSelectedRows ] = useState([]);
-
+    const tableRef = useRef(null);
     useEffect(() => {
         setResultData(ResultQuery?.data?.data.results)
+    },[ResultQuery])
 
-    },[ResultQuery ])
-    // console.log(TableData)
+    useEffect(() => {
+        if(tableRef.current)
+            ScrollByDrag(ResultQuery?.data?.data?.results?.length ? true : false);
+    }, [document.querySelector("thead.ant-table-thead tr") ,
+        document.querySelector(".ant-table-tbody .ant-table-body") , ResultQuery?.data?.data]);
+
     useEffect(() => {
         if(ResultData && ResultData.length)
         {
@@ -40,7 +44,6 @@ export const QuestionerResultBody = ({ ResultQuery , SetCurrentPage , SelectedTy
             setTableColumns(columns);
             setTableData(rows);
         }
-
         else
         {
             setTableColumns([]);
@@ -51,12 +54,14 @@ export const QuestionerResultBody = ({ ResultQuery , SetCurrentPage , SelectedTy
     return <div style={{ width : '86%' , margin : '0 auto' }}>
         {contextHolder}
         {
-            ResultQuery.isLoading ? <SkeletonTable columns={5} rowCount={11} /> :
+            ( ResultQuery.isLoading) ? <SkeletonTable columns={5} rowCount={11} /> :
                 (TableColumns?.length && TableData?.length) ?
                  <ResultBodyContainer>
                     <ResultTableContainer>
                         <QuestionerResultTable TableColumns={TableColumns}
                            SelectedRows={SelectedRows}
+                           setPageSize={setPageSize}
+                           PageSize={PageSize}
                            deleteRowState={deleteRowState}
                            SetCurrentPage={SetCurrentPage}
                            QuestionnaireQuery={QuestionnaireQuery}
@@ -73,11 +78,14 @@ export const QuestionerResultBody = ({ ResultQuery , SetCurrentPage , SelectedTy
                                   href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/`}>
                                 <EmptyButtonPage type='primary'>الان بسازید</EmptyButtonPage>
                             </Link>
-                        </EmptyResultContainer> : <EmptyResultContainer>
+                        </EmptyResultContainer> :
+                    <ResultTableContainer>
+                        <EmptyResultContainer>
                             <div className='no_data_table' style={{
                                 width : '100%' , height : '100%' , marginTop : 10
                             }}>
                                 <Table
+                                    ref={tableRef}
                                     columns={QuestionnaireQuery?.data?.data?.questions.map(item => ({
                                         title : <Tooltip
                                             title={<div className='tooltip_container' onClick={() => navigator.clipboard.writeText(item.question?.title)}>
@@ -115,12 +123,15 @@ export const QuestionerResultBody = ({ ResultQuery , SetCurrentPage , SelectedTy
                                         }))
                                     }))}
                                     locale={{
-                                        emptyText : <p className='no_result_message'>نتیجه‌ای یافت نشد</p>
+                                        emptyText : <p className='no_result_message' style={{
+                                            fontSize : 20 , color : 'var(--Neutral-Gray9)'
+                                        }}>نتیجه‌ای یافت نشد</p>
                                     }}
                                     // loading={LoadingTable}
                                 />
                             </div>
                         </EmptyResultContainer>
+                    </ResultTableContainer>
         }
     </div>
 }

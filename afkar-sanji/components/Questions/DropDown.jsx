@@ -4,6 +4,7 @@ import { DropDownContainer } from '@/styles/questionnairePanel/QuestionComponent
 import { styled } from 'styled-components'
 import { useDispatch , useSelector } from 'react-redux'
 import { ChoseOption } from '@/utilities/stores/AnswerStore'
+import {Icon} from "@/styles/icons";
 
 const shuffleArray = (array) => {
     const shuffledArray = [...array];
@@ -73,7 +74,9 @@ const DropDown = ({ QuestionInfo }) => {
         showSearch
         mode={QuestionInfo.max_selected_options && QuestionInfo.max_selected_options > 1 ? 'multiple' : null}
         value={selectedValues}
+        notFoundContent={'موردی یافت نشد'}
         onChange={DropDownAnswerHandler}
+        suffixIcon={<Icon name={'suffixIcon'} style={{ width : 11 }} />}
         placeholder="پاسخ خود را انتخاب کنید"
         style={{ width: '100%', fontFamily: 'IRANSans', direction: 'rtl' }}
         dropdownStyle={{ fontFamily: 'IRANSans' }}

@@ -52,7 +52,7 @@ const QuestionComponent = ({ QuestionInfo , Questionnaire , ChildQuestion , slid
   
   return (
     QuestionInfo.question_type == 'welcome_page' ? <WelcomeComponent WelcomeInfo={QuestionInfo} mobilepreview={mobilepreview} /> 
-    : QuestionInfo.question_type != 'thanks_page' ? <QuestionComponentContainer  onWheel={e => e.stopPropagation()}
+    : QuestionInfo.question_type != 'thanks_page' ? <QuestionComponentContainer id={`question-${QuestionInfo.id}`}  onWheel={e => e.stopPropagation()}
     className={`question_component  ${QuestionInfo.group ? 'group_question' : ''} `}
     childq={ChildQuestion ? 'true' : null} mobilepreview={mobilepreview} slidemode={slidemode}>
         <div className='question_header' >

@@ -19,6 +19,16 @@ export const ModalSubComponentGenerator = (QuestionData , Answer,EditAnswerSetSt
                 <p>به این سوال پاسخ داده نشده</p>
             </NoAnswerBoxContainer>
             break;
+        case 'text_answer':
+            return Answer.find(item => item.question_id == QuestionData.id) ? <ModalSubComponentContainer>
+                <p style={{ fontWeight : 700 , whiteSpace : 'nowrap' }}> پاسخ سوال: </p>
+                <p>{
+                    Answer.find(item => item.question_id == QuestionData.id)?.answer
+                }</p>
+            </ModalSubComponentContainer> : <NoAnswerBoxContainer>
+                <p>به این سوال پاسخ داده نشده</p>
+            </NoAnswerBoxContainer>
+            break;
         case 'integer_range':
             return Answer.find(item => item.question_id == QuestionData.id)?.answer ? <ModalSubComponentContainer>
                 <p style={{ fontWeight : 700 }}> طیف: </p>

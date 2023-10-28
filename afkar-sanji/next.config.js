@@ -19,7 +19,7 @@ const nextConfig = {
     // },
      {
         source: '/api/:path*',
-        destination: 'https://mah-api.ariomotion.com/:path*/',
+        destination: 'https://mah-api.codintofuture.ir/:path*/',
         basePath: false,
       },
   ]

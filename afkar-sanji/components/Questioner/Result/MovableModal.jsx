@@ -1,7 +1,6 @@
 import React, {lazy, Suspense, useEffect, useRef, useState} from 'react';
 import Draggable from 'react-draggable';
 import {digitsEnToFa} from "@persian-tools/persian-tools";
-import {UserAvatarLogout} from "@/styles/common";
 import {ModalEditButton, ModalHeader , ModalBody , ModalFooter} from "@/styles/Result/QuestionerResult";
 import {Icon} from "@/styles/icons";
 import {Button, message} from "antd";
@@ -34,12 +33,12 @@ export const MovableModal = ({ ModalAnswerSet , ResultQuery , setOpenResultModal
                 AnswerSetArray : ModalAnswerSet.answerSet.answers ,
                 QuestionsArray : ModalAnswerSet.questions
             }))
-    },[])
+    },[window.innerWidth])
     const ConfirmAnswerHandler = async () => {
         let AnswerSet = AnswerSetsArray;
 
         let FileQuestionQuestions = AnswerSet.map(item => {
-            if(item.file)
+            if(item.file && typeof item.file != 'string')
                 return item
         })
         let CopiedQuestionAnswerSet = JSON.parse(JSON.stringify(AnswerSet));
@@ -78,12 +77,12 @@ export const MovableModal = ({ ModalAnswerSet , ResultQuery , setOpenResultModal
                 ErrorsArray.forEach(ErrorItem => {
                     if(ErrorItem) {
                         let QuestionElement = document.getElementById('question' + ErrorItem)
-                        QuestionElement.scrollIntoView({behavior: 'smooth'});
+                        QuestionElement?.scrollIntoView({behavior: 'smooth'});
 
                         setTimeout(() => {
-                            const desiredOffset = window.innerHeight / 2 - QuestionElement.clientHeight / 2;
+                            const desiredOffset = window.innerHeight / 2 - QuestionElement?.clientHeight / 2;
                             window.scrollTo({
-                                top: QuestionElement.offsetTop - desiredOffset,
+                                top: QuestionElement?.offsetTop - desiredOffset,
                                 behavior: 'smooth'
                             });
                         }, 500);
@@ -105,39 +104,21 @@ export const MovableModal = ({ ModalAnswerSet , ResultQuery , setOpenResultModal
         setSaveChangesLoading(false)
         // router.push(`../${questionnaire.uuid}/questioner-result`);
     }
-    const handleDrag = (e, ui) => {
-        // Get the current window dimensions
-        const windowWidth = window.innerWidth;
-        const windowHeight = window.innerHeight;
 
-        // Calculate the maximum allowed position
-        const maxX = windowWidth - e.target.offsetWidth;
-        const maxY = windowHeight - e.target.offsetHeight;
 
-        // Adjust the position to stay within the viewport
-        let x = ui.x;
-        let y = ui.y;
+    const draggableWidth = 336;
+    const draggableHeight = 628;
 
-        // Check if the dragged element is going out of the viewport horizontally
-        if (ui.x < 0) {
-            x = 0;
-        } else if (ui.x > maxX) {
-            x = maxX;
-        }
 
-        // Check if the dragged element is going out of the viewport vertically
-        if (ui.y < 0) {
-            y = 0;
-        } else if (ui.y > maxY) {
-            y = maxY;
-        }
-
-        // Set the new position
-        ui.x = x;
-        ui.y = y;
-    };
+    // console.log(window.innerWidth , window.innerHeight)
     return (
-        <Draggable handle=".handle" onDrag={handleDrag}>
+        <Draggable bounds={{
+            left : undefined ,
+            top : undefined ,
+            right : window.innerWidth - 400 ,
+            bottom : 700
+        }}
+                   handle=".handle" >
             <div className="box">
                 <ModalHeader>
                     {messageContext}

@@ -6,7 +6,7 @@ import { Button, Upload , message} from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-const FileUpload = ({ QuestionInfo }) => {
+const FileUpload = ({ QuestionInfo , setQuestionBoxHeight}) => {
   const dispatcher = useDispatch();
   const [ FileUploadedState , SetFileUploadedState ] = useState(QuestionInfo.media ? true : false);
   const [previewVisible, setPreviewVisible] = useState(false);
@@ -30,7 +30,15 @@ const FileUpload = ({ QuestionInfo }) => {
       // url: URL.createObjectURL(QuestionInfo.media),
     },
   ]);
- 
+  useEffect(() => {
+    setTimeout(() => {
+      setQuestionBoxHeight(document.querySelector(`.QuestionItem${QuestionInfo.id} .question_item__root`).clientHeight + 85)
+    },400)
+
+      // setTimeout(() => {
+      //   setQuestionBoxHeight(document.querySelector(`.QuestionItem${QuestionInfo.id} .question_item__root`).clientHeight + 85)
+      // },300)
+  },[fileUploaded , fileList ])
   const FileUploadHandler = (file, fileList , event) => {
     if(file.file.percent == 0)
     {
@@ -88,6 +96,7 @@ const FileUpload = ({ QuestionInfo }) => {
          }
       ))
       setUploadError(false);
+    // setQuestionBoxHeight(document.querySelector(`.QuestionItem${QuestionInfo.id} .question_item__root`).clientHeight + 85)
   }
   const handlePreview = async (file) => {
     if (file.url) {
@@ -119,12 +128,14 @@ const FileUpload = ({ QuestionInfo }) => {
           beforeUpload={beforeUpload}
           onChange={e => FileUploadHandler(e)}
           onRemove={() => {
+
             dispatcher(RemoveFileHandler(
             { QuestionID : QuestionInfo.id ,
                IsQuestion :(QuestionInfo.question_type != 'welcome_page' && QuestionInfo.question_type != 'thanks_page'),
                group : QuestionInfo.group 
               }
             ))
+            // setQuestionBoxHeight(document.querySelector(`.QuestionItem${QuestionInfo.id} .question_item__root`).clientHeight + 85)
           }}
         >
           <Button  icon={<Icon name='Upload' style={{ width : 12 }} />}>آپلود کنید</Button>

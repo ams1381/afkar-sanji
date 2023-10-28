@@ -46,7 +46,7 @@ export function moveItem(arr, prevIndex, newIndex) {
   }
   return arr;
 }
-const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
+const QuestionDesignPanel = ({ Questionnaire , RightDrawerOpen , QuestionnaireReloader}) => {
   const QuestionDataDispatcher = useDispatch();
   const [ SearchResult , SetSearchResult ] = useState([]);
   const [ActiveQuestion, setActiveQuestion] = useState(null);
@@ -54,7 +54,7 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
   const regex = /(<([^>]+)>)/gi;
   const  AllQuestion = useSelector(s => s.reducer.data);
   const NonQuestions = useSelector(s => s.reducer.nonQuestionData);
-
+  let delayTimer;
   const sortableOptions = {
     animation: 150,
     group: 'nested',
@@ -148,7 +148,6 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
        {
         console.log(err)
        }
-        // console.log(event.oldDraggableIndex,event.newDraggableIndex,event.to)
       }
     },
     onMove : event => {
@@ -202,20 +201,29 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
     })
   },[AllQuestion])
   const SearchQuestionHandler = async (e) => {
-     let SearchRes = await axiosInstance.get(`/question-api/questionnaires/${Questionnaire.uuid}/search-questions/?search=${e}`);
-     if(SearchRes)
-     {
-      let search_array = SearchRes.data.map(item => item.question ? ({
-        label : <p style={{ fontFamily : 'IRANSans' , textAlign : 'right' }}>
-          {item.question.title.replace(regex,"")}
-          </p>,
-        value : item.question.id,
-        id : item.question.id
-      }) : '')
-      search_array.forEach((item,index) => !item ? search_array.splice(index,1)  : '')
-       search_array = search_array.filter(SearchItem => typeof SearchItem == 'object')
-      SetSearchResult(search_array)
-     }
+    clearTimeout(delayTimer);
+    delayTimer = setTimeout(async function() {
+      // Do the ajax stuff
+      if(!e?.length)
+        return
+      else
+      {
+        let SearchRes = await axiosInstance.get(`/question-api/questionnaires/${Questionnaire.uuid}/search-questions/?search=${e}`);
+        if(SearchRes)
+        {
+          let search_array = SearchRes.data.map(item => item.question ? ({
+            label : <p style={{ fontFamily : 'IRANSans' , textAlign : 'right' }}>
+              {item.question.title.replace(regex,"")}
+            </p>,
+            value : item.question.id,
+            id : item.question.id
+          }) : '')
+          search_array.forEach((item,index) => !item ? search_array.splice(index,1)  : '')
+          search_array = search_array.filter(SearchItem => typeof SearchItem == 'object')
+          SetSearchResult(search_array)
+        }
+      }
+    }, 1000);
   }
   const SearchSelectHandler = (QuestionID) => {
     let SelectedQuestion = AllQuestion.find(item => item && item.question && item.question.id == QuestionID);
@@ -288,6 +296,7 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                 <QuestionItem 
                 IsQuestion={false}
                 UUID={Questionnaire.uuid}
+                RightDrawerOpen={RightDrawerOpen}
                 ActiveQuestion={ActiveQuestion}
                 Questionnaire={Questionnaire}
                 setActiveQuestion={setActiveQuestion}
@@ -322,6 +331,7 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                                 UUID={Questionnaire.uuid}
                                 key={item.question.id}
                                 question={item}
+                                RightDrawerOpen={RightDrawerOpen}
                                 // provided={provided}
                                 QuestionsList={AllQuestion}
                                 ActiveQuestion={ActiveQuestion}
@@ -343,7 +353,8 @@ const QuestionDesignPanel = ({ Questionnaire , QuestionnaireReloader}) => {
                  <QuestionItem 
                   ActiveQuestion={ActiveQuestion}
                   setActiveQuestion={setActiveQuestion}
-                  IsQuestion={false} 
+                  IsQuestion={false}
+                  RightDrawerOpen={RightDrawerOpen}
                   UUID={Questionnaire.uuid} 
                   Questionnaire={Questionnaire}
                   question={NonQuestions[1]} /> :

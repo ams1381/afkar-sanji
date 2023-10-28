@@ -5,7 +5,7 @@ import {QuestionTypeIcon} from "@/utilities/QuestionTypes";
 import React from "react";
 const regex = /(<([^>]+)>)/gi;
 export const TableColumnGenerator = (QuestionsArray,ResultData,resultMessage,regex,SelectedTypeFilter) => {
-    let ColumnsArray =  (QuestionsArray?.map(item =>  !SelectedTypeFilter.length || SelectedTypeFilter.length == 12 ?  ({
+    let ColumnsArray =  (QuestionsArray?.map((item,index) =>  !SelectedTypeFilter.length || SelectedTypeFilter.length == 12 ?  ({
         title : <Tooltip
             title={<div className='tooltip_container' onClick={() =>
             {
@@ -37,19 +37,17 @@ export const TableColumnGenerator = (QuestionsArray,ResultData,resultMessage,reg
                                defaultFileList={[{
                                    name: Answer.split('/')[6],
                                    status: 'done',
-                                   url: 'https://mah-api.ariomotion.com' + Answer,
-                                   thumbUrl : 'https://mah-api.ariomotion.com' + Answer
+                                   url: 'https://mah-api.codintofuture.ir' + Answer,
+                                   thumbUrl : 'https://mah-api.codintofuture.ir.com' + Answer
                                }]} />
             else if(typeof Answer == 'string' || typeof Answer == 'number')
                 return <div>
                     <p>{Answer}</p>
                 </div>
-        }
-        ,
+        },
         width : 340,
         dataIndex : item.question?.title,
         // key : item.question?.id ,
-        fixed : 'top' ,
         align : 'center' ,
         ellipsis: true,
         children : item?.question?.question_type == 'group' ?
@@ -83,19 +81,19 @@ export const TableColumnGenerator = (QuestionsArray,ResultData,resultMessage,reg
                 width :  226,
                 children : ChildQuestion?.question?.options?.map(option => ({
                     title : <Tooltip title={<div className='tooltip_container'
-                                                 onClick={() =>
-                                                 {
-                                                     resultMessage.info({
-                                                         content : 'کپی شد' ,
-                                                         duration : 3 ,
-                                                         style : {
-                                                             display : 'flex',
-                                                             alignItems : 'center',
-                                                             justifyContent : 'center'
-                                                         }
-                                                     })
-                                                     navigator.clipboard.writeText(option?.text)
-                                                 }}>
+                             onClick={() =>
+                             {
+                                 resultMessage.info({
+                                     content : 'کپی شد' ,
+                                     duration : 3 ,
+                                     style : {
+                                         display : 'flex',
+                                         alignItems : 'center',
+                                         justifyContent : 'center'
+                                     }
+                                 })
+                                 navigator.clipboard.writeText(option?.text)
+                             }}>
                         {option?.text ? option?.text?.replace(regex,"") : ' '} <Icon name='WDuplicate' />
                     </div>}>
                         <p>{option?.text != 'null' ? option?.text?.replace(regex,"") : ' '}</p>
@@ -109,19 +107,19 @@ export const TableColumnGenerator = (QuestionsArray,ResultData,resultMessage,reg
             }))
             : item?.question?.options?.map(option => ({
                 title : <Tooltip title={<div className='tooltip_container'
-                                             onClick={() =>
-                                             {
-                                                 resultMessage.info({
-                                                     content : 'کپی شد' ,
-                                                     duration : 3 ,
-                                                     style : {
-                                                         display : 'flex',
-                                                         alignItems : 'center',
-                                                         justifyContent : 'center'
-                                                     }
-                                                 })
-                                                 navigator.clipboard.writeText(option?.text)
-                                             }}>
+                     onClick={() =>
+                     {
+                         resultMessage.info({
+                             content : 'کپی شد' ,
+                             duration : 3 ,
+                             style : {
+                                 display : 'flex',
+                                 alignItems : 'center',
+                                 justifyContent : 'center'
+                             }
+                         })
+                         navigator.clipboard.writeText(option?.text)
+                     }}>
                     {option?.text ? option.text?.replace(regex,"") : ' '} <Icon name='WDuplicate' />
                 </div>}>
                     <p>{option?.text != 'null' ? option?.text?.replace(regex,"") : ' '}</p>
@@ -155,18 +153,19 @@ export const TableColumnGenerator = (QuestionsArray,ResultData,resultMessage,reg
                 { QuestionTypeIcon(item.question?.question_type) }
             </div>
         </Tooltip>,
+
         render : (Answer) => {
             if(!Answer)
                 return
             else if((typeof Answer == 'string' && Answer.includes('/media/')))
                 return <Upload isImageUrl={() => true} disabled
-                               iconRender={() => <Icon name='File' />}
-                               defaultFileList={[{
-                                   name: Answer.split('/')[6],
-                                   status: 'done',
-                                   url: 'https://mah-api.ariomotion.com' + Answer,
-                                   thumbUrl : 'https://mah-api.ariomotion.com' + Answer
-                               }]} />
+                       iconRender={() => <Icon name='File' />}
+                       defaultFileList={[{
+                           name: Answer.split('/')[6],
+                           status: 'done',
+                           url: 'https://mah-api.codintofuture.ir.com' + Answer,
+                           thumbUrl : 'https://mah-api.codintofuture.ir.com' + Answer
+                       }]} />
             else if(typeof Answer == 'string' || typeof Answer == 'number')
                 return <div>
                     <p>{Answer}</p>
@@ -182,18 +181,18 @@ export const TableColumnGenerator = (QuestionsArray,ResultData,resultMessage,reg
             item?.question.child_questions.map(ChildQuestion => ({
                 title : <Tooltip
                     title={<div className='tooltip_container'
-                                onClick={() =>
-                                {
-                                    resultMessage.info({
-                                        content : 'کپی شد' ,
-                                        duration : 3 ,
-                                        style : {
-                                            display : 'flex',
-                                            alignItems : 'center',
-                                            justifyContent : 'center'
-                                        }
-                                    })
-                                    navigator.clipboard.writeText(ChildQuestion.question?.title)
+                        onClick={() =>
+                        {
+                            resultMessage.info({
+                                content : 'کپی شد' ,
+                                duration : 3 ,
+                                style : {
+                                    display : 'flex',
+                                    alignItems : 'center',
+                                    justifyContent : 'center'
+                                }
+                            })
+                            navigator.clipboard.writeText(ChildQuestion.question?.title)
                                 }}>
                         {ChildQuestion.question?.title} <Icon name='WDuplicate' />
                     </div>}>
@@ -209,19 +208,19 @@ export const TableColumnGenerator = (QuestionsArray,ResultData,resultMessage,reg
                 width :  226,
                 children : ChildQuestion?.question?.options?.map(option => ({
                     title : <Tooltip title={<div className='tooltip_container'
-                                                 onClick={() =>
-                                                 {
-                                                     resultMessage.info({
-                                                         content : 'کپی شد' ,
-                                                         duration : 3 ,
-                                                         style : {
-                                                             display : 'flex',
-                                                             alignItems : 'center',
-                                                             justifyContent : 'center'
-                                                         }
-                                                     })
-                                                     navigator.clipboard.writeText(option?.text)
-                                                 }}>
+                         onClick={() =>
+                         {
+                             resultMessage.info({
+                                 content : 'کپی شد' ,
+                                 duration : 3 ,
+                                 style : {
+                                     display : 'flex',
+                                     alignItems : 'center',
+                                     justifyContent : 'center'
+                                 }
+                             })
+                             navigator.clipboard.writeText(option?.text)
+                         }}>
                         {option?.text ? option?.text?.replace(regex,"") : ' '} <Icon name='WDuplicate' />
                     </div>}>
                         <p>{option?.text != 'null' ? option?.text?.replace(regex,"") : ' '}</p>
@@ -235,19 +234,19 @@ export const TableColumnGenerator = (QuestionsArray,ResultData,resultMessage,reg
             }))
             : item?.question?.options?.map(option => ({
                 title : <Tooltip title={<div className='tooltip_container'
-                                             onClick={() =>
-                                             {
-                                                 resultMessage.info({
-                                                     content : 'کپی شد' ,
-                                                     duration : 3 ,
-                                                     style : {
-                                                         display : 'flex',
-                                                         alignItems : 'center',
-                                                         justifyContent : 'center'
-                                                     }
-                                                 })
-                                                 navigator.clipboard.writeText(option?.text)
-                                             }}>
+                     onClick={() =>
+                     {
+                         resultMessage.info({
+                             content : 'کپی شد' ,
+                             duration : 3 ,
+                             style : {
+                                 display : 'flex',
+                                 alignItems : 'center',
+                                 justifyContent : 'center'
+                             }
+                         })
+                         navigator.clipboard.writeText(option?.text)
+                     }}>
                     {option?.text ? option.text?.replace(regex,"") : ' '} <Icon name='WDuplicate' />
                 </div>}>
                     <p>{option?.text != 'null' ? option?.text?.replace(regex,"") : ' '}</p>
@@ -290,8 +289,8 @@ export const TableColumnGenerator = (QuestionsArray,ResultData,resultMessage,reg
                                        defaultFileList={[{
                                            name: Answer.split('/')[6],
                                            status: 'done',
-                                           url: 'https://mah-api.ariomotion.com' + Answer,
-                                           thumbUrl : 'https://mah-api.ariomotion.com' + Answer
+                                           url: 'https://mah-api.codintofuture.ir.com' + Answer,
+                                           thumbUrl : 'https://mah-api.codintofuture.ir.com' + Answer
                                        }]} />
                     else if(typeof Answer == 'string' || typeof Answer == 'number')
                         return <div>
@@ -309,17 +308,17 @@ export const TableColumnGenerator = (QuestionsArray,ResultData,resultMessage,reg
                         ({
                         title : <Tooltip
                             title={<div className='tooltip_container'
-                                        onClick={() =>
-                                        {
-                                            resultMessage.info({
-                                                content : 'کپی شد' ,
-                                                duration : 3 ,
-                                                style : {
-                                                    display : 'flex',
-                                                    alignItems : 'center',
-                                                    justifyContent : 'center'
-                                                }
-                                            })
+                                onClick={() =>
+                                {
+                                    resultMessage.info({
+                                        content : 'کپی شد' ,
+                                        duration : 3 ,
+                                        style : {
+                                            display : 'flex',
+                                            alignItems : 'center',
+                                            justifyContent : 'center'
+                                        }
+                                    })
                                             navigator.clipboard.writeText(ChildQuestion.question?.title)
                                         }}>
                                 {ChildQuestion.question?.title} <Icon name='WDuplicate' />
@@ -336,19 +335,19 @@ export const TableColumnGenerator = (QuestionsArray,ResultData,resultMessage,reg
                         width :  226,
                         children : ChildQuestion?.question?.options?.map(option => ({
                             title : <Tooltip title={<div className='tooltip_container'
-                                                         onClick={() =>
-                                                         {
-                                                             resultMessage.info({
-                                                                 content : 'کپی شد' ,
-                                                                 duration : 3 ,
-                                                                 style : {
-                                                                     display : 'flex',
-                                                                     alignItems : 'center',
-                                                                     justifyContent : 'center'
-                                                                 }
-                                                             })
-                                                             navigator.clipboard.writeText(option?.text)
-                                                         }}>
+                                 onClick={() =>
+                                 {
+                                     resultMessage.info({
+                                         content : 'کپی شد' ,
+                                         duration : 3 ,
+                                         style : {
+                                             display : 'flex',
+                                             alignItems : 'center',
+                                             justifyContent : 'center'
+                                         }
+                                     })
+                                     navigator.clipboard.writeText(option?.text)
+                                 }}>
                                 {option?.text ? option?.text?.replace(regex,"") : ' '} <Icon name='WDuplicate' />
                             </div>}>
                                 <p>{option?.text != 'null' ? option?.text?.replace(regex,"") : ' '}</p>
@@ -374,6 +373,7 @@ export const TableColumnGenerator = (QuestionsArray,ResultData,resultMessage,reg
     })
 
     ColumnsArray = ColumnsArray.filter(item => (Array.isArray(item.children) && !item.children.length) ? null : item);
+
     return ColumnsArray;
 }
 export const TableDataGenerator = (ResultData,QuestionnaireQuery) => {
@@ -390,7 +390,10 @@ export const TableDataGenerator = (ResultData,QuestionnaireQuery) => {
                 // console.log(rows,index)
                 if(typeof item.answer != 'object')
                 {
-                    rows[rows.length - 1][item.question] = item.answer ? digitsEnToFa(item.answer) : '';
+                    if(item.question_type == 'file')
+                        rows[rows.length - 1][item.question] =  item.answer ? item.answer : '';
+                    else
+                        rows[rows.length - 1][item.question] = item.answer ? digitsEnToFa(item.answer) : '';
                 }
                 else
                 {

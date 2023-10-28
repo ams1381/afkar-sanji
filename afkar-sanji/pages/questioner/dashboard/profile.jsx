@@ -92,34 +92,11 @@ export async function getServerSideProps(context) {
             acc[key] = decodeURIComponent(value);
             return acc;
         }, {});
-        // /user-api/nested-countries/
-        try
-        {
-            let regionsRes  =  await
-                fetch('https://mah-api.ariomotion.com/user-api/nested-countries/',
-                    {
-                        headers: {
-                            Authorization: `Bearer ${parsedCookies.access_token}`,
-                        },
-                    })
-            let MeResponse = await fetch('https://mah-api.ariomotion.com/user-api/users/me/',{
-                headers : {
-                    Authorization: `Bearer ${parsedCookies.access_token}`,
-                }
-            })
-                MeData = await  MeResponse.json();
-              regionsData = await regionsRes.json();
-        }
-        catch (err)
-        {
 
-        }
         return {
             props: {
                 // Pass the cookies as props to the component
                 cookies: parsedCookies,
-                regions : regionsData ? regionsData : null ,
-                meData : MeData ? MeData : null
             },
         };
     }

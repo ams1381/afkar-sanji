@@ -1,44 +1,61 @@
-import { EditButton, InfoBox, UserInfoContainer , ConfirmButtonContainer , LocationSelectorContainer } from '@/styles/Questioner/profile'
+import {
+    ConfirmButtonContainer,
+    EditButton,
+    InfoBox,
+    LocationSelectorContainer,
+    UserInfoContainer
+} from '@/styles/Questioner/profile'
 import Link from 'next/link'
-import React from 'react'
-import {Cascader, Button, message} from 'antd'
-import { axiosInstance } from '@/utilities/axios';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react'
+import {Button, Cascader, message, Skeleton} from 'antd'
+import {axiosInstance} from '@/utilities/axios';
 import {convertDate, convertToRegularTime} from "@/components/QuestionnairePanel/SettingPanel";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
-import { Skeleton } from 'antd'
 import {Icon} from "@/styles/icons";
 
 export const JobInfo = ({ Countries , userData ,MeQuery , regions }) => {
     const [ selectedRegions , setSelectedRegions ] = useState(null);
     const [ RegionError , setRegionError ] = useState(false);
-    const [ countriesData , setCountriesData ] = useState(regions ? regions[0]?.provinces?.map(ProvinceItem => ({
-        label : ProvinceItem.name ,
-        value : ProvinceItem.id ,
-        disabled: !ProvinceItem.cities.length,
-        children : ProvinceItem.cities.map(CityItem => ({
-            label : CityItem.name ,
-            value : CityItem.id ,
-            disabled: !ProvinceItem.cities.length,
-            children : CityItem.districts.map(DistrictItem => ({
-                label : DistrictItem.name ,
-                value : DistrictItem.id
-            }))
-        }))
-    })) : []);
+    const [ countriesData , setCountriesData ] = useState( []);
+    const [ caseCaderOpen , setCaseCaderOpen ] = useState(false);
     const [ RegionLoading , setRegionLoading ] = useState(false);
+    const [ SelectedZone , setSelectedZone ] = useState([]);
+    const casecaderRef = useRef();
     const [ userInfoMessage , userInfoMessageContext ] = message.useMessage();
 
+    useEffect(() => {
+        if(MeQuery.data?.data && MeQuery.data?.data.preferred_districts['2'])
+        {
+            setSelectedZone(MeQuery.data?.data.preferred_districts['2'].provinces)
+        }
+    },[MeQuery])
 
+    useEffect(() => {
+        if(regions)
+        setCountriesData(regions[0]?.provinces?.map(ProvinceItem => ({
+            label : ProvinceItem.name ,
+            value : ProvinceItem.id ,
+            disabled: !ProvinceItem.cities.length,
+            children : ProvinceItem.cities.map(CityItem => ({
+                label : CityItem.name ,
+                value : CityItem.id ,
+                disabled: !ProvinceItem.cities.length,
+                children : CityItem.districts.map(DistrictItem => ({
+                    label : DistrictItem.name ,
+                    value : DistrictItem.id
+                }))
+            }))
+        })))
+    },[regions])
     const CascaderSelectHandler = async (SelectedList) => {
         if(!regions)
             return
-
         let DistrictsArray = [];
+        let SelectedZonde = []
         SelectedList.forEach(SelectedItem => {
             if(SelectedItem.length == 1)
             {
+                SelectedZonde.push(regions[0]?.provinces.find(item => item.id == SelectedItem[0]))
                 regions[0].provinces.find(item => item.id == SelectedItem[0]).cities.forEach(CityItem => {
                     CityItem.districts.forEach(DistrictItem => {
                         DistrictsArray.push(DistrictItem.id);
@@ -51,31 +68,72 @@ export const JobInfo = ({ Countries , userData ,MeQuery , regions }) => {
                 find(CityItem => CityItem.id == SelectedItem[1]).districts.forEach(DistrictItem => {
                     DistrictsArray.push(DistrictItem.id)
                 })
+                SelectedZonde.push({
+                    name : regions[0].provinces.find(item => item.id == SelectedItem[0]).name ,
+                    id : regions[0].provinces.find(item => item.id == SelectedItem[0]).id ,
+                    cities : [{
+                        name : regions[0].provinces.find(item => item.id == SelectedItem[0]).cities.
+                        find(CityItem => CityItem.id == SelectedItem[1]).name ,
+                        id : regions[0].provinces.find(item => item.id == SelectedItem[0]).cities.
+                        find(CityItem => CityItem.id == SelectedItem[1]).id ,
+                        districts : regions[0].provinces.find(item => item.id == SelectedItem[0]).cities.
+                        find(CityItem => CityItem.id == SelectedItem[1]).districts
+                    }]
+                })
             }
             else if(SelectedItem.length == 3)
             {
-                if(SelectedItem.every=(item => typeof item == 'string'))
+                if(SelectedItem.every(item => typeof item === 'string'))
                 {
-                    console.log(SelectedItem[0],regions[0].provinces.find(item => item.name == SelectedItem[0]))
+
                     DistrictsArray.push(regions[0].provinces.find(item => item.name == SelectedItem[0]).cities.
                     find(CityItem => CityItem.name == SelectedItem[1]).districts.find(DistrictItem => DistrictItem.name == SelectedItem[2]).id)
+
+                    SelectedZonde.push({
+                        name : regions[0].provinces.find(item => item.name == SelectedItem[0]).name ,
+                        id : regions[0].provinces.find(item => item.name == SelectedItem[0]).id ,
+                        cities : [{
+                            name : regions[0].provinces.find(item => item.name == SelectedItem[0]).cities.
+                            find(CityItem => CityItem.name == SelectedItem[1]).name ,
+                            id : regions[0].provinces.find(item => item.id == SelectedItem[0]).cities.
+                            find(CityItem => CityItem.name == SelectedItem[1]).id ,
+                            districts : [regions[0].provinces.find(item => item.name == SelectedItem[0]).cities.
+                            find(CityItem => CityItem.name == SelectedItem[1]).districts.find(DistrictItem => DistrictItem.name == SelectedItem[2])]
+                        }]
+                    })
                 }
                 else
                     DistrictsArray.push(regions[0].provinces.find(item => item.id == SelectedItem[0]).cities.
                     find(CityItem => CityItem.id == SelectedItem[1]).districts.find(DistrictItem => DistrictItem.id == SelectedItem[2]).id)
+
+                SelectedZonde.push({
+                    name : regions[0].provinces.find(item => item.id == SelectedItem[0]).name ,
+                    id : regions[0].provinces.find(item => item.id == SelectedItem[0]).id ,
+                    cities : [{
+                        name : regions[0].provinces.find(item => item.id == SelectedItem[0]).cities.
+                        find(CityItem => CityItem.id == SelectedItem[1]).name ,
+                        id : regions[0].provinces.find(item => item.id == SelectedItem[0]).cities.
+                        find(CityItem => CityItem.id == SelectedItem[1]).id ,
+                        districts : [regions[0].provinces.find(item => item.id == SelectedItem[0]).cities.
+                        find(CityItem => CityItem.id == SelectedItem[1]).districts.find(DistrictItem => DistrictItem.id == SelectedItem[2])]
+                    }]
+                })
             }
         })
         if(!SelectedList)
             return
         // if(SelectedList.length == 3)
+        // console.log(SelectedZonde)
+        setSelectedZone(SelectedZonde)
         setSelectedRegions(DistrictsArray)
         setRegionError(false)
     }
+
     const RegionConfirmHandler = async () => {
         setRegionLoading(true)
         try {
             await axiosInstance.patch('/user-api/users/me/', {
-                'prefered_districts' :selectedRegions
+                'preferred_districts' :selectedRegions
             })
         }
         catch (err) {
@@ -91,10 +149,32 @@ export const JobInfo = ({ Countries , userData ,MeQuery , regions }) => {
         }
         setRegionLoading(false)
     }
-    const { SHOW_CHILD } = Cascader;
+
+    function generateDistrictsLabel(Provinces) {
+        const pTags = [];
+
+        Provinces.forEach((province) => {
+            const provinceName = province.name;
+            const cities = province.cities;
+
+            cities.forEach((city) => {
+                const cityName = city.name;
+                const districtNames = city.districts.map((district) => district.name);
+
+                const pTag = <p onClick={() => {
+                    setCaseCaderOpen(true)
+                    if(casecaderRef.current)
+                        casecaderRef.current.focus();
+                }} key={city.id}>{cityName + ' / ' + districtNames.join('، ')}</p>;
+                pTags.push(pTag);
+            });
+        });
+
+        return pTags;
+    }
 
   return (
-      (MeQuery.error || MeQuery.isLoading) ?
+      (!regions && MeQuery.error || MeQuery.isLoading) ?
           <UserInfoContainer>
               <Skeleton.Input active />
               <div style={{ marginTop : 12 }}>
@@ -116,46 +196,58 @@ export const JobInfo = ({ Countries , userData ,MeQuery , regions }) => {
               </LocationSelectorContainer>
           </UserInfoContainer>
           :
-    <UserInfoContainer>
+          regions && <UserInfoContainer>
         {userInfoMessageContext}
         <h3>اطلاعات شغلی</h3>
         <div style={{ marginTop : 12 }}>
-            <InfoBox bold>
-               <div className='last_update_container'>
-                   <span>رزومه </span>
-                   <span style={{ display : 'flex' , gap : 5 }}>
+            { MeQuery?.data?.data?.resume ? <InfoBox bold>
+                <div className='last_update_container'>
+                    <span>رزومه </span>
+                    <span style={{display: 'flex', gap: 5}}>
                        {
-                           MeQuery?.data?.data?.updated_at ? digitsEnToFa(convertDate(convertToRegularTime(MeQuery?.data?.data?.updated_at).split(' ')[0],'jalali'))
-                           : ''}
-                       <p>:آخرین به روزرسانی</p>
+                           MeQuery?.data?.data?.updated_at ? digitsEnToFa(convertDate(convertToRegularTime(MeQuery?.data?.data?.updated_at).split(' ')[0], 'jalali'))
+                               : ''}
+                        <p>:آخرین به روزرسانی</p>
                    </span>
-               </div>
+                </div>
                 <Link href={'/'}>
                     <EditButton>
                         ویرایش
                     </EditButton>
                 </Link>
-            </InfoBox>
+            </InfoBox> :
+                <InfoBox bold>
+                    <p>برای دریافت پروژه این بخش را کامل کنید</p>
+                    <Button type={'primary'}>وارد کردن رزومه</Button>
+            </InfoBox>}
         </div>
         <LocationSelectorContainer>
             <p>منطقه پرسشگری</p>
             <Cascader options={countriesData}
              showSearch
-                      multiple
-              defaultValue={MeQuery?.data?.data?.prefered_districts?.length ?  MeQuery?.data?.data?.prefered_districts?.map(item => [
-                  item.province.name ,
-                  item.city.name ,
-                  item.name
-              ]) : null}
+              multiple
+              ref={casecaderRef}
+              open={caseCaderOpen}
+              onFocus={() => setCaseCaderOpen(true)}
+              onBlur={() => setCaseCaderOpen(false)}
+              defaultValue={
+                  MeQuery?.data?.data?.preferred_districts['2'] ?
+                      generateOutputArray(MeQuery?.data?.data?.preferred_districts['2'].provinces) : []
+              }
+              notFoundContent={'موردی یافت نشد'}
              onChange={CascaderSelectHandler}
-              // displayRender={(label, selectedOptions) => console.log(label, selectedOptions)}
-              // tagRender={(label , onClose , value) => console.log(label , onClose , value)}
               status={RegionError ? 'error' : null}
              showCheckedStrategy={Cascader.SHOW_PARENT}
               suffixIcon={<Icon name={'suffixIcon'} style={{ width : 11 }} />}
               placement={'bottomRight'}
              placeholder="انتخاب کنید" />
-
+            { (SelectedZone.length) ?
+                <div className={'selected_districts'}>
+                {
+                    generateDistrictsLabel(SelectedZone).map(item => item)
+                }
+            </div>
+            : ''}
             <ConfirmButtonContainer style={{ textAlign : 'left' }}>
                 <Button type='primary' loading={RegionLoading} onClick={RegionConfirmHandler}>
                 ثبت
@@ -165,4 +257,22 @@ export const JobInfo = ({ Countries , userData ,MeQuery , regions }) => {
         </LocationSelectorContainer>
     </UserInfoContainer>
   )
+}
+function generateOutputArray(dataArray) {
+    const outputArray = [];
+
+    for (const province of dataArray) {
+        const provinceId = province.id;
+
+        for (const city of province.cities) {
+            const cityId = city.id;
+
+            for (const district of city.districts) {
+                const districtIds = [provinceId, cityId, district.id];
+                outputArray.push(districtIds);
+            }
+        }
+    }
+
+    return outputArray;
 }

@@ -2,27 +2,22 @@ import Head from "next/head";
 import React, {useEffect, useState} from "react";
 import {PageBox, QuestionerPageContainer} from "@/styles/common";
 import {CommonDrawer} from "@/components/common/CommonDrawer";
-import {Button, Checkbox, Select} from "antd";
-import {DeleteRowButton, ResultBodyContainer, ResultTableContainer} from "@/styles/Result/ResultPage";
-import {Icon} from "@/styles/icons";
+import { ResultBodyContainer, ResultTableContainer} from "@/styles/Result/ResultPage";
 import QuestionerHeader from "@/components/common/QuestionerHeader";
-import {
-    QuestionerResultChangerContainer,
-    QuestionerResultHeader, RowSelectorContainer,
-} from "@/styles/Result/QuestionerResult";
 import {QuestionerResultHead} from "@/components/Questioner/Result/QuestionerResultHeader";
-import {useQueries, useQuery} from "@tanstack/react-query";
+import {useQueries} from "@tanstack/react-query";
 import {axiosInstance} from "@/utilities/axios";
 import {useRouter} from "next/router";
 import {QuestionerResultBody} from "@/components/Questioner/Result/QuestionerResultBody";
 
-const QuestionerResult = ({ meData }) => {
+const QuestionerResult = () => {
     const [ RightDrawerOpen , setRightDrawerOpen ] = useState(false);
     const router = useRouter();
     const [ SelectedRows , setSelectedRows ] = useState([]);
     const [ CurrentPage , SetCurrentPage ] = useState(1);
     const [ SelectedTypeFilter , setSelectedTypeFilter ] = useState([]);
-    const [ QuestionnaireQuery , ResultQuery ] = useQueries({
+    const [ PageSize , setPageSize ] = useState(7);
+    const [ QuestionnaireQuery , ResultQuery, MeQuery ] = useQueries({
         queries: [
             {
                 queryKey: ['questionnaire'],
@@ -32,20 +27,26 @@ const QuestionerResult = ({ meData }) => {
             {
                 queryKey: ['result'],
                 queryFn: async () =>
-                    await axiosInstance.get(`/result-api/${router.query.QuestionnaireUUID}/answer-sets/?answered_at=&end_date=&page=${CurrentPage}&start_date=`) ,
+                    await axiosInstance.get(`/result-api/${router.query.QuestionnaireUUID}/answer-sets/?answered_at=&end_date=&page_size=${PageSize ? PageSize : ''}&page=${CurrentPage ? CurrentPage : 1}&start_date=`) ,
+                refetchOnWindowFocus : false
+            },
+            {
+                queryKey: ['MeQuery'],
+                queryFn: async () => await axiosInstance.get(`/user-api/users/me/`),
                 refetchOnWindowFocus : false
             },
         ],
     });
-    // console.log(ResultQuery.error)
-    // useEffect(() => {
-    //     if(ResultQuery.error && ResultQuery.error?.response?.status == 404)
-    //         SetCurrentPage(CurrentPage - 1)
-    // },[ResultQuery])
     useEffect(() => {
+        if(SelectedRows?.length == ResultQuery?.data?.data?.results?.length)
+        {
+            setPageSize(null)
+            SetCurrentPage(null)
+            setSelectedRows([])
+        }
         ResultQuery.refetch()
         setSelectedRows([])
-    },[CurrentPage])
+    },[CurrentPage , PageSize])
     return <>
         <Head>
             <title>Afkar Sanji | Questioner Result </title>
@@ -56,7 +57,7 @@ const QuestionerResult = ({ meData }) => {
         <PageBox>
             <CommonDrawer RightDrawerOpen={RightDrawerOpen} setRightDrawerOpen={setRightDrawerOpen} />
             <main style={{ width : RightDrawerOpen ? '84%' : '100%', transition : '0.3s' }}>
-                <QuestionerHeader pageName='result' meData={meData} />
+                <QuestionerHeader pageName='result' meData={MeQuery?.data?.data} />
                 <QuestionerPageContainer style={{ height : '100vh' , overflow : 'hidden' , maxHeight : '690px' }}>
                         <QuestionerResultHead SelectedRows={SelectedRows}
                           setSelectedRows={setSelectedRows} CurrentPage={CurrentPage}
@@ -70,8 +71,8 @@ const QuestionerResult = ({ meData }) => {
                             </ResultTableContainer>
                         </ResultBodyContainer>
                         : <QuestionerResultBody SetCurrentPage={SetCurrentPage} ResultQuery={ResultQuery}
-                               SelectedRows={SelectedRows} setSelectedRows={setSelectedRows}
-                               SelectedTypeFilter={SelectedTypeFilter}
+                               SelectedRows={SelectedRows} setSelectedRows={setSelectedRows} PageSize={PageSize}
+                               SelectedTypeFilter={SelectedTypeFilter} setPageSize={setPageSize}
                                QuestionnaireQuery={QuestionnaireQuery}/>}
                 </QuestionerPageContainer>
             </main>
@@ -82,39 +83,25 @@ export default  QuestionerResult;
 export async function getServerSideProps(context) {
     const { req } = context;
     const cookies = req.headers.cookie;
-    let MeData;
-    // Check if cookies are present
+    const urlDest = req.url;
+
     if (cookies) {
-        // Parse the cookies
         const parsedCookies = cookies.split(';').reduce((acc, cookie) => {
             const [key, value] = cookie.trim().split('=');
             acc[key] = decodeURIComponent(value);
             return acc;
         }, {});
-        try {
-            let MeResponse = await fetch('https://mah-api.ariomotion.com/user-api/users/me/',{
-                headers : {
-                    Authorization: `Bearer ${parsedCookies.access_token}`,
-                }
-            })
-             MeData = await  MeResponse.json();
-        }
-        catch (err) {
 
-        }
         return {
             props: {
-                // Pass the cookies as props to the component
                 cookies: parsedCookies,
-                meData : MeData ? MeData : null
             },
         };
     }
-
     return {
         redirect: {
             permanent: false,
-            destination: "/auth"
+            destination: "/auth?returnUrl=" + urlDest
         }
     };
 }

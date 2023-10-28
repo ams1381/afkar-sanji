@@ -70,6 +70,12 @@ export const InputAnswerContainer = styled.div`
   {
     font-family: 'IRANSANS' !important; 
   }
+  & textarea
+  {
+    border-radius: 2px !important;
+    margin-top: 26px;
+    font-family: IRANSans;
+  }
 `
 export const DegreeItemsContainer = styled.div`
   display: grid;

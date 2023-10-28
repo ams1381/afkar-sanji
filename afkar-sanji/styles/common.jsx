@@ -254,6 +254,7 @@ export const CommonDrawerContainer = styled.div`
   & a
   {
     text-decoration: none;
+    outline: none;
   }
     .drawerLogo
     {
@@ -361,7 +362,7 @@ export const HeaderAvatarButton = styled(UserAvatarLogout)`
   border: 1px solid var(--primary-color);
   color: var(--primary-color);
   width: auto;
-  
+  transition: 0.3s background;
   &:hover
   {
     background: linear-gradient(0deg, rgba(83, 96, 237, 0.20) 0%, rgba(83, 96, 237, 0.20) 100%), var(--Surface, #FEFEFE);
@@ -369,6 +370,7 @@ export const HeaderAvatarButton = styled(UserAvatarLogout)`
   & img
   {
     max-width: 30px;
+    max-height: 30px;
   }
   .user_icon
   {

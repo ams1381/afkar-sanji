@@ -33,7 +33,6 @@ const QuestionnairePanel = ({ cookies }) => {
     async () => await axiosInstance.get(`/question-api/questionnaires/${router?.query?.QuestionnaireID}/`),{
       refetchOnWindowFocus : false
     })
-    console.log('check')
     if(error && error?.response)
     {
       if(error?.response.status == 404)
@@ -68,6 +67,12 @@ const QuestionnairePanel = ({ cookies }) => {
             body {
               overflow: hidden;
             }
+            .ant-select-item-empty
+            {
+              text-align: right;
+              padding: 10px;
+              color: var(--Neutral-Gray6);
+            }
             @media screen and (max-width : 768px)
             {
               html,
@@ -94,7 +99,7 @@ const QuestionnairePanel = ({ cookies }) => {
             ChangeSide={SetSideState} Questionnaire={data?.data}/>}
             {
               SideState == 'question_design' ? <QuestionDesignPanel QuestionnaireReloader={refetch}
-              Questionnaire={data?.data}  /> 
+              Questionnaire={data?.data} RightDrawerOpen={RightDrawerOpen}  />
               : data?.data && <SettingPanel Questionnaire={data?.data}  ChangeSide={SetSideState}
               refetch={refetch}/>
               }

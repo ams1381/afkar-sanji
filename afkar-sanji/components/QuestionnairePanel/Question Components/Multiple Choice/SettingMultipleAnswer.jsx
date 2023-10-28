@@ -175,10 +175,10 @@ const SettingMultipleAnswer = ({QuestionInfo}) => {
             <p>پاسخ به سوال اجباری باشد</p>
             <Switch checked={QuestionInfo.is_required}/>
         </div>
-        <div className='checkbox_container' onClick={e => RegularToggleHandler(!QuestionInfo.show_number,'show_number')}>
-            <p>عدم نمایش شماره ی سوال</p>
-            <Switch checked={QuestionInfo.show_number}/>
-        </div>
+        {/*<div className='checkbox_container' onClick={e => RegularToggleHandler(!QuestionInfo.show_number,'show_number')}>*/}
+        {/*    <p>عدم نمایش شماره ی سوال</p>*/}
+        {/*    <Switch checked={QuestionInfo.show_number}/>*/}
+        {/*</div>*/}
         <div className='checkbox_container' onClick={e => RegularToggleHandler(!QuestionInfo.is_random_options,'is_random_options')}>
             <p>تصادفی سازی نمایش گزینه ها</p>
             <Switch checked={QuestionInfo.is_random_options}/>

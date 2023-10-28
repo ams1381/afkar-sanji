@@ -46,7 +46,6 @@ const OTPSms = ({ cookies }) => {
       setTimeout(() => {
         
         const returnUrl = router.query.returnUrl || '/';
-        console.log(router)
         typeof window !== 'undefined' ? router.push(returnUrl)  : ''
       },3000)
     }

@@ -84,7 +84,7 @@ export const QuestionnaireNameInput = styled.input`
   font-family: 'IRANSANS';
   background: none;
   border: none;
-  color: var(--Neutral-Gray9);
+  color: ${p => p.error ? 'var(--Error-color)' : 'var(--Neutral-Gray9)'} ;
   font-weight: 600;
   font-size: 1rem;
   outline: none;

@@ -61,6 +61,7 @@ const AddQuestionnairePopUp = ({ AddQuestionnaireModal , FolderReload , folders 
             <ModalContentContainer>
                 <p>عنوان نظرسنجی را وارد کنید</p>
                 <AddQuestionnaireModalInput placeholder='نظرسنجی 1'
+            onKeyDown={e => e.key == 'Enter' ? AddQuestionnaireHandler() : ''}
                 onChange={(e) => {
                     setNewQuestionnaireName(e.target.value)
                     SetErrMessage(null);

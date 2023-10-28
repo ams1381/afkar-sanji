@@ -8,7 +8,7 @@ import { LoginFormOTPInput } from './LoginFormOTPInput';
 import { AuthContext } from '@/utilities/AuthContext';
 import { Button , ConfigProvider , message } from 'antd';
 import { themeContext } from '@/utilities/ThemeContext';
-import { AuthValidator } from '@/utilities/AuthValidators';
+import { AuthValidator } from '@/utilities/validators/AuthValidators';
 import persianNumberMin from 'persian-number';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FormChildDiv } from '@/styles/auth/Login';

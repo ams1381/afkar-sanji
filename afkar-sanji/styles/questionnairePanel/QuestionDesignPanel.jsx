@@ -230,7 +230,8 @@ export const QuestionDesignItem = styled.div`
     background: var(--surface);
     width: ${p => p.childq ? '95%' : '100%'};
     // margin-top : ${p => p.childq ? '1rem' : '0'};
-    transition : border 0.3s;
+    transition : 0.3s;
+    height : ${p => p.height ? p.height + 'px' : '56px'};
     border-right : 2px solid ${p => p.saved ? 'var(--primary-color)' : 'var(--Error-color)'};
 
     .question_bold_info 
@@ -306,14 +307,13 @@ export const LoadingQuestionItem = styled(QuestionDesignItem)`
         }
 `
 export const PreviewContainer = styled.div`
-    
-        width : 50%;
         position: fixed;
-        width: 44%;
-        left: 6%;
+        width: ${p => p.RightDrawerOpen ? '37%' : '44%'};
+        left: ${p => p.RightDrawerOpen ? '5%' : '6%'};
         max-height: 591px;
         overflow: scroll;
         top: ${p => p.QuestionTopDis ? p.QuestionTopDis + 'px' : '138px'};
+        transition: 0.3s;
     
     &::-webkit-scrollbar
     {
@@ -339,6 +339,8 @@ export const QuestionItemRow = styled.div`
     & .question_design_item
     {
         overflow: hidden;
+        // height : ${p => p.isopen ? 'auto' : '56px'};
+        // transition: 0.3s;
     }
     .nested_dnd_message
     {    
@@ -353,6 +355,7 @@ export const QuestionItemRow = styled.div`
     .design_container
     {
         width : ${p => p.childq ? '100%' : '50%'};
+        
     }
     .child_container
     {

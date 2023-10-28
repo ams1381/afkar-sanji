@@ -4,7 +4,7 @@ import {
 } from '@/styles/Questioner/profile'
 import { Icon } from '@/styles/icons'
 import {message, Skeleton, Upload} from 'antd'
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import { InfoContainer } from './InfoBox';
 import {digitsEnToFa} from "@persian-tools/persian-tools";
 import {UploadFileHandler} from "@/utilities/stores/QuestionStore";
@@ -20,8 +20,8 @@ export const UserInfoBox = ({ MeQuery , regions }) => {
         [{
             name : 'عکس پروفایل',
             status: 'success',
-            url: 'https://mah-api.ariomotion.com' + MeQuery?.data?.data?.avatar,
-            thumbUrl : 'https://mah-api.ariomotion.com' + MeQuery?.data?.data?.avatar
+            url: 'https://mah-api.codintofuture.ir' + MeQuery?.data?.data?.avatar,
+            thumbUrl : 'https://mah-api.codintofuture.ir' + MeQuery?.data?.data?.avatar
         }]
         : null);
     useEffect(() => {
@@ -31,8 +31,8 @@ export const UserInfoBox = ({ MeQuery , regions }) => {
             setFileList([{
                 name : 'عکس پروفایل',
                 status: 'success',
-                url: 'https://mah-api.ariomotion.com' + MeQuery?.data?.data?.avatar,
-                thumbUrl : 'https://mah-api.ariomotion.com' + MeQuery?.data?.data?.avatar
+                url: 'https://mah-api.codintofuture.ir' + MeQuery?.data?.data?.avatar,
+                thumbUrl : 'https://mah-api.codintofuture.ir' + MeQuery?.data?.data?.avatar
             }])
             setFileUploaded(true)
         }
@@ -183,6 +183,11 @@ export const UserInfoBox = ({ MeQuery , regions }) => {
                     className="avatar-uploader"
                     fileList={fileList}
                     maxCount={1}
+                    locale={{
+                        uploadError : 'خطا در بارگذاری',
+                        uploading : 'در حال بارگذاری'
+                    }}
+                    accept={'image/*'}
                     onRemove={() => setFileList([])}
                     beforeUpload={beforeUpload}
                     onChange={FileUploadHandler}>

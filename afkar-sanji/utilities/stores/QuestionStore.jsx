@@ -20,7 +20,6 @@ const QuestionSlice =  createSlice({
         },
         ChangeErrorData : (state,action) => {
             const { actionErrorObject , questionID } = action.payload;
-            console.log(actionErrorObject , questionID)
             if(!state.Error.find(item => item.qid == questionID))
             {
                 state.Error.push({
@@ -106,18 +105,10 @@ const QuestionSlice =  createSlice({
             {
                 if(!group)
                     state.data.find(item => item.question.id == QuestionID).question = Response;
-                // if(state.data.find(item => item.question && item.question.id == QuestionID)){
-                //     // console.log(JSON.parse(JSON.stringify(state.data.find(item => item.question.id == QuestionID).question)),Response)
-                    
-                // }
                 else
                 {
-                    console.log(Response, group)
                     state.data.find(item => item.question.id == group).question.child_questions
                         .find(item => item.question.id == QuestionID).question = Response;
-                    // state.data.forEach(item => item.question.child_questions ?
-                    //     item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                    //     .question = Response : '') 
                 }
                 
             }
@@ -226,11 +217,9 @@ const QuestionSlice =  createSlice({
         },
         ChangeMinOrMaxAnswerHandler : (state, action) => {
             const  { QuestionID , MinMaxName , MinMaxValue , group } = action.payload;
-            if(state.Error && state.Error[MinMaxName])
+            if(state.Error && state.Error.length)
             {
-                // delete  state.Error[MinMaxName];
-                state.Error = state.Error.filter(item => item.quid != QuestionID);
-                // console.log(JSON.parse(JSON.stringify(state.Error)))
+                state.Error = state.Error.filter(item => item.qid != QuestionID);
             }
             if(!group)
             {
@@ -241,9 +230,6 @@ const QuestionSlice =  createSlice({
             {
                 state.data.find(item => item.question.id == group).question.child_questions.
                 find(ChildItem => ChildItem.question.id == QuestionID).question[MinMaxName] = MinMaxValue;
-                // state.data.forEach(item => item.question.child_questions ?
-                // item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                // .question[MinMaxName] = MinMaxValue : '')
             }
             // :
             
@@ -276,11 +262,6 @@ const QuestionSlice =  createSlice({
                 state.data.find(item => item.question.id == group).question.child_questions
                 .find(item => item.question.id == QuestionID).question.max = DegreeValue;
             }
-            // state.data.find(item => item.question.id == QuestionID) ?
-            
-            // : state.data.forEach(item => item.question.child_questions ?
-            //     item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-            //     .question.max = DegreeValue : '')
         },
         OptionModifier : (state, action) => {
             const  { QuestionID , OptionID , OptionText , group } = action.payload;
@@ -290,17 +271,12 @@ const QuestionSlice =  createSlice({
                 state.data.find(questionItem => questionItem.question.id == QuestionID).question.options.find
                 (item => item.id == OptionID).text = OptionText
             }
-            // state.data.find(questionItem => questionItem.question.id == QuestionID) ? 
             else
             {
                 state.data.find(questionItem => questionItem.question.id == group).question.child_questions
                 .find(item => item.question.id == QuestionID).question.options
                 .find(optionItem => optionItem.id == OptionID).text = OptionText;
             }
-            // : state.data.forEach(item => item.question.child_questions ?
-            // item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-            // .question.options.find
-            // (item => item.id == OptionID).text = OptionText : '')
         },
         OptionAdder : (state, action) => {
             const  { QuestionID , OptionID , NewOptionID , group , OptionText , newOption} = action.payload;
@@ -322,41 +298,22 @@ const QuestionSlice =  createSlice({
                 }
                 else
                 {
-                    // let DuplicatedOption = JSON.parse(JSON.stringify(state.data)).forEach(item => item.question.child_questions ?
-                    //     item.question.child_questions.find(child_item => child_item.question.id == QuestionID).question.options.find(OptionItem => OptionItem.id == OptionID) : '');
                     let DuplicatedOption = JSON.parse(JSON.stringify(state.data))?.find(item => item.question.id == group).question.child_questions.find(item => item.question.id == QuestionID)
                     .question.options.find(OptionItem => OptionItem.id == OptionID);
-
-                    
-                    // // let DuplicatedIndex = JSON.parse(JSON.stringify(state.data)).forEach(item => item.question.child_questions ?
-                    // //     item.question.child_questions.find(child_item => child_item.question.id == QuestionID).question.options.findIndex(OptionItem => OptionItem.id == OptionID) : '');
 
                     let DuplicatedIndex = JSON.parse(JSON.stringify(state.data))?.find(item => item.question.id == group).question.child_questions.find(item => item.question.id == QuestionID)
                     .question.options.findIndex(OptionItem => OptionItem.id == OptionID)
 
                     const foundGroup = state.data.find(item => item.question.id === group);
                     const childQuestions = foundGroup?.question.child_questions;
-                    const foundChildQuestion = childQuestions?.find(item => item?.question?.id);
-                    // console.log(JSON.parse(JSON.stringity(foundGroup)),
+                    const foundChildQuestion = childQuestions?.find(item => item?.question?.id == QuestionID);
               
                     if (foundChildQuestion) {
-
-                    // console.log(DuplicatedOption , DuplicatedIndex)
                     const options = foundChildQuestion.question.options;
-
-                    // Insert the duplicated option at the specified index
-                    options.splice(DuplicatedIndex + 1, 0, DuplicatedOption);
-
-                    const targetOption = options.find((item, index) => index === DuplicatedIndex + 1);
-                    state.data.find(item => item.question.id == group).question.child_questions
-                    .find(item => item.question.id == QuestionID).question.options.splice(DuplicatedIndex + 1, 0, DuplicatedOption);
-                    // console.log(DuplicatedOption , DuplicatedIndex)
-                    // Update the text and ID for the duplicated option
-                    if (targetOption) {
-                        targetOption.text = '';
-                        targetOption.id = NewOptionID;
-                        targetOption.newOption = newOption;
-                    }
+                    options.splice(DuplicatedIndex + 1, 0, {
+                        text : '',
+                        id : NewOptionID
+                    });
                     }
   
                 }
@@ -364,7 +321,6 @@ const QuestionSlice =  createSlice({
             else
             {
                 if(!group)
-                    // console.log(JSON.parse(JSON.stringify(state.data)).find(item => item.question.id ==))
                     state.data.find(questionItem => questionItem.question.id == QuestionID).question.options.push({
                         id : NewOptionID ,
                         text : OptionText , 
@@ -435,18 +391,9 @@ const QuestionSlice =  createSlice({
             }
             else
             {
-                // let SortedOptions = JSON.parse(JSON.stringify(state.data)).forEach(item => item.question.child_questions ?
-                //     item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                //     .question.options.sort((a,b) => a.text.localeCompare(b.text))  : '')
-                // let SortedOptions = JSON.parse(JSON.stringify(state.data)).find(item = > item.question.id == group).child_questions
-                // .find(item => item.question.id == QuestionID).question.options.sort((a,b) => a.text.lcaleCompare(b.text));
-
                 state.data.find(item => item.question.id == group).question.child_questions
                 .find(item => item.question.id == QuestionID).question.options.sort((a,b) => a.text.localeCompare(b.text));
-                
-                // state.data.forEach(item => item.question.child_questions ?
-                //     item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                //     .question.options = SortedOptions  : '')
+
             }
         }
         ,ChangeLabelHandler : (state, action) => {
@@ -597,24 +544,7 @@ const QuestionSlice =  createSlice({
                 state.data.find(item => item.question.id == group).question.child_questions
                 .find(ChildItem => ChildItem.question.id == QuestionID).question.max = newMax;
 
-
-                console.log(JSON.parse(JSON.stringify(state.data.find(item => item.question.id == group).question.child_questions
-                .find(ChildItem => ChildItem.question.id == QuestionID))))
-                // state.data.forEach(item => item.question.child_questions ?
-                //     item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                //     .question.question_type = newType : '')
-                // state.data.forEach(item => item.question.child_questions ?
-                //     item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                //     .question.url_prefix = Prefix_url : '')
-                // state.data.forEach(item => item.question.child_questions ?
-                //     item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                //     .question.min = newMin : '')
-                // state.data.forEach(item => item.question.child_questions ?
-                //     item.question.child_questions.find(child_item => child_item.question.id == QuestionID)
-                //     .question.max = newMax : '')
             }
-
-            // console.log(state.data.find(item => item.question.id == QuestionID).question.question_type)
         },
         ChangeAnswerPattern : (state, action) => {
             const { QuestionID , NewPattern , answer_template} = action.payload;

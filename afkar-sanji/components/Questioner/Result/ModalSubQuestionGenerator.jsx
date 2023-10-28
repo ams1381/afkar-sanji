@@ -36,7 +36,7 @@ export const ModalSubQuestionGenerator = (QuestionData,setErrorQuestions,ErrorQu
                                      ErrorQuestions={ErrorQuestions} loadableAnswer={loadableAnswer} answerSet={AnswerSetsArray}/>
         case 'group':
             return   QuestionData.child_questions.map((ChildQuestion,index) =>
-                    AnswerSetsArray.some(AnswerItem => AnswerItem.question_id == ChildQuestion?.question.id) && <QuestionContainer key={ChildQuestion.question.id} error={ErrorQuestions.find(ErrorItem => ErrorItem == ChildQuestion.question.id) ? 'active' : null}
+                    AnswerSetsArray.find(AnswerItem => AnswerItem.question === ChildQuestion?.question.id) && <QuestionContainer key={ChildQuestion.question.id} error={ErrorQuestions.find(ErrorItem => ErrorItem == ChildQuestion.question.id) ? 'active' : null}
                                                                                                                                    id={'question' + ChildQuestion.question.id}>
                         <div className='question_header'>
                                 <span>

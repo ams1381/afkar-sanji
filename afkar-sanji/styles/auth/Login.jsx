@@ -135,7 +135,6 @@ export const LoginHeaderText = styled.h2`
     font-family: Arial, Helvetica, sans-serif;
     overflow: hidden;
     transition : 0.3s;
-
     animation : ${p => p.filltext ? 'LoginTitleAnim 1.7s ease' : 'none'};
     animation-timing-function: cubic-bezier(0.7, -0.4, 0.4, 1.4);
     // animation-duration: 400ms;
@@ -143,7 +142,7 @@ export const LoginHeaderText = styled.h2`
 
     &::after 
     {
-        content: 'AfkarSanji';
+        content: 'Mah';
         position: absolute;
         top: 0;
         left: 0;
@@ -173,6 +172,54 @@ export const LoginHeaderText = styled.h2`
     {
         font-size: 40px;
     }
+`
+
+export const TextProgress = styled.div`
+  font-size: 40px;
+  white-space: nowrap;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 0.5px var(--primary-color);
+  position: relative;
+  text-align: center;
+  margin: 0 auto;
+  width: fit-content;
+  animation : ${p => p.filltext ? 'LoginTitleAnim 1.7s ease' : 'none'};
+  animation-timing-function: cubic-bezier(0.7, -0.4, 0.4, 1.4);
+  // animation-duration: 400ms;
+  font-family: 'IRANSANS';
+  animation-delay: 800ms;
+  font-weight: 800;
+
+  @keyframes LoginTitleAnim
+  {
+    25% { transform : scale(1.5)  }
+    50% { transform : scale(1)  }
+    75% { transform : scale(1.5)  }
+    100% { transform : scale(1)  }
+  }
+  @media screen and (max-width: 480px)
+  {
+    font-size: 30px;
+  }
+`
+export const TextInnerProgress = styled.div`
+  color: var(--primary-color);
+  position: absolute;
+  -webkit-text-fill-color: var(--primary-color);
+  top: 0;
+  left: 0;
+  text-align: center;
+  width: ${p => p.filltext ? '100%' : p.halffill ? '50%' : '0'};
+  white-space: nowrap;
+  font-size: 40px;
+  overflow: hidden;
+  transition: 0.3s;
+  
+  
+  @media screen and (max-width: 480px)
+  {
+    font-size: 30px;
+  }
 `
 export const LoginInput = styled.input`
     width: 92%;
@@ -210,8 +257,11 @@ export const LoginBox = styled.div`
     display: flex;
     justify-content: center;
     flex-direction: column;
-    overflow: ${p => p.filltext ? 'initial' : 'hidden'};
-
+    overflow-x: ${p => p.filltext ? 'initial' : 'hidden'};
+  &::-webkit-scrollbar
+  {
+    width: 0;
+  }
     @media screen and (max-width : 480px)
     {
         width: 93%;

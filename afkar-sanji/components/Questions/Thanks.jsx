@@ -8,7 +8,6 @@ import { Player } from 'video-react';
 import { SharePopOverContent } from '../Folders/SharePopover';
 
 const ThankComponent = ({ ThanksInfo , mobilepreview , UUID}) => {
-  console.log(UUID)
   const regex = /(<([^>]+)>)/gi;
   const [ copiedState , setCopiedState ] = useState(false);
   const [ sharePopoverState , setSharePopoverState ] = useState(false);

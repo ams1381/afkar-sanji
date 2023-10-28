@@ -34,10 +34,11 @@ export const OptionalSubComponent = ({ QuestionData , answerSet , setErrorQuesti
             {
                 if(!answerSet?.find(item => item.question === QuestionData.id)?.answer?.selected_options)
                     return
+
                     let selected_options_array = answerSet?.find(item => item.question === QuestionData.id).answer.selected_options
                         .map(SelectedOption => ({
                             id : SelectedOption ,
-                            text : QuestionData.options.find(item => item.id == SelectedOption).text
+                            text : QuestionData.options.find(item => item.id === SelectedOption)?.text
                         }));
 
                     setSelectedValues(selected_options_array);

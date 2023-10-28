@@ -4,7 +4,7 @@ import { Checkbox, Switch } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-const QuestionDescription = ({ QuestionInfo , QuestionDataDispatcher , IsQuestion}) => {
+const QuestionDescription = ({ QuestionInfo , QuestionDataDispatcher , IsQuestion , setQuestionBoxHeight }) => {
 
     const [ openDescriptionField , SetOpenDescriptionField ] = useState(QuestionInfo.description ? true : false);
     const [ DescriptionText , SetDescriptionText ] = useState(null);
@@ -12,10 +12,6 @@ const QuestionDescription = ({ QuestionInfo , QuestionDataDispatcher , IsQuestio
     const regex = /(<([^>]+)>)/gi;
     const [ descriptionOpen , setDescriptionOpen ] = useState(false);
     const InputValue = useRef(QuestionInfo.description);
-    // useEffect(() => {
-    //   if(QuestionInfo.description)
-    //     SetDescriptionText(QuestionInfo.description)
-    // },[QuestionInfo])
     const DescriptionToggleHandler = () => {
       SetOpenDescriptionField(!openDescriptionField)
       setDescriptionOpen(!openDescriptionField)
@@ -29,19 +25,18 @@ const QuestionDescription = ({ QuestionInfo , QuestionDataDispatcher , IsQuestio
          QuestionChanged : IsQuestion ,
          group : QuestionInfo.group
       }))
-      //  console.log(QuestionInfo)
       }
-      // else if(!openDescriptionField && DescriptionText)
-      // {
-      //   QuestionDataDispatcher(ChangeDescriptionHandler({ QuestionID : QuestionInfo.id, NewDesc : DescriptionText , QuestionChanged : IsQuestion}))
-      // }
+
     }
+    useEffect(() => {
+        if(document.querySelector(`.QuestionItem${QuestionInfo.id} .question_item__root`))
+            setQuestionBoxHeight(document.querySelector(`.QuestionItem${QuestionInfo.id} .question_item__root`).clientHeight + 85)
+    },[descriptionOpen])
     const DescriptionChangeHandler = (e) => {
 
       if(!e.target.value)
       {
         SetOpenDescriptionField(false)
-        // QuestionDataDispatcher(ChangeDescriptionHandler({ QuestionID : QuestionInfo.id, NewDesc : null , QuestionChanged : IsQuestion}))
       } 
       else
       {
@@ -58,7 +53,7 @@ const QuestionDescription = ({ QuestionInfo , QuestionDataDispatcher , IsQuestio
     }
 
   return (
-    <QuestionDescriptionContainer>
+    <QuestionDescriptionContainer className={'testDesc'}>
         <div className='Description_checkbox_container' onClick={DescriptionToggleHandler}>
             <p>توضیحات</p>
             <Switch checked={openDescriptionField}/>

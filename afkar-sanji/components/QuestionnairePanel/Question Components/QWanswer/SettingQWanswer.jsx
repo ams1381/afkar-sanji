@@ -14,15 +14,15 @@ const SettingQWanswer = ({ QuestionInfo }) => {
       dispatcher(ChangeAnswerPattern(
         { QuestionID : QuestionInfo.id , NewPattern : e , answer_template : PatternGenerator(e).answer_template}
         ))
-      
-  
   }
   useEffect(() => {
-    console.log(OcurredError)
-    if(OcurredError)
+    if(OcurredError && OcurredError.length)
     {
-        if(OcurredError.min || OcurredError.max)
-            setInputError('active')
+        let QuestionErrorObject = OcurredError.find(item => item.qid == QuestionInfo.id).err_object;
+        if(QuestionErrorObject.min)
+            setInputError('min')
+        else if(QuestionErrorObject.max)
+            setInputError('max')
         else
             setInputError(null)
     }
@@ -30,7 +30,6 @@ const SettingQWanswer = ({ QuestionInfo }) => {
         setInputError(null)
 },[OcurredError])
   const ChangeMinMaxHandler = (event,InputName) => {
-    console.log(event,InputName)
     dispatcher(ChangeMinOrMaxAnswerHandler({
          QuestionID : QuestionInfo.id , 
          MinMaxName : InputName , 
@@ -64,11 +63,11 @@ const SettingQWanswer = ({ QuestionInfo }) => {
         ? <AlphabetNumberContainer inputerror={inputError}>
           <p>تعداد حروف</p>
           <label>
-              <InputNumber value={QuestionInfo.min} min={0} onChange={(e) => ChangeMinMaxHandler(e,'min')}/>
+              <InputNumber status={inputError === 'min' ? 'error' : null} value={QuestionInfo.min} min={0} onChange={(e) => ChangeMinMaxHandler(e,'min')}/>
               <p>حداقل</p>
           </label>
           <label>
-              <InputNumber value={QuestionInfo.max} min={1} onChange={(e) => ChangeMinMaxHandler(e,'max')}/>
+              <InputNumber status={inputError === 'max' ? 'error' : null} value={QuestionInfo.max} min={1} onChange={(e) => ChangeMinMaxHandler(e,'max')}/>
               <p>حداکثر</p>
           </label>
         </AlphabetNumberContainer> : ''}
@@ -76,7 +75,7 @@ const SettingQWanswer = ({ QuestionInfo }) => {
     </TextAnswerSettingContainer>
   )
 }
-const PatternGenerator = (Type) => {
+export const PatternGenerator = (Type) => {
   switch(Type)
   {
     case 'georgian_date':

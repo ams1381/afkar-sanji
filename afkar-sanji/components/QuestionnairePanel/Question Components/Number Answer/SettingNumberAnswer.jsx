@@ -60,10 +60,10 @@ export const SettingNumberAnswer = ({ QuestionInfo }) => {
           </label>
     </AlphabetNumberContainer>
     <ToggleContainer>
-    <div className='checkbox_container' onClick={e => RegularToggleHandler(!QuestionInfo.show_number,'show_number')}>
-            <p>عدم نمایش شماره سوال</p>
-            <Switch checked={QuestionInfo.show_number}/>
-        </div>
+    {/*<div className='checkbox_container' onClick={e => RegularToggleHandler(!QuestionInfo.show_number,'show_number')}>*/}
+    {/*        <p>عدم نمایش شماره سوال</p>*/}
+    {/*        <Switch checked={QuestionInfo.show_number}/>*/}
+    {/*    </div>*/}
         <div className='checkbox_container' onClick={e => RegularToggleHandler(!QuestionInfo.accept_negative,'accept_negative')}>
             <p>عدد منفی مجاز باشد</p>
             <Switch checked={QuestionInfo.accept_negative}/>

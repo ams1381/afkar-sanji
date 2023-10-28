@@ -7,6 +7,10 @@
     font-family: Gilory;
     src: url('../public/Fonts/Gilroy-Light.woff');
 }
+@font-face {
+    font-family: IRANSANSX;
+    src: url('../public/Fonts/IRANSansX-Regular.ttf');
+}
 
 * {
     box-sizing: border-box;

@@ -9,13 +9,17 @@ export const QuestionerResultHeader = styled.div`
   justify-content: space-between;
   flex-direction: row-reverse;
   align-items: center;
+  
 `
 export const QuestionerResultChangerContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
   flex-direction: row-reverse;
-  
+  .ant-btn
+  {
+    background: var(--primary-color);
+  }
   & .ant-select
   {
     direction: rtl;

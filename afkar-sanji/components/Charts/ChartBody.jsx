@@ -45,21 +45,7 @@ export const options = {
   },
 };
 
-function groupBy(arr) {
-  const result = {};
 
-  arr.forEach(item => {
-    for (const prop in item.counts) {
-      if (result[prop]) {
-        result[prop] += item.counts[prop];
-      } else {
-        result[prop] = item.counts[prop];
-      }
-    }
-  });
-
-  return result;
-}
 const ChartsBody = ({ ChartQuery , QuestionnaireQuery }) => {
   const [ filterPopover , setFilterPopover ] = useState(false);
   const [ totalChartType , setTotalChartType ] = useState(null);

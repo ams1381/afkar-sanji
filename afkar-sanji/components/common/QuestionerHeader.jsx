@@ -14,9 +14,31 @@ import { Icon } from '@/styles/icons';
 import { useState } from 'react';
 import Link from "next/link";
 import { Skeleton } from 'antd'
+import {axiosInstance} from "@/utilities/axios";
+import {useRouter} from "next/router";
 
 export const QuestionerHeader = ({ pageName , meData }) => {
+   const router = useRouter()
   const [ logoutPopOver , switchPopover ] = useState(false);
+    const LogoutHandler = async () => {
+        // removeCookie('access_token')
+        // removeCookie('refresh_token');
+        try
+        {
+            (function(){document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); }); })();
+            await axiosInstance.post('/user-api/auth/logout/',{
+                refresh_token : axiosInstance.refresh_token ,
+            })
+        }
+        catch(Err)
+        {
+            console.log(Err)
+        }
+
+
+        // getCookie
+        router.push('/auth')
+    }
   return (
       !meData ?
           <HeaderContainer>
@@ -36,7 +58,7 @@ export const QuestionerHeader = ({ pageName , meData }) => {
                   <LogoutPopoverItem>
                       <Link href={'/questioner/dashboard/profile/'}>پروفایل کاربری</Link>
                   </LogoutPopoverItem>
-                  <LogoutPopoverItem>
+                  <LogoutPopoverItem onClick={() => LogoutHandler()}>
                       <p>خروج</p>
                       <Icon name={'Logout'} />
                   </LogoutPopoverItem>
@@ -49,7 +71,7 @@ export const QuestionerHeader = ({ pageName , meData }) => {
                 style={{width : 190}}
                 >
                     <HeaderAvatarButton onClick={() => switchPopover(!logoutPopOver)}>
-                        { meData.avatar ? <img src={'https://mah-api.ariomotion.com' + meData.avatar}/> :
+                        { meData.avatar ? <img src={'https://mah-api.codintofuture.ir' + meData.avatar}/> :
                         <Icon name={'User'} className={'user_icon'} />}
                         <p>{meData.first_name}</p>
                     </HeaderAvatarButton>

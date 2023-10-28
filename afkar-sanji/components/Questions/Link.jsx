@@ -25,7 +25,7 @@ export const Link = ({ QuestionInfo }) => {
     {
       dispatcher(ChangeInputAnswer({
          QuestionID : QuestionInfo.id ,
-          InputName : 'Link' ,
+          InputName : 'link' ,
           InputValue : Value.target.value
         }))
     }

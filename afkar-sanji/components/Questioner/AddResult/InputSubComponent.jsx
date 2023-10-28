@@ -5,6 +5,7 @@ import {digitsFaToEn} from "@persian-tools/persian-tools";
 import {useDispatch} from "react-redux";
 import {useEffect, useState} from "react";
 import TextArea from "antd/lib/input/TextArea";
+import {PatternGenerator} from "@/components/QuestionnairePanel/Question Components/QWanswer/SettingQWanswer";
 
 
 export const InputSubComponent = ({ QuestionData , answerSet , ErrorQuestions , setErrorQuestions , loadableAnswer }) => {
@@ -24,6 +25,7 @@ export const InputSubComponent = ({ QuestionData , answerSet , ErrorQuestions , 
         //     }
         // }
     },[QuestionData.id])
+
     const ChangeInputHandler = (e) => {
         if(QuestionData.pattern.includes('english_letters'))
         {
@@ -50,31 +52,38 @@ export const InputSubComponent = ({ QuestionData , answerSet , ErrorQuestions , 
             let ErrorQuestionArray = [...ErrorQuestions]
             setErrorQuestions(ErrorQuestionArray.filter(item => item != QuestionData.id))
         }
+
         dispatcher(ChangeInputAnswer({
             QuestionID : QuestionData.id ,
             InputName : QuestionData.question_type ,
-            InputValue : digitsFaToEn(e.toString())
+            InputValue : digitsFaToEn(e.target.value?.toString())
         }))
     }
     return (
         <InputAnswerContainer>
-
             {QuestionData.question_type == 'number_answer' ?
                 <InputNumber min={QuestionData.min} max={QuestionData.max}
-                     value={InputValue}        onChange={(e) => {
-                    setInputValue(e.toString())
+                     value={InputValue}  onChange={(e) => {
+                     if(e)
+                        setInputValue(e.toString())
+                    else
+                         setInputValue(null)
                     dispatcher(ChangeInputAnswer({
                         QuestionID : QuestionData.id ,
                         InputName : 'number_answer' ,
-                        InputValue : digitsFaToEn(e.toString())
+                        InputValue :e ? digitsFaToEn(e.toString()) : null
                     }))}
                 } /> :
                 QuestionData.question_type == 'text_answer' ?
-                    <TextArea rows={4} placeholder="maxLength is 6" maxLength={6} onChange={ChangeInputHandler}  /> :
+                    <TextArea rows={4} placeholder={PatternGenerator(QuestionData.pattern)?.label}
+                              value={InputValue}
+                              maxLength={QuestionData.max ? QuestionData.max : null}
+                              onChange={ChangeInputHandler}  /> :
                 <Input style={{ borderRadius : 2 , marginTop : 26 }} value={InputValue} onChange={(e) => {
-                    // console.log(e.target.value)
+
+                    let ValidationRegex = QuestionData.question_type == 'link' ? /https?:\/\/\S+/g : /[^a-zA-Z@._\-]/g
                     const inputValue = e.target.value;
-                    const cleanedValue = inputValue.replace(/[^a-zA-Z@._\-]/g, '');
+                    const cleanedValue = inputValue.replace(ValidationRegex, '');
                     setInputValue(cleanedValue)
                     let ErrorQuestionArray = [...ErrorQuestions]
 

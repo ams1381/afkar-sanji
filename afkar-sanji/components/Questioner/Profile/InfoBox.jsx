@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useRef} from 'react'
 import { UserInfoContainer , InfoBox 
     , EditInfoBox , UserBoldInfoContainer } from '@/styles/Questioner/profile'
 import { Icon } from '@/styles/icons'
@@ -14,27 +14,37 @@ export const InfoContainer = ({ BoxName , BoxDataName ,MeQuery , UserData , bold
     const [ InputData , setInputData ] = useState(UserData[BoxDataName]);
     const [ ErrorOccured , setErrorOccured ] = useState(false);
     const [ EditLoadingState , setEditLoadingState ] = useState(false);
+    const InputRef = useRef();
+
+    useEffect(() => {
+        if(editState && InputRef.current)
+            InputRef.current.focus();
+    },[editState])
 
     const EditHandler = async () => {
-      setEditState(false)
+
+      setEditLoadingState(true)
       try 
       {
           if(regions)
           {
               if(BoxDataName == 'province') {
-                  setInputData(regions[0].province.find(item => item.name == InputData).id)
+                  setInputData(regions[0].provinces.find(item => item.id == InputData).id)
               }
               else if(BoxDataName == 'nationality') {
-                  setInputData(regions.find(item => item.name == InputData).id)
+                  setInputData(regions.find(item => item.id == InputData).id)
               }
           }
         const dataToUpdate = {
           [BoxDataName]: InputData  // Use computed property name here
         };
-          setEditLoadingState(true)
+
         await axiosInstance.patch('/user-api/users/me/',dataToUpdate)
           MeQuery?.refetch()
+
+          setEditState(false)
           setEditLoadingState(false)
+
       }
       catch(err)
       {
@@ -52,6 +62,7 @@ export const InfoContainer = ({ BoxName , BoxDataName ,MeQuery , UserData , bold
         }
 
       }
+        // setEditLoadingState(false)
     }
   return (
     <InfoBox bold={bold} error={ErrorOccured ? 'active' : null}>
@@ -119,9 +130,10 @@ export const InfoContainer = ({ BoxName , BoxDataName ,MeQuery , UserData , bold
                             }))}>
                             استان محل سکونت
                         </Select>
-                : <input style={{pointerEvents: editState ? 'all' : 'none'}} autoFocus
+                : <input style={{pointerEvents: editState ? 'all' : 'none'}}
+                         disabled={!editState}
                     value={InputData ? digitsEnToFa(InputData) : ''}
-
+                     ref={InputRef}
                     onChange={(e) => {
                         setErrorOccured(null)
                         setInputData(e.target.value)
@@ -130,8 +142,8 @@ export const InfoContainer = ({ BoxName , BoxDataName ,MeQuery , UserData , bold
             :
                <>
                    { EditLoadingState ? <TailSpin
-                           height="10"
-                           width="10"
+                           height="18"
+                           width="18"
                            color="black"
                            ariaLabel="tail-spin-loading"
                            radius="1"
@@ -139,11 +151,15 @@ export const InfoContainer = ({ BoxName , BoxDataName ,MeQuery , UserData , bold
                            wrapperClass=""
                            visible={true}
                        />
-                       :<>
-                           <Icon name='GrayClose' onClick={() => setEditState(false)}
+                       :<div className={'edit_icons_container'}>
+                           <Icon name='GrayClose' onClick={() => {
+                               setEditState(false)
+                               setInputData(UserData[BoxDataName]);
+                               setErrorOccured(false)
+                           }}
                                  style={{width: 13, filter: 'brightness(0.6)'}}/>
                            <Icon name='GrayCheck' onClick={() => EditHandler()}/>
-                       </> }
+                       </div> }
                </>}
 
         </EditInfoBox>

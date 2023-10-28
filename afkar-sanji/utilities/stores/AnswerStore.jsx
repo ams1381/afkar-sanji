@@ -35,7 +35,6 @@ const AnswerSetSlice =  createSlice({
         setAnswerSetArray : (state , action) => {
             const { AnswerSetArray , QuestionsArray } = action.payload;
             let JSONAnswerSetArray = JSON.parse(JSON.stringify(AnswerSetArray));
-            console.log(JSONAnswerSetArray)
             JSONAnswerSetArray = JSONAnswerSetArray.map(item => ({
                 question : item.question_id ,
                 answer : (item.question_type == 'optional') ? item.answer.options ? {
@@ -66,7 +65,9 @@ const AnswerSetSlice =  createSlice({
                         } : {}
                     : item.question_type == 'link' ? item.answer ? {
                         link : item.answer
-                    } : {} : {},
+                    } : {} : item.question_type == 'text_answer' ? item.answer ? {
+                                text_answer : item.answer
+                            } : {} : {},
 
                 file : item.file
             }))

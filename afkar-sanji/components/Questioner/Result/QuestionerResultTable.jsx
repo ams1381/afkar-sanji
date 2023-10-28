@@ -9,21 +9,17 @@ import {Provider} from "react-redux";
 import AnswerStore from "@/utilities/stores/AnswerStore";
 // import ReactModal from 'react-modal-resizable-draggable';
 
-export const QuestionerResultTable = ({ ResultQuery , QuestionnaireQuery , QuestionsArray , SetCurrentPage ,
+export const QuestionerResultTable = ({ ResultQuery , PageSize , setPageSize , QuestionnaireQuery , QuestionsArray , SetCurrentPage ,
           setSelectedRows ,TableColumns , SelectedRows , TableData  }) => {
     const [ openResultModal , setOpenResultModal ] = useState(false);
     const [ ModalAnswerSet , setModalAnswerSet ] = useState([]);
-    const MarkdownPreview = lazy(() => import('react-modal-resizable-draggable'));
-
-    const [modalStyle, setModalStyle] = useState({});
-    const modalRef = useRef(null);
-    // const [ selectedRows , setSelectedRows ] = useState([6870]);
     const tableRef = useRef(null);
 
     useEffect(() => {
         if(tableRef.current)
-            ScrollByDrag();
-    }, [document?.querySelector("thead.ant-table-thead tr")]);
+            ScrollByDrag(ResultQuery?.data?.data?.results?.length ? true : false);
+    }, [document.querySelector("thead.ant-table-thead tr") ,
+        document.querySelector(".ant-table-tbody .ant-table-body")]);
 
 
     return  <>
@@ -40,14 +36,17 @@ export const QuestionerResultTable = ({ ResultQuery , QuestionnaireQuery , Quest
             sticky
             loading={ResultQuery.isFetching}
             bordered
+            disabled={!PageSize}
             locale={{
                 emptyText : <p className='no_result_message'>نتیجه‌ای یافت نشد</p>
             }}
             direction='ltr'
+            showQuickJumper
             pagination={{
                 hideOnSinglePage : true,
                 total : ResultQuery?.data?.data.count,
-                pageSize : 7,
+                pageSize : PageSize ? PageSize : 0,
+                onShowSizeChange : (a,b) => setPageSize(b),
                 position : 'center' ,
                 alignment : 'center' ,
                 defaultPageSize : 4,
@@ -57,7 +56,7 @@ export const QuestionerResultTable = ({ ResultQuery , QuestionnaireQuery , Quest
                     return  digitsEnToFa(page)
                 },
                 showQuickJumper : true ,
-                showSizeChanger  : false,
+                showSizeChanger  : true,
                 showTotal : (total , range) => {
                     return <p>جمعا {digitsEnToFa(Math.ceil(ResultQuery?.data?.data.count / 7))} صفحه </p>
                 },
@@ -65,6 +64,7 @@ export const QuestionerResultTable = ({ ResultQuery , QuestionnaireQuery , Quest
                 locale : {
                     jump_to: "",
                     page : 'رفتن به',
+                    items_per_page : 'صفحه' ,
                 }
             }}
             rowSelection={{
@@ -74,7 +74,9 @@ export const QuestionerResultTable = ({ ResultQuery , QuestionnaireQuery , Quest
                 },
                 // hideSelectAll : true,
                 columnWidth : 112,
-                fixed : true,
+                fixed: true,
+                // width : 100 ,
+
                 renderCell :
                     (checked, record, index, originNode) => {
                        return <div className='order_cell' style={{ gap : 0 }}>

@@ -1,4 +1,4 @@
-import { QuestionChartContainer , QuestionChartContainerHeader , QuestionChartBodyContainer } from '@/styles/Charts/ChartsPage'
+import { QuestionChartContainer , QuestionChartContainerHeader  } from '@/styles/Charts/ChartsPage'
 import { Icon } from '@/styles/icons'
 import { QuestionTypeIcon } from '@/utilities/QuestionTypes'
 import { Popover } from 'antd'
@@ -6,16 +6,12 @@ import React from 'react'
 import { useState } from 'react'
 import { SortPopoverContent } from './SortPopoverContent'
 import { ChartTypePopover } from './ChartTypePopover'
-import { Bar, Line, Pie } from 'react-chartjs-2'
 import 'chart.js/auto'
 import { ChartGenerator } from './ChartGenerator'
-import { defaults } from 'react-chartjs-2';
-import { digitsEnToFa } from '@persian-tools/persian-tools'
-import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { useEffect } from 'react'
 import { useRef } from 'react'
 import html2canvas from 'html2canvas'
-// import { objectTraps } from 'immer/dist/internal'
+import {ChartDataGenerator, ChartOptionGenerator} from "@/utilities/Charts/ChartConfigGenerator";
 const regex = /(<([^>]+)>)/gi;
 
 const exportChart = async (ChartID,ChartType) => {
@@ -40,125 +36,6 @@ const exportChart = async (ChartID,ChartType) => {
     catch(err)
     {
       console.log(err)
-    }
-}
-
-const ChartDataGenerator = (PlotDetail,currentSort,currentChartType,backgroundColors,borderColors) => {
-  // console.log(backgr/oundColors)
-  let data; 
-  // console.log(currentChartType)
-  if(PlotDetail.options)
-    {
-     let dataArray =  Object.values(PlotDetail.counts).map((item,index) => [ PlotDetail.options[index].text  , item ])
-     let SortArray = currentSort == 'increase' ? Object.values(PlotDetail.counts).sort((a,b) => a - b) :
-      currentSort == 'decrease' ? Object.values(PlotDetail.counts).sort((a,b) => a - b).reverse() : ''
-    
-    if(currentSort != 'default')
-      dataArray = dataArray.map(function(item) {
-        var n = SortArray.indexOf(item[1]);
-        SortArray[n] = '';
-        return [n, item]
-    }).sort().map(function(j) { return j[1] }).map(item => item[0])
-
-     return data = {
-        type : currentChartType == 'Line' ? 'line' : (currentChartType == 'Bar' ||  currentChartType == 'HorizontalBar') ? 'bar' :'pie',
-        labels: Object.values(PlotDetail.counts).every(item => item == 0) ? [] :
-        currentSort == 'default' ? PlotDetail.options?.map(item => item.text?.replace(regex,"")) :
-        dataArray.map(item => item.replace(regex,"")) 
-        ,
-        datasets: [
-          {
-            data: PlotDetail.counts ?  
-            currentSort == 'default' ?  Object.values(PlotDetail.counts) : currentSort == 'increase' ?
-            Object.values(PlotDetail.counts).sort((a,b) => a - b) : currentSort == 'decrease' ?
-             Object.values(PlotDetail.counts).sort((a,b) => a - b).reverse() : ''
-            : [],
-            // fill: true,
-            backgroundColor: backgroundColors ? backgroundColors : currentChartType != 'Line' ? generateRandomColors(PlotDetail.options?.length) : null ,
-            borderColor: (borderColors == 'transparent' && currentChartType == 'Line') ? generateRandomColors(1)
-             : currentChartType == 'Line' ? generateRandomColors(1) : 'transparent',
-            fontFamily : 'IRANSans',
-            yAxisID : 'y'
-          },
-        ],
-        // plugins: [htmlLegendPlugin],
-      };
-    }
-     else if(PlotDetail.question_type == 'integer_range' || PlotDetail.question_type == 'integer_selective')
-    {
-
-     let dataArray = objectToSparseArray(PlotDetail.counts , PlotDetail.max).map((item,index) => [ PlotDetail.min == 0 ? index : index + 1 , item ]);
-     let SortArray = currentSort == 'increase' ? objectToSparseArray(PlotDetail.counts , PlotDetail.max).sort((a,b) => a - b) :
-      currentSort == 'decrease' ? objectToSparseArray(PlotDetail.counts , PlotDetail.max).sort((a,b) => a - b).reverse() : ''
-    
-    if(currentSort != 'default')
-    {
-      dataArray = dataArray.map(function(item) {
-        var n = SortArray.indexOf(item[1]);
-        SortArray[n] = '';
-        return [n, item]
-    }).sort().map(function(j) { return j[1] }).map(item => item[0]);
-    }   
-      return  data = { 
-            type : currentChartType == 'Line' ? 'line' : (currentChartType == 'Bar' ||  currentChartType == 'HorizontalBar') ? 'bar' :'pie',
-            labels: (currentSort == 'default') ? Array.from({ length : PlotDetail.max }).map((_,index) =>
-               (PlotDetail.max == 0 ? index : index + 1)) : 
-               dataArray
-               ,
-            datasets: [
-              {
-                data: currentSort == 'default' ? objectToSparseArray(PlotDetail.counts , PlotDetail.max) :
-                currentSort == 'increase' ? objectToSparseArray(PlotDetail.counts , PlotDetail.max).sort((a,b) => a - b) :
-                currentSort == 'decrease' ? objectToSparseArray(PlotDetail.counts , PlotDetail.max).sort((a,b) => a - b).reverse() : []
-                ,
-                // fill: true,
-                backgroundColor: backgroundColors ? backgroundColors : currentChartType != 'Line' ? generateRandomColors(PlotDetail.max) : null ,
-                borderColor: (borderColors == 'transparent' && currentChartType == 'Line') ? generateRandomColors(1)
-                 : currentChartType == 'Line' ? generateRandomColors(1) : 'transparent',
-                fontFamily : 'IRANSans',
-                yAxisID : 'y'
-              },
-            ],
-          };
-    }
-    else if(PlotDetail.question_type == 'number_answer')
-    {
-      let dataArray = Object.keys(PlotDetail.counts).map((item,index) => [ item , Object.values(PlotDetail.counts)[index] ]);
-      let SortArray = currentSort == 'increase' ? Object.values(PlotDetail.counts).sort((a,b) => a - b) :
-      currentSort == 'decrease' ? Object.values(PlotDetail.counts).sort((a,b) => a - b).reverse() : ''
-
-      if(currentSort != 'default')
-      {
-        dataArray = dataArray.map(function(item) {
-          var n = SortArray.indexOf(item[1]);
-          SortArray[n] = '';
-          return [n, item]
-      }).sort().map(function(j) { return j[1] }).map(item => item[0]);
-      }  
-
-    return  data = {
-        type : currentChartType == 'Line' ? 'line' : (currentChartType == 'Bar' ||  currentChartType == 'HorizontalBar') ? 'bar' :'pie',
-        labels: (currentSort == 'default') ? Object.keys(PlotDetail.counts).map((item,index) =>
-               digitsEnToFa(item)) : 
-               dataArray.map(item => digitsEnToFa(item))
-               ,
-        datasets: [
-          {
-            data: Object.values(PlotDetail.counts).length == 1 ? [(Object.values(PlotDetail.counts)[0])]
-            : currentSort == 'default' ? Object.values(PlotDetail.counts).map(item => (item)) :
-            currentSort == 'increase' ? Object.values(PlotDetail.counts).map(item => (item)).sort((a,b) => a - b) :
-            currentSort == 'decrease' ? Object.values(PlotDetail.counts).map(item => (item)).sort((a,b) => a - b).reverse() : []
-            ,
-            // fill: true,
-            backgroundColor: backgroundColors ? backgroundColors :  currentChartType != 'Line' ? generateRandomColors(PlotDetail.max) : null ,
-            borderColor: (borderColors == 'transparent' && currentChartType == 'Line') ? generateRandomColors(1)
-             : currentChartType == 'Line' ? generateRandomColors(1) : 'transparent',
-            fontFamily : 'IRANSans',
-            yAxisID : 'y',
-           
-          },
-        ],
-      };
     }
 }
 
@@ -188,188 +65,7 @@ export const QuestionChart = ({ PlotDetail , totalChartType , totalChartSort}) =
           setCurrentSort(totalChartSort)
     },[totalChartSort])
     
-    const options = {
-        // responsive: true,
-        aspectRatio: 1,
-        // maintainAspectRatio: false,
-        indexAxis: indexAxis,
-        plugins: {
-          // htmlLegend: {
-          //   // ID of the container to put the legend in
-          //   containerID: 'legend-container',
-          // },
-          legend: {
-            display:  currentChartType == 'Pie',
-            // display : false,
-            position: 'right',
-            labels: {
-              color: "#666",
-              usePointStyle : true ,
-              font: {
-                family: "IRANSans" // Add your font here to change the font of your legend label
-              }
-            },
-          },
-          tooltip: {
-            display : false,
-            cornerRadius : 2,
-            titleFont : {
-                family : 'IRANSans'
-            },
-            bodyFont : {
-                family : 'IRANSans'
-            },
-            callbacks: {
-                label : (shit) => {
-                  try 
-                  {
-                    return  digitsEnToFa(shit.formattedValue.toString() + ' ' + shit.label)
-                  }
-                   catch(err)
-                   {
-                    console.log(err)
-                   }
-                },
-                title : (TitleValue) => {
-                  return digitsEnToFa(TitleValue[0].formattedValue)
-                }
-            }
-        }, 
-      }  ,
-      scales : {
-        x : {
-          display : currentChartType != 'Pie',
-          
-          title : 
-          {    
-            font : {
-              family : 'IRANSans'
-            },
-          },
-          ticks : {     
-              font : {
-                family : 'IRANSans'
-            },
-            callback: function(value, index, ticks) {
-              if(currentChartType != 'HorizontalBar')
-              {
-                if(PlotDetail.question_type == 'optional' ||
-                PlotDetail.question_type == 'drop_down')
-                {
-                  let dataArray = PlotDetail.options.map((item,index) => [ item?.text , Object.values(PlotDetail.counts)[index] ]);
-                 let SortArray = currentSort == 'increase' ? Object.values(PlotDetail.counts).sort((a,b) => a - b) :
-                   currentSort == 'decrease' ? Object.values(PlotDetail.counts).sort((a,b) => a - b).reverse() : ''
-                 
-                 if(currentSort != 'default')
-                   dataArray = dataArray.map(function(item) {
-                     var n = SortArray.indexOf(item[1]);
-                     SortArray[n] = '';
-                     return [n, item]
-                 }).sort().map(function(j) { return j[1] })
 
-                 if(currentSort != 'default' && dataArray[index][0])
-                    return digitsEnToFa(dataArray[index][0]?.replace(regex,""))
-                  else
-                    return digitsEnToFa(PlotDetail.options[index]?.text?.replace(regex,""));
-                }
-                 
-               else 
-               {
-  
-                 let dataArray = objectToSparseArray(PlotDetail.counts , PlotDetail.max).map((item,index) => [ PlotDetail.minimum_answer == 0 ? index : index + 1 , item ]);
-                 let SortArray = currentSort == 'increase' ? Object.values(PlotDetail.counts).sort((a,b) => a - b) :
-                   currentSort == 'decrease' ? Object.values(PlotDetail.counts).sort((a,b) => a - b).reverse() : ''
-                 
-                 if(currentSort != 'default')
-                   dataArray = dataArray.map(function(item) {
-                     var n = SortArray.indexOf(item[1]);
-                     SortArray[n] = '';
-                     return [n, item]
-                 }).sort().map(function(j) { return j[1] })
- 
-                 if(dataArray[index] && dataArray[index][0] && currentSort != 'default')
-                   return digitsEnToFa(dataArray[index][0]?.toString())
-                  else
-                  {
-                    if(PlotDetail.minimum_answer == 0) 
-                      return digitsEnToFa(value)
-                    else
-                      return digitsEnToFa(value + 1)
-                  }
-                  
-               } 
-              }
-              else
-              {
-                return digitsEnToFa(value)
-                //  return digitsEnToFa(Object.values(PlotDetail.counts)[index][0]);
-              }
-          }
-          }
-        } , 
-        y : {
-          display : currentChartType != 'Pie',
-          min : 0,
-          ticks : {
-            font : {
-              family : 'IRANSans'
-          },
-          margin : 5,
-          callback: function(value, index, ticks) {
-            if(currentChartType != 'HorizontalBar')
-              return digitsEnToFa(value);
-            else
-            {
-              if(PlotDetail.question_type == 'optional' || PlotDetail.question_type == 'drop_down')
-              {
-                let dataArray = PlotDetail.options.map((item,index) => [ item?.text , Object.values(PlotDetail.counts)[index] ]);
-                 let SortArray = currentSort == 'increase' ? Object.values(PlotDetail.counts).sort((a,b) => a - b) :
-                   currentSort == 'decrease' ? Object.values(PlotDetail.counts).sort((a,b) => a - b).reverse() : ''
-                 
-                 if(currentSort != 'default')
-                   dataArray = dataArray.map(function(item) {
-                     var n = SortArray.indexOf(item[1]);
-                     SortArray[n] = '';
-                     return [n, item]
-                 }).sort().map(function(j) { return j[1] })
-
-
-               
-                 if(currentSort != 'default' && dataArray[index][0])
-                  return digitsEnToFa(dataArray[index][0]?.replace(regex,""))
-                else
-                  return digitsEnToFa(PlotDetail.options[index]?.text?.replace(regex,""))
-              }
-                 
-              else
-              {
-                let dataArray = objectToSparseArray(PlotDetail.counts , PlotDetail.max).map((item,index) => [ PlotDetail.min == 0 ? index : index + 1 , item ]);
-                 let SortArray = currentSort == 'increase' ? dataArray.map(item => item[1]).sort((a,b) => a - b) :
-                   currentSort == 'decrease' ? dataArray.map(item => item[1]).sort((a,b) => a - b).reverse() : ''
-                 
-                 if(currentSort != 'default')
-                   dataArray = dataArray.map(function(item) {
-                     var n = SortArray.indexOf(item[1]);
-                     SortArray[n] = '';
-                     return [n, item]
-                 }).sort().map(function(j) { return j[1] })
- 
-        
-                 if(dataArray[index] && dataArray[index][0])
-                   return digitsEnToFa(dataArray[index][0])
-              
-              }
-            }
-        }
-          },
-          title : {
-             font : {
-            family : 'IRANSans'
-          } ,
-        }
-      }
-      }
-    };
   return (
     
     <QuestionChartContainer>
@@ -406,14 +102,16 @@ export const QuestionChart = ({ PlotDetail , totalChartType , totalChartSort}) =
         </QuestionChartContainerHeader>
         <div>
             <div style={{ width : 'fit-content' , margin : '0 auto' }}>
-            { ChartData && ChartGenerator(currentChartType,ChartData,PlotDetail,options,chartRef) }
+            { ChartData && ChartGenerator(currentChartType,ChartData,PlotDetail,
+                ChartOptionGenerator(indexAxis , currentChartType , PlotDetail , currentSort)
+                ,chartRef) }
          
             </div>
         </div>
     </QuestionChartContainer>
   )
 }
-const generateRandomColors = (count) => {
+export const generateRandomColors = (count) => {
     const colors = [];
     const letters = '0123456789ABCDEF';
   
@@ -436,65 +134,8 @@ export function fillArrayWithObject(obj, length) {
 
   return resultArray;
 }
-function rearrangeTextArray(textArray, sourceIndices, targetIndices) {
-  if (
-    textArray.length !== sourceIndices.length ||
-    textArray.length !== targetIndices.length
-  ) {
-    throw new Error("Input arrays must have the same length.");
-  }
 
-  // Create an array to store elements grouped by target index
-  const groupedElements = [];
-
-  for (let i = 0; i < textArray.length; i++) {
-    const targetIndex = targetIndices[i];
-
-    // Initialize an array for the target index if not already present
-    if (!groupedElements[targetIndex]) {
-      groupedElements[targetIndex] = [];
-    }
-
-    // Push the element along with its source index
-    groupedElements[targetIndex].push({ text: textArray[i], sourceIndex: sourceIndices[i] });
-  }
-
-  // Flatten the grouped elements while maintaining the order
-  const rearrangedArray = [];
-  for (let targetIndex = 0; targetIndex < groupedElements.length; targetIndex++) {
-    const elements = groupedElements[targetIndex];
-    if (elements) {
-      // Sort the elements by their source index
-      elements.sort((a, b) => a.sourceIndex - b.sourceIndex);
-      // Push the sorted elements into the rearranged array
-      rearrangedArray.push(...elements.map((element) => element.text));
-    }
-  }
-
-  return rearrangedArray;
-}
-function sortArrayByChanges(originalArray, initialArray, changedArray) {
-  // Create an array of objects, each containing the original number and its corresponding change values
-  const combinedArray = originalArray.map((number, index) => ({
-    number,
-    changeValue: changedArray[index] - initialArray[index],
-  }));
-
-  // Sort the combined array based on the change values
-  combinedArray.sort((a, b) => b.changeValue - a.changeValue);
-
-  // Extract the sorted numbers from the combined array
-  const sortedArray = combinedArray.map(item => item.number);
-
-  return sortedArray;
-}
-
-function sortObjectByValues(obj, isAscending = true) {
-  return Object.fromEntries(Object.entries(obj)
-    .sort((a, b) => isAscending ? a[1] - b[1] : b[1] - a[1])
-  );
-}
-function objectToSparseArray(obj, length) {
+export function objectToSparseArray(obj, length) {
   const resultArray = Array(length).fill(0);
 
   for (const key in obj) {
@@ -505,32 +146,4 @@ function objectToSparseArray(obj, length) {
   }
 
   return resultArray;
-}
-function sortArrayByPattern(arr, pattern) {
-  const result = [];
-  
-  // Separate the array into parts based on the pattern
-  const increasePart = arr.filter((_, i) => pattern[i] === 1);
-  const noChangePart = arr.filter((_, i) => pattern[i] === 0);
-  
-  // Sort the parts accordingly
-  increasePart.sort((a, b) => a - b);
-  
-  // Reconstruct the array based on the pattern
-  for (const val of pattern) {
-    if (val === 1) {
-      result.push(increasePart.shift());
-    } else {
-      result.push(noChangePart.shift());
-    }
-  }
-  
-  return result;
-}
-const SortArrayBasedOnAnother = (OrgArray,SortArray) => {
-  OrgArray.map(function(item) {
-      var n = SortArray.indexOf(item[1]);
-      SortArray[n] = '';
-      return [n, item]
-  }).sort().map(function(j) { return j[1] })
 }

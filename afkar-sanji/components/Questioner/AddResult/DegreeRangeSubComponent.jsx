@@ -17,37 +17,36 @@ export const DegreeRangeSubComponent = ({ QuestionData , answerSet , ErrorQuesti
     useEffect(() => {
         // console.log(answerSet?.find(item => item.question === QuestionData.id))
         if(answerSet.find(item => item.question === QuestionData.id))
-        {   console.log(answerSet?.find(item => item.question === QuestionData.id))
+        {
             SetSelectedItem(answerSet.find(item => item.question === QuestionData.id).answer[QuestionData.question_type] )
-            // let selected_options_array = answerSet?.find(item => item.question === QuestionData.id)?.answer?.selected_options;
-            // // console.log(selected_options_array)
-            // setSelectedValues(selected_options_array);
-            // if(answerSet.find(item => item.question === QuestionData.id).answer?.other_text)
-            // {
-            //
-            //     setShowInput(true);
-            //     setOtherInputValue(answerSet.find(item => item.question == QuestionInfo.id).answer?.other_text)
-            // }
         }
     },[QuestionData.id ])
+
     return <DegreeItemsContainer>
         {
             Array.from({ length : QuestionData.max }).map((_,index) =>
                 <OptionalItemContainer key={index + 1} onClick={() => {
-                    SetSelectedItem(index)
+                    if(QuestionData.question_type == 'integer_selective' ||
+                        (QuestionData.question_type == 'integer_range' && QuestionData.min !== 0))
+                        SetSelectedItem(index + 1)
+                    else
+                        SetSelectedItem(index)
                     let ErrorQuestionArray = [...ErrorQuestions]
-
+                    // console.log((QuestionData.min === 0))
                     setErrorQuestions(ErrorQuestionArray.filter(item => item != QuestionData.id))
                     dispatcher(NumberSelect({
                         QuestionID : QuestionData.id ,
-                        NumberValue : QuestionData.min == 0 ? index : index + 1 ,
+                        NumberValue : QuestionData.min === 0 ? index : index + 1 ,
                         NumberName : QuestionData.question_type
                     }))
-                }
+                    }
                 }
                     style={{ fontWeight : 700 , color : 'black' , gap : '8px'}}>
                 <p>{digitsEnToFa( QuestionData.min == 0 ? index : index + 1)}</p>
-                <Checkbox checked={index == SelectedItem} />
+                    { QuestionData.question_type == "integer_selective" ?
+                    <Checkbox checked={index + 1 === SelectedItem} /> :
+                        <Checkbox checked={QuestionData.min == 0 ? index == SelectedItem : index + 1 == SelectedItem } />
+                    }
             </OptionalItemContainer>)
         }
     </DegreeItemsContainer>

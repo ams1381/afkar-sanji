@@ -4,7 +4,7 @@ import {  QuestionnaireHeader ,  QuestionnaireBodyStat ,
 import { QuestionnaireDiv , QuestionnaireSeeResultButton , RenameSpan } from '@/styles/folders/Questionnaire';
 import BadgeStyle from '@/styles/folders/Questionnaire.module.css'
 import jalaali from 'jalaali-js';
-import { Badge, Card, Skeleton, Space } from 'antd';
+import {Badge, Card, message, Skeleton, Space} from 'antd';
 import PN from "persian-number";
 import QuestionnaireFooterPart from './questionnaireFooter';
 import { axiosInstance } from '@/utilities/axios';
@@ -13,6 +13,7 @@ import { handleInputWidth } from '@/utilities/RenameFunctions';
 import { digitsEnToFa } from '@persian-tools/persian-tools';
 import Link from 'next/link';
 import { convertToRegularTime } from '../QuestionnairePanel/SettingPanel';
+import {TailSpin} from "react-loader-spinner";
 
 const convertToJalaliDate = (inputDate) => {
     const [year, month, day] = inputDate.split('-');
@@ -22,7 +23,8 @@ const convertToJalaliDate = (inputDate) => {
 const QuestionnaireBox = ({Questionnaire , FolderReload , folderNumber}) => {
     const [ ChangeNameActive , setChangeNameState ] = useState(false);
     const [ QuestionnaireName , setQuestionnaireName ] = useState(Questionnaire.name);
-    const [ NameInputWidth , SetInputWidth ] = useState(null);
+    const [ RenameLoading , setRenameLoading ] = useState(false);
+    const [ MessageApi , MessageContext ] = message.useMessage();
     const nameRef = useRef(null);
     const isRenamePending = useRef(false);
     useEffect(() => {
@@ -46,18 +48,32 @@ const QuestionnaireBox = ({Questionnaire , FolderReload , folderNumber}) => {
         handleInputWidth(nameRef,QuestionnaireName)
         try
         {
+            setRenameLoading(true)
             setQuestionnaireName(QuestionnaireName);
             await axiosInstance.patch(`/question-api/questionnaires/${Questionnaire.uuid}/`,{ name : QuestionnaireName });
             FolderReload()
+            setChangeNameState(false);
             // handleInputWidth(nameRef,QuestionnaireName);
         }
        catch(err)
        {
+            if(err.response?.status == 500)
+            {
+                MessageApi.error({
+                    content : 'مشکل سمت سرور' ,
+                    duration : 3,
+                    style : {
+                        fontFamily : 'IRANSans',
+                        direction : 'rtl'
+                    }
+                })
+            }
+
         // handleInputWidth(nameRef,QuestionnaireName);
        }
        finally
        {
-        setChangeNameState(false);
+        setRenameLoading(false)
        }
     }
     const nameInputChangeHandler = async (e) => {
@@ -67,6 +83,7 @@ const QuestionnaireBox = ({Questionnaire , FolderReload , folderNumber}) => {
 
   return (
      <QuestionnaireDiv>
+         {MessageContext}
         <Badge.Ribbon className={BadgeStyle['QuestionnaireBadge']} color={Questionnaire.is_active ? "green" : "red"} text={Questionnaire.is_active ? 'فعال' : 'غیر فعال'}  
             style={{
                 marginTop : 30 , fontFamily : 'IRANSans' ,
@@ -80,21 +97,33 @@ const QuestionnaireBox = ({Questionnaire , FolderReload , folderNumber}) => {
                  <QuestionnaireNameInput ref={nameRef} onKeyDown={e => e.key == 'Enter' ? RenameQuestionnaire() : ''} 
                  type="text" onChange={nameInputChangeHandler}
                   value={QuestionnaireName} disabled={!ChangeNameActive}/>
-                 <RenameSpan clickable={(ChangeNameActive && !QuestionnaireName) ? null : 'active'} 
-                  onClick={RenameStateHandler}>
-                    {!ChangeNameActive ? <Icon name='RenameQuestionnaire' /> : 
-                    <div> 
-                        <Icon name='RenameQuestionnaireCheck' />
-                     </div>}
-                 </RenameSpan>
-                 {ChangeNameActive && <RenameSpan clickable={true}
-                  onClick={() => {
-                    setQuestionnaireName(Questionnaire.name)
-                    setChangeNameState(false)
-                    handleInputWidth(nameRef,Questionnaire.name);
-                    }} style={{ marginRight : 10 }}>
-                     <Icon name='BlackClose' style={{ width : 14 }} />
-                 </RenameSpan>}
+                 { RenameLoading ? <TailSpin
+                     height="18"
+                     width="18"
+                     color="black"
+                     ariaLabel="tail-spin-loading"
+                     radius="1"
+                     wrapperStyle={{}}
+                     wrapperClass="spiner_loading_wrapper"
+                     visible={true}
+                 /> : <>
+                     <RenameSpan clickable={(ChangeNameActive && !QuestionnaireName) ? null : 'active'}
+                                 onClick={RenameStateHandler}>
+                         {!ChangeNameActive ? <Icon name='RenameQuestionnaire' /> :
+                             <div>
+                                 <Icon name='RenameQuestionnaireCheck' />
+                             </div>}
+                     </RenameSpan>
+                     {ChangeNameActive && <RenameSpan clickable={true}
+                                                      onClick={() => {
+                                                          setQuestionnaireName(Questionnaire.name)
+                                                          setChangeNameState(false)
+                                                          handleInputWidth(nameRef,Questionnaire.name);
+                                                      }} style={{ marginRight : 10 }}>
+                         <Icon name='BlackClose' style={{ width : 14 }} />
+                     </RenameSpan>}
+                 </>}
+
              </QuestionnaireNameContainer> : <Skeleton active /> }
              <div className="questionnaire_preview">
                 {Questionnaire.question_count != 0  ? 

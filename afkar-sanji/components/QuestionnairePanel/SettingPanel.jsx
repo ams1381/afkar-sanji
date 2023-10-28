@@ -185,6 +185,7 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
             <DatePicker  format=" YYYY/MM/DD HH:mm:ss "
               disabled={!DateActive}
               rangeHover
+
               dateSeparator="تا" 
               // minDate="1402/6/18"
               // minDate={new DateObject({ calendar: persian })}
@@ -205,7 +206,7 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
               ]}
               onChange={DateChangeHandler}
               calendar={persian}
-              calendarPosition="bottom-left"
+              calendarPosition="bottom-right"
               locale={persian_fa}
             />
           </div>

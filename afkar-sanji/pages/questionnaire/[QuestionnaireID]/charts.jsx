@@ -63,7 +63,7 @@ export default ChartsPage;
 export async function getServerSideProps(context) {
   const { req } = context;
   const cookies = req.headers.cookie;
-  const urlDest = req.pathname ;
+  const urlDest = req.url;
 
 
   if (cookies) {
@@ -80,18 +80,10 @@ export async function getServerSideProps(context) {
     };
   }
 
-  if(urlDest != '/500' && urlDest != '/404' && urlDest != '/403')
     return {
       redirect: {
         permanent: false,
         destination: "/auth?returnUrl=" + urlDest
-      }
-    };
-  else
-    return {
-      redirect: {
-        permanent: false,
-        destination: urlDest
       }
   }
 }

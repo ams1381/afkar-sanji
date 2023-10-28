@@ -95,8 +95,11 @@ export const ResultTableContainer = styled.div`
   
     & .ant-table
     {
-        margin-top : 10px;
         background : ${p => p.loading ? '#EFE9E9' : 'none'};
+    }
+    .ant-table-wrapper
+    {
+      margin-top : 10px;
     }
       .react-draggable
       {
@@ -304,6 +307,10 @@ export const ResultTableContainer = styled.div`
     {
         background: transparent;
     }
+    .no_data_table .ant-table-wrapper
+    {
+      overflow: auto;
+    }
     .ant-table-cell .no_result_message
     {
         color: var(--Neutral-Gray9) !important;
@@ -323,10 +330,33 @@ export const ResultTableContainer = styled.div`
     {
         width : 0;
     }
-    //.ant-table-body .ant-table-selection-col
-    //{
-    //  width: 30px !important;
-    //}
+  .ant-upload-list-item
+  {
+    justify-content: center;
+  }
+    .ant-upload-list-item a
+    {
+      flex : none !important;
+    }
+  .ant-table-cell.ant-table-selection-column.ant-table-cell-fix-left
+  {
+    right : 0 !important;
+    box-shadow: -4px 0px 24px 0px rgba(0, 0, 0, 0.10) !important;
+  }
+  .ant-table-header
+  {
+    box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.10) !important;
+  }
+  .ant-select.ant-pagination-options-size-changer
+  {
+    height: 100% !important;
+  }
+  .ant-select.ant-pagination-options-size-changer .ant-select-selector
+  {
+    height: 100% !important;
+    align-items: center;
+    border-radius: 2px;
+  }
 `
 export const EmptyResultContainer = styled.div`
     height: 70vh;

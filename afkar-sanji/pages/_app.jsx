@@ -18,14 +18,15 @@ export default function App({ Component, pageProps }) {
   const [ readyToRender , setReadyToRender ] = useState(false);
   const [ UserData , setUserData ]= useState(null);
   // const [ phoneNum, setPhoneNumber ] = useCookie('numberPhone', null);
+  axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + pageProps?.cookies?.access_token;
+  axiosInstance.defaults.refresh_token = pageProps?.cookies?.refresh_token;
 
     const authentication = async () => {
       if (!pageProps.cookies || !pageProps.cookies.access_token) {
         window.location.pathname = '/auth'
         return;
       }
-      axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + pageProps?.cookies?.access_token;
-      axiosInstance.defaults.refresh_token = pageProps?.cookies?.refresh_token;
+
       try
       {
         let { data } = await axiosInstance.get('/user-api/users/me/');

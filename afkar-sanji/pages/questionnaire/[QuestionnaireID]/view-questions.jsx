@@ -26,6 +26,8 @@ import { FreeMode, Mousewheel, Pagination } from 'swiper/modules';
 import { isValidElement } from 'react';
 import { useTimer } from 'react-timer-hook';
 import { Timer } from '@/components/ViewQuestions/Timer';
+import {AnswersArrayGenerator, AnswersValidator, QuestionAnswersArray} from "@/utilities/validators/viewQuestions";
+import {PreviewContainer} from "@/components/ViewQuestions/PreviewContainer";
 
 SwiperCore.use([Navigation]);
 
@@ -33,9 +35,7 @@ function getDeadlineTimestamp(timeString) {
   if(!timeString)
     return null
   const [hours, minutes, seconds] = timeString.split(':').map(Number);
-
   const millisecondsFromTime = (hours * 3600 + minutes * 60 + seconds) * 1000;
-
   const deadlineTimestamp = Date.now() + millisecondsFromTime;
 
   return deadlineTimestamp;
@@ -51,7 +51,7 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
   const [ nextQuestionLoading , setNextQuestionLoading ] = useState(false);
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [ TimerFinished , SetTimerFinished ] = useState(false);
-
+  const [ AnswersArray , setAnswersArray ] = useState([]);
   let notAnsweredQuestions = []
   let QuestionsAnswerSet;
   let dispatcher;
@@ -60,7 +60,6 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
     dispatcher = useDispatch();
     QuestionsAnswerSet = useSelector(state => state.reducer.AnswerSet)
   }
-  
   useEffect(() => {
     try 
     {
@@ -100,6 +99,7 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
          QuestionsArray.forEach((item,index) => !item ? QuestionsArray.splice(index,1) : '')
          QuestionsArray && QuestionsArray.length && answerSetID ? dispatcher(setInitialAnswerSet({ Questions : QuestionsArray })) : ''
          SetQuestionsData(QuestionsArray?.filter(item => item != undefined))
+        setAnswersArray(AnswersArrayGenerator(QuestionsArray))
          SetQuestionnaireInfo(data)
          if(data.welcome_page)
             SetCurrentIndex('welcome_page');
@@ -132,8 +132,8 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
   };
 
   const NextQuestionHandler = async () => {
-    setNextQuestionError(null)
-    // console.log(QuestionsData[CurrentIndex].question , QuestionsAnswerSet)
+    setNextQuestionError(null);
+    console.log(QuestionsAnswerSet)
     if(QuestionsAnswerSet)
     {
       let AnswerItem;
@@ -224,17 +224,15 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
       // console.log(!Object.values(AnswerItem.answer).length)
       if(!Object.values(AnswerItem.answer).length)
         delete CopiedAnswerItem.answer;
-      try 
+      try
       {
         setNextQuestionLoading(true)
 
           if(AnswerItem?.file)
           {
-
             await axios.post(`/question-api/questionnaires/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,AnswerSetFormDataConverter([AnswerItem]),{
               'Content-Type' : 'multipart/form-data'
             });
-        // .
           }
         else
           await axios.post(`/question-api/questionnaires/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,[CopiedAnswerItem]);
@@ -337,12 +335,12 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
           <PreviewQuestionsContainer slidemode={(!QuestionnaireInfo.show_question_in_pages &&
              CurrentIndex != 'Thanks')? 'active' : null}>
           { (QuestionnaireInfo.show_question_in_pages &&
-           QuestionnaireInfo.welcome_page && CurrentIndex =='welcome_page') 
+           QuestionnaireInfo.welcome_page && CurrentIndex =='welcome_page')
           && <WelcomeComponent mobilepreview={true}
           WelcomeInfo={QuestionnaireInfo.welcome_page} SetCurrentIndex={SetCurrentIndex} />}
           { ( CurrentIndex !='Thanks') ? !QuestionnaireInfo.show_question_in_pages ?
                 <div className="custom-swiper-container">
-                <Swiper 
+                <Swiper
                   direction="vertical"
                   onSwiper={saveSwiperInstance}
                   slidesPerView={'auto'}
@@ -370,8 +368,7 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
                     // }
                   }}
                   modules={[ Mousewheel, Pagination]}
-                  onSlideChange={ChangeSwiperSlideHandler}
-                >
+                  onSlideChange={ChangeSwiperSlideHandler}>
                 { QuestionnaireInfo.welcome_page && <SwiperSlide>
                   <WelcomeComponent mobilepreview={true} swiperMode={true}
                     WelcomeInfo={QuestionnaireInfo.welcome_page}
@@ -379,7 +376,7 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
                   </SwiperSlide>}
                   {QuestionsData.map((item, index) => (
                     item && <SwiperSlide key={item.question.id} id={'swiper-slide' + item.question.id} >
-                        <QuestionComponent mobilepreview={true} 
+                        <QuestionComponent mobilepreview={true}
                         key={item.question.id}
                         slidemode={(!QuestionnaireInfo.show_question_in_pages && CurrentIndex != 'Thanks')? 'active' : null}
                         QuestionInfo={item.question}
@@ -394,7 +391,7 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
                   ))}
                 </Swiper>
               </div>
-          : (QuestionsData[CurrentIndex] && 
+          : (QuestionsData[CurrentIndex] &&
           <>
          { QuestionnaireInfo.progress_bar ?  <AnimatePresence >
             <motion.div
@@ -402,22 +399,22 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
               initial={{ scale : 0.2 ,y : -500 ,
                   // width : '5%' ,
                   opacity : 0.1 ,
-                  x :  (CurrentIndex + 1 - QuestionsData?.length) * 10  }} 
+                  x :  (CurrentIndex + 1 - QuestionsData?.length) * 10  }}
               transition={{ duration : 0.5 }}
               animate={ { scale : 1  , x : 0 , y : 0 , opacity : 1 , width : '100%'} }>
-            <QuestionComponent mobilepreview={true} QuestionInfo={QuestionsData[CurrentIndex].question} />
+            <QuestionComponent mobilepreview={true}  QuestionInfo={QuestionsData[CurrentIndex].question} />
             { nextQuestionError ? <p className='answer_error_message'>{nextQuestionError}</p> : '' }
             </motion.div>
-            </AnimatePresence> : <> 
+            </AnimatePresence> : <>
                   <QuestionComponent mobilepreview={true} QuestionInfo={QuestionsData[CurrentIndex].question} />
                 { nextQuestionError ? <p className='answer_error_message'>{nextQuestionError}</p> : '' }
                 </>}
-          </>  ): ''}   
+          </>  ): ''}
 
           { CurrentIndex == 'Thanks'
           ? QuestionnaireInfo.thanks_page ? <ThankComponent ThanksInfo={QuestionnaireInfo.thanks_page}
-           mobilepreview={true} QuestionnaireInfo={QuestionnaireInfo} UUID={router.query.QuestionnaireID} /> : 
-          <DefaultThanks mobilepreview={true} QuestionnaireInfo={QuestionnaireInfo} /> : 
+           mobilepreview={true} QuestionnaireInfo={QuestionnaireInfo} UUID={router.query.QuestionnaireID} /> :
+          <DefaultThanks mobilepreview={true} QuestionnaireInfo={QuestionnaireInfo} /> :
             ''
           }
           </PreviewQuestionsContainer>

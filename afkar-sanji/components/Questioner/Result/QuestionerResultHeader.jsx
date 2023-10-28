@@ -164,7 +164,7 @@ export const QuestionerResultHead = ({ questionnaireQuery , SetCurrentPage ,
                             else
                                 setSelectedRows(ResultQuery?.data?.data?.results.map(item => item.id))
                         }}
-                        checked={ResultQuery?.data?.data?.results?.length == SelectedRows.length}/>
+                        checked={ResultQuery?.data?.data?.results?.length && (ResultQuery?.data?.data?.results?.length == SelectedRows.length)}/>
                 </label>
                 <RemovePopup DeleteState={DeleteRowState} onOkay={DeleteRowHandler}
                              setDeleteState={setDeleteRowState} title='نتیجه یا نتایجی که انتخاب کردید حذف شود؟'/>

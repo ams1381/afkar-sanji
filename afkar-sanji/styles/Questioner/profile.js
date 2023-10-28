@@ -29,7 +29,7 @@ export const UserInfoBoxHeader = styled.div`
     height : 100% !important;
     margin-block : 0 !important;
   }
-  .ant-upload-list-item.ant-upload-list-item-success , .ant-upload-list-item.ant-upload-list-item-uploading
+  .ant-upload-list-item.ant-upload-list-item-success , .ant-upload-list-item.ant-upload-list-item-uploading , .ant-upload-list-item
   {
     border-radius: 2px !important;
   }
@@ -73,6 +73,7 @@ export const InfoBox = styled.div`
         transition: 0.3s;
         border: none;
         text-align: left;
+        direction: rtl;
         outline: none;
         color : ${p => p.error ? 'var(--Error-color)' : 'var(--Neutral-Gray9)'};
     }
@@ -82,12 +83,27 @@ export const InfoBox = styled.div`
     flex-direction: row-reverse;
     gap: 10px
   }
+  .ant-btn
+  {
+    background-color: var(--primary-color);
+  }
 `
 export const EditInfoBox = styled.div`
     display: flex;
     align-items: center;
     flex-direction: row-reverse;
-    gap: 8px;
+    gap: 26px;
+  
+  & input:disabled
+  {
+    background: none;
+  }
+    .edit_icons_container
+    {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
      & i 
      {
         cursor : pointer;
@@ -128,24 +144,52 @@ export const EditButton = styled.button`
     }
 `
 export const LocationSelectorContainer = styled.div`
-    text-align: center;
-    margin-top: 12px;
-    font-size: 14px;
-    padding: 10px;
-    background: ${p => p.loading ? 'none' : 'white'};
-    color: var(--Neutral-Gray9);
+  text-align: center;
+  margin-top: 12px;
+  font-size: 14px;
+  padding: 10px;
+  background: ${p => p.loading ? 'none' : 'white'};
+  color: var(--Neutral-Gray9);
 
-    .ant-select
+  .ant-select {
+    width: 100% !important;
+    direction: rtl !important;
+    text-align: right !important;
+    margin-top: 10px !important;
+  }
+
+  .ant-select-selector {
+    border-radius: 2px !important;
+  }
+
+  .ant-select-selection-search-input
+  {
+    font-family: IRANSans;
+  }
+  .selected_districts
     {
-        width: 100% !important;
-        direction: rtl !important;
-        text-align: right !important;
-        margin-top: 10px !important;
+      margin-top: 14px;
+      text-align: right;
+      font-size: 14px;
+      display: flex;
+      justify-content: flex-end;
+      flex-direction: column;
+      gap: 5px;
+      align-items: flex-end;
     }
-    .ant-select-selector
-    {
-        border-radius : 2px !important;
-    }
+  .selected_districts p {
+    cursor: pointer;
+    width: fit-content;
+    border-radius: 2px;
+    transition: 0.3s;
+    padding: 0 7px 0 7px;
+    
+  }
+  .selected_districts p:hover {
+    background: var(--SideBar-header-border);
+  }
+  
+}
 `
 export const ConfirmButtonContainer = styled.div`
     text-align: left;
