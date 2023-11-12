@@ -11,11 +11,11 @@ export const DefaultThanks = ({ mobilepreview , QuestionnaireInfo  }) => {
   const [ sharePopoverState , setSharePopoverState ] = useState(false);
 
   return (
-    <QuestionComponentContainer style={{ boxShadow : 'none' }} mobilepreview={mobilepreview}>
-    <QuestionTitle>
-            <p>صفحه‌ی تشکر پیش فرض</p>
+    <QuestionComponentContainer style={{ boxShadow : 'none' , background : 'var(--drawer-active-item-bg)' , borderRadius : 6 , border : '1px solid var(--primary-color)'}} mobilepreview={mobilepreview}>
+    <QuestionTitle style={{ color : 'var(--primary-color)' }}>
+            <p>صفحه‌ی پایان</p>
         </QuestionTitle>
-        <div className='thank_description'>
+        <div className='thank_description' style={{ color : 'var(--primary-color)' }}>
             <p>متن ساختگی برای صفحه‌ی تشکر رابط کاربری افکار سنجی</p>
         </div>
         <div className='uploaded_file_preview' style={{ margin : '1.5rem 0' }}>

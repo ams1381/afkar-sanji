@@ -1,28 +1,26 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import ViewQuestions from './view-questions'
 import { Provider } from 'react-redux'
 import AnswerStore from '@/utilities/stores/AnswerStore'
 import Head from 'next/head'
 import { useEffect } from 'react'
-import { useSelector } from 'react-redux'
-import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import axios from 'axios'
-import { baseURL } from '@/utilities/axios'
-import QuestionStore from '@/utilities/stores/QuestionStore'
 import {PreviewPage, PreviewPageContainer, PreviewQuestionsContainer} from "@/styles/questionnairePanel/ViewQuestions";
+import {AuthContext} from "@/utilities/AuthContext";
 
 const AnswerPage = () => {
   const router = useRouter();
+  const Auth = useContext(AuthContext);
   const [ AnswerSetID , setAnswerSetID ] = useState(null);
   const [ AnswerSetError , setAnswerSetError ] = useState(null);
-  // console.log(data)
+
   useEffect(() => {
     const answerSetCreator = async () => {
       try
       {
-        let { data } = await axios.post(`question-api/questionnaires/${router.query.QuestionnaireID}/answer-sets/`);
+        let { data } = await axios.post(`${Auth.reqRole}/${router.query.QuestionnaireID}/answer-sets/`);
         setAnswerSetID(data.id)
       }
       catch(err)
@@ -56,18 +54,5 @@ const AnswerPage = () => {
     
   )
 }
-// export const getServerSideProps = async (context) => {
-//   const { QuestionnaireID } = context.query;
-//   try {
-//     const { data } = await axios.post(`${baseURL}question-api/questionnaires/${QuestionnaireID}/answer-sets/`);
-//     return {
-//       props: { data },
-//     };
-//   } catch (error) {
-//     console.error('Error creating answer set:', error);
-//     return {
-//       props: { data: null },
-//     };
-//   }
-// }
+
 export default AnswerPage;

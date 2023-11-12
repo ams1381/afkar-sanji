@@ -106,7 +106,7 @@ export const QuestionerResultTable = ({ ResultQuery , PageSize , setPageSize , Q
                 ),
             }}
             size="middle"
-            scroll={{  x: 2500, y: "50vh" , draggable : true}}
+            scroll={{  x: 1000 }}
             scrollableTarget="table-wrapper"
         />
     </>

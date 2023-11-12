@@ -1,7 +1,7 @@
 import { ResultHeader } from '@/components/ResultPage/ResultHeader';
 import { Header } from '@/components/common/Header';
 import Head from 'next/head';
-import React, { useEffect, useRef } from 'react'
+import React, {useContext, useEffect, useRef} from 'react'
 import { useState } from 'react';
 import { PanelInnerContainer } from '@/styles/questionnairePanel/QuestionnairePanelHeader';
 import { useQueries, useQuery } from '@tanstack/react-query';
@@ -11,10 +11,14 @@ import { ResultBody } from '@/components/ResultPage/ResultBody';
 import ProgressBarLoading from '@/styles/ProgressBarLoading';
 import { CommonDrawer } from '@/components/common/CommonDrawer';
 import { PageBox } from '@/styles/common';
+import {AuthContext} from "@/utilities/AuthContext";
+import {useLocalStorage} from "@/utilities/useLocalStorage";
 
 const ResultsPage = ({ cookies }) => {
   const [ SideBarOpen , setOpen ] = useState(false);
   const router = useRouter();
+  const Auth = useContext(AuthContext);
+  const { getItem } = useLocalStorage();
   const [ CurrentPage , SetCurrentPage ] = useState(1);
   const CurrentRef = useRef(1);
   const [ StartDate , setStartDate ] = useState('');
@@ -25,14 +29,16 @@ const ResultsPage = ({ cookies }) => {
     queries: [
       {
         queryKey: ['questionnaire'],
-        queryFn: async () => await axiosInstance.get(`/question-api/questionnaires/${router.query.QuestionnaireID}/`),
-        refetchOnWindowFocus : false
+        queryFn: async () => await axiosInstance.get(`/${getItem('roleReq') ? getItem('roleReq') : 'question-api/questionnaires'}/${router.query.QuestionnaireID}/`),
+        refetchOnWindowFocus : false,
+        retry : false
       },
       {
         queryKey: ['result'],
         queryFn: async () =>
-          await axiosInstance.get(`/result-api/${router.query.QuestionnaireID}/answer-sets/?answered_at=&end_date=${EndDate}&page=${CurrentPage}&start_date=${StartDate}`) ,
-        refetchOnWindowFocus : false
+          await axiosInstance.get(`/${getItem('roleReq') ? getItem('roleReq') : 'result-api'}/${router.query.QuestionnaireID}/answer-sets/?answered_at=&end_date=${EndDate}&page=${CurrentPage}&start_date=${StartDate}`) ,
+        refetchOnWindowFocus : false ,
+        retry : false
         },
     ],
   });
@@ -51,6 +57,7 @@ const ResultsPage = ({ cookies }) => {
     ResultQuery.refetch();
   },[StartDate , EndDate])
    useEffect(() => {
+     if(SearchValue)
     SearchQuery.refetch();
    },[SearchValue])
   return (

@@ -25,7 +25,7 @@ import SetQueryParams from "@/utilities/filtering/filter";
 import {Icon} from "@/styles/icons";
 
 export default function () {
-    const [RightDrawerOpen, setRightDrawerOpen] = useState(true);
+    const [RightDrawerOpen, setRightDrawerOpen] = useState(false);
     const router = useRouter()
     const [meData,setMeData] = useState([])
     const [filterParams, setFilterParams] = useState({

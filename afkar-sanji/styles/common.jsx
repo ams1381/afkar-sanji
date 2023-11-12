@@ -2,11 +2,24 @@ import { Button, Input } from "antd";
 import { styled } from "styled-components";
 
 //Header
+
+export const UserIconContainer = styled.div`
+  position: absolute;
+  width: 56px;
+  height: 40px;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
 export const HeaderContainer = styled.div`
     background: var(--surface);
     height: 57px;
     display: flex;
     align-items: center;
+    position: relative;
+    z-index: 556;
+    box-shadow: 0px -1px 0px 0px #F0F0F0 inset;
 `
 export const HeaderComponent = styled.div`
     display: flex;
@@ -240,17 +253,19 @@ export const ScreenMask = styled.div`
     z-index : ${p => p.shown ? '2' : '-1'}
 `
 export const PageBox = styled.div`
-    display: flex;
-    justify-content: flex-start;
+    //display: flex;
+    //justify-content: flex-start;
 `
 export const CommonDrawerContainer = styled.div`
     height: 1000px;
     background: white;
     position: fixed;
     right: 0;
+    top: 0;
     z-index: 555;
-    width: ${p => p.open ? '20%' : '62px'};
+    width: ${p => p.open ? '20%' : '56px'};
     transition : 0.3s;
+    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.15);
   & a
   {
     text-decoration: none;
@@ -258,7 +273,7 @@ export const CommonDrawerContainer = styled.div`
   }
     .drawerLogo
     {
-        height: 58px;
+        height: 10%;
         display: flex;
         font-size: 12px;
         color: var(--primary-color);
@@ -266,29 +281,60 @@ export const CommonDrawerContainer = styled.div`
         align-items: center;
         cursor: pointer;
         background: var(--Primary-surface, #EEF0FF);
+        border-top: 1px solid var(--primary-color);
     }
     .drawerLogo i 
     {
         width : 38px;
         height : 38px;
     }
-    .drawer_item {
-        display: flex;
-        padding: ${p => p.open ? '12px 24px' : 'none'};
-        background: var(--hit-box, rgba(255, 255, 255, 0.00));
-        height: 38px;
-        cursor: pointer;
-        align-items: center;
-        justify-content: ${p => p.open ? 'flex-end' : 'center'};
-        color: var(--Neutral-Gray9);
-        font-size: 14px;
-        gap: 10px;
-        transition : 0.3s;
-    }
+    // .drawer_item {
+    //     display: flex;
+    //     padding: ${p => p.open ? '12px' : 'none'};
+    //     //background: var(--hit-box, rgba(255, 255, 255, 0.00));
+    //     cursor: pointer;
+    //     align-items: center;
+    //     //justify-content: ${p => p.open ? 'flex-end' : 'center'};
+    //     justify-content: center;
+    //     color: var(--Neutral-Gray9);
+    //     font-size: 14px;
+    //     gap: 10px;
+    //     height: 40px;
+    //
+    //     transition : 0.3s;
+    // }
+    //.drawer_item_text
+    //{
+    //  display: flex;
+    //  padding: 0 12px 0 var(--Tittle-Padding, 24px);
+    //  align-items: center;
+    //  gap: 10px;
+    //  color: var(--On-Surface, #525252);
+    //  font-family: IRANSans;
+    //  font-size: 14px;
+    //  font-style: normal;
+    //  font-weight: 400;
+    //  justify-content: flex-end;
+    //  height: 40px;
+    //  transition: 0.3s;
+    //  cursor: pointer;
+    //}
+  //.dashboard:hover ~ .drawer-column .dashboard
+  //{
+  //  background-color: red;
+  //}
+  //.dashboard:hover , .employer:hover , .interviewer:hover , .wallet:hover , .create-questionaire:hover , .profile:hover
+  //{
+  //  color: var(--primary-color);
+  //  //filter: invert(37%) sepia(74%) saturate(1045%) hue-rotate(210deg) brightness(91%) contrast(105%);
+  //}
+  .dashboard:hover .i_dashboard i
+  {
+    filter: invert(37%) sepia(74%) saturate(1045%) hue-rotate(210deg) brightness(91%) contrast(105%);
+  }
     .drawer_item:hover
     {
         color: var(--primary-color);
-        
     }
     .drawer_item:hover i 
     {
@@ -296,8 +342,8 @@ export const CommonDrawerContainer = styled.div`
     }
     .drawer_item i
     {
-        width : 14px;
-        height : 14px;
+        width : 17px;
+        height :17px;
     }
     .drawer_item p , .drawerLogo p
     {
@@ -325,6 +371,131 @@ export const CommonDrawerContainer = styled.div`
         width : 10px;
         transform: rotate(-90deg);
     }
+  .drawer-inner-container
+  {
+    height: 100vh;
+    position: relative;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: space-between;
+  }
+  .drawer-logo-inner-container
+  {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0px 12px 0px var(--Tittle-Padding, 24px);
+    align-items: center;
+  }
+  .drawer-logo-container
+  {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    transition: 0.3s;
+  }
+  .trapezoid {
+    position: absolute;
+    top: 50%;
+    transform: translate(0 , -50%);
+    left: -20px;
+    //z-index: -1111;
+    background: url(/Images/Rectangle.png);
+    height: 66px;
+    width: 23px;
+    filter: drop-shadow(-2px 0px 1px rgba(0, 0, 0, 0.089));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .trapezoid i
+  {
+    transition: 0.8s;
+    width: 12px;
+    height: 12px;
+    transform: ${p => p.open ? 'rotate(180deg)' : 'none'};
+  }
+`
+export const CommonDrawerItemText = styled.div`
+  display: flex;
+  padding: 0 12px 0 var(--Tittle-Padding, 24px);
+  align-items: center;
+  gap: 10px;
+  color: var(--On-Surface, #525252);
+  font-family: IRANSans;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  justify-content: flex-end;
+  height: 40px;
+  transition: 0.3s;
+  cursor: pointer;
+  background-color: ${p => p.active ? 'var(--drawer-active-item-bg)' : 'white'};
+  border-left: ${p => p.active ? '1px solid var(--primary-color)' : 'none'};
+  cursor: pointer;
+  
+  &:hover
+  {
+    background: ${p => p.active ? 'var(--drawer-active-item-bg)' : 'white'};
+    color : var(--primary-color)
+  }
+`
+export const CommonDrawerItemIcon = styled.div`
+  display: flex;
+  padding: ${p => p.open ? '12px' : 'none'};
+  background: ${p => p.active ? 'var(--drawer-active-item-bg)' : 'white'};
+  cursor: pointer;
+  align-items: center;
+    //justify-content: ${p => p.open ? 'flex-end' : 'center'};
+  justify-content: center;
+  color: var(--Neutral-Gray9);
+  font-size: 14px;
+  gap: 10px;
+  height: 40px;
+  border-left: ${p => (!p.open && p.active) ? '1px solid var(--primary-color)' : 'none'};
+  transition : 0.3s;
+  
+   & p
+   {
+     width: ${p => p.open ? 'auto' : '0%'};
+     overflow: hidden;
+     white-space: nowrap;
+     transition: width 0.9s;
+   }
+  &:hover
+  {
+    color: var(--primary-color);
+  }
+`
+export  const CommonDrawerTopPartContainer = styled.div`
+  height: 100%;
+  display: flex;
+  width: 100%;
+  position: relative;
+  justify-content: space-between;
+  align-items: flex-end;
+  a:hover
+  {
+    background: none;
+  }
+  .drawer-column
+  {
+    transition: 0.3s;
+    height: 91.5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+  }
+
+  
+`
+export const CommonDrawerLogoImageContainer = styled.div`
+     width: ${p => p.draweropen ? '25%' : '100%'};
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `
 export const QuestionerPageContainer = styled.div`
     width : 100%;
@@ -376,4 +547,79 @@ export const HeaderAvatarButton = styled(UserAvatarLogout)`
   {
     filter: invert(45%) sepia(70%) saturate(5831%) hue-rotate(226deg) brightness(97%) contrast(91%);
   }
+`
+export const ChatMask = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  background: #00000057;
+  z-index: 3333;
+`
+export const ChatContainer = styled.div`
+  position: absolute;
+  left: 50%;
+  background: var(--surface);
+  top: 50%;
+  transform: translate(-50%,-50%);
+  width: 45%;
+  display: flex;
+  height: 494px;
+  box-shadow: 0px 9px 28px 8px rgba(0, 0, 0, 0.05), 0px 6px 16px 0px rgba(0, 0, 0, 0.08), 0px 3px 6px -4px rgba(0, 0, 0, 0.12);
+  flex-direction: column;
+`
+export const ChatHeaderContainer = styled.div`
+  display: flex;
+  padding: var(--Gap-col, 16px) var(--Tittle-Padding, 24px);
+  justify-content: space-between;
+  align-items: center;
+`
+export const ChatHeaderTitle = styled.div`
+  display: flex;
+  font-size: 14px;
+  gap: 4px;
+
+  p.admin-name {
+    font-weight: 700;
+  }
+  p.project-name {
+    color: var(--character-secondary-45, rgba(0, 0, 0, 0.45));
+  }
+`
+export const ChatPromptContainer = styled.div`
+  width: 100%;
+  display: flex;
+  padding: 10px var(--Gap-col, 16px);
+  align-items: center;
+  gap: 8px;
+  align-self: stretch;
+  box-shadow: 0 1px 0 0 #F0F0F0 inset;
+
+  .ant-btn
+  {
+    background-color: var(--primary-color);
+  }
+  input {
+    font-family: 'IRANSANS';
+    border-radius: 2px;
+    text-align: right;
+    height: 100%;
+  }
+`
+export const ChatMessageContainer = styled.div`
+    flex: 1;
+    padding: 24px;
+`
+export const SentMessageContainer = styled.div`
+  font-size: 14px;
+  text-align: right;
+  display: flex;
+  max-width: 400px;
+  padding: 0px 10px;
+  justify-content: flex-end;
+  gap: 10px;
+  border-radius: var(--radius-XS, 2px);
+  flex-direction: column;
+  align-items: flex-end;
 `

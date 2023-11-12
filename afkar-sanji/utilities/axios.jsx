@@ -1,12 +1,11 @@
 import axios from "axios";
-import { AuthContext } from "./AuthContext";
 import { getCookie } from "react-use-cookie";
 // export const baseURL = 'http://mah-api.ariomotion.com/';
 // export const baseURL = 'https://mostafarm7.pythonanywhere.com/'
 // axios.defaults.baseURL = 'https://mostafarm7.pythonanywhere.com/';
+export const baseurl = 'https://mah-api.codintofuture.ir'
 axios.defaults.baseURL = '/api'
-let refreshToken;
-
+getCookie('role')
 
 export const axiosInstance = axios.create({
     headers: {
@@ -14,11 +13,8 @@ export const axiosInstance = axios.create({
         // 'Content-Type': 'multipart/form-data'
     }
 });
-export const SetRefreshToken =(RefreshToken) => {
-    refreshToken = RefreshToken;
-}
+
 axiosInstance.interceptors.request.use(function (config) {
-    // Do something before reis sent
     return config;
 }, function (error) {
     // Do something with request error
@@ -44,9 +40,9 @@ axiosInstance.interceptors.response.use(function (response) {
                 window.location.pathname = '/auth';
             }
             break;
-        case 403:
-            window.location.pathname = '/403'
-            break;
+        // case 403:
+        //     window.location.pathname = '/403'
+        //     break;
         // case 404:
         //     window.location.pathname = '/404'
         //     break;

@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useRef, useState } from 'react';
+import React, {useContext, useEffect, useReducer, useRef, useState} from 'react';
 import { message } from 'antd';
 import { Button } from 'antd';
 import { Switch, Checkbox } from 'antd';
@@ -15,20 +15,14 @@ import persian_fa from "react-date-object/locales/persian_fa"
 import moment from 'moment-jalaali';
 import DatePanel from 'react-multi-date-picker/plugins/date_panel';
 import { useLocalStorage } from '@/utilities/useLocalStorage';
+import {SettignToggle} from "@/components/QuestionnairePanel/QuestionnaireSetting/SettingToggle";
+import {QuestionnaireReducerFunction} from "@/utilities/stores/SettingReducers";
+import {
+  InterviewSettingContainer
+} from "@/components/QuestionnairePanel/QuestionnaireSetting/InterviwerSettings/SettingContainer";
+import {AuthContext} from "@/utilities/AuthContext";
 
-export const convertStringToDate = str => {
-  const [datePart, timezonePart] = str.split(/[T+]/);
-  const [timezoneHours, timezoneMinutes] = timezonePart.split(":").map(Number);
 
-  const date = new Date(datePart);
-  date.setUTCHours(date.getUTCHours() + timezoneHours);
-  date.setUTCMinutes(date.getUTCMinutes() + timezoneMinutes);
-
-  const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-  const formattedTime = `${date.getUTCHours().toString().padStart(2, '0')}:${date.getUTCMinutes().toString().padStart(2, '0')}:${date.getUTCSeconds().toString().padStart(2, '0')}`;
-
-  return [formattedDate, formattedTime];
-};
 export function convertToRegularTime(dateTimeString) {
   const dateObj = new Date(dateTimeString);
 
@@ -46,22 +40,18 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
   const [QuestionnaireData, Dispatcher] = useReducer(QuestionnaireReducerFunction, Questionnaire);
   const [messageApi, contextHolder] = message.useMessage();
   const { getItem , setItem } = useLocalStorage();
+  const Auth = useContext(AuthContext);
   const [DateActive, SetDateActive] = useState(false);
   const [TimerActive, SetTimerActive] = useState(QuestionnaireData?.timer ? true : false);
-  const [TimerOpen, setTimerOpen] = useState(false);
   const [SettingChanged, SetSettingChanged] = useState(false);
   const [SettingLoading, SetSettingLoading] = useState(false);
   const [ErrorType, SetErrorType] = useState(null);
-  const [TimerValue, setTimerValue] = useState(Questionnaire?.timer);
+
   let end_date;
   let pub_date;
-  const [ DatePickerValue , setDatePickerValue ] = useState(null);
 
     if(QuestionnaireData.pub_date)
     {
-      // console.log(parseInt(convertToRegularTime(QuestionnaireData.pub_date).split(" ")[1].split(':')[0]) + 1 + ':' +
-      // convertToRegularTime(QuestionnaireData.pub_date).split(" ")[1].split(':')[1] + ':' +
-      // convertToRegularTime(QuestionnaireData.pub_date).split(" ")[1].split(':')[0])
       pub_date = digitsEnToFa(convertDate((convertToRegularTime(QuestionnaireData.pub_date).split(" ")[0]),'jalali') + ' ') +
       digitsEnToFa(parseInt(parseInt(convertToRegularTime(QuestionnaireData.pub_date).split(" ")[1].split(':')[0]) + 1) + ':' +
       convertToRegularTime(QuestionnaireData.pub_date).split(" ")[1].split(':')[1] + ':' +
@@ -91,33 +81,28 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
       Dispatcher({ ACTION: 'Timer Cleared' });
     SetSettingChanged(true)
   }
-
   const DateChangeHandler = (ali, NewDate) => {
     SetErrorType(null)
-    
+
     if(NewDate.validatedValue && NewDate.validatedValue.length == 1)
     {
-
-      // pub_date = NewDate.validatedValue[0];
-      Dispatcher({ 
+      Dispatcher({
         ACTION : 'Pub date set' , NewDate : convertPersianDateTimeToISO(digitsFaToEn(NewDate.validatedValue[0]))
       })
-      Dispatcher({ 
+      Dispatcher({
         ACTION : 'End date set' , NewDate : null
       })
     }
     else if(NewDate.validatedValue && NewDate.validatedValue.length == 2)
     {
       end_date = NewDate.validatedValue[1];
-      Dispatcher({ 
+      Dispatcher({
         ACTION : 'End date set' , NewDate : convertPersianDateTimeToISO(digitsFaToEn(NewDate.validatedValue[1]))
       })
     }
     SetSettingChanged(true)
   }
-
   const TimerChangeHandler = (_, Timer) => {
-    setTimerValue(digitsFaToEn(Timer.validatedValue[0]))
     Dispatcher({ ACTION: 'Timer Change', NewTimer: digitsFaToEn(Timer.validatedValue[0]) });
     SetSettingChanged(true)
   }
@@ -143,7 +128,7 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
       delete QuestionnaireData.welcome_page;
       delete QuestionnaireData.questions;
       delete QuestionnaireData.thanks_page;
-     let { data } = await axiosInstance.patch(`/question-api/questionnaires/${Questionnaire.uuid}/`, QuestionnaireData);
+     let { data } = await axiosInstance.patch(`/${Auth.reqRole}/${Questionnaire.uuid}/`, QuestionnaireData);
      if(data)
      {
       SetSettingChanged(false)
@@ -152,7 +137,7 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
       ChangeSide('question_design')
 
      }
-      
+
     }
     catch (err) {
       console.log(err)
@@ -176,6 +161,7 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
     <>
       {contextHolder}
       <QuestionnaireSettingContainer>
+
         <QuestionnaireDatePickerContainer>
           <div className='picker_header' onClick={() => DateToggleHandler(!DateActive)}>
             <p>: فعال سازی دستی </p>
@@ -185,12 +171,8 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
             <DatePicker  format=" YYYY/MM/DD HH:mm:ss "
               disabled={!DateActive}
               rangeHover
-
-              dateSeparator="تا" 
-              // minDate="1402/6/18"
-              // minDate={new DateObject({ calendar: persian })}
+              dateSeparator="تا"
               minDate={new DateObject({ calendar: persian })}
-              // maxDate={new DateObject({ calendar: persian }).add(3, "days")}
               render={(value, openCalendar) => {
                 return (
                   <TimePickerContainer Error={ErrorType == 'date_error' ? 'active' : false} active={DateActive ? 'active' : null}>
@@ -211,6 +193,7 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
             />
           </div>
         </QuestionnaireDatePickerContainer>
+        { getItem('roleReq') && getItem('roleReq') === 'interview-api/interviews' && <InterviewSettingContainer Questionnaire={Questionnaire}/>}
         <QuestionnaireDatePickerContainer active={TimerActive ? 'active' : null}>
           <div className='picker_header time_picker' onClick={() => TimerToggleHandler(!TimerActive)}>
             <p>: تنظیم مهلت پاسخ دهی </p>
@@ -250,30 +233,12 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
          
           </div>
         </QuestionnaireDatePickerContainer>
-        {/* <QuestionnaireDatePickerContainer>
-          <div className='picker_header' onClick={e => ToggleCheckBoxHandler(!QuestionnaireData.show_question_in_pages, 'show_question_in_pages')}>
-            <p>در هر صفحه یک سوال نمایش داده شود</p>
-            <Switch checked={QuestionnaireData.show_question_in_pages} />
-          </div>
-        </QuestionnaireDatePickerContainer> */}
-        <QuestionnaireDatePickerContainer>
-          <div className='picker_header' onClick={e => ToggleCheckBoxHandler(!QuestionnaireData.is_active, 'is_active')}>
-            <p>غیر فعال سازی موقت</p>
-            <Switch checked={!QuestionnaireData.is_active} />
-          </div>
-        </QuestionnaireDatePickerContainer>
-        <QuestionnaireDatePickerContainer>
-          <div className='picker_header' onClick={e => ToggleCheckBoxHandler(!QuestionnaireData.show_number, 'show_number')}>
-            <p>عدم نمایش شماره سوال</p>
-            <Switch checked={!QuestionnaireData.show_number} />
-          </div>
-        </QuestionnaireDatePickerContainer>
-        <QuestionnaireDatePickerContainer style={{ borderBottom: 'none', paddingBottom: 0, marginRight: '30px' }}>
-          <div className='picker_header' onClick={e => ToggleCheckBoxHandler(QuestionnaireData.progress_bar, 'progress_bar')}>
-            <p>حذف نوار پیشرفت</p>
-            <Switch checked={!QuestionnaireData.progress_bar} />
-          </div>
-        </QuestionnaireDatePickerContainer>
+        <SettignToggle ToggleName={'is_active'} ToggleText={'غیر فعال سازی موقت'}
+            ToggleCheckBoxHandler={ToggleCheckBoxHandler} QuestionnaireData={QuestionnaireData} />
+        <SettignToggle ToggleName={'show_number'} ToggleText={'عدم نمایش شماره سوال'}
+                       ToggleCheckBoxHandler={ToggleCheckBoxHandler} QuestionnaireData={QuestionnaireData} />
+        <SettignToggle ToggleName={'progress_bar'} ToggleText={'حذف نوار پیشرفت'}
+                       ToggleCheckBoxHandler={ToggleCheckBoxHandler} QuestionnaireData={QuestionnaireData} />
         <QuestionnaireDatePickerContainer disabled={!QuestionnaireData.show_question_in_pages}
          style={{ borderBottom: 'none', paddingBottom: 0, marginRight: '30px' }}>
           <div className='picker_header' onClick={e => ToggleCheckBoxHandler(QuestionnaireData.previous_button, 'previous_button')}>
@@ -312,71 +277,8 @@ export const convertDate = (inputDate, dateType) => {
 
   return inputDate; // Return input date if no conversion needed
 };
-const QuestionnaireReducerFunction = (State,ACTION) => {
-  switch(ACTION.ACTION)
-  {
-    case 'Date Cleared' :
-      return {
-        ...State,
-        pub_date : null,
-        end_date : null
-      }
-    case 'Data Replacement' :
-      return ACTION.newData;
-    case 'Timer Cleared' :
-      return {
-        ...State,
-        timer : null
-      }
-    case 'Pub date set':
-      return {
-        ...State,
-        pub_date : ACTION.NewDate,
-        
-      }
-    case 'End date set':
-      return {
-        ...State,
-        end_date : ACTION.NewDate,
-      }
-    case 'Timer Change':
-      return {
-        ...State,
-        timer : ACTION.NewTimer
-      }
-    case 'show_question_in_pages':
-      return {
-        ...State,
-        show_question_in_pages : ACTION.NewToggleValue,
-        previous_button : ACTION.NewToggleValue,
-      }
-    case 'progress_bar':
-      return {
-        ...State,
-        progress_bar : !ACTION.NewToggleValue
-      }
-    case 'previous_button':
-      return {
-        ...State,
-        previous_button : !ACTION.NewToggleValue
-      }
-    case 'is_active':
-      return {
-        ...State ,
-        is_active : ACTION.NewToggleValue
-      }
-    case 'reset_questionnaire':
-      return ACTION.Resetvalue
-    case 'show_number':
-      return {
-        ...State,
-        show_number : ACTION.NewToggleValue
-      }
-  }
-}
 
-function convertPersianDateTimeToISO(persianDateTime) {
-  // Replace Persian numerals with English numerals
+const convertPersianDateTimeToISO = (persianDateTime) => {
   const englishDateTime = persianDateTime.replace(/[۰-۹]/g, (d) => String.fromCharCode(d.charCodeAt(0) - '۰'.charCodeAt(0) + '0'.charCodeAt(0)));
 
   // Parse the Persian date and time using jalali-moment

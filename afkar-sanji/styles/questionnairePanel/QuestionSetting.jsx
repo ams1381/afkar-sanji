@@ -276,3 +276,208 @@ export const RangeWriteContainer = styled.div`
         margin-bottom : 35px !important;
     }
 `
+export const AminContactContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-bottom: 1px solid #CCCCCC;
+  padding: 20px 0;
+`
+export const AdminContactHeader = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 5px;
+  color: var(--Neutral-Gray9);
+  .admin-header-text
+  {
+    font-size: 18px;
+  }
+  .ant-btn
+  {
+    background-color: var(--primary-color);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .ant-btn i
+  {
+    width: 14px;
+    height: 14px;
+  }
+`
+export const AdminContactBody = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+  color: var(--Neutral-Gray9);
+  font-size: 14px;
+  height: 44px;
+  align-items: center;
+`;
+export const AdminContactStatusContainer = styled.div`
+  display: flex;
+  color: var(--Error-color);
+  gap: 10px;
+  flex-direction: row-reverse;
+  
+  .status
+  {
+    font-weight: 700;
+  }
+`;
+export const InterviewContainer = styled.div`
+  padding: 20px 0;
+  border-bottom: 1px solid #CCCCCC;
+`
+export const InterviewInnerContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`
+export const InterviewerHeader = styled.div`
+  text-align: right;
+  height: 44px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  color: var(--Neutral-Gray9);
+`
+export const InterviewerBodyRow = styled.div`
+  display: flex;
+  height: 44px;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+  color: var(--Neutral-Gray9);
+  
+  .ant-btn-primary
+  {
+    background-color: var(--primary-color);
+  }
+`
+export const InterViewAnswerPriceContainer = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+  
+  .ant-btn
+  {
+    display: flex;
+    font-size: 14px;
+    gap: 10px;
+    flex-direction: row-reverse;
+    align-items: center;
+    border: none;
+  }
+  .confirm_button
+  {
+    color: var(--primary-color);
+  }
+  .confirm_button i
+  {
+    filter: invert(37%) sepia(74%) saturate(1045%) hue-rotate(210deg) brightness(91%) contrast(105%);
+    width: 12px;
+    height: 12px;
+  }
+  .cancel_button
+  {
+    color: var(--Error-color);
+  }
+  .cancel_button i
+  {
+    filter: invert(37%) sepia(68%) saturate(1417%) hue-rotate(327deg) brightness(110%) contrast(119%);
+    width: 11px;
+    height: 11px;
+  }
+`
+
+export const InterViewerNumber = styled.div`
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 8px;
+  align-items: center;
+  
+  .ant-btn
+  {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-direction: row-reverse;
+    color: var(--primary-color);
+  }
+`
+export const InterViewerStatusContainer = styled.div`
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 10px;
+  align-items: center;
+  font-size: 12px;
+`
+export const InterviewerActivator = styled.div`
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 10px;
+  font-size: 12px;
+  align-items: center;
+  color: var(--Error-color);
+`
+export const InterViewerTargetingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px 0;
+  border-bottom: 1px solid #CCCCCC;
+  
+  .target-header-text
+  {
+    font-size: 18px;
+    color: var(--Neutral-Gray9);
+  }
+`
+export const InterViewerTargetingInfoContainer = styled.div`
+  width: 100%;
+  display: flex;
+  height: 44px;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+  color: var(--Neutral-Gray9);
+
+  
+  .ant-btn
+  {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-direction: row-reverse;
+    color: var(--primary-color);
+  }
+`
+export const InterViewerTargetHeader = styled.div`
+  width: 100%;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+`
+export const InterViewerTimeRangeContainer = styled.div`
+  display: flex;
+  gap: 2px;
+  flex-direction: row-reverse;
+  align-items: center;
+  span
+  {
+    padding: 4px;
+    background: #EEF0FF;
+    border-radius: 2px;
+    width: 70px;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    color: var(--primary-color);
+  }
+`

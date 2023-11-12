@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import React from 'react'
+import React, {useContext} from 'react'
 import { useState } from 'react';
 import { useQueries } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
@@ -11,17 +11,19 @@ import ChartsBody from '@/components/Charts/ChartBody';
 import { axiosInstance } from '@/utilities/axios';
 import { CommonDrawer } from '@/components/common/CommonDrawer';
 import { PageBox } from '@/styles/common';
+import {AuthContext} from "@/utilities/AuthContext";
 
 const ChartsPage = ({ cookies }) => {
   const [ SideBarOpen , setOpen ] = useState(false);
   const router = useRouter();
+  const Auth = useContext(AuthContext);
   const [ RightDrawerOpen , setRightDrawerOpen ] = useState(false);
   const [ QuestionnaireQuery , ChartQuery ] = useQueries({
     queries: [
       {
         queryKey: ['questionnaire'],
         queryFn: async () =>
-          await axiosInstance.get(`/question-api/questionnaires/${router.query.QuestionnaireID}/`)
+          await axiosInstance.get(`/${Auth.reqRole}/${router.query.QuestionnaireID}/`)
       },
 
       {

@@ -48,7 +48,7 @@ body::-webkit-scrollbar {
     --surface: #FEFEFE;
     --popover-hover-bg: #FAFAFA;
     --questionnaire-edit-item-bg: #F5F5F5;
-
+    --drawer-active-item-bg : #EEF0FF;
 
     /* Login Page */
     --login-input-text-color: #656565;

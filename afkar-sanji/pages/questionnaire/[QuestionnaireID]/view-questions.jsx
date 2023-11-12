@@ -10,7 +10,7 @@ import { axiosInstance, baseURL } from '@/utilities/axios';
 import { Button, Progress, Skeleton, message , Statistic  } from 'antd';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import React, { useEffect, useRef, useState } from 'react'
+import React, {useContext, useEffect, useRef, useState} from 'react'
 import { Swiper, SwiperSlide, useSwiper } from 'swiper/react';
 import SwiperCore, { Navigation } from 'swiper/core';
 import ProgressBarLoading from '@/styles/ProgressBarLoading';
@@ -28,6 +28,7 @@ import { useTimer } from 'react-timer-hook';
 import { Timer } from '@/components/ViewQuestions/Timer';
 import {AnswersArrayGenerator, AnswersValidator, QuestionAnswersArray} from "@/utilities/validators/viewQuestions";
 import {PreviewContainer} from "@/components/ViewQuestions/PreviewContainer";
+import {AuthContext} from "@/utilities/AuthContext";
 
 SwiperCore.use([Navigation]);
 
@@ -48,8 +49,8 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
   const [ CurrentIndex , SetCurrentIndex ] = useState('Welcome');
   const [ swiperInstance , setSwiperInstance ] = useState(null);
   const [ nextQuestionError , setNextQuestionError ] = useState(null);
+  const Auth = useContext(AuthContext);
   const [ nextQuestionLoading , setNextQuestionLoading ] = useState(false);
-  const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [ TimerFinished , SetTimerFinished ] = useState(false);
   const [ AnswersArray , setAnswersArray ] = useState([]);
   let notAnsweredQuestions = []
@@ -89,7 +90,7 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
         else
         {
           // axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + cookies?.access_token;
-          let  response =  await axiosInstance.get(`/question-api/questionnaires/${router?.query?.QuestionnaireID}/`);
+          let  response =  await axiosInstance.get(`/${Auth.reqRole}/${router?.query?.QuestionnaireID}/`);
           data = response.data;
         }          
         let QuestionsArray =  data.questions.map((item,index) => { 
@@ -133,7 +134,6 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
 
   const NextQuestionHandler = async () => {
     setNextQuestionError(null);
-    console.log(QuestionsAnswerSet)
     if(QuestionsAnswerSet)
     {
       let AnswerItem;
@@ -163,13 +163,13 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
         {
           if(AnswerItem?.file)
           {
-            await axios.post(`/question-api/questionnaires/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,AnswerSetFormDataConverter([AnswerItem]),{
+            await axios.post(`/${Auth.reqRole}/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,AnswerSetFormDataConverter([AnswerItem]),{
               'Content-Type' : 'multipart/form-data'
             });
         // .
           }
         else
-          await axios.post(`/question-api/questionnaires/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,[CopiedAnswerItem]);
+          await axios.post(`/${Auth.reqRole}/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,[CopiedAnswerItem]);
         }
         else 
         {
@@ -177,12 +177,12 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
           {
            let FileAnswers = AnswerItem.filter(item => item.file != null);
            FileAnswers.forEach(async (item) => {
-            await axios.post(`/question-api/questionnaires/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,AnswerSetFormDataConverter([item]),{
+            await axios.post(`/${Auth.reqRole}/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,AnswerSetFormDataConverter([item]),{
               'Content-Type' : 'multipart/form-data'
             });
            }) 
           }
-          await axios.post(`/question-api/questionnaires/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,AnswerItem.filter(item => !item.file));
+          await axios.post(`/${Auth.reqRole}/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,AnswerItem.filter(item => !item.file));
           // }
         }  
         setNextQuestionLoading(false)
@@ -193,8 +193,24 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
         setNextQuestionLoading(false)
 
         // console.log(Object.values(err?.response?.data[0]))
-        if(err?.response?.data)
-          setNextQuestionError(Object.values(err?.response?.data[0])[0])
+        if(err?.response?.status === 500)
+          messageApi.error({
+            content : 'مشکل سمت سرور',
+            style : {
+              marginTop : 20
+            }
+          })
+        if(err?.response?.data && err?.response?.status == 400) {
+          if(err?.response?.data?.length == 1)
+            setNextQuestionError(Object.values(err?.response?.data[0])[0]);
+          else if(typeof err?.response?.data.find(ErrorItem => Object.values(ErrorItem).length !== 0) == 'object') {
+            setNextQuestionError(Object.values(err?.response?.data.find(ErrorItem => Object.values(ErrorItem).length !== 0))[0])
+          }
+          console.log()
+          // else if((err?.response?.data.find(ErrorItem => Object.values(ErrorItem).length !== 0)))
+          //   console.log(Object.values(err?.response?.data.find(ErrorItem => Object.values(ErrorItem).length !== 0))[0])
+        }
+
         return
       }
       // QuestionsData[CurrentIndex].quetion.id
@@ -230,12 +246,13 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
 
           if(AnswerItem?.file)
           {
-            await axios.post(`/question-api/questionnaires/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,AnswerSetFormDataConverter([AnswerItem]),{
+            await axios.post(`/${Auth.reqRole}/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,
+                AnswerSetFormDataConverter([AnswerItem]),{
               'Content-Type' : 'multipart/form-data'
             });
           }
         else
-          await axios.post(`/question-api/questionnaires/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,[CopiedAnswerItem]);
+          await axios.post(`/${Auth.reqRole}/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,[CopiedAnswerItem]);
         setNextQuestionLoading(false)
       }
       catch(err)
@@ -290,10 +307,11 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
     {
       
       if(FileQuestionQuestions && FileQuestionQuestions.length)
-      await axios.post(`/question-api/questionnaires/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,AnswerSetFormDataConverter(FileQuestionQuestions),{
+      await axios.post(`/${Auth.reqRole}/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,
+          AnswerSetFormDataConverter(FileQuestionQuestions),{
         'Content-Type' : 'multipart/form-data'
       })
-    await axios.post(`/question-api/questionnaires/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,
+    await axios.post(`/${Auth.reqRole}/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,
     CopiedQuestionAnswerSet)
     SetCurrentIndex('Thanks')
   }

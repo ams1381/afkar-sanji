@@ -6,7 +6,8 @@ export const QuestionnaireContainer = styled.div`
     padding-bottom: 1rem;
     display: grid;
     row-gap: 1.3rem;
-    grid-template-columns: repeat(auto-fill,minmax(406px,1fr));
+    //grid-template-columns: repeat(auto-fill,minmax(406px,1fr));
+  grid-template-columns: repeat(auto-fill,minmax(350px,1fr));
     justify-items: center;
     direction: rtl;
     grid-auto-flow: dense;
@@ -23,7 +24,8 @@ export const QuestionnaireDiv = styled.div`
     border: ${p => p.isloading ? 'none' : '1px solid #CCCCCC'};
     border-radius: 2px;
     font-family: 'IRANSans';
-    width: 420px;
+    //width: 420px;
+    width: 100%;
     direction: ltr;
     background: ${p => p.isloading ? '#E7E7E7' : 'var(--surface)'};
     padding-bottom : ${p => p.isloading ? '20px' : '0'};

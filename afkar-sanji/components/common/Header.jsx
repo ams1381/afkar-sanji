@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { HeaderComponent, UserAvatarLogout , HeaderContainer ,
-    SideBarToggleButton , HeaderFolderButton , LogoutPopOverInfo, LogoutPopOverLayout} from '@/styles/common';
+import {
+    HeaderComponent, UserAvatarLogout, HeaderContainer,
+    SideBarToggleButton, HeaderFolderButton, LogoutPopOverInfo, LogoutPopOverLayout, UserIconContainer
+} from '@/styles/common';
 import { Button, ConfigProvider, Popover, Skeleton } from 'antd';
 import { AuthContext } from '@/utilities/AuthContext';
 import { themeContext } from '@/utilities/ThemeContext';
@@ -37,6 +39,7 @@ export const Header = ({SetSideBar , goToFolders , Questionnaire , cookies , loa
     const FolderButtonHandler = () => {
         goToFolders ? router.back() : SetSideBar();
     }
+
     useEffect(() => {
         handleInputWidth(QuestionnaireNameInputRef,QuestionnaireName);
       },[QuestionnaireNameInputRef.current])
@@ -54,9 +57,10 @@ export const Header = ({SetSideBar , goToFolders , Questionnaire , cookies , loa
       const QuestionnaireRenameConfirmHandler = async () => {
         if(!QuestionnaireName)
           return
-       await axiosInstance.patch(`/question-api/questionnaires/${Questionnaire.uuid}/`,{ name : QuestionnaireName });
+       await axiosInstance.patch(`/${Auth.reqRole}/${Questionnaire.uuid}/`,{ name : QuestionnaireName });
        SetRenameState(false);
       }
+    // question-api/questionnaires
   return (
     loadingHeader ? 
     <HeaderContainer>
@@ -73,6 +77,22 @@ export const Header = ({SetSideBar , goToFolders , Questionnaire , cookies , loa
     :
     <HeaderContainer>
         <HeaderComponent>
+            <UserIconContainer>
+                {
+                    Auth.isAdmin ?
+                        <Link href={'/admin/'} style={{ display : 'flex' , alignItems : 'center' }}>
+                            <Icon style={{ width : 24 , height : 24 }} name={'AdminIcon'} />
+                        </Link>:
+                        <>
+                            { Auth.role === '' && <Icon style={{ width : 24 , height : 24 }} name={'NormalUser'} /> }
+                            { Auth.role === 'e' && <Icon style={{ width : 24 , height : 24 }} name={'EmployerIcon'} /> }
+                            { Auth.role === 'i' && <Icon style={{ width : 24 , height : 24 }} name={'QuestionerIcon'} /> }
+                            { Auth.role === 'ie' && <Icon style={{ width : 24 , height : 24 }} name={'InterViewerEmployer'} /> }
+                        </>
+                }
+                {/*InterViewerEmployer*/}
+            </UserIconContainer>
+
             <ConfigProvider theme={themeContext}>
                 <Popover
                 content={<AvatarComponent cookies={cookies} />}

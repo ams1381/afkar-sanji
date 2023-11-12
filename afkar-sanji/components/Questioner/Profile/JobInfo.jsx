@@ -9,7 +9,7 @@ import Link from 'next/link'
 import React, {useEffect, useRef, useState} from 'react'
 import {Button, Cascader, message, Skeleton} from 'antd'
 import {axiosInstance} from '@/utilities/axios';
-import {convertDate, convertToRegularTime} from "@/components/QuestionnairePanel/SettingPanel";
+import {convertDate, convertToRegularTime} from "@/components/QuestionnairePanel/QuestionnaireSetting/SettingPanel";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
 import {Icon} from "@/styles/icons";
 

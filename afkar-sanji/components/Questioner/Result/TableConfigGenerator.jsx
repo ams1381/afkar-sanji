@@ -37,8 +37,8 @@ export const TableColumnGenerator = (QuestionsArray,ResultData,resultMessage,reg
                                defaultFileList={[{
                                    name: Answer.split('/')[6],
                                    status: 'done',
-                                   url: 'https://mah-api.codintofuture.ir' + Answer,
-                                   thumbUrl : 'https://mah-api.codintofuture.ir.com' + Answer
+                                   url:  Answer,
+                                   thumbUrl :  Answer
                                }]} />
             else if(typeof Answer == 'string' || typeof Answer == 'number')
                 return <div>

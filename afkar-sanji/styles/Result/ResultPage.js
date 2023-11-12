@@ -6,6 +6,8 @@ export const ResultBodyContainer = styled.div`
    display: ${p => p.error ? 'flex' : 'block'};
    align-items: center;
    justify-content: center;
+  
+  
     .date_filter
     {
         width: 45%;
@@ -461,4 +463,88 @@ export const EmptyButtonPage = styled(Button)`
     margin-top: 16px;
     box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.06);
     padding: 4px 15px;
+`
+
+export const DateFilterContainer = styled.div`
+  padding: 8px;
+  gap: 8px;
+  display: flex;
+  flex-direction: column;
+
+  .rmdp-input
+  {
+    border-radius: 2px;
+    width: 100%;
+    height: 32px;
+  }
+  input
+  {
+    border-radius: 2px;
+    font-family: 'IRANSANS';
+    text-align: right;
+  }
+  .b-deselect
+  {
+    margin-right: 10px;
+  }
+`
+export const InterviewerCodeSearchContainer = styled.div`
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  flex-direction: row-reverse;
+  border-radius: 2px;
+  & input
+  {
+    border: none;
+  }
+  & input:focus
+  {
+    box-shadow: none !important;
+  }
+  span
+  {
+    padding: 9px;
+    border-right: 1px solid rgba(0, 0, 0, 0.25);
+  }
+`
+export const DateFilterButtonsContainer = styled.div`
+  display: flex;
+  align-items: center;
+  height: 32px;
+  gap: 8px;
+  width: 100%;
+  
+  .ant-btn
+  {
+    color: var(--Neutral-Gray6);
+  }
+  .search-button
+  {
+    color: var(--Neutral-Gray9);
+  }
+  .ant-btn:hover
+  {
+    color : var(--primary-color);
+  }
+`
+export const FilterButtonContainer = styled.div`
+    align-items: center;
+    display: flex;
+    gap: 12px;
+    cursor: pointer;
+    text-align: right;
+    justify-content: center;
+    transition: 0.3s;
+  
+  & span
+  {
+    padding: 3px;
+    border-radius: 2px;
+    transition: 0.3s;
+  }
+  & span:hover
+  {
+    background-color: #E2E2E2;
+  }
 `

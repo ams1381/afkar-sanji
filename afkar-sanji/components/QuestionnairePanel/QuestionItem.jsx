@@ -8,7 +8,7 @@ import { QuestionDesignItem , QuestionItemSurface ,DropDownQuestionButton , Ques
 import { QuestionTypeComponentGenerator, Question_types } from '@/utilities/QuestionTypes';
 import 'react-dropdown/style.css';
 import RemovePopup from '../common/RemovePopup';
-import React, { useEffect, useRef, useState } from 'react'
+import React, {useContext, useEffect, useRef, useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import { Button, Select , message } from 'antd';
 import QuestionDescription from './Question Components/Common/Description';
@@ -31,6 +31,7 @@ import {
     QuestionPatcher, SortableConfigGenerator
 } from "@/utilities/stores/QuestionsActions";
 import { AnimatePresence , motion } from "framer-motion";
+import {AuthContext} from "@/utilities/AuthContext";
 
 function shallowEqual(obj1, obj2) {
   if (obj1 === null || obj2 === null ||
@@ -60,7 +61,7 @@ function shallowEqual(obj1, obj2) {
 }
 export const QuestionItem = ({  ActiveQuestion , childPlacement ,setActiveQuestion , Questionnaire ,
    QuestionsList  , IsQuestion , question , RightDrawerOpen , UUID , parentPlacement , GroupID }) => {
-
+  const Auth = useContext(AuthContext);
   const [ QuestionRootOpenState , SetQuestionRootOpenState ] = useState(false);
   const [ QuestionActionState , SetQuestionActionState ] = useState('edit');
   const [ DeleteQuestionState , SetDeleteQuestionState ] = useState(false);
@@ -78,9 +79,7 @@ export const QuestionItem = ({  ActiveQuestion , childPlacement ,setActiveQuesti
   let childQuestion = question?.question?.child_questions;
 
   const [ QuestionTopDis , setQuestionTopDis ] = useState(137);
-
   const regex = /(<([^>]+)>)/gi;
-
   let questionsData = question;
 
   useEffect(() => {
@@ -120,8 +119,6 @@ export const QuestionItem = ({  ActiveQuestion , childPlacement ,setActiveQuesti
   useEffect(() => {
           if(QuestionRootOpenState)
           {
-              // if(questionsData.question.question_type == InitialQuestionData.current.question.question_type &&
-              //     questionsData.question.options?.length == InitialQuestionData.current.question.options?.length)
                 setQuestionBoxHeight(150)
               setTimeout(() => {
                   setQuestionBoxHeight(document.querySelector(`.QuestionItem${questionsData.question.id} .question_item__root`).clientHeight + 85)
@@ -163,7 +160,6 @@ export const QuestionItem = ({  ActiveQuestion , childPlacement ,setActiveQuesti
       'QuestionType' : questionsData?.question?.question_type
     })
   }
-
   const ChangeQuestionTypeHandler = (_,ChangedType,e) => {
       // setQuestionBoxHeight(document.querySelector(`.QuestionItem${questionsData.question.id} .question_item__root`).clientHeight + 80)
     ChangedType ? QuestionDispatcher(ChangeQuestionType({ 
@@ -172,7 +168,6 @@ export const QuestionItem = ({  ActiveQuestion , childPlacement ,setActiveQuesti
        Prefix_url : ChangedType.url_prefix ,
        group : questionsData.question.group
        })) : ''
-
   }
   return (
     (questionsData) ? 
@@ -309,16 +304,14 @@ export const QuestionItem = ({  ActiveQuestion , childPlacement ,setActiveQuesti
                           { QuestionRootOpenState ? <QuestionItemFooter savebuttonactive={!QuestionChanged ? 'active' : null} >
                               <Button type='primary'
                                       loading={SaveButtonLoadingState}
-                                      onClick={questionsData.question.newFace ? () => QuestionCreator(questionsData , QuestionsArray , setQuestionChangedState , InitialQuestionData , UUID  , SetSaveButtonLoadingState , QuestionDispatcher , SavedMessage , setActiveQuestion)
-                                          : () => QuestionPatcher(SetSaveButtonLoadingState , UUID , questionsData , QuestionDispatcher , SavedMessage , setQuestionChangedState)}>
+                                      onClick={questionsData.question.newFace ? () => QuestionCreator(questionsData , QuestionsArray , setQuestionChangedState , InitialQuestionData , UUID  , SetSaveButtonLoadingState , QuestionDispatcher , SavedMessage , setActiveQuestion,Auth)
+                                          : () => QuestionPatcher(SetSaveButtonLoadingState , UUID , questionsData , QuestionDispatcher , SavedMessage , setQuestionChangedState,Auth)}>
                                   ذخیره
                               </Button>
                               <Button danger onClick={QuestionOpenHandler}>
                                   <p>انصراف</p>
                               </Button>
-
                           </QuestionItemFooter> : ''}
-
                   </motion.div>
               </AnimatePresence>
                 }
@@ -340,16 +333,14 @@ export const QuestionItem = ({  ActiveQuestion , childPlacement ,setActiveQuesti
                                 parentPlacement={questionsData.question.placement}
                                 childPlacement={index + 1}
                                 Questionnaire={Questionnaire}
-                                // provided={provided}
                                 QuestionsList={QuestionsList}
                                 ActiveQuestion={ActiveQuestion}
                                 setActiveQuestion={setActiveQuestion}
-                                // dropboardprovide={provided}
                                 />
                             </div>)}
             </ReactSortable>
          :
-         <ReactSortable {...SortableConfigGenerator(childQuestion,UUID,QuestionDispatcher,SavedMessage,QuestionsArray)}
+         <ReactSortable {...SortableConfigGenerator(childQuestion,UUID,QuestionDispatcher,SavedMessage,QuestionsArray,Auth)}
                         className='child_container'
           list={questionsData.question.child_questions} setList={() => {}}>
         <div className='nested_dnd_message'>

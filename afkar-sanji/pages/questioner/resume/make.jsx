@@ -118,7 +118,7 @@ export async function getServerSideProps(context) {
             return acc;
         }, {});
 
-        let MeResponse = await fetch('https://mah-api.ariomotion.com/user-api/users/me/', {
+        let MeResponse = await fetch('https://mah-api.codintofuture.ir/user-api/users/me/', {
             headers: {
                 Authorization: `Bearer ${parsedCookies.access_token}`,
             }

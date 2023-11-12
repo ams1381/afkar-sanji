@@ -1,5 +1,5 @@
 import { Select, Skeleton, Spin, message } from 'antd';
-import React, { useEffect, useRef, useState } from 'react'
+import React, {useContext, useEffect, useRef, useState} from 'react'
 import { ClearSearchInputButton, QuestionDesignTitle, QuestionDesignBox,
    QuestionnairePanelBodyContainer  , QuestionSearchContainer , QuestionSearchInput,
     AddNonQuestionItem, QuestionItemRow, QuestionDesignItem, QuestionItemSurface, 
@@ -14,6 +14,7 @@ import { useDispatch } from 'react-redux';
 import { initialQuestionsSetter } from '@/utilities/stores/QuestionStore';
 import { useSelector } from 'react-redux';
 import { ReactSortable } from 'react-sortablejs';
+import {AuthContext} from "@/utilities/AuthContext";
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -26,11 +27,11 @@ export const getListStyle = (isDraggingOver) => ({
   width: '100%',
 });
 
-export const ReorderPoster = async (UUID,reOrderedArray) => {
+export const ReorderPoster = async (UUID,reOrderedArray,Auth) => {
   axiosInstance.defaults.headers['Content-Type'] = 'application/json';
   try 
      {
-      await axiosInstance.post(`/question-api/questionnaires/${UUID}/change-questions-placements/`,{
+      await axiosInstance.post(`/${Auth.reqRole}/${UUID}/change-questions-placements/`,{
         'placements' : reOrderedArray
       })
      }
@@ -47,6 +48,7 @@ export function moveItem(arr, prevIndex, newIndex) {
   return arr;
 }
 const QuestionDesignPanel = ({ Questionnaire , RightDrawerOpen , QuestionnaireReloader}) => {
+  const Auth = useContext(AuthContext);
   const QuestionDataDispatcher = useDispatch();
   const [ SearchResult , SetSearchResult ] = useState([]);
   const [ActiveQuestion, setActiveQuestion] = useState(null);
@@ -90,7 +92,7 @@ const QuestionDesignPanel = ({ Questionnaire , RightDrawerOpen , QuestionnaireRe
           return
       try 
       {
-        await ReorderPoster(Questionnaire.uuid,reOrderedArray)
+        await ReorderPoster(Questionnaire.uuid,reOrderedArray,Auth)
       }
       catch(err)
       {
@@ -137,7 +139,7 @@ const QuestionDesignPanel = ({ Questionnaire , RightDrawerOpen , QuestionnaireRe
           }))
          
           if(!DraggedQuestion?.question.newFace)
-          await axiosInstance.patch(`/question-api/questionnaires/${Questionnaire.uuid}/${DraggedQuestion?.question.url_prefix}/${DraggedQuestionID}/`,
+          await axiosInstance.patch(`/${Auth.reqRole}/${Questionnaire.uuid}/${DraggedQuestion?.question.url_prefix}/${DraggedQuestionID}/`,
           { group : DroppedGroupQuestionID , placement : event.newDraggableIndex + 1});
           AllQuestionsData.find(item => item.question.id == DroppedGroupQuestionID).question.child_questions.splice(event.newDraggableIndex, 0 ,copiedDraggedQuestion);
           QuestionDataDispatcher(QuestionSorter())
@@ -188,7 +190,6 @@ const QuestionDesignPanel = ({ Questionnaire , RightDrawerOpen , QuestionnaireRe
     }
   },[Questionnaire])
   useEffect(() => {
-
     document.querySelectorAll('.child_container .design_container').forEach(item => {
       item.style.width = '100%'
       item.firstElementChild.style.width = '95%'
@@ -208,7 +209,7 @@ const QuestionDesignPanel = ({ Questionnaire , RightDrawerOpen , QuestionnaireRe
         return
       else
       {
-        let SearchRes = await axiosInstance.get(`/question-api/questionnaires/${Questionnaire.uuid}/search-questions/?search=${e}`);
+        let SearchRes = await axiosInstance.get(`/${Auth.reqRole}/${Questionnaire.uuid}/search-questions/?search=${e}`);
         if(SearchRes)
         {
           let search_array = SearchRes.data.map(item => item.question ? ({

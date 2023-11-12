@@ -8,7 +8,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import persianNumberMin from 'persian-number';
 import React, { useContext } from 'react'
-import { getCookie } from 'react-use-cookie';
+import {getCookie, setCookie} from 'react-use-cookie';
 
 const OTPSms = ({ cookies }) => {
   if(!getCookie('numberPhone'))
@@ -30,7 +30,12 @@ const OTPSms = ({ cookies }) => {
        'token' : persianNumberMin.convertPeToEn(value) ,
        'phone_number' : persianNumberMin.convertPeToEn(Auth.PhoneNumber) }
        );
-    if(otp_res.status == 201) 
+    let MeRes = await axiosInstance.get('/user-api/users/me/',{
+      headers : {
+        Authorization : 'Bearer ' + otp_res.data.access
+      }
+    });
+    if(otp_res.status === 201 && MeRes.status === 200)
     {
       LoginMessage.success({
         content : 'ورود با موفقیت انجام شد' ,
@@ -44,7 +49,12 @@ const OTPSms = ({ cookies }) => {
       })
 
       setTimeout(() => {
-        
+        setCookie('role','regular-user')
+        Auth.setIsAdmin(MeRes?.data?.is_staff);
+        if(MeRes?.data?.resume) {}
+          Auth.setHasResume(true)
+          Auth.setUserRole(MeRes?.data.role)
+        // Auth.setReqRole('question-api/questionnaires');
         const returnUrl = router.query.returnUrl || '/';
         typeof window !== 'undefined' ? router.push(returnUrl)  : ''
       },3000)

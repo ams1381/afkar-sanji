@@ -101,7 +101,13 @@ export const QuestionnaireSettingContainer = styled.div`
     padding: 18px;
     border-radius: 2px;
     border: 1px solid #B8B8B8;
+    max-height: 516px;
+    overflow: auto;
 
+    &::-webkit-scrollbar {
+      width: 0;
+    }
+  
     .questionnaire_setting_footer
     {
         display: flex;

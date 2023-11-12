@@ -8,7 +8,7 @@ import {
 import {digitsEnToFa} from "@persian-tools/persian-tools";
 import {SubComponentGenerator} from "@/components/Questioner/AddResult/QuestionSubCompGenerator";
 import {Button, message} from "antd";
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {setAnswerSetArray, setInitialAnswerSet} from "@/utilities/stores/AnswerStore";
 import axios from "axios";
@@ -17,10 +17,12 @@ import Link from "next/link";
 import {useRouter} from "next/router";
 import { Skeleton } from "antd"
 import {OptionalItemContainer} from "@/styles/questionnairePanel/QuestionComponent";
+import {AuthContext} from "@/utilities/AuthContext";
 
 export const PageContent = ({ questionnaire }) => {
     const dispatcher = useDispatch();
     const router = useRouter();
+    const Auth = useContext(AuthContext);
     const [ messageApi , messageContext ] = message.useMessage();
     const [ AnswerConfirmLoading , setAnswerConfirmLoading ] = useState(false)
     const [ ErrorQuestions , setErrorQuestions ] = useState([]);
@@ -52,20 +54,31 @@ export const PageContent = ({ questionnaire }) => {
             setAnswerConfirmLoading(true)
             let CreatedAnswerSet;
             // if(!answerSet) {
-                let { data } = await axios.post(`/question-api/questionnaires/${questionnaire.uuid}/answer-sets/`);
+                let { data } = await axios.post(`/interview-api/interviews/${questionnaire.uuid}/answer-sets/`);
                 CreatedAnswerSet = data;
             // }
 
             if(FileQuestionQuestions && FileQuestionQuestions.length)
-                await axios.post(`/question-api/questionnaires/${questionnaire.uuid}/answer-sets/${CreatedAnswerSet.id}/add-answer/`,
+                await axios.post(`/interview-api/interviews/${questionnaire.uuid}/answer-sets/${CreatedAnswerSet.id}/add-answer/`,
                     AnswerSetFormDataConverter(FileQuestionQuestions),{
                     'Content-Type' : 'multipart/form-data'
                 })
-            await axios.post(`/question-api/questionnaires/${questionnaire.uuid}/answer-sets/${CreatedAnswerSet.id}/add-answer/`,
+            await axios.post(`/interview-api/interviews/${questionnaire.uuid}/answer-sets/${CreatedAnswerSet.id}/add-answer/`,
                 CopiedQuestionAnswerSet)
         }
         catch(err)
         {
+            // console.log(err.response?.data)
+            if(err.response?.status ==  500) {
+                messageApi.error({
+                    content : 'مشکل سمت سرور',
+                    style : {
+                        fontFamily : 'IRANSans'
+                    }
+                })
+                setAnswerConfirmLoading(false)
+                return
+            }
             setAnswerConfirmLoading(false)
             if(err.response?.data?.questionnaire)
             {
@@ -79,6 +92,9 @@ export const PageContent = ({ questionnaire }) => {
             }
             if(err.response?.data)
             {
+
+                if(!Array.isArray(err.response?.data))
+                    return
                 let ErrorsArray = err.response?.data.map(item => {
                     if(Object.keys(item).length)
                         return Object.keys(item)[0]

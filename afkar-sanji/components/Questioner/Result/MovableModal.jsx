@@ -1,4 +1,4 @@
-import React, {lazy, Suspense, useEffect, useRef, useState} from 'react';
+import React, {lazy, Suspense, useContext, useEffect, useRef, useState} from 'react';
 import Draggable from 'react-draggable';
 import {digitsEnToFa} from "@persian-tools/persian-tools";
 import {ModalEditButton, ModalHeader , ModalBody , ModalFooter} from "@/styles/Result/QuestionerResult";
@@ -9,15 +9,18 @@ import {SubComponentGenerator} from "@/components/Questioner/AddResult/QuestionS
 import {useDispatch, useSelector} from "react-redux";
 import {setAnswerSetArray, setInitialAnswerSet} from "@/utilities/stores/AnswerStore";
 import {ModalSubComponentGenerator} from "@/components/Questioner/Result/ModalSubComponentGenerator";
-import {convertDate, convertToRegularTime} from "@/components/QuestionnairePanel/SettingPanel";
+import {convertDate, convertToRegularTime} from "@/components/QuestionnairePanel/QuestionnaireSetting/SettingPanel";
 import axios from "axios";
 import {AnswerSetFormDataConverter} from "@/utilities/FormData";
 import {ModalSubQuestionGenerator} from "@/components/Questioner/Result/ModalSubQuestionGenerator";
+import {AuthContext} from "@/utilities/AuthContext";
+import {axiosInstance} from "@/utilities/axios";
 
 
 export const MovableModal = ({ ModalAnswerSet , ResultQuery , setOpenResultModal , QuestionnaireUUID}) => {
     const [ ErrorQuestions , setErrorQuestions ] = useState([])
     const dispatcher = useDispatch();
+    const Auth = useContext(AuthContext);
     const [ SaveChangesLoading , setSaveChangesLoading ] = useState(false)
     const [ EditAnswerSetState , setEditAnswerSetState ] = useState(false);
     const [ messageApi , messageContext ] = message.useMessage();
@@ -56,11 +59,11 @@ export const MovableModal = ({ ModalAnswerSet , ResultQuery , setOpenResultModal
 
 
             if(FileQuestionQuestions && FileQuestionQuestions.length)
-                await axios.post(`/question-api/questionnaires/${QuestionnaireUUID}/answer-sets/${ModalAnswerSet.answerSet.id}/add-answer/`,
+                await axiosInstance.post(`/interview-api/interviews/${QuestionnaireUUID}/answer-sets/${ModalAnswerSet.answerSet.id}/add-answer/`,
                     AnswerSetFormDataConverter(FileQuestionQuestions),{
                         'Content-Type' : 'multipart/form-data'
                     })
-            await axios.post(`/question-api/questionnaires/${QuestionnaireUUID}/answer-sets/${ModalAnswerSet.answerSet.id}/add-answer/`,
+            await axiosInstance.post(`/interview-api/interviews/${QuestionnaireUUID}/answer-sets/${ModalAnswerSet.answerSet.id}/add-answer/`,
                 CopiedQuestionAnswerSet)
 
             ResultQuery.refetch()
@@ -68,6 +71,15 @@ export const MovableModal = ({ ModalAnswerSet , ResultQuery , setOpenResultModal
         catch(err)
         {
             setSaveChangesLoading(false)
+            if(err.response?.status === 500) {
+                messageApi.error({
+                    content : 'مشکل سمت سرور',
+                    style : {
+                        fontFamily : 'IRANSans'
+                    }
+                })
+                return
+            }
             if(err.response?.data)
             {
                 let ErrorsArray = err.response?.data.map(item => {

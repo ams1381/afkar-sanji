@@ -13,7 +13,6 @@ const RateQuestion = ({ QuestionInfo }) => {
   const [ RateAnswerValue , setRateAnswerValue ] = useState(0)
     const [ RateValue , setRateValue ] = useState(0);
     const RateAnswerHandler = (RateValue) => {
-      console.log(RateValue)
       setRateValue(RateValue);
       setRateAnswerValue(RateValue)
       if(QuestionsAnswerSet && QuestionsAnswerSet.length)

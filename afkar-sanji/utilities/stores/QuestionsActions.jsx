@@ -88,7 +88,7 @@ export const QuestionOpenHandler = (setQuestionBoxHeight ,QuestionRootOpenState 
 
 }
 
-export const QuestionPatcher = async (SetSaveButtonLoadingState , UUID , questionsData , QuestionDispatcher , SavedMessage , setQuestionChangedState) => {
+export const QuestionPatcher = async (SetSaveButtonLoadingState , UUID , questionsData , QuestionDispatcher , SavedMessage , setQuestionChangedState,Auth) => {
     SetSaveButtonLoadingState(true);
     let QDataInstance = JSON.parse(JSON.stringify(questionsData))
     QDataInstance.question.media = questionsData.question.media;
@@ -128,10 +128,10 @@ export const QuestionPatcher = async (SetSaveButtonLoadingState , UUID , questio
     try
     {
         if(questionsData.question.url_prefix)
-            await axiosInstance.patch(`/question-api/questionnaires/${UUID}/${questionsData.question.url_prefix}/${questionsData.question.id}/`,form_data_convertor(QDataInstance.question))
+            await axiosInstance.patch(`/${Auth.reqRole}/${UUID}/${questionsData.question.url_prefix}/${questionsData.question.id}/`,form_data_convertor(QDataInstance.question))
         else
-            questionsData.question.question_type == 'welcome_page' ? axiosInstance.patch(`/question-api/questionnaires/${UUID}/welcome-pages/${questionsData.question.id}/`,form_data_convertor(QDataInstance.question))
-                : axiosInstance.patch(`/question-api/questionnaires/${UUID}/thanks-pages/${questionsData.question.id}/`,form_data_convertor(QDataInstance.question))
+            questionsData.question.question_type == 'welcome_page' ? axiosInstance.patch(`/${Auth.reqRole}/${UUID}/welcome-pages/${questionsData.question.id}/`,form_data_convertor(QDataInstance.question))
+                : axiosInstance.patch(`/${Auth.reqRole}/${UUID}/thanks-pages/${questionsData.question.id}/`,form_data_convertor(QDataInstance.question))
 
         axiosInstance.defaults.headers['Content-Type'] = 'application/json';
         setQuestionChangedState(false);
@@ -163,7 +163,7 @@ export const QuestionPatcher = async (SetSaveButtonLoadingState , UUID , questio
 }
 
 
-export const QuestionCreator = async (questionsData , QuestionsArray , setQuestionChangedState , InitialQuestionData , UUID  , SetSaveButtonLoadingState , QuestionDispatcher , SavedMessage , setActiveQuestion) => {
+export const QuestionCreator = async (questionsData , QuestionsArray , setQuestionChangedState , InitialQuestionData , UUID  , SetSaveButtonLoadingState , QuestionDispatcher , SavedMessage , setActiveQuestion,Auth) => {
     let QDataInstance = JSON.parse(JSON.stringify(questionsData))
     axiosInstance.defaults.headers['Content-Type'] = 'multipart/form-data'
     if(questionsData.question.media != null && typeof questionsData.question.media == 'string')
@@ -205,7 +205,7 @@ export const QuestionCreator = async (questionsData , QuestionsArray , setQuesti
                 return;
             }
 
-            let { data }  = await axiosInstance.post(`/question-api/questionnaires/${UUID}/${questionsData.question.url_prefix}/`,
+            let { data }  = await axiosInstance.post(`/${Auth.reqRole}/${UUID}/${questionsData.question.url_prefix}/`,
                 form_data_convertor(questionsData.question));
             setActiveQuestion({
                 'QuestionID' : data.id ,
@@ -225,7 +225,7 @@ export const QuestionCreator = async (questionsData , QuestionsArray , setQuesti
             });
             sorted_questions_array.forEach((item,index) => !item  ? sorted_questions_array.splice(index,1) : '')
 
-            await axiosInstance.post(`/question-api/questionnaires/${UUID}/change-questions-placements/`,{
+            await axiosInstance.post(`/${Auth.reqRole}/${UUID}/change-questions-placements/`,{
                 'placements' : sorted_questions_array
             })
             QuestionDispatcher(QuestionSorter())
@@ -233,8 +233,8 @@ export const QuestionCreator = async (questionsData , QuestionsArray , setQuesti
         else
         {
             SetSaveButtonLoadingState(true);
-            let { data } = questionsData.question.question_type == 'welcome_page' ? await axiosInstance.post(`/question-api/questionnaires/${UUID}/welcome-pages/`,form_data_convertor(questionsData.question))
-                : await axiosInstance.post(`/question-api/questionnaires/${UUID}/thanks-pages/`,form_data_convertor(questionsData.question))
+            let { data } = questionsData.question.question_type == 'welcome_page' ? await axiosInstance.post(`/${Auth.reqRole}/${UUID}/welcome-pages/`,form_data_convertor(questionsData.question))
+                : await axiosInstance.post(`/${Auth.reqRole}/${UUID}/thanks-pages/`,form_data_convertor(questionsData.question))
 
             QuestionDispatcher(finalizer({
                 isQuestion :  false ,
@@ -299,7 +299,7 @@ export const AddQuestionHandler = (setQuestionBoxHeight,RandomIdGenerator,questi
     // setQuestionBoxHeight(document.querySelector(`.QuestionItem${newQuestionId} .question_item__root`).clientHeight + 80)
 }
 
-export const SortableConfigGenerator = (childQuestion,UUID,QuestionDispatcher,SavedMessage,QuestionsArray) => {
+export const SortableConfigGenerator = (childQuestion,UUID,QuestionDispatcher,SavedMessage,QuestionsArray,Auth) => {
     return  {
         animation: 100,
         group: 'nested',
@@ -329,7 +329,7 @@ export const SortableConfigGenerator = (childQuestion,UUID,QuestionDispatcher,Sa
                     }))
                     axiosInstance.defaults.headers['Content-Type'] = 'application/json';
                     if(!childQuestion[evt.oldDraggableIndex]?.question?.newFace)
-                        await axiosInstance.patch(`/question-api/questionnaires/${UUID}/${childQuestion[evt.oldDraggableIndex]?.question?.url_prefix}/
+                        await axiosInstance.patch(`/${Auth.reqRole}/${UUID}/${childQuestion[evt.oldDraggableIndex]?.question?.url_prefix}/
               ${childQuestion[evt.oldDraggableIndex]?.question?.id}`
                             ,{ group : null })
                     AllQuestions.splice(evt.newDraggableIndex , 0, copiedChildQuestion[evt.oldDraggableIndex])
@@ -343,7 +343,7 @@ export const SortableConfigGenerator = (childQuestion,UUID,QuestionDispatcher,Sa
                     if(reOrderedArray.includes(undefined) || reOrderedArray.includes(null))
                         return
 
-                    await axiosInstance.post(`/question-api/questionnaires/${UUID}/change-questions-placements/`,{
+                    await axiosInstance.post(`/${Auth.reqRole}/${UUID}/change-questions-placements/`,{
                         'placements' : reOrderedArray
                     })
 
@@ -392,7 +392,7 @@ export const SortableConfigGenerator = (childQuestion,UUID,QuestionDispatcher,Sa
                             ReorderArray.push({ question_id : item.question.id , new_placement : index + 1 })
                     })
                     axiosInstance.defaults.headers['Content-Type'] = 'application/json';
-                    await axiosInstance.post(`/question-api/questionnaires/${UUID}/change-questions-placements/`,{
+                    await axiosInstance.post(`/${Auth.reqRole}/${UUID}/change-questions-placements/`,{
                         'placements' : ReorderArray
                     })
                 }
@@ -429,13 +429,13 @@ export const SortableConfigGenerator = (childQuestion,UUID,QuestionDispatcher,Sa
                                 new_placement : ChildItem.question.placement
                             })
                     })
-                    await axiosInstance.post(`/question-api/questionnaires/${UUID}/change-questions-placements/`,{
+                    await axiosInstance.post(`/${Auth.reqRole}/${UUID}/change-questions-placements/`,{
                         'placements' : NewGroupOrder
                     })
                     // console.log(QuestionsArray.find(item => item.question.id == newGroup))
                     // QuestionsArray.find(item => item.question.id == newGroup)
                     if(!copiedChild[evt.oldDraggableIndex]?.question?.newFace)
-                        await axiosInstance.patch(`/question-api/questionnaires/${UUID}/${copiedChild[evt.oldDraggableIndex]?.question?.url_prefix}/
+                        await axiosInstance.patch(`/${Auth.reqRole}/${UUID}/${copiedChild[evt.oldDraggableIndex]?.question?.url_prefix}/
           ${childQuestion[evt.oldDraggableIndex]?.question?.id}`
                             ,{ group : newGroup })
                     // SwitchIntoGroups
@@ -457,7 +457,7 @@ export const SortableConfigGenerator = (childQuestion,UUID,QuestionDispatcher,Sa
                     newIndex : evt.newDraggableIndex
                 }))
                 if(!copiedChild[evt.oldDraggableIndex]?.question?.newFace)
-                    await axiosInstance.patch(`/question-api/questionnaires/${UUID}/${copiedChild[evt.oldDraggableIndex]?.question?.url_prefix}/
+                    await axiosInstance.patch(`/${Auth.reqRole}/${UUID}/${copiedChild[evt.oldDraggableIndex]?.question?.url_prefix}/
             ${childQuestion[evt.oldDraggableIndex]?.question?.id}`
                         ,{ group : newGroup })
 

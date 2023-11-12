@@ -2,12 +2,12 @@ import { ResultBodyContainer , ResultButton , DeleteRowButton , EmptyButtonPage 
       ResultTableContainer , EmptyResultContainer , ResultBodyTopPart , TableOutPut } from '@/styles/Result/ResultPage';
 import { Icon } from '@/styles/icons';
 import { Skeleton , Table , Upload, message, Tooltip, Input } from 'antd';
-import React, { useEffect } from 'react'
+import React, {useContext, useEffect} from 'react'
 import Link from 'next/link';
 import { axiosInstance } from '@/utilities/axios';
 import EmptyImage from '../../public/Images/empty-image.png'
 import { digitsEnToFa, digitsFaToEn } from '@persian-tools/persian-tools';
-import { convertDate } from '../QuestionnairePanel/SettingPanel';
+import { convertDate } from '../QuestionnairePanel/QuestionnaireSetting/SettingPanel';
 import { Excel } from 'antd-table-saveas-excel';
 import { useRef } from 'react';
 import RemovePopup from '../common/RemovePopup';
@@ -22,6 +22,7 @@ import { QuestionTypeIcon } from '@/utilities/QuestionTypes';
 import { useLocalStorage } from '@/utilities/useLocalStorage';
 import {TableColumnGenerator} from "@/components/ResultPage/TableDataGenerator";
 import {TableDataGenerator} from "@/components/Questioner/Result/TableConfigGenerator";
+import {AuthContext} from "@/utilities/AuthContext";
 const regex = /(<([^>]+)>)/gi;
 export const SkeletonTable = ({ columns, rowCount }) => {
     return (
@@ -109,6 +110,9 @@ export const ResultBody = ({ ResultQuery , setStartDate , setSearchValue , query
   const [ selectedRows , setSelectedRows ] = useState([]);
   const { setItem } = useLocalStorage();
   const [ rowDeleted , setRowDeleted ] = useState(false);
+  const Auth = useContext(AuthContext);
+  const [ InterviewerCodePopup , setInterviewerCodepopup ] = useState(false);
+  const [ DateFilterPopover , setDateFilterPopover ] = useState(false);
   const tableRef = useRef(null);
   const [ LoadingTable , setLoadingTable ] = useState(true);
   let [ ResultData , setResultData ] = useState(null)
@@ -142,7 +146,7 @@ export const ResultBody = ({ ResultQuery , setStartDate , setSearchValue , query
       let rows = [];
       let QuestionsArray = QuestionnaireQuery?.data?.data?.questions.filter(item => item.question != null)
       if(QuestionsArray)
-        columns = TableColumnGenerator(QuestionsArray,resultMessage,regex)
+        columns = TableColumnGenerator(QuestionsArray,resultMessage,regex,DateFilterPopover,setDateFilterPopover,InterviewerCodePopup,setInterviewerCodepopup)
 
     rows = TableDataGenerator(ResultData,QuestionnaireQuery,regex)
     setTableColumns(columns);
@@ -167,6 +171,7 @@ const ResultSearchHandler = async (e) => {
 } 
 
   useEffect(() => {
+      console.log(tableRef.current)
     if(tableRef.current)
       ScrollByDrag(ResultQuery?.data?.data?.results?.length ? true : false);
   }, [document.querySelector("thead.ant-table-thead tr") , document.querySelector(".ant-table-tbody .ant-table-body")]);
@@ -176,7 +181,7 @@ const ResultSearchHandler = async (e) => {
       if(selectedRows.length)
       {
         selectedRows.forEach(async (row) => {
-           await axiosInstance.delete(`/question-api/questionnaires/${QuestionnaireQuery.data?.data?.uuid}/answer-sets/${row}/`)
+           await axiosInstance.delete(`/${Auth.reqRole}/${QuestionnaireQuery.data?.data?.uuid}/answer-sets/${row}/`)
           //  setRowDeleted(true)
             ResultQuery?.refetch()
             setResultData(ResultQuery?.data?.data.results)
@@ -233,11 +238,11 @@ const ResultSearchHandler = async (e) => {
               <ResultBodyTopPart style={{ marginTop : 0 }}>
             <TableOutPut>
                 <div className='table_control'>
-                    <Skeleton.Button active /> 
+                    <Skeleton.Button active />
                     <Skeleton.Button active />
                 </div>
             </TableOutPut>
-            <div className='date_filter'>         
+            <div className='date_filter'>
               <Skeleton.Button active />
               <Skeleton.Button active style={{ width : 120 }}/>
             </div>
@@ -301,14 +306,18 @@ const ResultSearchHandler = async (e) => {
         </ResultBodyTopPart>
         <ResultTableContainer>
            { (TableColumns?.length && TableData?.length) ?  <Table 
-              columns={TableColumns}
+              columns={TableColumnGenerator(QuestionnaireQuery?.data?.data?.questions.filter(item => item.question != null),
+                  resultMessage,regex,DateFilterPopover,setDateFilterPopover,InterviewerCodePopup,setInterviewerCodepopup)}
               dataSource={TableData}       
               ref={tableRef}
               sticky
               loading={LoadingTable}
               bordered
               locale={{
-                emptyText : <p className='no_result_message'>نتیجه‌ای یافت نشد</p>
+                emptyText : <p className='no_result_message'>نتیجه‌ای یافت نشد</p>,
+                  triggerDesc: 'مرتب سازی نزولی',
+                  triggerAsc: 'مرتب سازی صعودی',
+                  cancelSort: 'لغو مرتب سازی'
               }}
               direction='ltr'
               pagination={{
@@ -354,7 +363,8 @@ const ResultSearchHandler = async (e) => {
                 columnTitle : () => <p>ردیف</p>
               }}
               size="middle"
-              scroll={{  x: 2500, y: "50vh" , draggable : true}}
+              // scroll={{  x: 2500, y: "50vh" , drag : true }}
+               scroll={{ x : '1000' }}
               scrollableTarget="table-wrapper"
              /> : (!QuestionnaireQuery.data?.data?.questions?.length) ? <EmptyResultContainer>
                 <img src={EmptyImage.src} />

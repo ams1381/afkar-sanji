@@ -1,11 +1,11 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import {
     HeaderContainer,
     HeaderComponent,
     UserAvatarLogout,
     PageBox,
     LogoutPopoverItem,
-    HeaderAvatarButton
+    HeaderAvatarButton, UserIconContainer
 } from '@/styles/common';
 import { QuestionnaireDirectoryContainer , QuestionnaireDirectoryPath
 } from '@/styles/questionnairePanel/QuestionnairePanelHeader';
@@ -16,9 +16,11 @@ import Link from "next/link";
 import { Skeleton } from 'antd'
 import {axiosInstance} from "@/utilities/axios";
 import {useRouter} from "next/router";
+import {AuthContext} from "@/utilities/AuthContext";
 
 export const QuestionerHeader = ({ pageName , meData }) => {
-   const router = useRouter()
+   const router = useRouter();
+   const Auth = useContext(AuthContext)
   const [ logoutPopOver , switchPopover ] = useState(false);
     const LogoutHandler = async () => {
         // removeCookie('access_token')
@@ -53,6 +55,21 @@ export const QuestionerHeader = ({ pageName , meData }) => {
           </HeaderContainer>
           :  <HeaderContainer>
           <HeaderComponent>
+              <UserIconContainer>
+                  {
+                      Auth.isAdmin ?
+                          <Link href={'/admin/'} style={{ display : 'flex' , alignItems : 'center' }}>
+                              <Icon style={{ width : 24 , height : 24 }} name={'AdminIcon'} />
+                          </Link>:
+                          <>
+                              { Auth.role === '' && <Icon style={{ width : 24 , height : 24 }} name={'NormalUser'} /> }
+                              { Auth.role === 'e' && <Icon style={{ width : 24 , height : 24 }} name={'EmployerIcon'} /> }
+                              { Auth.role === 'i' && <Icon style={{ width : 24 , height : 24 }} name={'QuestionerIcon'} /> }
+                              { Auth.role === 'ie' && <Icon style={{ width : 24 , height : 24 }} name={'InterViewerEmployer'} /> }
+                          </>
+                  }
+                  {/*InterViewerEmployer*/}
+              </UserIconContainer>
           <Popover
               content={<div style={{ padding : '4px 0' }}>
                   <LogoutPopoverItem>
@@ -71,7 +88,7 @@ export const QuestionerHeader = ({ pageName , meData }) => {
                 style={{width : 190}}
                 >
                     <HeaderAvatarButton onClick={() => switchPopover(!logoutPopOver)}>
-                        { meData.avatar ? <img src={'https://mah-api.codintofuture.ir' + meData.avatar}/> :
+                        { meData.avatar ? <img src={meData.avatar}/> :
                         <Icon name={'User'} className={'user_icon'} />}
                         <p>{meData.first_name}</p>
                     </HeaderAvatarButton>
@@ -103,6 +120,20 @@ const pathComponentGenerator = (PageName) => {
           return <>
               <p> نتایج </p> /
               <span> داشبورد </span>
+          </>
+      case 'admin-panel':
+          return <>
+              <p>صفحه‌ اصلی</p>
+          </>
+      case 'users-list':
+          return <>
+              <p> لیست کاربران </p> /
+              <span> صفحه ی اصلی </span>
+          </>
+      case 'questionnaires-list':
+          return  <>
+              <p> لیست پرسشنامه ها </p> /
+              <span> صفحه ی اصلی </span>
           </>
   }
 }

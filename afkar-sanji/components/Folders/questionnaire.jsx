@@ -1,19 +1,19 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, {useContext, useEffect, useRef, useState} from 'react'
 import {  QuestionnaireHeader ,  QuestionnaireBodyStat ,
     QuestionnaireNameContainer , QuestionnaireNameInput , QuestionnairePreviewButton} from '@/styles/folders/Questionnaire';
 import { QuestionnaireDiv , QuestionnaireSeeResultButton , RenameSpan } from '@/styles/folders/Questionnaire';
 import BadgeStyle from '@/styles/folders/Questionnaire.module.css'
 import jalaali from 'jalaali-js';
 import {Badge, Card, message, Skeleton, Space} from 'antd';
-import PN from "persian-number";
 import QuestionnaireFooterPart from './questionnaireFooter';
 import { axiosInstance } from '@/utilities/axios';
 import { Icon } from '@/styles/icons';
 import { handleInputWidth } from '@/utilities/RenameFunctions';
 import { digitsEnToFa } from '@persian-tools/persian-tools';
 import Link from 'next/link';
-import { convertToRegularTime } from '../QuestionnairePanel/SettingPanel';
+import { convertToRegularTime } from '../QuestionnairePanel/QuestionnaireSetting/SettingPanel';
 import {TailSpin} from "react-loader-spinner";
+import {AuthContext} from "@/utilities/AuthContext";
 
 const convertToJalaliDate = (inputDate) => {
     const [year, month, day] = inputDate.split('-');
@@ -25,13 +25,12 @@ const QuestionnaireBox = ({Questionnaire , FolderReload , folderNumber}) => {
     const [ QuestionnaireName , setQuestionnaireName ] = useState(Questionnaire.name);
     const [ RenameLoading , setRenameLoading ] = useState(false);
     const [ MessageApi , MessageContext ] = message.useMessage();
+    const Auth = useContext(AuthContext);
     const nameRef = useRef(null);
-    const isRenamePending = useRef(false);
     useEffect(() => {
         handleInputWidth(nameRef,QuestionnaireName);
     },[])
-    // useEffect(() => {
-        
+
     const RenameStateHandler = () => {
         setChangeNameState(!ChangeNameActive)
         setTimeout(()=> {
@@ -50,7 +49,7 @@ const QuestionnaireBox = ({Questionnaire , FolderReload , folderNumber}) => {
         {
             setRenameLoading(true)
             setQuestionnaireName(QuestionnaireName);
-            await axiosInstance.patch(`/question-api/questionnaires/${Questionnaire.uuid}/`,{ name : QuestionnaireName });
+            await axiosInstance.patch(`/${Auth.reqRole}/${Questionnaire.uuid}/`,{ name : QuestionnaireName });
             FolderReload()
             setChangeNameState(false);
             // handleInputWidth(nameRef,QuestionnaireName);
@@ -68,8 +67,6 @@ const QuestionnaireBox = ({Questionnaire , FolderReload , folderNumber}) => {
                     }
                 })
             }
-
-        // handleInputWidth(nameRef,QuestionnaireName);
        }
        finally
        {

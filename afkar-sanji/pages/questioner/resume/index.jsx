@@ -256,7 +256,7 @@ export default function ({meData, cookies}) {
                                 className={`bottom`}
                                 onClick={() => router.push("/questioner/information")}
                             >
-                                تکمیل اطلاعات
+                                پنل پرسش‌گری
                                 <img src={arrowRightIcon?.src}/>
 
                             </Button>
@@ -283,12 +283,6 @@ export async function getServerSideProps(context) {
             acc[key] = decodeURIComponent(value);
             return acc;
         }, {});
-        let MeResponse = await fetch('https://mah-api.ariomotion.com/user-api/users/me/', {
-            headers: {
-                Authorization: `Bearer ${parsedCookies.access_token}`,
-            }
-        })
-        MeData = await MeResponse.json();
         return {
             props: {
                 // Pass the cookies as props to the component

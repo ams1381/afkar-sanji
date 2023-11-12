@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import React, {useState} from 'react'
+import React, {useContext, useState} from 'react'
 import Head from "next/head";
 import {PageBox, QuestionerPageContainer , QuestionerContentBox } from "@/styles/common";
 import {CommonDrawer} from "@/components/common/CommonDrawer";
@@ -14,9 +14,11 @@ import {Provider} from "react-redux";
 import {PageContent} from "@/components/Questioner/AddResult/PageContent";
 import {useQueries} from "@tanstack/react-query";
 import {useRouter} from "next/router";
+import {AuthContext} from "@/utilities/AuthContext";
 
 const AddResultPage = ({ questionnaire , meData }) => {
-    const router = useRouter()
+    const router = useRouter();
+    const Auth = useContext(AuthContext);
     const [ MeQuery , QuestionnaireQuery ] = useQueries({
         queries: [
             {
@@ -27,7 +29,7 @@ const AddResultPage = ({ questionnaire , meData }) => {
             {
                 queryKey: ['QuestionnaireQuery'],
                 queryFn: async () =>
-                    await axiosInstance.get(`/question-api/questionnaires/${router.query.QuestionnaireUUID}`) ,
+                    await axiosInstance.get(`/interview-api/interviews/${router.query.QuestionnaireUUID}`) ,
                 refetchOnWindowFocus : false
             },
         ],

@@ -4,7 +4,7 @@ const nextConfig = {
     devIndicators: {
         buildActivity: false
     },
-  reactStrictMode: true,
+  reactStrictMode: false,
   compiler: {
     // Enables the styled-components SWC transform
     styledComponents: {
@@ -12,11 +12,6 @@ const nextConfig = {
     }
   },
   rewrites : async () => [
-    // {
-    //   source: '/api/user-api/auth/gateway',
-    //   destination: 'https://mah-api.ariomotion.com/user-api/auth/gateway/',
-    //   basePath: false,
-    // },
      {
         source: '/api/:path*',
         destination: 'https://mah-api.codintofuture.ir/:path*/',

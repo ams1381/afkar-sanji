@@ -13,7 +13,7 @@ import {Icon} from "@/styles/icons";
 import DatePanel from "react-multi-date-picker/plugins/date_panel";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
-import {convertDate} from "@/components/QuestionnairePanel/SettingPanel";
+import {convertDate} from "@/components/QuestionnairePanel/QuestionnaireSetting/SettingPanel";
 import {digitsFaToEn} from "@persian-tools/persian-tools";
 import iconUp from 'public/Icons/icon2Fil.svg'
 import iconDownUp from 'public/Icons/iconFil.svg'

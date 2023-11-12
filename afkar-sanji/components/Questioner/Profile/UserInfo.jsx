@@ -20,8 +20,8 @@ export const UserInfoBox = ({ MeQuery , regions }) => {
         [{
             name : 'عکس پروفایل',
             status: 'success',
-            url: 'https://mah-api.codintofuture.ir' + MeQuery?.data?.data?.avatar,
-            thumbUrl : 'https://mah-api.codintofuture.ir' + MeQuery?.data?.data?.avatar
+            url: MeQuery?.data?.data?.avatar,
+            thumbUrl :  MeQuery?.data?.data?.avatar
         }]
         : null);
     useEffect(() => {
@@ -31,8 +31,8 @@ export const UserInfoBox = ({ MeQuery , regions }) => {
             setFileList([{
                 name : 'عکس پروفایل',
                 status: 'success',
-                url: 'https://mah-api.codintofuture.ir' + MeQuery?.data?.data?.avatar,
-                thumbUrl : 'https://mah-api.codintofuture.ir' + MeQuery?.data?.data?.avatar
+                url:  MeQuery?.data?.data?.avatar,
+                thumbUrl : MeQuery?.data?.data?.avatar
             }])
             setFileUploaded(true)
         }

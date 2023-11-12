@@ -1,5 +1,5 @@
 import Head from "next/head";
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {PageBox, QuestionerPageContainer} from "@/styles/common";
 import {CommonDrawer} from "@/components/common/CommonDrawer";
 import { ResultBodyContainer, ResultTableContainer} from "@/styles/Result/ResultPage";
@@ -9,12 +9,14 @@ import {useQueries} from "@tanstack/react-query";
 import {axiosInstance} from "@/utilities/axios";
 import {useRouter} from "next/router";
 import {QuestionerResultBody} from "@/components/Questioner/Result/QuestionerResultBody";
+import {AuthContext} from "@/utilities/AuthContext";
 
 const QuestionerResult = () => {
     const [ RightDrawerOpen , setRightDrawerOpen ] = useState(false);
     const router = useRouter();
     const [ SelectedRows , setSelectedRows ] = useState([]);
     const [ CurrentPage , SetCurrentPage ] = useState(1);
+    const Auth = useContext(AuthContext);
     const [ SelectedTypeFilter , setSelectedTypeFilter ] = useState([]);
     const [ PageSize , setPageSize ] = useState(7);
     const [ QuestionnaireQuery , ResultQuery, MeQuery ] = useQueries({

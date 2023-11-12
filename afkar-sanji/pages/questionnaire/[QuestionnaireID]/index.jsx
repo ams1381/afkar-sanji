@@ -2,12 +2,12 @@ import { Header } from '@/components/common/Header';
 import { axiosInstance } from '@/utilities/axios';
 import Head from 'next/head';
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import QuestionnairePanelHeader from '@/components/QuestionnairePanel/QuestionnairePanelHeader';
 import { Skeleton } from 'antd';
 import { QuestionnairePanelContainer , PanelInnerContainer} from '@/styles/questionnairePanel/QuestionnairePanelHeader';
 import { Icon } from '@/styles/icons';
-import SettingPanel from '@/components/QuestionnairePanel/SettingPanel';
+import SettingPanel from '@/components/QuestionnairePanel/QuestionnaireSetting/SettingPanel';
 import QuestionDesignPanel from '@/components/QuestionnairePanel/QuestionDesignPanel';
 import ProgressBarLoading from '@/styles/ProgressBarLoading';
 import { Provider } from 'react-redux';
@@ -16,6 +16,10 @@ import { message } from 'antd';
 import { useQuery } from '@tanstack/react-query';
 import { CommonDrawer } from '@/components/common/CommonDrawer';
 import { PageBox } from '@/styles/common';
+import {AuthContext} from "@/utilities/AuthContext";
+import {useLocalStorage} from "@/utilities/useLocalStorage";
+import {ChatModal} from "@/components/Questioner/ChatModal/ChatModal";
+import {SettingSekelton} from "@/components/QuestionnairePanel/QuestionnaireSetting/SettingSkeleton";
 
 export const beforeUnloadHandler = function (e) {
     e.preventDefault();
@@ -23,6 +27,8 @@ export const beforeUnloadHandler = function (e) {
   };
 const QuestionnairePanel = ({ cookies }) => {
     const router = useRouter();
+    const authContext = useContext(AuthContext);
+    const { getItem } = useLocalStorage();
     const [ messageApi , messageContext ] = message.useMessage()
     const [ SideBarOpen , setOpen ] = useState(false);
     const [ SideState , SetSideState ] = useState('question_design');
@@ -30,21 +36,14 @@ const QuestionnairePanel = ({ cookies }) => {
     const [ RightDrawerOpen , setRightDrawerOpen ] = useState(false);
     // axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + cookies?.access_token;
     const { data , isLoading , refetch , error , isFetched} = useQuery(['QuestionnaireRetrieve'],
-    async () => await axiosInstance.get(`/question-api/questionnaires/${router?.query?.QuestionnaireID}/`),{
+    async () => await axiosInstance.get(`/${getItem('roleReq') ? getItem('roleReq') : 'question-api/questionnaires'}/${router?.query?.QuestionnaireID}/`),{
       refetchOnWindowFocus : false
     })
+
     if(error && error?.response)
     {
       if(error?.response.status == 404)
           router.push('/404')
-        // messageApi.error({
-        //         content : 'یافت نشد',
-        //         duration : 6,
-        //         style : {
-        //           fontFamily : 'IRANSans',
-        //           direction : 'rtl'
-        //         }
-        //       })
         else
           messageApi.error({
             content : error.response.data,
@@ -88,11 +87,13 @@ const QuestionnairePanel = ({ cookies }) => {
     <ProgressBarLoading />
     {messageContext}
     <PageBox>
-      <CommonDrawer RightDrawerOpen={RightDrawerOpen} setRightDrawerOpen={setRightDrawerOpen} />
-      <main style={{ width : RightDrawerOpen ? '84%' : '100%', transition : '0.3s' }}>
+
+
       <Header SetSideBar={() => setOpen(!SideBarOpen)} cookies={cookies}
       goToFolders={true} loadingHeader={isLoading}
       Questionnaire={data?.data}/>
+        <CommonDrawer RightDrawerOpen={RightDrawerOpen} setRightDrawerOpen={setRightDrawerOpen} />
+        <main style={{ width : RightDrawerOpen ? '84%' : '100%', transition : '0.3s' }}>
         <QuestionnairePanelContainer>
           <PanelInnerContainer> 
             {  <QuestionnairePanelHeader SideState={SideState} isFetched={isFetched}
@@ -100,15 +101,15 @@ const QuestionnairePanel = ({ cookies }) => {
             {
               SideState == 'question_design' ? <QuestionDesignPanel QuestionnaireReloader={refetch}
               Questionnaire={data?.data} RightDrawerOpen={RightDrawerOpen}  />
-              : data?.data && <SettingPanel Questionnaire={data?.data}  ChangeSide={SetSideState}
-              refetch={refetch}/>
+              : data?.data ? <SettingPanel Questionnaire={data?.data}  ChangeSide={SetSideState}
+              refetch={refetch}/> : <SettingSekelton />
               }
             </PanelInnerContainer>
         </QuestionnairePanelContainer>
         </main>
       </PageBox>
       </Provider>
-      
+      {/*<ChatModal />*/}
     </>
   )
 }

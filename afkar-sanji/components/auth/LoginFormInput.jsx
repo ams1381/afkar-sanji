@@ -7,8 +7,6 @@ import {
   ClearLoginInputButton,
 } from '@/styles/auth/Login';
 import { AuthContext } from '@/utilities/AuthContext';
-import { NumberFormat } from 'react-hichestan-numberinput';
-import * as persianTools from "@persian-tools/persian-tools";
 import { digitsEnToFa } from "@persian-tools/persian-tools";
 import { useEffect } from 'react';
 

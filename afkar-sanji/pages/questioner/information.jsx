@@ -28,9 +28,11 @@ import {LeftLight, RightLight} from "@/styles/auth/Login";
 import arrowDownIcon from '@/public/Icons/selectDown.svg'
 import Image from "next/image";
 import closeIcon from "@/public/Icons/Dismiss.svg";
+import {useRouter} from "next/router";
 
 export default function () {
     const [userData, setUserData] = useState();
+    const router = useRouter();
     useEffect(() => {
         axiosInstance.get("/user-api/users/me/").then((res) => {
             setUserData(res?.data);
@@ -83,7 +85,11 @@ export default function () {
 
     const handleSubmit = () => {
         axiosInstance.patch('/user-api/users/me/', formData).then(res => {
-            if (res?.status === 200) message.success('با موفقیت انجام شد')
+            if (res?.status === 200) {
+                message.success('با موفقیت انجام شد')
+                router.push('/questioner/resume/')
+            }
+
         }).catch(error => {
             const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
             message.error(ERROR_MESSAGE)

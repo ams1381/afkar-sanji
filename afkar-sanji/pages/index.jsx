@@ -9,7 +9,7 @@ import { Popover, Progress, message } from 'antd';
 import { Icon } from '@/styles/icons';
 import { Skeleton, Switch } from 'antd';
 import Head from 'next/head';
-import React, { Suspense , lazy, useRef } from 'react';
+import React, {Suspense, lazy, useRef, useContext} from 'react';
 import { useEffect, useState } from 'react';
 import { axiosInstance } from '@/utilities/axios';
 import { useRouter } from 'next/router';
@@ -24,6 +24,7 @@ import { handleInputWidth } from '@/utilities/RenameFunctions';
 import { useQuery } from '@tanstack/react-query';
 import { CommonDrawer } from '@/components/common/CommonDrawer';
 import {TailSpin} from "react-loader-spinner";
+import {AuthContext} from "@/utilities/AuthContext";
 
 export default function Home({ cookies }) {
   const { getItem , removeItem , setItem} = useLocalStorage();
@@ -37,13 +38,19 @@ export default function Home({ cookies }) {
   const [ readyToCreate , setReadyToCreate ] = useState(false);
   const [ renameFolderError , setRenameFolderError ]  = useState(false);
   const CornerButton = useRef(null);
+  const Auth = useContext(AuthContext)
   const [ RightDrawerOpen , setRightDrawerOpen ] = useState(false);
   const FolderNameInput = useRef(null);
   const [ ChangeFolderName , SetChangeFolderNameState ] = useState(false);
   const [ FolderName , SetFolderName ] = useState(null);
   const { data , isLoading, error , refetch } = useQuery(['FolderFetch'],
-  async () => await axiosInstance.get('/user-api/folders/'))
+  async () => await axiosInstance.get(`/user-api/folders/?is_interview=${getItem('roleReq') && getItem('roleReq') === 'question-api/questionnaires' ? 0 : 1}`),{
+    refetchOnWindowFocus : false
+      })
 
+  useEffect(() => {
+       refetch();
+  }, [Auth.reqRole]);
   
   useEffect(() => {
 
@@ -140,7 +147,7 @@ export default function Home({ cookies }) {
       <ProgressBarLoading />
       <PageBox>
         <CommonDrawer RightDrawerOpen={RightDrawerOpen} setRightDrawerOpen={setRightDrawerOpen} />
-        <main style={{ width : RightDrawerOpen ? '80%' : '100%', transition : '0.3s' }}>
+
       <Header SetSideBar={() => setOpen(!SideBarOpen)} cookies={cookies} />
       <SideBar folders={data?.data} SelectedFolder={SelectedFolder} isopen={SideBarOpen} ReadyToCreate={readyToCreate}
        setReadyToCreate={setReadyToCreate} FolderReload={refetch}  ChangeFolder={SelectFolder}
@@ -155,7 +162,7 @@ export default function Home({ cookies }) {
             overlayInnerStyle={{ 
               boxShadow : 'none' 
               , marginRight : window.innerWidth > 720 ?
-              RightDrawerOpen ? '11.5vw' : '7.7vw' : '4vw'
+              RightDrawerOpen ? '9.5vw' : '7.7vw' : '4vw'
                , background : 'transparent'
           }}
             onOpenChange={() => setAddPopover(false)}
@@ -165,14 +172,15 @@ export default function Home({ cookies }) {
                   <Icon name='Add' />
                 </CornerAddButton>
         </Popover>
+        <main style={{ width : RightDrawerOpen ? '80%' : '100%', transition : '0.3s' }}>
     <ContentBox >
-      { 
+      {
         data?.data && data?.data.length !== 0 ? <MainContainer>
         <FolderEditContainer>
             <Popover
             trigger="click"
             content={<FolderPopoverContent  RenameFolderState={SetChangeFolderNameState} RenameInput={FolderNameInput}
-            SelectFolder={SelectFolder} FolderReload={refetch} 
+            SelectFolder={SelectFolder} FolderReload={refetch}
             closeEditPopover={() => setFolderPopover(false)}
              SelectedFolderNumber={SelectedFolder} Folders={data?.data} />}
             open={FolderPopover}
@@ -204,20 +212,20 @@ export default function Home({ cookies }) {
                 </FolderPopoverToggle>}
               </>
           }
-              <QuestionnaireNameInput type='text' onKeyDown={e => e.key == 'Enter' ? folderRenameConfirm() : ''}
+              <QuestionnaireNameInput type='text' onKeyDown={e => e.key === 'Enter' ? folderRenameConfirm() : ''}
               ref={FolderNameInput} error={renameFolderError} value={FolderName} onChange={folderNameChangeHandler}
-               disabled={!ChangeFolderName} /> 
+               disabled={!ChangeFolderName} />
           </FolderEditContainer>
-      <QuestionnaireContainer>        
+      <QuestionnaireContainer>
         {
-          data?.data[SelectedFolder]?.questionnaires.length ? data?.data[SelectedFolder].questionnaires.map((item) => 
+          data?.data[SelectedFolder]?.questionnaires.length ? data?.data[SelectedFolder].questionnaires.map((item) =>
           <QuestionnaireBox FolderReload={refetch} folderNumber={SelectedFolder}
            Questionnaire={item} key={item.id} />)
           : <EmptyFolderContainer>
           <p>یک پرسشنامه درست کنید</p>
           <AddQuestionnairePopUp AddQuestionnaireModal={AddQuestionnaireState}
           setQuestionnaireModalState={() => setAddQuestionnaireState(!AddQuestionnaireState)}
-          FolderReload={refetch} 
+          FolderReload={refetch}
           folders={data?.data}
           SelectedFolderNumber={SelectedFolder}
           />
@@ -225,10 +233,10 @@ export default function Home({ cookies }) {
               <p>ایجاد نظر سنجی</p>
               <Icon name='AddFile' style={{ width : 14 }}/>
              </button>
-          </EmptyFolderContainer> 
+          </EmptyFolderContainer>
         }
       </QuestionnaireContainer>
-        </MainContainer> 
+        </MainContainer>
         : data?.data ?  <EmptyFolderContainer>
             <p>برای مدیریت بهتر نظر سنجی ها یک پوشه درست کن</p>
             <button onClick={() => setOpen(true)}>
@@ -264,7 +272,7 @@ export default function Home({ cookies }) {
                       <QuestionnaireSeeResultButton>
                           <Skeleton.Button active />
                       </QuestionnaireSeeResultButton>
-                      
+
                     </div>
               </div>
               <QuestionnaireFooter loading='active'>
@@ -298,7 +306,7 @@ export default function Home({ cookies }) {
                       <QuestionnaireSeeResultButton>
                           <Skeleton.Button active />
                       </QuestionnaireSeeResultButton>
-                      
+
                     </div>
               </div>
               <QuestionnaireFooter loading='active'>
@@ -332,7 +340,7 @@ export default function Home({ cookies }) {
                       <QuestionnaireSeeResultButton>
                           <Skeleton.Button active />
                       </QuestionnaireSeeResultButton>
-                      
+
                     </div>
               </div>
               <QuestionnaireFooter loading='active'>
@@ -343,8 +351,8 @@ export default function Home({ cookies }) {
               </QuestionnaireFooter>
           </QuestionnaireDiv>
          </QuestionnaireContainer>
-        </MainContainer> 
-      } 
+        </MainContainer>
+      }
     </ContentBox>
     </main>
     </PageBox>

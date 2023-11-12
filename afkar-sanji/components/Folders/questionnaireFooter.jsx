@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useContext, useState} from 'react'
 import { QuestionnaireFooter , QuestionnaireFooterItem , QuestionnaireFooterButton
 } from '@/styles/folders/Questionnaire'
 import { Icon } from '@/styles/icons'
@@ -13,6 +13,7 @@ import { PdfGenerator } from './pdfExport';
 import { useLocalStorage } from '@/utilities/useLocalStorage';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import TopBarProgress from 'react-topbar-progress-indicator';
+import {AuthContext} from "@/utilities/AuthContext";
 
 
 const QuestionnaireFooterPart = ({ questionnaire , FolderReload , folderNumber}) => {
@@ -24,11 +25,12 @@ const QuestionnaireFooterPart = ({ questionnaire , FolderReload , folderNumber})
     const [ ProgressBarState , SetProgressBarState ] = useState(false);
     const router = useRouter();
     const [ RetrievedQuestionnaire , setRetrievedQuestionnaire ] = useState(null);
+    const Auth = useContext(AuthContext);
     const RemoveQuestionnaireHandler = async () => {
         // SetOperatingState(true)
         try
         {
-          await axiosInstance.delete(`/question-api/questionnaires/${questionnaire.uuid}/`);
+          await axiosInstance.delete(`/${Auth.reqRole}/${questionnaire.uuid}/`);
           FolderReload();
           setDeletePopoverState(false);
         }
@@ -49,7 +51,7 @@ const QuestionnaireFooterPart = ({ questionnaire , FolderReload , folderNumber})
     const RetrieveQuestionnaire = async () => {
         try 
         {
-         let { data } = await axiosInstance.get(`/question-api/questionnaires/${questionnaire.uuid}/`)
+         let { data } = await axiosInstance.get(`/${Auth.reqRole}/${questionnaire.uuid}/`)
          console.log(data)
          setRetrievedQuestionnaire(data)
         }

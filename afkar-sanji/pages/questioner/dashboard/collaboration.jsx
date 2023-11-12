@@ -23,7 +23,7 @@ import {AudioOutlined} from '@ant-design/icons';
 import {TimePickerContainer} from "@/styles/questioner/dashboard/Collaboration/collaboration";
 import {Icon} from "@/styles/icons";
 import DatePanel from "react-multi-date-picker/plugins/date_panel";
-import {convertDate} from "@/components/QuestionnairePanel/SettingPanel";
+import {convertDate} from "@/components/QuestionnairePanel/QuestionnaireSetting/SettingPanel";
 import {digitsFaToEn} from "@persian-tools/persian-tools";
 import persian_fa from 'react-date-object/locales/persian_fa';
 import persian from 'react-date-object/calendars/persian';
@@ -46,7 +46,7 @@ const suffix = (
 const onSearch = (value, _e, info) => console.log(info?.source, value);
 export default function ({cookies}) {
     const [logoutPopOver, switchPopover] = useState(false);
-    const [RightDrawerOpen, setRightDrawerOpen] = useState(true);
+    const [RightDrawerOpen, setRightDrawerOpen] = useState(false);
     const [StartDate, setStartDate] = useState('');
     const [EndDate, setEndDate] = useState('')
     const DateFilterHandler = async (_, filterDate) => {

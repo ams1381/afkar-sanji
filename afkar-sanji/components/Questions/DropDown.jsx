@@ -46,7 +46,6 @@ const DropDown = ({ QuestionInfo }) => {
       maxSelected = 1
 
     let selectedOptions;
-    console.log(!Array.isArray(values) && typeof values == 'string' , values , maxSelected)
     if (Array.isArray(values) && values.length <= maxSelected) {
       setSelectedValues(values);
       selectedOptions = values.map(value => {

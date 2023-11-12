@@ -6,11 +6,12 @@ import {
 import {Button, Checkbox, Divider, message, Popover, Select} from "antd";
 import {DeleteRowButton} from "@/styles/Result/ResultPage";
 import {Icon} from "@/styles/icons";
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import Link from "next/link";
 import { Skeleton } from "antd";
 import {axiosInstance} from "@/utilities/axios";
 import RemovePopup from "@/components/common/RemovePopup";
+import {AuthContext} from "@/utilities/AuthContext";
 
 export const QuestionTypeFilterContent = ({ setSelectedTypeFilter , SelectedTypeFilter }) => {
     // const [ SelectedTypeFilter , setSelectedTypeFilter ] = useState([]);
@@ -91,7 +92,8 @@ export const QuestionTypeFilterContent = ({ setSelectedTypeFilter , SelectedType
 export const QuestionerResultHead = ({ questionnaireQuery , SetCurrentPage ,
      SelectedTypeFilter,  setSelectedTypeFilter ,  CurrentPage , setSelectedRows , ResultQuery , SelectedRows }) => {
     const [ QuestionTypeSelectorPopover , setQuestionTypeSelectorPopover ] = useState(false);
-    const [ DeleteRowState , setDeleteRowState ] = useState(false)
+    const [ DeleteRowState , setDeleteRowState ] = useState(false);
+    const Auth = useContext(AuthContext);
     const [ resultMessage , contextHolder] = message.useMessage();
     const DeleteRowHandler = async () => {
         try
@@ -99,7 +101,7 @@ export const QuestionerResultHead = ({ questionnaireQuery , SetCurrentPage ,
             if(SelectedRows.length)
             {
                 SelectedRows.forEach(async (row) => {
-                    await axiosInstance.delete(`/question-api/questionnaires/${questionnaireQuery.data?.data?.uuid}/answer-sets/${row}/`)
+                    await axiosInstance.delete(`/interview-api/interviews/${questionnaireQuery.data?.data?.uuid}/answer-sets/${row}/`)
                     // ResultQuery?.refetch()
                 })
                 if(SelectedRows.length == ResultQuery?.data?.data?.results.length || ResultQuery?.data?.data?.results.length == 1)

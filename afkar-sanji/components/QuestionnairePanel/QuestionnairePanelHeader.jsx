@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, {useContext, useEffect, useRef, useState} from 'react'
 import { QuestionnairePanelContainer , PanelInnerContainer , SeeResultButton ,
   QuestionnaireDirectoryContainer , QuestionnaireDirectoryPath , PanelHeader ,
   QuestionnaireEditItemsInnerContainer , QuestionnaireEditItem , QuestionnaireEditItemsContainer , QuestionnaireEditButtonContainer
@@ -13,10 +13,12 @@ import { useRouter } from 'next/router';
 import { handleInputWidth } from '@/utilities/RenameFunctions';
 import { SharePopOverContent } from '../Folders/SharePopover';
 import { useLocalStorage } from '@/utilities/useLocalStorage';
+import {AuthContext} from "@/utilities/AuthContext";
 
 const QuestionnairePanelHeader = ({ FolderName , isFetched , Questionnaire , SideState , ChangeSide }) => {
   const router = useRouter();
   const { getItem , setItem } = useLocalStorage();
+  const Auth = useContext(AuthContext);
   const [ QuestionnaireName , SetQuestionnaireName ]= useState(Questionnaire ? Questionnaire.name : null);
   const [ RenameState , SetRenameState ] = useState(false);
   const [ SharePopover , setSharePopOver] = useState(false);
@@ -112,21 +114,28 @@ const QuestionnairePanelHeader = ({ FolderName , isFetched , Questionnaire , Sid
               />
             </QuestionnaireEditItemsInnerContainer>
             <QuestionnaireEditButtonContainer>
-            <Link onClick={(e) => { !Questionnaire.questions.length ? e.preventDefault() : '' }}
-            href={`/questionnaire/${Questionnaire.uuid}/view-questions/`}  target='_blank'>
-              <button style={{ pointerEvents :(Questionnaire.questions &&  Questionnaire.questions.length) ? 'all' : 'none' }}>
-                     <Icon name='BlackEye' />
-              </button>
-              </Link>
-              <Popover
-            content={<SharePopOverContent Questionnaire={Questionnaire} />}
-            trigger="click"
-            open={SharePopover}
-            onOpenChange={() => setSharePopOver(false)}>
-              <button onClick={() => setSharePopOver(!SharePopover)}>
-                  <Icon name='Share' />
-              </button>
-            </Popover>
+              { getItem('roleReq') !== 'interview-api/interviews' && <Link onClick={(e) => {
+                !Questionnaire.questions.length ? e.preventDefault() : ''
+              }}
+                     href={`/questionnaire/${Questionnaire.uuid}/view-questions/`} target='_blank'>
+                <button
+                    style={{pointerEvents: (Questionnaire.questions && Questionnaire.questions.length) ? 'all' : 'none'}}>
+                  <Icon name='BlackEye'/>
+                </button>
+              </Link>}
+
+              { getItem('roleReq') !== 'interview-api/interviews' && <Popover
+                  content={<SharePopOverContent Questionnaire={Questionnaire}/>}
+                  trigger="click"
+                  open={SharePopover}
+                  onOpenChange={() => setSharePopOver(false)}>
+                <button onClick={() => setSharePopOver(!SharePopover)}>
+                  <Icon name='Share'/>
+                </button>
+              </Popover>}
+              { getItem('roleReq') && getItem('roleReq') === 'interview-api/interviews' && <button>
+                <Icon style={{width: 14}} name={'ChatIcon'}/>
+              </button>}
             </QuestionnaireEditButtonContainer>
         </QuestionnaireEditItemsContainer>
      
@@ -140,8 +149,14 @@ const QuestionnairePanelHeader = ({ FolderName , isFetched , Questionnaire , Sid
           </QuestionnaireEditItemsInnerContainer>
           
           <QuestionnaireEditButtonContainer isloading={'active'}>
-            <Skeleton.Button active style={{ width : 15 , borderRadius : 2 }} />
-            <Skeleton.Button active style={{ width : 15 , borderRadius : 2 }} />
+            {
+                getItem('roleReq') !== 'interview-api/interviews' && <>
+                  <Skeleton.Button active style={{ width : 15 , borderRadius : 2 }} />
+                  <Skeleton.Button active style={{ width : 15 , borderRadius : 2 }} />
+                </>
+            }
+            { getItem('roleReq') && getItem('roleReq') === 'interview-api/interviews' &&
+                <Skeleton.Button active style={{ width : 15 , borderRadius : 2 }} />}
         </QuestionnaireEditButtonContainer>
         </QuestionnaireEditItemsContainer>
         

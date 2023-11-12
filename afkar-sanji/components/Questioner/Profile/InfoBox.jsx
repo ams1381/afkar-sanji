@@ -24,19 +24,27 @@ export const InfoContainer = ({ BoxName , BoxDataName ,MeQuery , UserData , bold
     const EditHandler = async () => {
 
       setEditLoadingState(true)
+      let InputID;
       try 
       {
           if(regions)
           {
-              if(BoxDataName == 'province') {
-                  setInputData(regions[0].provinces.find(item => item.id == InputData).id)
+              if(BoxDataName == 'province' && InputData) {
+                  if(typeof InputData === "number")
+                      InputID = regions[0].provinces.find(item => item.id === InputData).id;
+                  else
+                    InputID = regions[0].provinces.find(item => item.name === InputData).id;
               }
-              else if(BoxDataName == 'nationality') {
-                  setInputData(regions.find(item => item.id == InputData).id)
+              else if(BoxDataName == 'nationality' && InputData) {
+                  console.log(InputData,regions)
+                  if(typeof InputData === "number")
+                      InputID = regions.find(item => item.id === InputData).id
+                  else
+                    InputID = regions.find(item => item.name === InputData).id
               }
           }
         const dataToUpdate = {
-          [BoxDataName]: InputData  // Use computed property name here
+          [BoxDataName]: (BoxDataName === 'province' || BoxDataName === 'nationality') ? InputID : InputData  // Use computed property name here
         };
 
         await axiosInstance.patch('/user-api/users/me/',dataToUpdate)
@@ -44,10 +52,12 @@ export const InfoContainer = ({ BoxName , BoxDataName ,MeQuery , UserData , bold
 
           setEditState(false)
           setEditLoadingState(false)
+          setErrorOccured(false)
 
       }
       catch(err)
       {
+          console.log(err)
           setEditLoadingState(false)
         if(err?.response?.data)
         {
@@ -134,6 +144,7 @@ export const InfoContainer = ({ BoxName , BoxDataName ,MeQuery , UserData , bold
                          disabled={!editState}
                     value={InputData ? digitsEnToFa(InputData) : ''}
                      ref={InputRef}
+                     onKeyDown={e => e.key === 'Enter' ? EditHandler() : ''}
                     onChange={(e) => {
                         setErrorOccured(null)
                         setInputData(e.target.value)

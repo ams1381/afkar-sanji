@@ -1,13 +1,15 @@
 import { FolderPopoverContainer, FolderPopoverItem } from '@/styles/folders/Popovers';
-import React, { useState } from 'react'
+import React, {useContext, useState} from 'react'
 import RemovePopup from '../common/RemovePopup';
 import { Icon } from '@/styles/icons';
 import Link from 'next/link';
 import { axiosInstance } from '@/utilities/axios';
 import { useRouter } from 'next/router';
+import {AuthContext} from "@/utilities/AuthContext";
 
 export const QuestionnairePopover = ({ Questionnaire , RenameInput  , RenameChangeState , SetQuestionnairePopoverState }) => {
   const router = useRouter();
+  const Auth = useContext(AuthContext);
   const [ DeleteQuestionnaireState , SetDeleteQuestionnaireState ] = useState(false);
   const [ RemovePopupState , SetRemovePopupState ] = useState(false);
     const RemoveQuestionnaireStateHandler = () => {
