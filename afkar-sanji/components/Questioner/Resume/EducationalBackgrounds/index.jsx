@@ -1,5 +1,5 @@
 import {
-    FromResumeItem, InputCom, ResumeInputCom, RowCom, FromStepScroll, ButtonContainer, AddBtn
+    BtnComponent, FromResumeItem, InputCom, ResumeInputCom, RowCom, FromStepScroll, ButtonContainer, AddBtn, Btn
 } from "@/styles/questioner/resume/resume";
 import {Row} from "@/styles/questioner/information";
 import {Button, message, Select, Skeleton} from "antd";
@@ -9,7 +9,6 @@ import add from "@/public/Icons/addBlue.svg";
 import StyleModules from "@/styles/auth/LoginStyles.module.css";
 import {educationalSchema} from "@/utilities/validators/resumeMaker";
 import {axiosInstance} from "@/utilities/axios";
-import {useQuery} from "@tanstack/react-query";
 // icon
 import arrowDownIcon from '@/public/Icons/selectDown.svg'
 import editIcon from '@/public/Icons/editEesume.svg'
@@ -216,18 +215,22 @@ export default function ({
                             </ResumeInputCom>
                         </Row>
                         <RowCom>
-                            {(index > 0 && index + 1 !== resumeData.length) && <img
-                                onClick={() => removeEducational(item.id || '')}
-                                className="close"
-                                src={close.src}
-                                alt=""
-                            />}
-                            {resumeData.length && index !== resumeData.length - 1 && <img
-                                onClick={() => editEducation(item.id || '')}
-                                className="close"
-                                src={editIcon.src}
-                                alt=""
-                            />}
+                            {(index > 0 && index + 1 !== resumeData.length) &&
+                                <BtnComponent className="close" shape={'circle'}>
+                                    <img
+                                        onClick={() => removeEducational(item.id || '')}
+                                        src={close.src}
+                                        alt=""
+                                    />
+                                </BtnComponent>}
+                            {resumeData.length && index !== resumeData.length - 1 && <BtnComponent>
+                                <img
+                                    onClick={() => editEducation(item.id || '')}
+                                    className="close"
+                                    src={editIcon.src}
+                                    alt=""/>
+                            </BtnComponent>
+                            }
                             <ResumeInputCom style={{
                                 width: '100%',
                                 display: 'flex',
@@ -248,9 +251,10 @@ export default function ({
                 </FromStepScroll>
             )}
             <ButtonContainer justify={`flex-end`}>
-                <AddBtn disabled={errors.length ? true : false} onClick={addEducational}>
+                <AddBtn color={errors?.length ? '#D9D9D9' : 'var(--primary-color)'} disabled={errors.length ? true : false}
+                        onClick={addEducational}>
                     <h2 className={`text`}>افزودن</h2>
-                    <img src={add.src} alt="" className="icon"/>
+                    <img style={{opacity: errors?.length ? '0.2' : '1'}} src={add.src} alt="" className="icon"/>
                 </AddBtn>
             </ButtonContainer>
             <Button

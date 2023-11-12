@@ -1,12 +1,7 @@
 import close from "@/public/Icons/Close.svg";
 import {useRouter} from "next/router";
 import {
-    AddBtn,
-    ButtonContainer,
-    FromResumeItem,
-    FromStepScroll,
-    InputCom,
-    ResumeInputCom
+    AddBtn, BtnComponent, ButtonContainer, FromResumeItem, FromStepScroll, InputCom, ResumeInputCom
 } from "@/styles/questioner/resume/resume";
 import {Button, message, Select, Skeleton} from "antd";
 import React, {useEffect, useState} from "react";
@@ -28,11 +23,9 @@ export default function ({year, setGender, me}) {
         setIsLoading(true)
         axiosInstance.get(`/user-api/users/${me?.id}/resume/${me?.resume?.id}/research-histories/`).then(res => {
             setIsLoading(false)
-            setResumeData([...res?.data,
-                {
-                    link: undefined, year: undefined, field: undefined
-                }
-            ])
+            setResumeData([...res?.data, {
+                link: undefined, year: undefined, field: undefined
+            }])
         })
     }
 
@@ -64,8 +57,6 @@ export default function ({year, setGender, me}) {
             message.error(ERROR_MESSAGE)
         })
 
-        // setResumeData(prevItems => [...prevItems, {link: undefined, year: undefined, field: undefined}]);
-        // message.success('با موفقیت اضافه شد')
     }
 
     async function removeResearch_histories(id) {
@@ -79,7 +70,8 @@ export default function ({year, setGender, me}) {
         }
     }
 
-    const editEducation = async (id) => {
+    const editResearch_histories = async (id) => {
+        console.log(id)
         try {
             const updatedItem = resumeData.find(item => item.id === id);
             const index = resumeData.findIndex(item => item.id === id);
@@ -102,92 +94,89 @@ export default function ({year, setGender, me}) {
         }
     };
 
-    return (
-        <>
-            {isLoading ? (
-                <div style={{
-                    display: 'flex',
-                    alignItems: "center",
-                    gap: '20px', flexWrap: 'wrap'
-                }}>
-                    <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '202px'}}/>
-                    <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '202px'}}/> <Skeleton.Input
-                    active style={{height: '40px', minWidth: 'auto', width: '202px'}}/>
-                </div>
-            ) : (
-                <FromStepScroll>
-                    {resumeData.map((item, index) => (
-                        <FromResumeItem key={item.id}>
-                            {index > 0 && index + 1 !== resumeData.length && <img
-                                onClick={() => removeResearch_histories(item?.id || '')}
-                                className="close"
-                                src={close.src}
-                                alt=""
-                            />}
+    return (<>
+        {isLoading ? (<div style={{
+            display: 'flex', alignItems: "center", gap: '20px', flexWrap: 'wrap'
+        }}>
+            <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '202px'}}/>
+            <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '202px'}}/> <Skeleton.Input
+            active style={{height: '40px', minWidth: 'auto', width: '202px'}}/>
+        </div>) : (<FromStepScroll>
+            {resumeData.map((item, index) => (<FromResumeItem key={item.id}>
+                {index > 0 && index + 1 !== resumeData.length && <BtnComponent>
+                    <img
+                        onClick={() => removeResearch_histories(item?.id || '')}
+                        className="close"
+                        src={close.src}
+                        alt=""
+                    />
+                </BtnComponent>
+                }
+                {resumeData.length && index !== resumeData.length - 1 && <BtnComponent>
+                    <img
+                        onClick={() => editResearch_histories(item.id)}
+                        className="close"
+                        src={editIcon.src}
+                        alt=""
+                    />
+                </BtnComponent>}
+                <ResumeInputCom>
+                    <div className="title">سال پژوهش</div>
+                    <Select
+                        suffixIcon={<img src={arrowDownIcon?.src}/>}
+                        style={{
+                            width: '100%',
+                            height: '40px',
+                            textAlign: 'right',
+                            padding: '0',
+                            boxShadow: 'none',
+                            direction: 'rtl'
+                        }}
+                        placeholder={'انتخاب کنید'}
+                        options={year}
+                        value={resumeData[index]?.year}
+                        onChange={e => setResumeData(prevData => {
+                            const updatedData = [...prevData];
+                            updatedData[index].year = e;
+                            return updatedData;
+                        })}
+                    />
+                </ResumeInputCom>
+                <ResumeInputCom>
+                    <div className="title">لینک</div>
+                    <InputCom value={resumeData[index]?.link} onChange={e => setResumeData(prevData => {
+                        const updatedData = [...prevData];
+                        updatedData[index].link = e?.target?.value;
+                        return updatedData;
+                    })} direction="ltr" placeholder={`google.come`}/>
+                </ResumeInputCom>
+                <ResumeInputCom>
+                    <div className="title">عنوان</div>
+                    <InputCom value={resumeData[index]?.field} onChange={e => setResumeData(prevData => {
+                        const updatedData = [...prevData];
+                        updatedData[index].field = e?.target?.value;
+                        return updatedData;
+                    })} direction="rtl"
+                              placeholder={`مثال: دریافت جایزه‌ی زکریا`}/>
+                </ResumeInputCom>
+            </FromResumeItem>))}
+        </FromStepScroll>)}
 
-                            {resumeData.length && index !== resumeData.length - 1 && <img
-                                onClick={() => editEducation(item.id || '')}
-                                className="close"
-                                src={editIcon.src}
-                                alt=""
-                            />}
-                            <ResumeInputCom>
-                                <div className="title">سال پژوهش</div>
-                                <Select
-                                    suffixIcon={<img src={arrowDownIcon?.src}/>}
-                                    style={{
-                                        width: '100%',
-                                        height: '40px',
-                                        textAlign: 'right',
-                                        padding: '0',
-                                        boxShadow: 'none',
-                                        direction: 'rtl'
-                                    }}
-                                    placeholder={'انتخاب کنید'}
-                                    options={year}
-                                    value={resumeData[index]?.year}
-                                    onChange={e => setResumeData(prevData => {
-                                        const updatedData = [...prevData];
-                                        updatedData[index].year = e;
-                                        return updatedData;
-                                    })}
-                                />
-                            </ResumeInputCom>
-                            <ResumeInputCom>
-                                <div className="title">لینک</div>
-                                <InputCom value={resumeData[index]?.link} onChange={e => setResumeData(prevData => {
-                                    const updatedData = [...prevData];
-                                    updatedData[index].link = e?.target?.value;
-                                    return updatedData;
-                                })} direction="ltr" placeholder={`google.come`}/>
-                            </ResumeInputCom>
-                            <ResumeInputCom>
-                                <div className="title">عنوان</div>
-                                <InputCom value={resumeData[index]?.field} onChange={e => setResumeData(prevData => {
-                                    const updatedData = [...prevData];
-                                    updatedData[index].field = e?.target?.value;
-                                    return updatedData;
-                                })} direction="rtl"
-                                          placeholder={`مثال: دریافت جایزه‌ی زکریا`}/>
-                            </ResumeInputCom>
-                        </FromResumeItem>
-                    ))}
-                </FromStepScroll>
-            )}
-
-            <ButtonContainer justify={`flex-end`}>
-                <AddBtn
-                    disabled={!resumeData[resumeData.length - 1]?.link || !resumeData[resumeData.length - 1]?.year || !resumeData[resumeData.length - 1]?.field}
-                    onClick={addResearch_histories}>
-                    <h2 className={`text`}>افزودن</h2>
-                    <img src={add.src} alt="" className="icon"/>
-                </AddBtn>
-            </ButtonContainer>
-            <Button onClick={() => router.push('/questioner/resume')} disabled={resumeData.length < 2} typeof='submit'
-                    className={StyleModules['confirm_button']}
-                    type="primary">
-                اتمام
-            </Button>
-        </>
-    )
+        <ButtonContainer justify={`flex-end`}>
+            <AddBtn
+                color={!resumeData[resumeData.length - 1]?.link || !resumeData[resumeData.length - 1]?.year || !resumeData[resumeData.length - 1]?.field ? '#D9D9D9' : 'var(--primary-color)'}
+                disabled={!resumeData[resumeData.length - 1]?.link || !resumeData[resumeData.length - 1]?.year || !resumeData[resumeData.length - 1]?.field}
+                onClick={addResearch_histories}>
+                <h2 className={`text`}>افزودن</h2>
+                <img
+                    style={{opacity: !resumeData[resumeData.length - 1]?.link || !resumeData[resumeData.length - 1]?.year || !resumeData[resumeData.length - 1]?.field ? '0.2' : '1'}}
+                    src={add.src} alt="" className="icon"/>
+            </AddBtn>
+        </ButtonContainer>
+        <Button onClick={() => router.push('/questioner/resume')} disabled={resumeData.length < 2} typeof='submit'
+                className={StyleModules['confirm_button']}
+                type="primary">
+            اتمام
+        </Button>
+    </>)
 }

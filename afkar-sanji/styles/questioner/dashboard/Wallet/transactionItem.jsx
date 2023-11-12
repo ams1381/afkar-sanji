@@ -17,7 +17,7 @@ export const TransactionHead = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 15px 15px 10px 15px;
+  padding: 10px 15px 10px 15px;
   border-bottom: 1px solid #eee;
   
   > .title {
@@ -43,7 +43,7 @@ export const TransactionHead = styled.div`
 `
 
 export const TransactionBody = styled.h2`
-  padding: 10px 15px 5px 15px;
+  padding: 5px 15px 5px 15px;
   display: flex;
   align-items: center;
   gap: 10px;

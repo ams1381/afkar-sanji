@@ -10,7 +10,6 @@ import {digitsEnToFa} from "@persian-tools/persian-tools";
 export default function ({data}) {
     // convert date
     const date = new Date(data?.created_at).toLocaleString('fa-IR').slice(0, 16).split(',')
-
     return (
         <TransactionItem>
             <TransactionHead>

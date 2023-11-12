@@ -4,7 +4,7 @@ import {
     InputCom,
     ResumeInputCom,
     FromStepScroll,
-    ButtonContainer, AddBtn
+    ButtonContainer, AddBtn, BtnComponent
 } from "@/styles/questioner/resume/resume";
 import {Button, message, Select, Skeleton} from "antd";
 import React, {useEffect, useState} from "react";
@@ -83,18 +83,17 @@ export default function ({
         }
 
 
-
         // if (id) {
-            // await axiosInstance.delete(`/user-api/users/${me?.id}/resume/${me?.resume?.id}/educational-backgrounds/${id}/`).then(res => {
-            //     if (res?.status === 204) {
-            //         message.error('حذف شد')
-            //         setWorkData(workData.filter(item => item.id !== id))
-            //     }
-            // })
-                // .catch(error => {
-                //     const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
-                //     message.error(ERROR_MESSAGE)
-                // })
+        // await axiosInstance.delete(`/user-api/users/${me?.id}/resume/${me?.resume?.id}/educational-backgrounds/${id}/`).then(res => {
+        //     if (res?.status === 204) {
+        //         message.error('حذف شد')
+        //         setWorkData(workData.filter(item => item.id !== id))
+        //     }
+        // })
+        // .catch(error => {
+        //     const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
+        //     message.error(ERROR_MESSAGE)
+        // })
         // }
         // if (id) {
         //     console.log(id)
@@ -161,19 +160,24 @@ export default function ({
                 <FromStepScroll>
                     {workData.map((item, index) => (
                         <FromResumeItem key={index}>
-                            {(index > 0 && index + 1 !== workData.length) && <img
-                                onClick={() => removeWork(item?.id)}
-                                className="close"
-                                src={close.src}
-                                alt=""
-                            />}
-
-                            {workData.length && index !== workData.length - 1 && <img
-                                onClick={() => editEducation(item?.id)}
-                                className="close"
-                                src={editIcon.src}
-                                alt=""
-                            />}
+                            {(index > 0 && index + 1 !== workData.length) && <BtnComponent>
+                                <img
+                                    onClick={() => removeWork(item?.id)}
+                                    className="close"
+                                    src={close.src}
+                                    alt=""
+                                />
+                            </BtnComponent>
+                            }
+                            {workData.length && index !== workData.length - 1 && <BtnComponent>
+                                <img
+                                    onClick={() => editEducation(item?.id)}
+                                    className="close"
+                                    src={editIcon.src}
+                                    alt=""
+                                />
+                            </BtnComponent>
+                            }
                             <ResumeInputCom>
                                 <div className="title">سال پایان</div>
                                 <Select
@@ -240,10 +244,13 @@ export default function ({
             )}
             <ButtonContainer justify={`flex-end`}>
                 <AddBtn
+                    color={!workData[workData.length - 1]?.position || !workData[workData.length - 1]?.company || !workData[workData.length - 1]?.start_date || !workData[workData.length - 1]?.end_date ? '#D9D9D9' : 'var(--primary-color)'}
                     disabled={!workData[workData.length - 1]?.position || !workData[workData.length - 1]?.company || !workData[workData.length - 1]?.start_date || !workData[workData.length - 1]?.end_date}
                     onClick={addWork}>
                     <h2 className={`text`}>افزودن</h2>
-                    <img src={add.src} alt="" className="icon"/>
+                    <img
+                        style={{opacity: !workData[workData.length - 1]?.position || !workData[workData.length - 1]?.company || !workData[workData.length - 1]?.start_date || !workData[workData.length - 1]?.end_date ? '0.2' : '1'}}
+                        src={add.src} alt="" className="icon"/>
                 </AddBtn>
             </ButtonContainer>
             <Button disabled={workData.length < 2} typeof='submit'

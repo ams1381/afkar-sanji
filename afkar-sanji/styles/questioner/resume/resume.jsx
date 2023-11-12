@@ -343,7 +343,14 @@ export const FromResumeItem = styled.div`
   flex-direction: ${p => p.flexDirection};
   gap: 12px;
   margin: 10px 0;
-
+  > .css-dev-only-do-not-override-pr0fja
+  {
+    display: flex !important;
+    padding: 20px !important;
+    border-radius: 100% !important;
+    width: 45px;
+    height: 45px;
+  }
   > .close {
     display: flex;
     padding: 15px;
@@ -375,7 +382,29 @@ export const RowCom = styled.div`
     box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.06);
     cursor: pointer;
   }
+  
+  > .css-dev-only-do-not-override-pr0fja
+  {
+    display: flex !important;
+    padding: 20px !important;
+    border-radius: 100% !important;
+    width: 45px;
+    height: 45px;
+  }
 `
+
+export const BtnComponent = styled(Button)`
+  display: flex;
+  padding: 15px;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--login-input-default-border);
+  background: #FFF;
+  box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+`
+
 
 export const ButtonContainer = styled.div
 `
@@ -396,9 +425,10 @@ export const AddBtn = styled(Button)`
   background:  #FFF;
   box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.02);
   margin-top: 24px;
+  margin-bottom: 9px;
   
   > .text {
-    color: var(--primary-color);
+    color: ${p => p.color} ;
     text-align: right;
     font-size: 14px;
     font-style: normal;

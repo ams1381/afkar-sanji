@@ -28,7 +28,7 @@ import {useQuery} from "@tanstack/react-query";
 
 const {Search} = Input;
 export default function ({meData, cookies}) {
-    const [file,setFile] = useState(null)
+    const [file, setFile] = useState(null)
     const [fileSize, setFileSize] = useState(null)
     const [link, setLink] = useState('')
     const [isUpload, setIsUpload] = useState(false)
@@ -254,7 +254,7 @@ export default function ({meData, cookies}) {
                                     gap: '5px'
                                 }}
                                 className={`bottom`}
-                                onClick={() => router.push("/questioner/information")}
+                                // onClick={() => router.push("/questioner/information")}
                             >
                                 پنل پرسش‌گری
                                 <img src={arrowRightIcon?.src}/>

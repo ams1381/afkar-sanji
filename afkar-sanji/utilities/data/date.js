@@ -63,8 +63,6 @@ export const educationsMenu = [
 
 ]
 
-// [{"key":"edu_type","value":"u","description":"    EDU_TYPE_CHOICES = (\n        ('u', 'دانشگاهی'),\n        ('h', 'حوزوی'),\n        ('o', 'سایر'),\n    )","type":"text"}]
-
 export const edu_type = [
     {value: 'u', label: 'دانشگاهی'},
     {value: 'h', label: 'حوزوی'},

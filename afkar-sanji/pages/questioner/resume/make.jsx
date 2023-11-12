@@ -94,7 +94,7 @@ export default function ({meData}) {
                         </>)}
                         {current === 4 && (<>
                             <div className="title"> : سابقه پژوهشی ۵</div>
-                            <ResearchHistories me={meData} research_histories={research_histories} setGender={setGender}
+                            <ResearchHistories  me={meData} research_histories={research_histories} setGender={setGender}
                                                setResearch_histories={setResearch_histories} year={year}/>
                         </>)}
                     </FromStep>
