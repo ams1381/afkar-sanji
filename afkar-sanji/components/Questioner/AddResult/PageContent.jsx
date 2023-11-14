@@ -18,6 +18,7 @@ import {useRouter} from "next/router";
 import { Skeleton } from "antd"
 import {OptionalItemContainer} from "@/styles/questionnairePanel/QuestionComponent";
 import {AuthContext} from "@/utilities/AuthContext";
+import {axiosInstance} from "@/utilities/axios";
 
 export const PageContent = ({ questionnaire }) => {
     const dispatcher = useDispatch();
@@ -54,16 +55,16 @@ export const PageContent = ({ questionnaire }) => {
             setAnswerConfirmLoading(true)
             let CreatedAnswerSet;
             // if(!answerSet) {
-                let { data } = await axios.post(`/interview-api/interviews/${questionnaire.uuid}/answer-sets/`);
+                let { data } = await axiosInstance.post(`/interview-api/interviews/${questionnaire.uuid}/answer-sets/`);
                 CreatedAnswerSet = data;
             // }
 
             if(FileQuestionQuestions && FileQuestionQuestions.length)
-                await axios.post(`/interview-api/interviews/${questionnaire.uuid}/answer-sets/${CreatedAnswerSet.id}/add-answer/`,
+                await axiosInstance.post(`/interview-api/interviews/${questionnaire.uuid}/answer-sets/${CreatedAnswerSet.id}/add-answer/`,
                     AnswerSetFormDataConverter(FileQuestionQuestions),{
                     'Content-Type' : 'multipart/form-data'
                 })
-            await axios.post(`/interview-api/interviews/${questionnaire.uuid}/answer-sets/${CreatedAnswerSet.id}/add-answer/`,
+            await axiosInstance.post(`/interview-api/interviews/${questionnaire.uuid}/answer-sets/${CreatedAnswerSet.id}/add-answer/`,
                 CopiedQuestionAnswerSet)
         }
         catch(err)

@@ -38,7 +38,10 @@ export const QuestionerResultTable = ({ ResultQuery , PageSize , setPageSize , Q
             bordered
             disabled={!PageSize}
             locale={{
-                emptyText : <p className='no_result_message'>نتیجه‌ای یافت نشد</p>
+                emptyText : <p className='no_result_message'>نتیجه‌ای یافت نشد</p>,
+                triggerDesc : 'مرتب سازی نزولی',
+                triggerAsc : 'مرتب سازی صعودی',
+                cancelSort : 'لغو مرتب سازی'
             }}
             direction='ltr'
             showQuickJumper
@@ -106,7 +109,7 @@ export const QuestionerResultTable = ({ ResultQuery , PageSize , setPageSize , Q
                 ),
             }}
             size="middle"
-            scroll={{  x: 1000 }}
+            scroll={{  x: 800 }}
             scrollableTarget="table-wrapper"
         />
     </>

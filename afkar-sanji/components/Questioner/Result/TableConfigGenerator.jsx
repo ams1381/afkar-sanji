@@ -3,6 +3,7 @@ import {Tooltip, Upload} from "antd";
 import {Icon} from "@/styles/icons";
 import {QuestionTypeIcon} from "@/utilities/QuestionTypes";
 import React from "react";
+import {convertDate, convertToRegularTime} from "@/components/QuestionnairePanel/QuestionnaireSetting/SettingPanel";
 const regex = /(<([^>]+)>)/gi;
 export const TableColumnGenerator = (QuestionsArray,ResultData,resultMessage,regex,SelectedTypeFilter) => {
     let ColumnsArray =  (QuestionsArray?.map((item,index) =>  !SelectedTypeFilter.length || SelectedTypeFilter.length == 12 ?  ({
@@ -373,10 +374,16 @@ export const TableColumnGenerator = (QuestionsArray,ResultData,resultMessage,reg
     })
 
     ColumnsArray = ColumnsArray.filter(item => (Array.isArray(item.children) && !item.children.length) ? null : item);
-
+    ColumnsArray.unshift({
+        title : 'تاریخ' ,
+        dataIndex : 'date',
+        width : 178 ,
+        align : 'center' ,
+        sorter : (a , b) => Date.parse(a.date) - Date.parse(b.date),
+    })
     return ColumnsArray;
 }
-export const TableDataGenerator = (ResultData,QuestionnaireQuery) => {
+export const TableDataGenerator = (ResultData,QuestionnaireQuery,regex,RoleReq) => {
     let rows = [];
     ResultData?.forEach((AnswerSet,index) => {
 
@@ -425,6 +432,13 @@ export const TableDataGenerator = (ResultData,QuestionnaireQuery) => {
             rows[rows.length - 1]['id'] = AnswerSet.id;
             rows[rows.length - 1]['key'] = AnswerSet.id;
             rows[rows.length - 1]['ردیف'] = rows.length
+            rows[rows.length - 1]['date'] = digitsEnToFa(convertDate(convertToRegularTime(AnswerSet.answered_at),'jalali'));
+            console.log(RoleReq)
+            if(RoleReq === 'interview-api/interviews') {
+                // answerSetTime
+                rows[rows.length - 1]['answerSetTime'] = digitsEnToFa(convertToRegularTime(AnswerSet.answered_at).split(' ')[1])
+                rows[rows.length - 1]['RowDate'] = digitsEnToFa(convertDate(convertToRegularTime(AnswerSet.answered_at),'jalali'));
+            }
         }
         else if(!AnswerSet.answers.length)
         {
@@ -447,6 +461,12 @@ export const TableDataGenerator = (ResultData,QuestionnaireQuery) => {
             })
             rows[rows.length - 1]['id'] = AnswerSet.id;
             rows[rows.length - 1]['key'] = AnswerSet.id;
+            rows[rows.length - 1]['date'] = digitsEnToFa(convertDate(convertToRegularTime(AnswerSet.answered_at),'jalali'));
+            if(RoleReq === 'interview-api/interviews') {
+                // answerSetTime
+                rows[rows.length - 1]['answerSetTime'] = digitsEnToFa(convertToRegularTime(AnswerSet.answered_at).split(' ')[1])
+                rows[rows.length - 1]['RowDate'] = digitsEnToFa(convertDate(convertToRegularTime(AnswerSet.answered_at),'jalali'));
+            }
         }
     })
 

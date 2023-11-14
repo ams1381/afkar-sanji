@@ -33,11 +33,12 @@ const UsersListPage = () => {
     const [ roleFilterValue , setRoleFilterValue ] = useState('');
     const [ interviewRequestFilter , setInterviewRequestFilter ] = useState(null);
     const [ selectedRows , setSelectedRows ] = useState([]);
+    const [ InterviewSearch , setInterviewSearch ] = useState(null)
     const [ UserListQuery , MeQuery, RegionsQuery ] = useQueries({
         queries : [
             { queryKey : ['UsersListQuery'] ,
                 queryFn : async () =>
-                    await axiosInstance.get(`/admin-api/users/?role=${roleFilterValue}${interviewRequestFilter ? interviewRequestFilter : ''}&page_size=${pageSize}&page=${CurrentPage ? CurrentPage : ''}&search=${userSearchValue ? userSearchValue : ''}`),
+                    await axiosInstance.get(`/admin-api/users/${userSearchValue ? 'search-users/' : ''}?role=${roleFilterValue}${interviewRequestFilter ? interviewRequestFilter : ''}&interview_name=${InterviewSearch ? InterviewSearch : ''}&page_size=${pageSize}&page=${CurrentPage ? CurrentPage : ''}&search=${userSearchValue ? userSearchValue : ''}`),
                 refetchOnWindowFocus : false,
                 retry : false
             } ,
@@ -56,7 +57,7 @@ const UsersListPage = () => {
     })
     useEffect(() => {
         UserListQuery.refetch()
-    }, [CurrentPage , roleFilterValue , interviewRequestFilter , userSearchValue , pageSize]);
+    }, [CurrentPage , roleFilterValue , interviewRequestFilter , userSearchValue , pageSize , InterviewSearch]);
 
 
     return <>
@@ -77,6 +78,8 @@ const UsersListPage = () => {
                                      setUserSearchValue={setUserSearchValue}
                                      userSearchValue={userSearchValue}
                                      HeaderMode={'users'}
+                                     InterviewSearch={InterviewSearch}
+                                     setInterviewSearch={setInterviewSearch}
                                      refetchList={UserListQuery.refetch}
                                  setRoleFilterValue={setRoleFilterValue}
                                  selectedRows={selectedRows} />
@@ -84,6 +87,7 @@ const UsersListPage = () => {
                             SetCurrentPage={SetCurrentPage}
                             setSelectedRows={setSelectedRows}
                             pageSize={pageSize}
+
                             setPageSize={setPageSize}
                             SetActivePopupUser={SetActivePopupUser}  UserListQuery={UserListQuery} />
                     </AdminPanelContainer>

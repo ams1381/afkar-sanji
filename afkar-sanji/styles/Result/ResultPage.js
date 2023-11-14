@@ -487,6 +487,10 @@ export const DateFilterContainer = styled.div`
   {
     margin-right: 10px;
   }
+  .ant-checkbox-inner
+  {
+    border-radius: 2px !important;
+  }
 `
 export const InterviewerCodeSearchContainer = styled.div`
   display: flex;
@@ -497,6 +501,7 @@ export const InterviewerCodeSearchContainer = styled.div`
   & input
   {
     border: none;
+    direction: rtl !important;
   }
   & input:focus
   {

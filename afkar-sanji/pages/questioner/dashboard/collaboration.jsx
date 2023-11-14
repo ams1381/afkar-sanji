@@ -24,7 +24,7 @@ import persian from 'react-date-object/calendars/persian';
 import DatePicker from "react-multi-date-picker";
 import filter from 'public/Icons/Arrow Sort Down Lines.svg'
 import CollaborationItem from "@/components/Questioner/Dashboadr/Collaboration/CollaborationItem";
-import {useQuery} from "@tanstack/react-query";
+import {useQueries, useQuery} from "@tanstack/react-query";
 import {axiosInstance} from "@/utilities/axios";
 
 const {Search} = Input;
@@ -34,7 +34,16 @@ export default function ({cookies}) {
     const [logoutPopOver, switchPopover] = useState(false);
     const [RightDrawerOpen, setRightDrawerOpen] = useState(false);
     const [StartDate, setStartDate] = useState('');
-    const [EndDate, setEndDate] = useState('')
+    const [EndDate, setEndDate] = useState('');
+    const [ MeQuery  ] = useQueries({
+        queries: [
+            {
+                queryKey: ['MeQuery'],
+                queryFn: async () => await axiosInstance.get(`/user-api/users/me/`),
+                refetchOnWindowFocus : false
+            },
+        ],
+    });
     const DateFilterHandler = async (_, filterDate) => {
         // console.log(filterDate.validatedValue)
         if (!filterDate.validatedValue?.length) {
@@ -57,61 +66,71 @@ export default function ({cookies}) {
     }
 
     const {data, isLoading, error, refetch} = useQuery(['Interview'],
-        async () => await axiosInstance.get('/interview-api/interviews/'))
+        async () => await axiosInstance.get('/interview-api/interviews/'),{
+            refetchOnWindowFocus : false ,
+            retry : false
+        })
 
     return (
         <PageBox>
             <CommonDrawer RightDrawerOpen={RightDrawerOpen} setRightDrawerOpen={setRightDrawerOpen}/>
+
+                <QuestionerHeader meData={MeQuery?.data?.data} pageName='profile'/>
             <main style={{width: RightDrawerOpen ? '80%' : '100%', transition: '0.3s'}}>
-                <QuestionerHeader pageName='profile'/>
                 <QuestionerPageContainer>
                     <QuestionerContentBox>
                         <Collaboration>
                             <CollaborationHeader>
-                                <FilterBox>
-                                    <img src={filter?.src} alt=""/>
-                                </FilterBox>
-                                <DatePicker format="YYYY-MM-DD"
-                                            onChange={DateFilterHandler}
-                                            render={(value, openCalendar) => {
-                                                return (
-                                                    <TimePickerContainer active={'active'}>
-                                                        <input value={value} onClick={openCalendar}
-                                                               placeholder='انتخاب تاریخ' readOnly/>
-                                                        <Icon name='Calender'/>
-                                                    </TimePickerContainer>
-                                                )
-                                            }}
-                                            range
-                                            plugins={[
-                                                <DatePanel position="left"/>
-                                            ]}
-                                            calendar={persian}
-                                            calendarPosition="bottom-left"
-                                            locale={persian_fa}
-                                />
-                                <Search
-                                    rootClassName={'notBorder'}
-                                    placeholder="براساس عنوان پرسش‌نامه یا نام کارفرما جست‌وجو کنید"
-                                    onSearch={onSearch}
-                                    style={{
-                                        width: '60%',
-                                    }}
-                                />
+                                <div>
+                                    <p>لیست پرسش‌نامه‌ها</p>
+                                </div>
+                                <div>
+                                    <p>درخواست‌های همکاری</p>
+                                </div>
+                                {/*<FilterBox>*/}
+                                {/*    <img src={filter?.src} alt=""/>*/}
+                                {/*</FilterBox>*/}
+                                {/*<DatePicker format="YYYY-MM-DD"*/}
+                                {/*            onChange={DateFilterHandler}*/}
+                                {/*            render={(value, openCalendar) => {*/}
+                                {/*                return (*/}
+                                {/*                    <TimePickerContainer active={'active'}>*/}
+                                {/*                        <input value={value} onClick={openCalendar}*/}
+                                {/*                               placeholder='انتخاب تاریخ' readOnly/>*/}
+                                {/*                        <Icon name='Calender'/>*/}
+                                {/*                    </TimePickerContainer>*/}
+                                {/*                )*/}
+                                {/*            }}*/}
+                                {/*            range*/}
+                                {/*            plugins={[*/}
+                                {/*                <DatePanel position="left"/>*/}
+                                {/*            ]}*/}
+                                {/*            calendar={persian}*/}
+                                {/*            calendarPosition="bottom-left"*/}
+                                {/*            locale={persian_fa}*/}
+                                {/*/>*/}
+                                {/*<Search*/}
+                                {/*    rootClassName={'notBorder'}*/}
+                                {/*    placeholder="براساس عنوان پرسش‌نامه یا نام کارفرما جست‌وجو کنید"*/}
+                                {/*    onSearch={onSearch}*/}
+                                {/*    style={{*/}
+                                {/*        width: '60%',*/}
+                                {/*    }}*/}
+                                {/*/>*/}
                             </CollaborationHeader>
                             <CollaborationBody>
                                 {isLoading && (
                                     <>
-                                        <Skeleton.Input style={{width: '100%', height: '100px'}}/>
-                                        <Skeleton.Input style={{width: '100%', height: '100px'}}/>
-                                        <Skeleton.Input style={{width: '100%', height: '100px'}}/>
-                                        <Skeleton.Input style={{width: '100%', height: '100px'}}/>
-                                        <Skeleton.Input style={{width: '100%', height: '100px'}}/>
+                                        <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
+                                        <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
+                                        <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
+                                        <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
+                                        <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
                                     </>
                                 )}
-                                {data?.data?.results ? data?.data?.results.map((interview, index) => {
+                                {(!error && data?.data?.results) ? data?.data?.results.map((interview, index) => {
                                     return <CollaborationItem data={interview} key={interview?.id}/>
-                                }) : ""}
+                                }) : error && error.response?.status === 500 && <div>خطای داخلی سرور</div>}
                             </CollaborationBody>
                         </Collaboration>
                     </QuestionerContentBox>

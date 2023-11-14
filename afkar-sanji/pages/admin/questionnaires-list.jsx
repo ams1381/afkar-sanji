@@ -1,5 +1,5 @@
 import Head from "next/head";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {PageBox} from "@/styles/common";
 import { useQueries } from "@tanstack/react-query";
 import {CommonDrawer} from "@/components/common/CommonDrawer";
@@ -9,19 +9,27 @@ import {ContentBox} from "@/styles/folders/Questionnaire";
 import {AdminPanelContainer} from "@/styles/Admin/adminPanel";
 import {UsersHeader} from "@/components/Admin/UsersList/UsersListHeader";
 import {QuestionnairesTable} from "@/components/Admin/QuestionnairesTable/QuestionnairesTable";
+import {UserInfoPopup} from "@/components/Admin/UsersTable/UserInfoPopup";
+import {QuestionnaireDataPopup} from "@/components/Admin/QuestionnairesTable/QuestionnaireDataPopup";
+import {PricePopup} from "@/components/Admin/QuestionnairesTable/PricePopup";
 
 const QuestionnairesList = () => {
     const [ RightDrawerOpen , setRightDrawerOpen ] = useState(false);
-    const [ userSearchValue , setUserSearchValue ] = useState(null);
+    const [ interviewSearch , setInterviewSearch ] = useState(null);
     const [ CurrentPage , SetCurrentPage ] = useState(1);
     const [ pageSize , setPageSize ] = useState(7);
     const [ selectedRows , setSelectedRows ] = useState([]);
-
-    const [ QuestionnairesListQuery , MeQuery ] = useQueries({
+    const [ ActiveQuestionnairePopup , setActiveQuestionnairePopup ] = useState(null);
+    const [ activePricePopup , setActivePricePopup ] = useState(null);
+    const [ levelFilter , setLevelFilter ] = useState('');
+    const [ priceFilter , setPriceFilter ] = useState('');
+    const [ filteredIDQuestionnaires , setFilteredIDQuestionnaires ] = useState([]);
+    const [ hasQuestionerFilter , setHasQuestionerFilter ] = useState('');
+    const [ QuestionnairesListQuery , MeQuery , RegionsQuery ] = useQueries({
         queries : [
             {
                 queryKey : ['QuestionnairesListQuery'],
-                queryFn : async () => await axiosInstance.get(`/admin-api/interviews/`),
+                queryFn : async () => await axiosInstance.get(`/admin-api/interviews/${interviewSearch ? 'search-questions/' : ''}?page_size=${pageSize}&page=${CurrentPage}${levelFilter}${priceFilter}&search=${interviewSearch ? interviewSearch : ''}`),
                 refetchOnWindowFocus : false,
                 retry : false
             }
@@ -30,8 +38,18 @@ const QuestionnairesList = () => {
                 refetchOnWindowFocus : false,
                 retry : false
             } ,
+            {
+                queryKey: ['RegionsQuery'],
+                queryFn: async () =>
+                    await axiosInstance.get(`/user-api/nested-countries/`) ,
+                refetchOnWindowFocus : false
+            },
         ]
     })
+
+    useEffect(() => {
+        QuestionnairesListQuery.refetch()
+    }, [CurrentPage , levelFilter , interviewSearch , priceFilter , pageSize , hasQuestionerFilter]);
     return <>
         <Head>
             <title>Afkar Sanji | Admin Panel | Questonnaires List</title>
@@ -48,15 +66,42 @@ const QuestionnairesList = () => {
                     <AdminPanelContainer>
                         <UsersHeader selectedRows={selectedRows}
                          HeaderMode={'interviews'}
-
+                         refetchList={QuestionnairesListQuery.refetch}
+                         setInterviewSearch={setInterviewSearch}
+                         InterviewSearch={interviewSearch}
                          setSelectedRows={setSelectedRows}
+                         setFilteredIDQuestionnaires={setFilteredIDQuestionnaires}
+                         filteredIDQuestionnaires={filteredIDQuestionnaires}
+                         setLevelFilter={setLevelFilter}
+                         QuestionnairesListQuery={QuestionnairesListQuery}
+                         setPriceFilter={setPriceFilter}
+                         setHasQuestionerFilter={setHasQuestionerFilter}
                         />
                         <QuestionnairesTable pageSize={pageSize}
-                                             setPageSize={setPageSize}
-                                             QuestionnairesListQuery={QuestionnairesListQuery} />
+                             setPageSize={setPageSize}
+                             setSelectedRows={setSelectedRows}
+                             filteredIDQuestionnaires={filteredIDQuestionnaires}
+                             setFilteredIDQuestionnaires={setFilteredIDQuestionnaires}
+                             SetCurrentPage={SetCurrentPage}
+                             setActivePricePopup={setActivePricePopup}
+                             setActiveQuestionnairePopup={setActiveQuestionnairePopup}
+                             QuestionnairesListQuery={QuestionnairesListQuery} />
                     </AdminPanelContainer>
                 </ContentBox>
             </main>
+            {(ActiveQuestionnairePopup && QuestionnairesListQuery?.data?.data && RegionsQuery?.data?.data ) &&
+                <QuestionnaireDataPopup
+                                QuestionnaireList={QuestionnairesListQuery.data.data.results}
+                               RegoionsData={RegionsQuery.data.data}
+                               ActiveQuestionnairePopup={ActiveQuestionnairePopup}
+                                setActiveQuestionnairePopup={setActiveQuestionnairePopup}
+                />}
+            {(activePricePopup && QuestionnairesListQuery?.data?.data && RegionsQuery?.data?.data ) &&
+                <PricePopup
+                    setActivePricePopup={setActivePricePopup}
+                    QuestionnaireList={QuestionnairesListQuery.data.data.results}
+                    activePricePopup={activePricePopup}
+                />}
         </PageBox>
     </>
 }

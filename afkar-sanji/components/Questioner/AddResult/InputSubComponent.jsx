@@ -1,7 +1,7 @@
 import {Input, InputNumber} from "antd";
 import {InputAnswerContainer} from "@/styles/Result/AddResult";
 import {ChangeInputAnswer} from "@/utilities/stores/AnswerStore";
-import {digitsFaToEn} from "@persian-tools/persian-tools";
+import {digitsEnToFa, digitsFaToEn} from "@persian-tools/persian-tools";
 import {useDispatch} from "react-redux";
 import {useEffect, useState} from "react";
 import TextArea from "antd/lib/input/TextArea";
@@ -63,9 +63,11 @@ export const InputSubComponent = ({ QuestionData , answerSet , ErrorQuestions , 
         <InputAnswerContainer>
             {QuestionData.question_type == 'number_answer' ?
                 <InputNumber min={QuestionData.min} max={QuestionData.max}
-                     value={InputValue}  onChange={(e) => {
-                     if(e)
-                        setInputValue(e.toString())
+                     value={(InputValue)}  onChange={(e) => {
+                     if(e) {
+                         setInputValue((e.toString()))
+                         // console.log(digitsFaToEn(e.toString()),e.toString())
+                     }
                     else
                          setInputValue(null)
                     dispatcher(ChangeInputAnswer({

@@ -50,7 +50,7 @@ export default function Home({ cookies }) {
 
   useEffect(() => {
        refetch();
-  }, [Auth.reqRole]);
+  }, [Auth.reqRole] , getItem('roleReq'));
   
   useEffect(() => {
 

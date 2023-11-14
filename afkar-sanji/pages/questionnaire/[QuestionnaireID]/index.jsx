@@ -87,8 +87,6 @@ const QuestionnairePanel = ({ cookies }) => {
     <ProgressBarLoading />
     {messageContext}
     <PageBox>
-
-
       <Header SetSideBar={() => setOpen(!SideBarOpen)} cookies={cookies}
       goToFolders={true} loadingHeader={isLoading}
       Questionnaire={data?.data}/>

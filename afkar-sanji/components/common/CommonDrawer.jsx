@@ -189,7 +189,6 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                         <Link href={'/'} onClick={() => {
                             setItem('roleReq','question-api/questionnaires')
                             Auth.setReqRole('question-api/questionnaires')
-                            setItem('roleReq','question-api/questionnaires')
                         }}>
                             <CommonDrawerItemIcon open={RightDrawerOpen ? 'active' : null} active={drawerSelectedItem === 'create-questionnaire'}
                                                   className='drawer_item i_create-questionaire'>
@@ -204,7 +203,7 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                             </CommonDrawerItemIcon>
                         </Link>
                         <Link href={'/admin/questionnaires-list/'}>
-                            <CommonDrawerItemIcon open={RightDrawerOpen ? 'active' : null} className='drawer_item i_wallet'>
+                            <CommonDrawerItemIcon  open={RightDrawerOpen ? 'active' : null} className='drawer_item i_wallet'>
                                 <Icon name='QuestionnairesList'/>
                             </CommonDrawerItemIcon>
                         </Link>

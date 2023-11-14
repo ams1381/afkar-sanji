@@ -4,7 +4,7 @@ import {Button} from "antd";
 
 export const PopupContainer = styled(ChatContainer)`
     height : auto;
-    width: 37.7%;
+    width: 576px;
     z-index: 100000;
 `
 export const PopupHeader = styled(ChatHeaderContainer)`
@@ -50,8 +50,17 @@ export const PopupRowContainer = styled.div`
   
   span
   {
-    color : black;
+    color : #525252;
     font-size: 14px;
+  }
+  a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 14px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-direction: row-reverse;
   }
 `
 export const PopupInfoContainer = styled.div`
@@ -59,4 +68,118 @@ export const PopupInfoContainer = styled.div`
   flex-direction: column;
   gap: 12px;
   margin: 24px 0;
+`
+export const LevelInfoContainer = styled.div`
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 10px;
+  align-items: center;
+`
+export const PricePack = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 3px;
+`
+export const PricePackContainer = styled.div`
+  width: 145px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-radius: 6px;
+  background: var(--Primary-surface, #EEF0FF);
+  color: var(--primary-color);
+  height: 124px;
+  cursor: pointer;
+  transition: 0.3s;
+  margin: 10px 0;
+  &:hover {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.44);
+  }
+`
+export const PricePacksItemsContainer = styled.div`
+  display: flex;
+  max-width: 100%;
+  gap: 12px;
+  overflow: auto;
+  width: fit-content;
+  
+  .price-per-each {
+    font-size: 12px;
+    text-align: right;
+  }
+  &::-webkit-scrollbar
+  {
+    width : 10px;
+    overflow: visible;
+    height : 10px;
+  }
+  &::-webkit-scrollbar-track
+  {
+    background : transparent;
+  }
+  &::-webkit-scrollbar-corner
+  {
+    display : none;
+  }
+  &::-webkit-scrollbar-thumb
+  {
+    background: #D3CFCF;
+    border-radius: 31px;
+  }
+`
+export const PricePackHeader = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  text-align: right;
+  height: 50px;
+  gap: 11px;
+  
+  p
+  {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+   i{
+     width: 14px;
+     height: 14px;
+     cursor: pointer;
+   }
+  
+`
+export const PricePackEditButtonsContainer = styled.div`
+  width: 24px;
+  height: 124px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+`
+export const PricePackButton = styled.span`
+  width: 100%;
+  border-radius: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.06);
+  height: 24px;
+  cursor: pointer;
+  
+  & i {
+    width: 14px;
+    height: 14px;
+  }
+}
+`
+export const PricePaakEditButton = styled(PricePackButton)`
+  border: 1px solid #5360ED;
+  background: #5360ED;
+`
+export const PricePackDeleteButton = styled(PricePackButton)`
+  background: var(--character-danger, #FF4D4F);
 `

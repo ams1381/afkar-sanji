@@ -5,6 +5,7 @@ import {ResultBodyContainer} from "@/styles/Result/ResultPage";
 import {UsersTableContainer} from "@/styles/Admin/adminPanel";
 import {UserInfoPopup} from "@/components/Admin/UsersTable/UserInfoPopup";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
+import {SkeletonTable} from "@/components/ResultPage/ResultBody";
 
 export const UsersTable = ({  ActivePopupUser , pageSize , setPageSize , setSelectedRows , SetCurrentPage , SetActivePopupUser , UserListQuery }) => {
     const [ TableBlockLoading , setTableBlockLoading ] = useState(null)
@@ -20,7 +21,7 @@ export const UsersTable = ({  ActivePopupUser , pageSize , setPageSize , setSele
                         UserListQuery?.data?.data ?
                             <Table
                                 loading={UserListQuery.isRefetching}
-                                scroll={{ x : 500 , y : 500 }}
+                                scroll={{ x : 1000 , y : 400 }}
                                 rowSelection={{
                                     onChange: (selectedRowKeys, selectedRows) => {
                                         setSelectedRows(selectedRows)
@@ -51,7 +52,7 @@ export const UsersTable = ({  ActivePopupUser , pageSize , setPageSize , setSele
                                     showQuickJumper : true ,
                                     showSizeChanger  : true,
                                     showTotal : (total , range) => {
-                                        return <p>جمعا {digitsEnToFa(Math.ceil(UserListQuery?.data?.data.count / 7))} صفحه </p>
+                                        return <p>جمعا {digitsEnToFa(Math.ceil(UserListQuery?.data?.data.count / pageSize))} صفحه </p>
                                     },
                                     onChange : (Page) => SetCurrentPage(Page) ,
                                     locale : {
@@ -62,10 +63,14 @@ export const UsersTable = ({  ActivePopupUser , pageSize , setPageSize , setSele
                                 }}
                                 columns={TableColumns(SetActivePopupUser,TableBlockLoading,setTableBlockLoading,UserListQuery.refetch)}
                                 locale={{
-                                    emptyText : <p className='no_result_message'>نتیجه‌ای یافت نشد</p>
+                                    emptyText : <p className='no_result_message'>نتیجه‌ای یافت نشد</p>,
+                                    triggerDesc: 'مرتب سازی نزولی',
+                                    triggerAsc: 'مرتب سازی صعودی',
+                                    cancelSort: 'لغو مرتب سازی'
                                 }}
                                 direction='ltr'
-                                dataSource={TableDataSet(UserListQuery?.data?.data)} />  : 'Loading'
+                                dataSource={TableDataSet(UserListQuery?.data?.data)} />  :
+                            <SkeletonTable columns={5} rowCount={10}/>
                     }
 
                 </UsersTableContainer>

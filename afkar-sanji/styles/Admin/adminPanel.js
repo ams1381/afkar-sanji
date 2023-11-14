@@ -199,6 +199,7 @@ export const UserTag = styled(Tag)`
   gap: 5px;
   align-items: center;
   direction: ltr;
+  color: ${p => p.pending ? '#A3A3A3' : p.rejected ? '#F5222D' : 'var(--primary-color)'};
 `
 export const TableBlockButton = styled(Button)`
   color: var(--Error-color);

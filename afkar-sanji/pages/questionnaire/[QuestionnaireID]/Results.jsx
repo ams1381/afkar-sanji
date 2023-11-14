@@ -74,10 +74,11 @@ const ResultsPage = ({ cookies }) => {
     <ProgressBarLoading />
     <PageBox>
       <CommonDrawer RightDrawerOpen={RightDrawerOpen} setRightDrawerOpen={setRightDrawerOpen} />
-      <main style={{ width : RightDrawerOpen ? '84%' : '100%', transition : '0.3s' }}>
+
       <Header SetSideBar={() => setOpen(!SideBarOpen)} cookies={cookies}
       goToFolders={true} loadingHeader={QuestionnaireQuery.isLoading}
       Questionnaire={QuestionnaireQuery.data?.data}/>
+      <main style={{ width : RightDrawerOpen ? '84%' : '100%', transition : '0.3s' }}>
       <PanelInnerContainer>
         <ResultHeader QuestionnaireQuery={QuestionnaireQuery}/>
         <ResultBody ResultQuery={SearchValue ? SearchQuery : ResultQuery}

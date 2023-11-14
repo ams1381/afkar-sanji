@@ -62,17 +62,15 @@ const Profile = () => {
             </Head>
             <PageBox>
                 <CommonDrawer RightDrawerOpen={RightDrawerOpen} setRightDrawerOpen={setRightDrawerOpen} />
-                <main style={{ width : RightDrawerOpen ? '84%' : '100%', transition : '0.3s' }}>
-                        <>
                         <QuestionerHeader pageName='profile' meData={MeQuery?.data?.data}  />
+                        <main style={{ width : RightDrawerOpen ? '84%' : '100%', transition : '0.3s' }}>
                         <QuestionerPageContainer>
                             <QuestionerContentBox>
                                 <UserInfoBox MeQuery={MeQuery}  regions={regions?.data?.data} />
                                 <JobInfo regions={regions?.data?.data} MeQuery={MeQuery} />
                             </QuestionerContentBox>
                         </QuestionerPageContainer>
-                        </>
-                </main>
+                        </main>
             </PageBox>
         </>
     )

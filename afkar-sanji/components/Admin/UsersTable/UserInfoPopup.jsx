@@ -97,10 +97,6 @@ export const UserInfoPopup = ({ usersLists , RegoionsData , ActivePopupUser , Se
                     </PopupRowContainer>
                 </PopupInfoContainer>
 
-                {
-
-                    // phone_number
-                }
             </ChatMessageContainer>
             <PopupFooter>
                 <PopupFooterButton

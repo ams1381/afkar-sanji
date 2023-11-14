@@ -12,14 +12,14 @@ export const TableColumns = (SetActivePopupUser,TableBlockLoading,setTableBlockL
             title: 'نام کاربر',
             dataIndex: 'name',
             key: 'name',
-            sorter : true ,
+            sorter : (a , b) => a.name?.localeCompare(b.name) ,
             // render: (text) => <p>{text}</p>,
         },
         {
             title: 'تاریخ ثبت نام',
             dataIndex: 'joinDate',
-            sorter : true ,
             key: 'joinDate',
+            sorter : (a , b) => Date.parse(a.rowData.date_joined) - Date.parse(b.rowData.date_joined),
         },
         {
             title: 'تاریخ درخواست',
@@ -156,6 +156,7 @@ export const TableDataSet = (UsersListData) => {
        return ({
            key : UserItem.id ,
            name : UserItem.first_name ,
+           rowData :  UserItem,
            joinDate : digitsEnToFa(convertDate(convertToRegularTime(UserItem.date_joined),'jalali')),
            tags : UsersTag ,
            isBlocked : !UserItem.is_active

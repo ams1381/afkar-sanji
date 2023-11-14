@@ -108,7 +108,7 @@ export const ResultBody = ({ ResultQuery , setStartDate , setSearchValue , query
   const [ resultMessage , contextHolder] = message.useMessage();
   const [ deleteRowState , setDeleteRowState ] = useState(false);
   const [ selectedRows , setSelectedRows ] = useState([]);
-  const { setItem } = useLocalStorage();
+  const { getItem , setItem } = useLocalStorage();
   const [ rowDeleted , setRowDeleted ] = useState(false);
   const Auth = useContext(AuthContext);
   const [ InterviewerCodePopup , setInterviewerCodepopup ] = useState(false);
@@ -132,7 +132,7 @@ export const ResultBody = ({ ResultQuery , setStartDate , setSearchValue , query
       setRowDeleted(false)
       
   },[ResultQuery , rowDeleted])
- 
+
   useEffect(() => {
     if(ResultQuery.isFetching || QuestionnaireQuery.isFetching)
       setLoadingTable(true)
@@ -148,7 +148,7 @@ export const ResultBody = ({ ResultQuery , setStartDate , setSearchValue , query
       if(QuestionsArray)
         columns = TableColumnGenerator(QuestionsArray,resultMessage,regex,DateFilterPopover,setDateFilterPopover,InterviewerCodePopup,setInterviewerCodepopup)
 
-    rows = TableDataGenerator(ResultData,QuestionnaireQuery,regex)
+    rows = TableDataGenerator(ResultData,QuestionnaireQuery,regex,getItem('roleReq'))
     setTableColumns(columns);
     setTableData(rows);
     }
@@ -171,7 +171,6 @@ const ResultSearchHandler = async (e) => {
 } 
 
   useEffect(() => {
-      console.log(tableRef.current)
     if(tableRef.current)
       ScrollByDrag(ResultQuery?.data?.data?.results?.length ? true : false);
   }, [document.querySelector("thead.ant-table-thead tr") , document.querySelector(".ant-table-tbody .ant-table-body")]);
@@ -307,7 +306,7 @@ const ResultSearchHandler = async (e) => {
         <ResultTableContainer>
            { (TableColumns?.length && TableData?.length) ?  <Table 
               columns={TableColumnGenerator(QuestionnaireQuery?.data?.data?.questions.filter(item => item.question != null),
-                  resultMessage,regex,DateFilterPopover,setDateFilterPopover,InterviewerCodePopup,setInterviewerCodepopup)}
+                  resultMessage,regex,DateFilterPopover,setDateFilterPopover,InterviewerCodePopup,setInterviewerCodepopup,getItem('roleReq'))}
               dataSource={TableData}       
               ref={tableRef}
               sticky
@@ -364,7 +363,7 @@ const ResultSearchHandler = async (e) => {
               }}
               size="middle"
               // scroll={{  x: 2500, y: "50vh" , drag : true }}
-               scroll={{ x : '1000' }}
+               scroll={{ x : 800 }}
               scrollableTarget="table-wrapper"
              /> : (!QuestionnaireQuery.data?.data?.questions?.length) ? <EmptyResultContainer>
                 <img src={EmptyImage.src} />

@@ -17,7 +17,7 @@ import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import {TimePickerContainer} from "@/styles/questionnairePanel/QuestionnaireSetting";
 export const TableColumnGenerator = (QuestionsArray,resultMessage,regex,DateFilterPopover
-             ,setDateFilterPopover,InterviewerCodePopup,setInterviewerCodepopup) => {
+     ,setDateFilterPopover,InterviewerCodePopup,setInterviewerCodepopup,RoleReq) => {
 
     let TableColumns = QuestionsArray?.map(item => ({
         title : <Tooltip
@@ -146,114 +146,119 @@ export const TableColumnGenerator = (QuestionsArray,resultMessage,regex,DateFilt
             }))
     }))
 
-    TableColumns.unshift({
-        title : <FilterButtonContainer>
-            <Popover placement={'bottom'} trigger={'click'}
-                     content={<DateFilterContainer>
-                         <InterviewerCodeSearchContainer>
-                             <Input placeholder={'کد پرسشگر'} />
-                             <span style={{cursor : 'pointer' }}>
+    if(RoleReq === 'interview-api/interviews') {
+        TableColumns.unshift({
+            title : <FilterButtonContainer>
+                <Popover placement={'bottom'} trigger={'click'}
+                         content={<DateFilterContainer>
+                             <InterviewerCodeSearchContainer>
+                                 <Input placeholder={'کد پرسشگر'} />
+                                 <span style={{cursor : 'pointer' }}>
                                  <Icon style={{ width : 14 , height : 14 }} name={'Search'} />
                              </span>
-                         </InterviewerCodeSearchContainer>
-                     </DateFilterContainer>}
-                onOpenChange={() => setInterviewerCodepopup(false)}
-                     open={InterviewerCodePopup}>
+                             </InterviewerCodeSearchContainer>
+                         </DateFilterContainer>}
+                         onOpenChange={() => setInterviewerCodepopup(false)}
+                         open={InterviewerCodePopup}>
                <span onClick={() => setInterviewerCodepopup(!InterviewerCodePopup)}>
                <Icon style={{ width : 14 , height : 14 }} name={'Search'} />
             </span>
-            </Popover>
+                </Popover>
 
-            <p>کد پرسشگر</p>
-        </FilterButtonContainer>,
-        dataIndex : 'کد پرسشگر',
-        width : 176,
-        // sorter : true,
-        showSorterTooltip : false,
-        align : 'center' ,
-        ellipsis: true,
-        // filtered : true ,
-        // filterIcon : <Icon style={{ width : 14 , height : 14 }} name={'Search'} /> ,
-        // filterDropdown : <div>sdgsdgsdgsdg</div>
-        // ...getColumnSearchProps('name'),
-        // #E2E2E2
-    })
-    TableColumns.unshift({
-        title : <FilterButtonContainer>
+                <p>کد پرسشگر</p>
+            </FilterButtonContainer>,
+            dataIndex : 'کد پرسشگر',
+            width : 176,
+            // sorter : true,
+            showSorterTooltip : false,
+            align : 'center' ,
+            ellipsis: true,
+            // filtered : true ,
+            // filterIcon : <Icon style={{ width : 14 , height : 14 }} name={'Search'} /> ,
+            // filterDropdown : <div>sdgsdgsdgsdg</div>
+            // ...getColumnSearchProps('name'),
+            // #E2E2E2
+        })
+        TableColumns.unshift({
+            title : <FilterButtonContainer>
              <span>
                 <Icon style={{ width : 17 , height : 17 }} name={'locationFilter'} />
             </span>
-            <p>موقعیت مکانی</p>
-        </FilterButtonContainer>,
-        dataIndex : 'موقعیت مکانی',
-        width : 176,
-        align : 'center' ,
-        // filtered : true ,
-        // filterIcon : <Icon style={{ width : 17 , height : 17 }} name={'locationFilter'} /> ,
-        // filterDropdown : <div>sdgsdgsdgsdg</div>,
-        // locationFilter
-        // ellipsis: true,
-        // FilterDate
-    })
-    TableColumns.unshift({
-        title : <FilterButtonContainer>
-            <Popover
-                placement={'bottom'}
-                trigger={'click'}
-                onOpenChange={() => setDateFilterPopover(false)}
-                content={<DateFilterContainer>
-                    <DatePicker
-                        rangeHover
-                        plugins={[<DatePanel position="left"/>]}
-                        calendar={persian}
-                        range
-                        render={(value, openCalendar) => {
-                            return (
-                                <TimePickerContainer style={{ cursor : 'pointer' }} onClick={openCalendar}>
-                                    <input style={{ pointerEvents : 'all' , color : 'black' }}
-                                       value={value} placeholder='انتخاب تاریخ' />
-                                    <Icon name='Calender' />
-                                </TimePickerContainer>
-                            )}}
-                        locale={persian_fa} />
-                    <DateFilterButtonsContainer>
-                        <Button className={'search-button'}>
-                            <p>جست‌و‌جو</p>
-                        </Button>
-                        <Button>
-                            بازنشانی
-                        </Button>
-                    </DateFilterButtonsContainer>
-                </DateFilterContainer>}
-                open={DateFilterPopover}>
-                <span onClick={() => setDateFilterPopover(!DateFilterPopover)}>
-                    <Icon style={{ width : 17 , height : 17 }} name={'FilterDate'} />
-            </span>
-            </Popover>
-            <span>
-                <Icon style={{ width : 18 , height : 18 }} name={'Sorter'} />
-            </span>
-            <p>تاریخ</p>
-        </FilterButtonContainer>,
-        dataIndex : 'تاریخ',
-        width : 176,
-        // sorter : true,
-        align : 'center' ,
-        // ellipsis: true,
-        // filtered : true ,
-        // filterDropdownOpen : true ,
-        // filterIcon : <Icon style={{ width : 14 , height : 14 }} name={'FilterDate'} /> ,
+                <p>موقعیت مکانی</p>
+            </FilterButtonContainer>,
+            dataIndex : 'موقعیت مکانی',
+            width : 176,
+            align : 'center' ,
+            // filtered : true ,
+            // filterIcon : <Icon style={{ width : 17 , height : 17 }} name={'locationFilter'} /> ,
+            // filterDropdown : <div>sdgsdgsdgsdg</div>,
+            // locationFilter
+            // ellipsis: true,
+            // FilterDate
+        })
+        TableColumns.unshift({
+            // title : <FilterButtonContainer>
+            //     <Popover
+            //         placement={'bottom'}
+            //         trigger={'click'}
+            //         onOpenChange={() => setDateFilterPopover(false)}
+            //         content={<DateFilterContainer>
+            //             <DatePicker
+            //                 rangeHover
+            //                 plugins={[<DatePanel position="left"/>]}
+            //                 calendar={persian}
+            //                 range
+            //                 render={(value, openCalendar) => {
+            //                     return (
+            //                         <TimePickerContainer style={{ cursor : 'pointer' }} onClick={openCalendar}>
+            //                             <input style={{ pointerEvents : 'all' , color : 'black' }}
+            //                                value={value} placeholder='انتخاب تاریخ' />
+            //                             <Icon name='Calender' />
+            //                         </TimePickerContainer>
+            //                     )}}
+            //                 locale={persian_fa} />
+            //             <DateFilterButtonsContainer>
+            //                 <Button className={'search-button'}>
+            //                     <p>جست‌و‌جو</p>
+            //                 </Button>
+            //                 <Button>
+            //                     بازنشانی
+            //                 </Button>
+            //             </DateFilterButtonsContainer>
+            //         </DateFilterContainer>}
+            //         open={DateFilterPopover}>
+            //         <span onClick={() => setDateFilterPopover(!DateFilterPopover)}>
+            //             <Icon style={{ width : 17 , height : 17 }} name={'FilterDate'} />
+            //     </span>
+            //     </Popover>
+            //     <span>
+            //         <Icon style={{ width : 18 , height : 18 }} name={'Sorter'} />
+            //     </span>
+            //     <p>تاریخ</p>
+            // </FilterButtonContainer>,
+            title : 'تاریخ',
+            dataIndex : 'RowDate',
+            width : 176,
+            sorter : (a , b) => Date.parse(a.date) - Date.parse(b.date),
+            align : 'center' ,
+            // ellipsis: true,
+            // filtered : true ,
+            // filterDropdownOpen : true ,
+            // filterIcon : <Icon style={{ width : 14 , height : 14 }} name={'FilterDate'} /> ,
 
-    })
-    TableColumns.unshift({
-        title : 'زمان ثبت',
-        dataIndex : 'زمان ثبت',
-        width : 176,
-        align : 'center',
-        ellipsis: true,
-        // ...getColumnSearchProps('name'),
+        })
+        TableColumns.unshift({
+            title : 'زمان ثبت',
+            dataIndex : 'answerSetTime',
+            width : 176,
+            align : 'center',
+            ellipsis: true,
+            // ...getColumnSearchProps('name'),
 
-    })
+        })
+    }
+
+
 
     return TableColumns
 }
