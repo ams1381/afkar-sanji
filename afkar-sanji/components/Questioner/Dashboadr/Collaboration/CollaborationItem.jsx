@@ -159,7 +159,7 @@ export default function ({data, isInterview, getRecommended}) {
                     open={open}
                     onOk={void 0}
                     onCancel={() => setOpen(false)}
-                    footer={() => (
+                    footer={(
                         <div style={{
                             display: 'flex',
                             alignItems: 'center',
