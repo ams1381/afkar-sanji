@@ -147,7 +147,7 @@ export default function ({cookies}) {
                                                     alignItems: 'center',
                                                     justifyContent: 'center',
                                                     height: '80vh'
-                                                }}>پرسشنامه ای وجود ندارد</div>
+                                                }}>درخواست‌های همکاری ای وجود ندارد</div>
                                         )}
                                     </>
                                 </div>
