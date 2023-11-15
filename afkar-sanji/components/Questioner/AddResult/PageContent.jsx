@@ -133,31 +133,34 @@ export const PageContent = ({ questionnaire }) => {
     return questionnaire ? <QuestionerPageContainer>
         {messageContext}
         <QuestionerContentBox style={{ flexDirection : 'column' }}>
-            <QuestionsContainer>
-                 { (questionnaire && questionnaire.questions && AnswerSetsArray?.length) &&
+            { questionnaire.questions.length  ? <QuestionsContainer>
+                {(questionnaire && questionnaire.questions && AnswerSetsArray?.length) &&
                     questionnaire.questions.map(item => item?.question &&
-                        <QuestionContainer error={ErrorQuestions.find(ErrorItem => ErrorItem == item.question.id) ? 'active' : null}
-                               id={'question' + item.question.id}>
+                        <QuestionContainer
+                            error={ErrorQuestions.find(ErrorItem => ErrorItem == item.question.id) ? 'active' : null}
+                            id={'question' + item.question.id}>
                             <div className='question_header'>
                                 <span>
-                                    { digitsEnToFa(item.question.placement) + '.' }
+                                    {digitsEnToFa(item.question.placement) + '.'}
 
                                 </span>
-                                <p style={{ fontWeight : item?.question.question_type == 'group' ? 700 : 200 }}>
+                                <p style={{fontWeight: item?.question.question_type == 'group' ? 700 : 200}}>
                                     {item.question.title}
                                 </p>
-                                { item.question.is_required ? '*' : '' }
+                                {item.question.is_required ? '*' : ''}
                             </div>
                             <p className={'question_description'}>
                                 {item.question.description}
                             </p>
-                            {SubComponentGenerator(item.question,setErrorQuestions,ErrorQuestions,AnswerSetsArray)}
+                            {SubComponentGenerator(item.question, setErrorQuestions, ErrorQuestions, AnswerSetsArray)}
                         </QuestionContainer>)
                 }
-            </QuestionsContainer>
+            </QuestionsContainer> : <QuestionsContainer>
+                <p>سوالی جهت نمایش وجود ندارد</p>
+            </QuestionsContainer>}
 
-            <AddResultFooter>
-                <Button type='primary' loading={AnswerConfirmLoading}  onClick={ConfirmAnswerHandler}>
+            { questionnaire.questions.length && <AddResultFooter>
+                <Button type='primary' loading={AnswerConfirmLoading} onClick={ConfirmAnswerHandler}>
                     ثبت پاسخ‌ها
                 </Button>
                 <Link href={`/questioner/dashboard/${questionnaire.uuid}/questioner-result/`}>
@@ -166,7 +169,7 @@ export const PageContent = ({ questionnaire }) => {
                     </Button>
                 </Link>
 
-            </AddResultFooter>
+            </AddResultFooter>}
         </QuestionerContentBox>
     </QuestionerPageContainer> : <QuestionerPageContainer>
         <QuestionerContentBox style={{ flexDirection : 'column' }}>

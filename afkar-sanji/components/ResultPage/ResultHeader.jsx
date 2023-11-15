@@ -16,7 +16,7 @@ import { SharePopOverContent } from '../Folders/SharePopover'
 export const ResultHeader = ({ QuestionnaireQuery }) => {
     const router = useRouter();
     const [ SharePopover , setSharePopOver] = useState(false);
-    const { setItem } = useLocalStorage();
+    const { setItem , getItem } = useLocalStorage();
     const [ SearchValue , setSearchValue ] = useState('')
     const { refetch, data , isLoading } = useQuery(
         ["key", "ResultSearch"],
@@ -81,11 +81,17 @@ export const ResultHeader = ({ QuestionnaireQuery }) => {
        <Skeleton.Button active style={{ borderRadius : 2 }} Button />
        <Skeleton.Button active style={{ borderRadius : 2 }} Button />
     </QuestionnaireEditItemsInnerContainer>
-    
-    <QuestionnaireEditButtonContainer isloading={'active'}>
-      <Skeleton.Button active style={{ width : 15 , borderRadius : 2 }} />
-      <Skeleton.Button active style={{ width : 15 , borderRadius : 2 }} />
-  </QuestionnaireEditButtonContainer>
+
+            <QuestionnaireEditButtonContainer isloading={'active'}>
+                {
+                    getItem('roleReq') !== 'interview-api/interviews' && <>
+                        <Skeleton.Button active style={{ width : 15 , borderRadius : 2 }} />
+                        <Skeleton.Button active style={{ width : 15 , borderRadius : 2 }} />
+                    </>
+                }
+                { getItem('roleReq') && getItem('roleReq') === 'interview-api/interviews' &&
+                    <Skeleton.Button active style={{ width : 15 , borderRadius : 2 }} />}
+            </QuestionnaireEditButtonContainer>
   </QuestionnaireEditItemsContainer>
         :
    <>
@@ -99,23 +105,28 @@ export const ResultHeader = ({ QuestionnaireQuery }) => {
                 moreIcon={<Icon name='close' />}
               />
             </QuestionnaireEditItemsInnerContainer>
-            <QuestionnaireEditButtonContainer>
-            <Link onClick={(e) => { !QuestionnaireQuery.data?.data?.questions.length ? e.preventDefault() : '' }}
-            href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/view-questions/`}  target='_blank'>
-              <button style={{ pointerEvents :(QuestionnaireQuery.data?.data?.questions &&  QuestionnaireQuery.data?.data?.questions.length) ? 'all' : 'none' }}>
-                     <Icon name='BlackEye' />
-              </button>
-              </Link>
-              <Popover
-            content={<SharePopOverContent Questionnaire={QuestionnaireQuery.data?.data} />}
-            trigger="click"
-            open={SharePopover}
-            onOpenChange={() => setSharePopOver(false)}>
-              <button onClick={() => setSharePopOver(!SharePopover)}>
-                  <Icon name='Share' />
-              </button>
-            </Popover>
-            </QuestionnaireEditButtonContainer>
+       { getItem('roleReq') !== 'interview-api/interviews' && <Link onClick={(e) => {
+           !Questionnaire.questions.length ? e.preventDefault() : ''
+       }}
+                                                                    href={`/questionnaire/${Questionnaire.uuid}/view-questions/`} target='_blank'>
+           <button
+               style={{pointerEvents: (Questionnaire.questions && Questionnaire.questions.length) ? 'all' : 'none'}}>
+               <Icon name='BlackEye'/>
+           </button>
+       </Link>}
+
+       { getItem('roleReq') !== 'interview-api/interviews' && <Popover
+           content={<SharePopOverContent Questionnaire={Questionnaire}/>}
+           trigger="click"
+           open={SharePopover}
+           onOpenChange={() => setSharePopOver(false)}>
+           <button onClick={() => setSharePopOver(!SharePopover)}>
+               <Icon name='Share'/>
+           </button>
+       </Popover>}
+       { getItem('roleReq') && getItem('roleReq') === 'interview-api/interviews' && <button>
+           <Icon style={{width: 14}} name={'ChatIcon'}/>
+       </button>}
           {/* <QuestionnaireDirectoryContainer>
             <QuestionnaireDirectoryPath>
               <p style={{ marginRight : '0.5rem' }}>نتایج </p> <span style={{ color : '#00000073' }}>/</span>

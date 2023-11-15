@@ -46,6 +46,10 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
   const [SettingChanged, SetSettingChanged] = useState(false);
   const [SettingLoading, SetSettingLoading] = useState(false);
   const [ErrorType, SetErrorType] = useState(null);
+  useEffect(() => {
+    // console.log('Quesitonnaire Changed')
+    Dispatcher({ ACTION : 'refresh_data' , refreshData : Questionnaire })
+  }, [Questionnaire]);
 
   let end_date;
   let pub_date;

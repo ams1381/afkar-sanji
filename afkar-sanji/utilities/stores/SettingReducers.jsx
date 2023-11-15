@@ -58,5 +58,10 @@ export const QuestionnaireReducerFunction = (State,ACTION) => {
                 ...State,
                 show_number : ACTION.NewToggleValue
             }
+        case 'refresh_data' :
+            return {
+                ...State ,
+                ...ACTION.refreshData
+            }
     }
 }

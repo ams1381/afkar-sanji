@@ -21,7 +21,7 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
     const { setItem , getItem } = useLocalStorage()
     const [ MessageApi , MessageContext ] = message.useMessage();
     const [ drawerSelectedItem , setDrawerSelecteditem ] = useState(null);
-    console.log(Auth)
+
     useEffect(() => {
         if(router.pathname === '/' || router.pathname.includes('questionnaire')) {
             if(getItem('roleReq') === 'question-api/questionnaires')

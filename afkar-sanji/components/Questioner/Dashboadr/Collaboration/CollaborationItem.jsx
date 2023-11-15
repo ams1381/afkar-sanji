@@ -105,8 +105,8 @@ export default function ({data, isInterview, getRecommended}) {
 
                     </CollaborationItemLeft>
                     <CollaborationItemRight color={data?.is_active ? '#5360ED' : 'red'}>
-                        <div className={`title`}>علی عباس آبادی</div>
-                        <div className={`caption`}>داده‌های غذایی نامی‌نو</div>
+                        <div className={`title`}>{data.name}</div>
+                        <div className={`caption`}>{data.owner.first_name}</div>
                     </CollaborationItemRight>
                 </CollaborationItemHeader>
                 {!isInterview ? (

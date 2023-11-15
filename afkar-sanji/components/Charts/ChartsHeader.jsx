@@ -12,7 +12,7 @@ import { useState } from 'react'
 
 export const ChartsHeader = ({ QuestionnaireQuery }) => {
   const router = useRouter();
-  const { setItem } = useLocalStorage();
+  const { setItem , getItem } = useLocalStorage();
   const [ SharePopover , setSharePopOver] = useState(false);
   const TabHeadItems = [
     {
@@ -84,21 +84,28 @@ export const ChartsHeader = ({ QuestionnaireQuery }) => {
               />
             </QuestionnaireEditItemsInnerContainer>
             <QuestionnaireEditButtonContainer>
-            <Link onClick={(e) => { !QuestionnaireQuery.data?.data?.questions.length ? e.preventDefault() : '' }}
-            href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/view-questions/`}  target='_blank'>
-              <button style={{ pointerEvents :(QuestionnaireQuery.data?.data?.questions &&  QuestionnaireQuery.data?.data?.questions.length) ? 'all' : 'none' }}>
-                     <Icon name='BlackEye' />
-              </button>
-              </Link>
-              <Popover
-            content={<SharePopOverContent Questionnaire={QuestionnaireQuery.data?.data} />}
-            trigger="click"
-            open={SharePopover}
-            onOpenChange={() => setSharePopOver(false)}>
-              <button onClick={() => setSharePopOver(!SharePopover)}>
-                  <Icon name='Share' />
-              </button>
-            </Popover>
+                { getItem('roleReq') !== 'interview-api/interviews' && <Link onClick={(e) => {
+                    !Questionnaire.questions.length ? e.preventDefault() : ''
+                }}
+                                                                             href={`/questionnaire/${Questionnaire.uuid}/view-questions/`} target='_blank'>
+                    <button
+                        style={{pointerEvents: (Questionnaire.questions && Questionnaire.questions.length) ? 'all' : 'none'}}>
+                        <Icon name='BlackEye'/>
+                    </button>
+                </Link>}
+
+                { getItem('roleReq') !== 'interview-api/interviews' && <Popover
+                    content={<SharePopOverContent Questionnaire={Questionnaire}/>}
+                    trigger="click"
+                    open={SharePopover}
+                    onOpenChange={() => setSharePopOver(false)}>
+                    <button onClick={() => setSharePopOver(!SharePopover)}>
+                        <Icon name='Share'/>
+                    </button>
+                </Popover>}
+                { getItem('roleReq') && getItem('roleReq') === 'interview-api/interviews' && <button>
+                    <Icon style={{width: 14}} name={'ChatIcon'}/>
+                </button>}
             </QuestionnaireEditButtonContainer>
               {/* <QuestionnaireDirectoryContainer>
                 <QuestionnaireDirectoryPath>

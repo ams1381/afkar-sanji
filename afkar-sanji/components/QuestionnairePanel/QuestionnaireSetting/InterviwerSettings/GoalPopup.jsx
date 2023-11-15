@@ -51,7 +51,7 @@ export const GoalPopup = ({ setCountPopupOpen , countPopupOpen , refetch , Quest
             GoalInfo.goal_start_date = moment(digitsFaToEn(goalStartDate), 'jYYYY/jMM/jDD').locale('en').format('YYYY-MM-DD');
         if(goalEndDate)
             GoalInfo.goal_end_date = moment(digitsFaToEn(goalEndDate), 'jYYYY/jMM/jDD').locale('en').format('YYYY-MM-DD');
-        console.log(GoalInfo)
+
         try {
             await axiosInstance.patch(`/interview-api/interviews/${Questionnaire.uuid}/`,GoalInfo)
             setConfirmLoading(false);

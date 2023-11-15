@@ -206,6 +206,23 @@ export const QuestionnaireEditItemsInnerContainer = styled.div`
         background: var(--primary-color) !important;
         bottom: 5px;
     }
+  & button
+  {
+    background: #FEFEFE;
+    border: 1px solid #D9D9D9;
+    width: 40px;
+    padding: 0.8rem 0 0.8rem 0;
+    cursor: pointer;
+    box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.06);
+    justify-content: center;
+    display: flex;
+    transition : 0.3s;
+    border-radius: 2px;
+  }
+  & button:hover
+  {
+    border : 1px solid var(--primary-color);
+  }
     @media screen and (max-width : 768px)
     {
         width : 100%;
