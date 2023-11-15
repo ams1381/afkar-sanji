@@ -26,21 +26,24 @@ import filter from 'public/Icons/Arrow Sort Down Lines.svg'
 import CollaborationItem from "@/components/Questioner/Dashboadr/Collaboration/CollaborationItem";
 import {useQueries, useQuery} from "@tanstack/react-query";
 import {axiosInstance} from "@/utilities/axios";
+import CollaborationInterView from "@/components/Questioner/Dashboadr/Collaboration/CollaborationInterView";
 
 const {Search} = Input;
 
 const onSearch = (value, _e, info) => console.log(info?.source, value);
 export default function ({cookies}) {
-    const [logoutPopOver, switchPopover] = useState(false);
     const [RightDrawerOpen, setRightDrawerOpen] = useState(false);
     const [StartDate, setStartDate] = useState('');
     const [EndDate, setEndDate] = useState('');
-    const [ MeQuery  ] = useQueries({
+    const [recommended, setRecommended] = useState([])
+    const [myInterView, setMyInterView] = useState([])
+    const [isGetData, setIsGetData] = useState(false)
+    const [MeQuery] = useQueries({
         queries: [
             {
                 queryKey: ['MeQuery'],
                 queryFn: async () => await axiosInstance.get(`/user-api/users/me/`),
-                refetchOnWindowFocus : false
+                refetchOnWindowFocus: false
             },
         ],
     });
@@ -66,71 +69,130 @@ export default function ({cookies}) {
     }
 
     const {data, isLoading, error, refetch} = useQuery(['Interview'],
-        async () => await axiosInstance.get('/interview-api/interviews/'),{
-            refetchOnWindowFocus : false ,
-            retry : false
+        async () => await axiosInstance.get('/interview-api/interviews/'), {
+            refetchOnWindowFocus: false,
+            retry: false
         })
+
+
+    const getRecommended = async () => {
+        axiosInstance.get('/interview-api/interviews/recommended-interviews/').then(res => {
+            setRecommended(res?.data?.results)
+        })
+    }
+
+
+    const getInterViews = async () => {
+        setIsGetData(true)
+        axiosInstance.get('/interview-api/interviews/my-interviews/').then(res => {
+            setIsGetData(false)
+            setMyInterView(res?.data?.results)
+        })
+    }
+
+    useEffect(() => {
+        getRecommended()
+        getInterViews()
+    }, []);
+
 
     return (
         <PageBox>
             <CommonDrawer RightDrawerOpen={RightDrawerOpen} setRightDrawerOpen={setRightDrawerOpen}/>
-
-                <QuestionerHeader meData={MeQuery?.data?.data} pageName='profile'/>
+            <QuestionerHeader meData={MeQuery?.data?.data} pageName='profile'/>
             <main style={{width: RightDrawerOpen ? '80%' : '100%', transition: '0.3s'}}>
                 <QuestionerPageContainer>
                     <QuestionerContentBox>
                         <Collaboration>
                             <CollaborationHeader>
-                                <div>
-                                    <p>لیست پرسش‌نامه‌ها</p>
-                                </div>
-                                <div>
-                                    <p>درخواست‌های همکاری</p>
-                                </div>
-                                {/*<FilterBox>*/}
-                                {/*    <img src={filter?.src} alt=""/>*/}
-                                {/*</FilterBox>*/}
-                                {/*<DatePicker format="YYYY-MM-DD"*/}
-                                {/*            onChange={DateFilterHandler}*/}
-                                {/*            render={(value, openCalendar) => {*/}
-                                {/*                return (*/}
-                                {/*                    <TimePickerContainer active={'active'}>*/}
-                                {/*                        <input value={value} onClick={openCalendar}*/}
-                                {/*                               placeholder='انتخاب تاریخ' readOnly/>*/}
-                                {/*                        <Icon name='Calender'/>*/}
-                                {/*                    </TimePickerContainer>*/}
-                                {/*                )*/}
-                                {/*            }}*/}
-                                {/*            range*/}
-                                {/*            plugins={[*/}
-                                {/*                <DatePanel position="left"/>*/}
-                                {/*            ]}*/}
-                                {/*            calendar={persian}*/}
-                                {/*            calendarPosition="bottom-left"*/}
-                                {/*            locale={persian_fa}*/}
-                                {/*/>*/}
-                                {/*<Search*/}
-                                {/*    rootClassName={'notBorder'}*/}
-                                {/*    placeholder="براساس عنوان پرسش‌نامه یا نام کارفرما جست‌وجو کنید"*/}
-                                {/*    onSearch={onSearch}*/}
-                                {/*    style={{*/}
-                                {/*        width: '60%',*/}
-                                {/*    }}*/}
-                                {/*/>*/}
                             </CollaborationHeader>
                             <CollaborationBody>
-                                {isLoading && (
+                                <div style={{
+                                    width: '100%',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '10px',
+                                    flexDirection: 'column',
+                                    maxHeight: ' 80vh',
+                                    overflow: 'auto',
+                                    marginTop: '2rem'
+                                }}>
+                                    {isGetData && (
+                                        <div style={{
+                                            width: '100%',
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: '10px'
+                                        }}>
+                                            <Skeleton.Input active style={{width: '100%', height: '200px'}}/>
+                                            <Skeleton.Input active style={{width: '100%', height: '200px'}}/>
+                                            <Skeleton.Input active style={{width: '100%', height: '200px'}}/>
+                                            <Skeleton.Input active style={{width: '100%', height: '200px'}}/>
+                                            <Skeleton.Input active style={{width: '100%', height: '200px'}}/>
+                                        </div>
+                                    )}
                                     <>
-                                        <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
-                                        <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
-                                        <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
-                                        <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
-                                        <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
+                                        <div style={{width: '100%', textAlign: 'right'}}>
+                                            <p style={{color: '#1D1D1D'}}>درخواست‌های همکاری </p>
+                                        </div>
+                                        {(!error && recommended) ? recommended.map((interview, index) => {
+                                            return <CollaborationItem getRecommended={getRecommended}
+                                                                      isInterview={false} data={interview}
+                                                                      key={interview?.id}/>
+                                        }) : error && error.response?.status === 500 && <div>خطای داخلی سرور</div>}
+                                        {!recommended.length && (
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    height: '80vh'
+                                                }}>پرسشنامه ای وجود ندارد</div>
+                                        )}
                                     </>
-                                )}
-                                {(!error && data?.data?.results) ? data?.data?.results.map((interview, index) => {
-                                    return <CollaborationItem data={interview} key={interview?.id}/>
-                                }) : error && error.response?.status === 500 && <div>خطای داخلی سرور</div>}
+                                </div>
+                                <div style={{
+                                    width: '100%',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '10px',
+                                    flexDirection: 'column'
+                                }}>
+                                    {isGetData && (
+                                        <div style={{
+                                            width: '100%',
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: '10px'
+                                        }}>
+                                            <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
+                                            <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
+                                            <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
+                                            <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
+                                            <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
+                                        </div>
+                                    )}
+                                    <>
+                                        <div style={{width: '100%', textAlign: 'right'}}>
+                                            <p style={{color: '#1D1D1D'}}>لیست پرسش‌نامه‌ها</p>
+                                        </div>
+                                        <>
+                                            {(!error && myInterView) && myInterView.map((interview, index) => {
+                                                return <CollaborationInterView data={interview}
+                                                                               key={interview?.id}/>
+                                            })}
+                                            {!myInterView.length && (
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        height: '80vh'
+                                                    }}>پرسشنامه ای وجود ندارد</div>
+                                            )}
+                                        </>
+                                    </>
+                                </div>
                             </CollaborationBody>
                         </Collaboration>
                     </QuestionerContentBox>
@@ -144,7 +206,7 @@ export default function ({cookies}) {
 export async function getServerSideProps(context) {
     const {req} = context;
     const cookies = req.headers.cookie;
-
+    const urlDest = req.url;
     // Check if cookies are present
     if (cookies) {
         // Parse the cookies
@@ -153,15 +215,10 @@ export async function getServerSideProps(context) {
             acc[key] = decodeURIComponent(value);
             return acc;
         }, {});
-        // const {data} = await axios.get(`https://mah-api.ariomotion.com/wallet-api/wallet/my-wallet/`, {headers:{
-        //     Authorization: `Bearer ${parsedCookies}`
-        //     }})
-        // console.log('wallet: ', data)
         return {
             props: {
                 // Pass the cookies as props to the component
                 cookies: parsedCookies,
-                // wallet: data
             },
         };
     }
@@ -169,7 +226,7 @@ export async function getServerSideProps(context) {
     return {
         redirect: {
             permanent: false,
-            destination: "/auth"
+            destination: "/auth?returnUrl=" + urlDest
         }
     };
 }

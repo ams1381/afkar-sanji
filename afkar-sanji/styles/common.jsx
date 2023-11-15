@@ -559,11 +559,12 @@ export const ChatMask = styled.div`
   z-index: 3333;
 `
 export const ChatContainer = styled.div`
+  z-index: 99999;
   position: absolute;
   left: 50%;
   background: var(--surface);
   top: 50%;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
   width: 45%;
   display: flex;
   height: 494px;

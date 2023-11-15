@@ -96,14 +96,19 @@ export default function ({year, setGender, me}) {
 
 
     const finishHandler = async () => {
-        await axiosInstance.patch('user-api/users/me', {
-            ask_for_interview_role: true
-        }).then(res => {
+
+        if (me?.role === 'n') {
+            await axiosInstance.patch('user-api/users/me', {
+                ask_for_interview_role: true
+            }).then(res => {
+                router.push('/questioner/resume')
+            }).catch(error => {
+                const errorMessage = error.response?.data[Object.keys(error.response.data)[0]][0];
+                message.error(errorMessage)
+            })
+        } else {
             router.push('/questioner/resume')
-        }).catch(error => {
-            const errorMessage = error.response?.data[Object.keys(error.response.data)[0]][0];
-            message.error(errorMessage)
-        })
+        }
 
     }
 
