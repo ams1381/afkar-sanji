@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useMemo, useRef} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import {useRouter} from "next/router";
 // style
 import {
@@ -12,15 +12,14 @@ import UploaderIcon from 'public/Icons/wrapper.svg'
 import closeIcon from "public/Icons/Dismiss.svg";
 import arrowUrl from 'public/Icons/arrowUrl.svg'
 // ant design
-import {Button, Radio, message, Upload} from 'antd';
+import {Button, message, Upload} from 'antd';
 import StyleModules from "@/styles/auth/LoginStyles.module.css";
 import {axiosInstance} from "@/utilities/axios";
-import {Input, Space} from 'antd';
+import {Input} from 'antd';
 // motion
 import {AnimatePresence, motion} from 'framer-motion';
 // style
 import {LeftLight, RightLight} from "@/styles/auth/Login";
-import {digitsEnToFa} from "@persian-tools/persian-tools";
 import Image from "next/image";
 import arrowRightIcon from "@/public/Icons/Chevron Double.svg";
 import {ResumeActiveBox, BtnCom} from '@/styles/questioner/resume/resume'
@@ -28,7 +27,6 @@ import {useQuery} from "@tanstack/react-query";
 
 const {Search} = Input;
 export default function ({meData, cookies}) {
-    const [file, setFile] = useState(null)
     const [fileSize, setFileSize] = useState(null)
     const [link, setLink] = useState('')
     const [isUpload, setIsUpload] = useState(false)
@@ -36,9 +34,8 @@ export default function ({meData, cookies}) {
     const [loading, setLoading] = useState(false)
     const [uploadOk, setUploadOk] = useState(false);
     const [isHaveResume, setIsHaveResume] = useState(false);
-    const [resumeData, setResumeData] = useState([])
-
     const status = useRef(true);
+
     useEffect(() => {
         if (status.current) {
             let formData = new FormData();
@@ -284,6 +281,12 @@ export async function getServerSideProps(context) {
             return acc;
         }, {});
 
+        let MeResponse = await fetch('https://mah-api.codintofuture.ir/user-api/users/me/', {
+            headers: {
+                Authorization: `Bearer ${parsedCookies.access_token}`,
+            }
+        })
+        MeData = await MeResponse.json();
         return {
             props: {
                 // Pass the cookies as props to the component
