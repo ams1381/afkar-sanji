@@ -41,7 +41,7 @@ export default function ({meData, cookies}) {
     const status = useRef(true);
     useEffect(() => {
         if (status.current) {
-            let formData = new FormData()
+            let formData = new FormData();
             formData.append('linkedin', '')
             if (meData?.resume === null) {
                 axiosInstance.post(`/user-api/users/${meData?.id}/resume/`, formData)
@@ -283,10 +283,12 @@ export async function getServerSideProps(context) {
             acc[key] = decodeURIComponent(value);
             return acc;
         }, {});
+
         return {
             props: {
                 // Pass the cookies as props to the component
-                cookies: parsedCookies, meData: MeData ? MeData : null
+                cookies: parsedCookies,
+                meData: MeData ? MeData : null
             },
         };
     }

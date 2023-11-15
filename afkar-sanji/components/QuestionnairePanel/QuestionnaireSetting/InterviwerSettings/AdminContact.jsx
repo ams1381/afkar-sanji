@@ -17,14 +17,14 @@ export const AdminContact = () => {
             </Button>
             <p className={'admin-header-text'}>ارتباط با ادمین</p>
         </AdminContactHeader>
-        <AdminContactBody>
-            <p>
-                وضعیت پرسش‌نامه از سمت ادمین
-            </p>
-            <AdminContactStatusContainer>
-                <p>ایجاد تغییر نیاز به بررسی ادمین و تایید او دارد</p>
-                <p className={'status'}>غیر فعال</p>
-            </AdminContactStatusContainer>
-        </AdminContactBody>
+        {/*<AdminContactBody>*/}
+        {/*    <p>*/}
+        {/*        وضعیت پرسش‌نامه از سمت ادمین*/}
+        {/*    </p>*/}
+        {/*    <AdminContactStatusContainer>*/}
+        {/*        <p>ایجاد تغییر نیاز به بررسی ادمین و تایید او دارد</p>*/}
+        {/*        <p className={'status'}>غیر فعال</p>*/}
+        {/*    </AdminContactStatusContainer>*/}
+        {/*</AdminContactBody>*/}
     </AminContactContainer>
 }

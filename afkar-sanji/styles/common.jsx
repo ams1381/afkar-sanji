@@ -422,7 +422,7 @@ export const CommonDrawerItemText = styled.div`
   padding: 0 12px 0 var(--Tittle-Padding, 24px);
   align-items: center;
   gap: 10px;
-  color: var(--On-Surface, #525252);
+  color: ${p => p.logout ? 'var(--Error-color)' : 'var(--On-Surface, #525252)' };
   font-family: IRANSans;
   font-size: 14px;
   font-style: normal;

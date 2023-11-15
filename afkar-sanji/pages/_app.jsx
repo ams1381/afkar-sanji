@@ -11,7 +11,7 @@ import { ThreeDots } from 'react-loader-spinner'
 import ProgressBarLoading from "@/styles/ProgressBarLoading";
 import {useLocalStorage} from "@/utilities/useLocalStorage";
 
-const queryClient = new QueryClient()
+export const queryClient = new QueryClient()
 
 export default function App({ Component, pageProps }) {
   const router = useRouter();

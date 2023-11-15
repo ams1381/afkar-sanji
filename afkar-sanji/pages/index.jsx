@@ -25,6 +25,7 @@ import { useQuery } from '@tanstack/react-query';
 import { CommonDrawer } from '@/components/common/CommonDrawer';
 import {TailSpin} from "react-loader-spinner";
 import {AuthContext} from "@/utilities/AuthContext";
+import {queryClient} from "@/pages/_app";
 
 export default function Home({ cookies }) {
   const { getItem , removeItem , setItem} = useLocalStorage();
@@ -43,15 +44,17 @@ export default function Home({ cookies }) {
   const FolderNameInput = useRef(null);
   const [ ChangeFolderName , SetChangeFolderNameState ] = useState(false);
   const [ FolderName , SetFolderName ] = useState(null);
-  const { data , isLoading, error , refetch } = useQuery(['FolderFetch'],
+  const [ SekeltonLoading , setSkeletonLoading ] = useState(true);
+  const { data , isLoading, error , refetch , isFetching, isFetched } = useQuery(['FolderFetch'],
   async () => await axiosInstance.get(`/user-api/folders/?is_interview=${getItem('roleReq') && getItem('roleReq') === 'question-api/questionnaires' ? 0 : 1}`),{
     refetchOnWindowFocus : false
       })
 
   useEffect(() => {
+        queryClient.resetQueries({ queryKey : 'FolderFetch' })
        refetch();
   }, [Auth.reqRole] , getItem('roleReq'));
-  
+
   useEffect(() => {
 
     // console.log(axiosInstance.defaults.headers['Authorization'])

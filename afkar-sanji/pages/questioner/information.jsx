@@ -91,6 +91,7 @@ export default function () {
                     className={"close"}
                     src={closeIcon?.src}
                     alt={"بستن"}
+                    onClick={() => router.push('/')}
                     style={{
                         position: 'absolute', top: '20px', right: '20px', cursor: 'pointer',
                     }}
@@ -100,7 +101,7 @@ export default function () {
                     <Form>
                         <Row direction={"rtl"}>
                             <FromItem>
-                                <div className="title">نام</div>
+                                <div className="title">نام *</div>
                                 <InputCom
                                     value={formData.first_name}
                                     onChange={(e) => {
@@ -113,7 +114,7 @@ export default function () {
                                 />
                             </FromItem>
                             <FromItem>
-                                <div className="title">نام خانوادگی</div>
+                                <div className="title">نام خانوادگی *</div>
                                 <InputCom
                                     required
                                     value={formData.last_name}
@@ -128,7 +129,7 @@ export default function () {
 
                         <Row direction={"rtl"}>
                             <FromItem>
-                                <div className="title">ایمیل</div>
+                                <div className="title">ایمیل *</div>
                                 <InputCom
                                     value={formData.email}
                                     onChange={(e) => {
@@ -143,7 +144,7 @@ export default function () {
 
                         <Row direction={"rtl"}>
                             <FromItem>
-                                <div className="title">جنسیت</div>
+                                <div className="title">جنسیت *</div>
                                 <Select
                                     suffixIcon={<img src={arrowDownIcon?.src}/>}
                                     options={[{value: "f", label: "زن"}, {value: "m", label: "مرد"},]}
@@ -165,7 +166,7 @@ export default function () {
 
                         <Row direction={"rtl"}>
                             <FromItem>
-                                <div className="title">آدرس محل سکونت</div>
+                                <div className="title">آدرس محل سکونت *</div>
                                 <TextAreaCom
                                     value={formData.address}
                                     onChange={(e) => {
@@ -182,7 +183,7 @@ export default function () {
 
                         <Row direction={"rtl"}>
                             <FromItem>
-                                <div className="title">ملیت</div>
+                                <div className="title">ملیت *</div>
                                 <Select
                                     options={country}
                                     className={'notBorder'}

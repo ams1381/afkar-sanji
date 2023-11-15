@@ -12,12 +12,14 @@ import Link from "next/link";
 import {AuthContext} from "@/utilities/AuthContext";
 import {useRouter} from "next/router";
 import {useLocalStorage} from "@/utilities/useLocalStorage";
+import {axiosInstance} from "@/utilities/axios";
 export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin }) => {
     const Auth = useContext(AuthContext);
     const router = useRouter();
     const { setItem , getItem } = useLocalStorage()
     const [ MessageApi , MessageContext ] = message.useMessage();
     const [ drawerSelectedItem , setDrawerSelecteditem ] = useState(null);
+    console.log(Auth)
     useEffect(() => {
         if(router.pathname === '/' || router.pathname.includes('questionnaire')) {
             if(getItem('roleReq') === 'question-api/questionnaires')
@@ -53,6 +55,20 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                 document.querySelector('.drawer-text-column').style.height = '100%';
         }
     },[RightDrawerOpen])
+    const LogoutHandler = () => {
+        try
+        {
+            (function(){document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); }); })();
+            axiosInstance.post('/user-api/auth/logout/',{
+                refresh_token : cookies.refresh_token ,
+            })
+        }
+        catch(Err)
+        {
+            console.log(Err)
+        }
+        router.push('/auth')
+    }
     // console.log(Auth.hasResume)
   return (
     <CommonDrawerContainer open={RightDrawerOpen ? 'active' : null} >
@@ -83,18 +99,21 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                         </CommonDrawerItemText>
                         {
                             !isAdmin ? <>
-                                <Link href={Auth.hasResume ? '/' : '/questioner/'} onClick={() => {
-                                    if(Auth.hasResume) {
-                                        Auth.setReqRole('interview-api/interviews');
-                                        setItem('roleReq','interview-api/interviews')
-                                    }
-                                }}>
-                                    <CommonDrawerItemText className='drawer_item_text employer'
-                                                          active={drawerSelectedItem === 'employer-panel'}>
+                                {/*<Link href={Auth.hasResume ? '/' : '/questioner/'} >*/}
+                                    <CommonDrawerItemText
+                                        onClick={() => {
+                                            if(Auth.role === 'e' || Auth.role === 'ie') {
+                                                Auth.setReqRole('interview-api/interviews');
+                                                setItem('roleReq','interview-api/interviews')
+                                                router.push('/')
+                                            }
+                                        }}
+                                        className='drawer_item_text employer'
+                                        active={drawerSelectedItem === 'employer-panel'}>
                                         <p>پنل کارفرمایی</p>
                                     </CommonDrawerItemText>
-                                </Link>
-                                <Link href={(Auth.role === 'e' || Auth.role === '') ? '/questioner/' : '/questioner/dashboard/collaboration/'}>
+                                {/*</Link>*/}
+                                <Link href={(Auth.role === 'e' || Auth.role === 'n' || !Auth.hasResume) ? '/questioner/' : '/questioner/dashboard/collaboration/'}>
                                     <CommonDrawerItemText active={drawerSelectedItem === 'interview-panel'} className='drawer_item_text interviewer'>
                                         <p>پنل پرسشگری</p>
                                     </CommonDrawerItemText>
@@ -135,15 +154,15 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
 
                     </div>
                     <div>
-                        { !isAdmin && <CommonDrawerItemText active={drawerSelectedItem === 'profile'}
+                        { !isAdmin && <Link href={'/questioner/dashboard/profile'}>
+                            <CommonDrawerItemText active={drawerSelectedItem === 'profile'}
                                                className='drawer_item_text profile'>
                             <p>حساب کاربری</p>
-                        </CommonDrawerItemText>}
-                        <Link href={'/'}>
-                            <CommonDrawerItemText className='drawer_item_text logout'>
+                        </CommonDrawerItemText>
+                        </Link>}
+                            <CommonDrawerItemText logout={true} onClick={() => LogoutHandler()} className='drawer_item_text'>
                                 <p>خروج</p>
                             </CommonDrawerItemText>
-                        </Link>
                     </div>
                 </div>
                     </motion.div>}
@@ -156,28 +175,31 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                         })}>
                             <Icon name='DrawerHome' />
                         </CommonDrawerItemIcon>
-                        { !isAdmin ? <> <Link href={Auth.hasResume ? '/' : '/questioner/'} onClick={() => {
-                            if (Auth.hasResume) {
-                                Auth.setReqRole('interview-api/interviews');
-                                setItem('roleReq', 'interview-api/interviews')
-                            }
-                        }}>
-                            <CommonDrawerItemIcon open={RightDrawerOpen ? 'active' : null}
-                                                  active={drawerSelectedItem === 'employer-panel'}
-                                                  className='drawer_item i_employer'>
+                        { !isAdmin ? <>
+                            <CommonDrawerItemIcon
+                                onClick={() => {
+                                    if (Auth.role === 'e' || Auth.role === 'ie') {
+                                        Auth.setReqRole('interview-api/interviews');
+                                        setItem('roleReq', 'interview-api/interviews');
+                                        router.push('/')
+                                    }
+                                }}
+                                open={RightDrawerOpen ? 'active' : null}
+                                  active={drawerSelectedItem === 'employer-panel'}
+                                  className='drawer_item i_employer'>
                                 <Icon name='Projects'/>
                             </CommonDrawerItemIcon>
-                        </Link>
-                            <Link href={(Auth.role === 'e' || Auth.role === '') ? '/questioner/' : '/questioner/dashboard/collaboration/'}>
+                            <Link href={(Auth.role === 'e' || Auth.role === 'n' || !Auth.hasResume)
+                                ? '/questioner/' : '/questioner/dashboard/collaboration/'}>
                         <CommonDrawerItemIcon open={RightDrawerOpen ? 'active' : null}
-                                              onClick={() => {
-                                                  if (Auth.hasResume) {
-                                                      Auth.setReqRole('question-api/questionnaires');
-                                                      setItem('roleReq', 'question-api/questionnaires')
-                                                  }
-                                              }}
-                                              active={drawerSelectedItem === 'interview-panel'}
-                                              className='drawer_item i_interviewer'>
+                              onClick={() => {
+                                  if (Auth.hasResume) {
+                                      Auth.setReqRole('question-api/questionnaires');
+                                      setItem('roleReq', 'question-api/questionnaires')
+                                  }
+                              }}
+                              active={drawerSelectedItem === 'interview-panel'}
+                              className='drawer_item i_interviewer'>
                             <Icon name='InterviewerPanel'/>
                         </CommonDrawerItemIcon>
                     </Link>
@@ -191,7 +213,7 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                             Auth.setReqRole('question-api/questionnaires')
                         }}>
                             <CommonDrawerItemIcon open={RightDrawerOpen ? 'active' : null} active={drawerSelectedItem === 'create-questionnaire'}
-                                                  className='drawer_item i_create-questionaire'>
+                                  className='drawer_item i_create-questionaire'>
                                 <Icon name='CreateQuestionnaire' />
                             </CommonDrawerItemIcon>
                         </Link>
@@ -220,7 +242,7 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                                <Icon name='UserProfile'/>
                            </CommonDrawerItemIcon>
                        </Link>}
-                       <CommonDrawerItemIcon className='drawer_item i_logout'>
+                       <CommonDrawerItemIcon onClick={() => LogoutHandler()} className='drawer_item i_logout'>
                            <Icon name='Logout' />
                        </CommonDrawerItemIcon>
                    </div>

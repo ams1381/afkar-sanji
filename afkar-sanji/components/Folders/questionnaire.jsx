@@ -1,6 +1,13 @@
 import React, {useContext, useEffect, useRef, useState} from 'react'
-import {  QuestionnaireHeader ,  QuestionnaireBodyStat ,
-    QuestionnaireNameContainer , QuestionnaireNameInput , QuestionnairePreviewButton} from '@/styles/folders/Questionnaire';
+import {
+    QuestionnaireHeader,
+    QuestionnaireBodyStat,
+    QuestionnaireNameContainer,
+    QuestionnaireNameInput,
+    QuestionnairePreviewButton,
+    QuestionnaireBedgeTextContainer,
+    QuestionnaireBadgeTextContainer, InterviewerBadgeText
+} from '@/styles/folders/Questionnaire';
 import { QuestionnaireDiv , QuestionnaireSeeResultButton , RenameSpan } from '@/styles/folders/Questionnaire';
 import BadgeStyle from '@/styles/folders/Questionnaire.module.css'
 import jalaali from 'jalaali-js';
@@ -14,6 +21,7 @@ import Link from 'next/link';
 import { convertToRegularTime } from '../QuestionnairePanel/QuestionnaireSetting/SettingPanel';
 import {TailSpin} from "react-loader-spinner";
 import {AuthContext} from "@/utilities/AuthContext";
+import {useLocalStorage} from "@/utilities/useLocalStorage";
 
 const convertToJalaliDate = (inputDate) => {
     const [year, month, day] = inputDate.split('-');
@@ -23,6 +31,7 @@ const convertToJalaliDate = (inputDate) => {
 const QuestionnaireBox = ({Questionnaire , FolderReload , folderNumber}) => {
     const [ ChangeNameActive , setChangeNameState ] = useState(false);
     const [ QuestionnaireName , setQuestionnaireName ] = useState(Questionnaire.name);
+    const { getItem } = useLocalStorage();
     const [ RenameLoading , setRenameLoading ] = useState(false);
     const [ MessageApi , MessageContext ] = message.useMessage();
     const Auth = useContext(AuthContext);
@@ -81,7 +90,17 @@ const QuestionnaireBox = ({Questionnaire , FolderReload , folderNumber}) => {
   return (
      <QuestionnaireDiv>
          {MessageContext}
-        <Badge.Ribbon className={BadgeStyle['QuestionnaireBadge']} color={Questionnaire.is_active ? "green" : "red"} text={Questionnaire.is_active ? 'فعال' : 'غیر فعال'}  
+        <Badge.Ribbon className={BadgeStyle['QuestionnaireBadge']} color={Questionnaire.is_active ? "green" : "red"}
+              text={<QuestionnaireBadgeTextContainer>
+                  <InterviewerBadgeText>{
+                      Questionnaire.is_active ? 'فعال' :'غیر فعال'
+                  }</InterviewerBadgeText>
+                  {
+                      getItem('roleReq') === 'interview-api/interviews' && <InterviewerBadgeText interview={true}>
+                          { Questionnaire.interviewer?.length ? 'دارای پرسش‌گر' : 'فاقد پرسش‌گر'}
+                      </InterviewerBadgeText>
+                  }
+              </QuestionnaireBadgeTextContainer>}
             style={{
                 marginTop : 30 , fontFamily : 'IRANSans' ,
                 fontSize : 13 , color : '#00000040' ,

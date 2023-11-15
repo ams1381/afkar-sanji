@@ -1,4 +1,4 @@
-import {Button, Switch} from "antd";
+import {Button, Modal, Switch} from "antd";
 import {InterviewInnerContainer
     , InterviewerHeader
     , InterViewAnswerPriceContainer
@@ -9,9 +9,16 @@ import {InterviewInnerContainer
     , InterviewerBodyRow } from "@/styles/questionnairePanel/QuestionSetting";
 import {Icon} from "@/styles/icons";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
+import {useState} from "react";
+import {
+    AnswerCountPopup
+} from "@/components/QuestionnairePanel/QuestionnaireSetting/InterviwerSettings/AnswerCountPopup";
 
 export const Interviewers = ({ Questionnaire }) => {
+    const [ countPopupOpen , setCountPopupOpen ] = useState(false)
+
     return <InterviewContainer>
+        <AnswerCountPopup setCountPopupOpen={setCountPopupOpen} countPopupOpen={countPopupOpen} />
         <InterviewInnerContainer>
                 <InterviewerHeader>
                     <p style={{ fontSize : 18 }}>پرسش‌گران</p>
@@ -35,11 +42,12 @@ export const Interviewers = ({ Questionnaire }) => {
                         تعداد مورد نیاز
                     </p>
                     <InterViewerNumber>
-                        <p>322</p>
-                        <Button>
-                            <p>ویرایش</p>
-                            <Icon name={'ArrowLeftBlue'} />
-                        </Button>
+                        <p>{Questionnaire.answer_count}</p>
+                            <Button onClick={() => setCountPopupOpen(!countPopupOpen)}>
+                                <p>ویرایش</p>
+                                <Icon name={'ArrowLeftBlue'} />
+                            </Button>
+
                     </InterViewerNumber>
                 </InterviewerBodyRow>
                 <InterviewerBodyRow>

@@ -90,14 +90,14 @@ const QuestionnaireFooterPart = ({ questionnaire , FolderReload , folderNumber})
             
         </QuestionnaireFooterItem>
         <QuestionnaireFooterItem>
-        <Link href={`questionnaire/${questionnaire.uuid}}/`} onClick={() => setItem('SelectedFolder',folderNumber)}>
+        <Link href={`questionnaire/${questionnaire.uuid}/`} onClick={() => setItem('SelectedFolder',folderNumber)}>
             <QuestionnaireFooterButton>
                     <Icon name='GrayPen' />
             </QuestionnaireFooterButton>
             </Link>
         </QuestionnaireFooterItem>
         <QuestionnaireFooterItem>
-        <Link href={`questionnaire/${questionnaire.uuid}}/charts/`}>
+        <Link href={`questionnaire/${questionnaire.uuid}/charts/`}>
             <QuestionnaireFooterButton>
             <Icon name='statics' />
             </QuestionnaireFooterButton>

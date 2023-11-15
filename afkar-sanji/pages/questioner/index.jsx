@@ -65,14 +65,18 @@ const Questioner = () => {
               </LeftHeader>
             </Header>
             <AfterBox />
-            <ImageWallpaper src={backGround?.src} alt={""} />
+
+              <ImageWallpaper src={backGround?.src} alt={""} />
+
           </QuestionBox>
+
           <Image
             width={28}
             height={28}
             className={"close"}
             src={closeIcon?.src}
             alt={"بستن"}
+            onClick={() => router.push('/')}
           />
 
         </Container>

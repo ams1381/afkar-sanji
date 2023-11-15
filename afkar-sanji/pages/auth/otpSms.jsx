@@ -51,7 +51,7 @@ const OTPSms = ({ cookies }) => {
       setTimeout(() => {
         setCookie('role','regular-user')
         Auth.setIsAdmin(MeRes?.data?.is_staff);
-        if(MeRes?.data?.resume) {}
+        if(MeRes?.data?.resume)
           Auth.setHasResume(true)
           Auth.setUserRole(MeRes?.data.role)
         // Auth.setReqRole('question-api/questionnaires');

@@ -84,7 +84,7 @@ export const Header = ({SetSideBar , goToFolders , Questionnaire , cookies , loa
                             <Icon style={{ width : 24 , height : 24 }} name={'AdminIcon'} />
                         </Link>:
                         <>
-                            { Auth.role === '' && <Icon style={{ width : 24 , height : 24 }} name={'NormalUser'} /> }
+                            { Auth.role === 'n' && <Icon style={{ width : 24 , height : 24 }} name={'NormalUser'} /> }
                             { Auth.role === 'e' && <Icon style={{ width : 24 , height : 24 }} name={'EmployerIcon'} /> }
                             { Auth.role === 'i' && <Icon style={{ width : 24 , height : 24 }} name={'QuestionerIcon'} /> }
                             { Auth.role === 'ie' && <Icon style={{ width : 24 , height : 24 }} name={'InterViewerEmployer'} /> }

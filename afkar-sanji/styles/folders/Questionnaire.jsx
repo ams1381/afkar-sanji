@@ -19,6 +19,14 @@ export const QuestionnaireContainer = styled.div`
         
     }
 `
+export const QuestionnaireBadgeTextContainer = styled.div`
+  display: flex;
+  flex-direction: row-reverse;
+`
+export const InterviewerBadgeText = styled.p`
+    padding: 0 8px;
+    border-right: ${p => p.interview ? '2px solid var(--Outline, #D9D9D9)' : 'none'};
+`
 export const QuestionnaireDiv = styled.div`
     height: fit-content;
     border: ${p => p.isloading ? 'none' : '1px solid #CCCCCC'};

@@ -14,8 +14,6 @@ const AvatarComponent = ({ cookies }) => {
     const router = useRouter();
 
     const LogoutHandler = () => {
-        // removeCookie('access_token')
-        // removeCookie('refresh_token');
         try 
         {
             (function(){document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); }); })();
@@ -27,12 +25,9 @@ const AvatarComponent = ({ cookies }) => {
         {
             console.log(Err)
         }
-        
- 
-        // getCookie
         router.push('/auth')
     }
-    // console.log(document.cookie)
+
   return (
     <LogoutPopOverLayout>
     <LogoutPopOverInfo>

@@ -2,9 +2,11 @@ import { PopoverContainer , PopoverButtonHolder , PopOverButton} from '@/styles/
 import React, { useEffect, useState } from 'react'
 import { Icon } from '@/styles/icons';
 import AddQuestionnairePopUp from './AddQuestionnairePopUp';
+import {useLocalStorage} from "@/utilities/useLocalStorage";
 
 const AddPopoverContent = ({folders , setReadyToCreate , SetSideBar , SelectedFolderNumber , setAddPopover , FolderReload}) => {
     const [ AddQuestionnaireModal , setQuestionnaireModalState ] = useState(false);
+    const { getItem } = useLocalStorage()
     const [ NewQuestionnaireName , setNewQuestionnaireName ] = useState(null);
     const [ ErrMessage , SetErrMessage ] = useState(null);
     useEffect(() => {
@@ -31,7 +33,7 @@ const AddPopoverContent = ({folders , setReadyToCreate , SetSideBar , SelectedFo
             </PopOverButton>
         </PopoverButtonHolder>
         <PopoverButtonHolder onClick={AddQuestionnaireModalHandler}>
-            <p>اضافه کردن نظر سنجی</p>
+            { getItem('roleReq') === 'interview-api/interviews' ? <p>اضافه کردن پروژه</p> : <p>اضافه کردن نظر سنجی</p>}
             <PopOverButton>
                 <Icon name='AddFile' style={{ width : 14 }}/>
             </PopOverButton>
