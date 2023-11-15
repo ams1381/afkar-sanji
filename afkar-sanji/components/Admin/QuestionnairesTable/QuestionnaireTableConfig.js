@@ -64,7 +64,7 @@ export const QuestionnaireTableColumns = (setActiveQuestionnairePopup,setActiveP
                             IconToRender = <Icon name={'AcceptedInterviewRole'} />
                         }
                         return (
-                            <UserTag pending={tag?.includes('pending') ? true : null}
+                            <UserTag questionnaireTag={true} pending={tag?.includes('pending') ? true : null}
                                  rejected={tag?.includes('rejected') ? true : null}    color={color} key={tag}>
                                 {tag?.includes('price') && ' قیمت'}
                                 {tag?.includes('level') && 'سطح'}

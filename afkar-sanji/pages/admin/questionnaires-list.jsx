@@ -25,6 +25,7 @@ const QuestionnairesList = () => {
     const [ priceFilter , setPriceFilter ] = useState('');
     const [ filteredIDQuestionnaires , setFilteredIDQuestionnaires ] = useState([]);
     const [ hasQuestionerFilter , setHasQuestionerFilter ] = useState('');
+    const [ packPopupType , setPackPopupType ] = useState('view')
     const [ QuestionnairesListQuery , MeQuery , RegionsQuery ] = useQueries({
         queries : [
             {

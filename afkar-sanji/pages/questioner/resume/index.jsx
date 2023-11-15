@@ -139,6 +139,7 @@ export default function ({meData, cookies}) {
                     <Image
                         width={28}
                         height={28}
+                        onClick={() => router.push('/')}
                         className={"close"}
                         src={closeIcon?.src}
                         alt={"بستن"}

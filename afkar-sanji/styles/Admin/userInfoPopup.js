@@ -94,6 +94,8 @@ export const PricePackContainer = styled.div`
   cursor: pointer;
   transition: 0.3s;
   margin: 10px 0;
+  border : ${p => p.selected ? '1px solid var(--primary-color)' : 'none'};
+  
   &:hover {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.44);
   }

@@ -8,9 +8,18 @@ import {
 } from "@/styles/questionnairePanel/QuestionSetting";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
 import {convertDate} from "@/components/QuestionnairePanel/QuestionnaireSetting/SettingPanel";
+import {GoalPopup} from "@/components/QuestionnairePanel/QuestionnaireSetting/InterviwerSettings/GoalPopup";
+import {useState} from "react";
 
-export const Targetting = ({ Questionnaire }) => {
+export const Targetting = ({ Questionnaire , refetch }) => {
+    const [ countPopupOpen , setCountPopupOpen ] = useState(false);
+
+
     return <InterViewerTargetingContainer>
+        <GoalPopup countPopupOpen={countPopupOpen}
+           Questionnaire={Questionnaire}
+           refetch={refetch}
+           setCountPopupOpen={setCountPopupOpen} />
         <InterViewerTargetHeader>
             <p className={'target-header-text'}>
                 هدف‌گذاری
@@ -25,7 +34,7 @@ export const Targetting = ({ Questionnaire }) => {
                 <p>باید { digitsEnToFa(Questionnaire.answer_count_goal) } نتیجه ثبت شود</p>
             </InterViewerTimeRangeContainer>
 
-            <Button>
+            <Button onClick={() => setCountPopupOpen(true)}>
                 <p>ویرایش</p>
                 <Icon name={'ArrowLeftBlue'} />
             </Button>

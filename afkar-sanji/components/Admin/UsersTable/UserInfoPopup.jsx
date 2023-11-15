@@ -15,22 +15,47 @@ import {
     PopupInfoContainer,
     PopupRowContainer, PopupTopButtonsContainer
 } from "@/styles/Admin/userInfoPopup";
-import {Button, Input} from "antd";
+import {Button, Input, message} from "antd";
 import {SentMessage} from "@/components/Questioner/ChatModal/SentMessage";
 import {useEffect, useState} from "react";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
+import {axiosInstance} from "@/utilities/axios";
 
-export const UserInfoPopup = ({ usersLists , RegoionsData , ActivePopupUser , SetActivePopupUser }) => {
+export const UserInfoPopup = ({ usersLists , setPopupType , RegoionsData , ActivePopupUser , SetActivePopupUser }) => {
     const [ UserData , setUserData ] = useState(usersLists.find(item => item.id === ActivePopupUser.id));
-
+    const [ interviewAcceptLoading , setInterviewAcceptLoading ] = useState(false);
+    const [ MessageApi , MessageContext ] = message.useMessage();
     useEffect(() => {
         setUserData(usersLists.find(item => item.id === ActivePopupUser.id))
     }, [ActivePopupUser]);
 
-    console.log(usersLists)
+    const AcceptInterviewRole = async () => {
+        setInterviewAcceptLoading(true)
+        try {
+            await axiosInstance.post(`/admin-api/users/${UserData.id}/grant-interviewer-role/`)
+        }
+        catch (err) {
+            if(err?.response?.status === 500)
+                MessageApi.error({
+                    content : 'خطای داخلی سرور',
+                    duration : 10 ,
+                    style : {
+                        borderRadius : 2,
+                        zIndex : 66668888888
+                    }
+                })
+            MessageApi.error({
+                content : Object.values(err?.response?.data)[0]
+            })
+        }
+        finally {
+            setInterviewAcceptLoading(false);
+        }
+    }
     return<>
     <ChatMask onClick={() => SetActivePopupUser(null)} />
         <PopupContainer style={{ height : 'auto' }}>
+            {MessageContext}
             <PopupHeader style={{ boxShadow : ''}}>
                 <div style={{ cursor : 'pointer' }} onClick={() => SetActivePopupUser(null)}>
                     <Icon style={{ width : 12 , height : 12 }} name={'GrayClose'} />
@@ -43,10 +68,10 @@ export const UserInfoPopup = ({ usersLists , RegoionsData , ActivePopupUser , Se
             </PopupHeader>
             <ChatMessageContainer>
                 <PopupTopButtonsContainer>
-                    <Button type={'primary'}>
+                    { UserData.resume && <Button type={'primary'} onClick={() => setPopupType('resume-popup')}>
                         مشاهده رزومه
-                    </Button>
-                    { usersLists.find(item => item.id === ActivePopupUser.id).ask_for_interview_role && <Button>
+                    </Button>}
+                    { usersLists.find(item => item.id === ActivePopupUser.id).ask_for_interview_role && <Button onClick={AcceptInterviewRole}>
                         تایید درخواست پرسش‌گری
                     </Button>}
                 </PopupTopButtonsContainer>
@@ -100,6 +125,7 @@ export const UserInfoPopup = ({ usersLists , RegoionsData , ActivePopupUser , Se
             </ChatMessageContainer>
             <PopupFooter>
                 <PopupFooterButton
+                    loading={interviewAcceptLoading}
                     onClick={() => SetActivePopupUser({
                         id : usersLists[usersLists.findIndex(UserItem => UserItem.id === ActivePopupUser.id) + 1].id
                     })}

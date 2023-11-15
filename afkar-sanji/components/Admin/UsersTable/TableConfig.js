@@ -35,7 +35,6 @@ export const TableColumns = (SetActivePopupUser,TableBlockLoading,setTableBlockL
             render: (_, { tags }) => (
                 <>
                     {tags.map((tag) => {
-                        // console.log(tag)
                         let color;
                         let IconToRender;
                         if(tag === 'کاربر') {
@@ -58,12 +57,8 @@ export const TableColumns = (SetActivePopupUser,TableBlockLoading,setTableBlockL
                             IconToRender = <Icon name={'RejectedInterviewRole'} />
                         }
 
-                        // let color = tag.length > 5 ? 'geekblue' : 'green';
-                        // if (tag === 'loser') {
-                        //     color = 'volcano';
-                        // }
                         return (
-                            <UserTag  color={color} key={tag}>
+                            <UserTag pending={tag === 'afir p' ? true : null} rejected={tag === 'afir r' ? true : null}  color={color} key={tag}>
                                 { tag?.includes('afir') ? 'درخواست پرسشگری'
                                     : tag.toUpperCase()}
                                 { IconToRender && IconToRender }
@@ -140,12 +135,13 @@ export const TableDataSet = (UsersListData) => {
 
 
         if(UserItem.ask_for_interview_role) {
+            console.log(UserItem)
             if(UserItem.is_interview_role_accepted)
                 UsersTag.push('afir a');
-            else if(!UserItem.is_interview_role_accepted)
-                UsersTag.push('afir r');
+            else if(UserItem.is_interview_role_accepted === null)
+                UsersTag.push('afir p');
             else
-                UsersTag.push('afir p')
+                UsersTag.push('afir r')
             // UsersTag.push('afir');
         }
         if(UserItem.is_staff)

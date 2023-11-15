@@ -113,6 +113,9 @@ const RoleSetter = ({ UserData , setRefreshPage }) => {
   else
     Auth.reqRole = ('question-api/questionnaires')
 
+  if(UserData.ask_for_interview_role)
+    Auth.setAskForInterviewRole(true)
+
   Auth.setUserRole(UserData.role)
   console.log('app',getItem('roleReq'))
   setRefreshPage(false)

@@ -107,9 +107,9 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
     SetSettingChanged(true)
   }
   const ToggleCheckBoxHandler = (e, ToggleName) => {
+    // console.log(e, ToggleName);
     Dispatcher({ ACTION: ToggleName, NewToggleValue: e });
     SetSettingChanged(true)
-
   }
   const CancelEditHandler = () => {
     Dispatcher({ ACTION: 'reset_questionnaire', Resetvalue: Questionnaire })
@@ -175,7 +175,7 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
               minDate={new DateObject({ calendar: persian })}
               render={(value, openCalendar) => {
                 return (
-                  <TimePickerContainer Error={ErrorType == 'date_error' ? 'active' : false} active={DateActive ? 'active' : null}>
+                  <TimePickerContainer Error={ErrorType === 'date_error' ? 'active' : false} active={DateActive ? 'active' : null}>
                     <input value={date_picker} onClick={openCalendar}
                       placeholder='انتخاب تاریخ' />
                     <Icon name='Calender' />
@@ -193,48 +193,50 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
             />
           </div>
         </QuestionnaireDatePickerContainer>
-        { getItem('roleReq') && getItem('roleReq') === 'interview-api/interviews' && <InterviewSettingContainer Questionnaire={Questionnaire}/>}
         <QuestionnaireDatePickerContainer active={TimerActive ? 'active' : null}>
           <div className='picker_header time_picker' onClick={() => TimerToggleHandler(!TimerActive)}>
             <p>: تنظیم مهلت پاسخ دهی </p>
             <Switch checked={TimerActive} />
           </div>
           <div className='picker_container time_picker' >
-          <DatePicker 
-            disableDayPicker
-            format="HH:mm:ss"   
-            
-            onChange={TimerChangeHandler}
-            render={(value, openCalendar) => {
-                let timerValue;
-                if(QuestionnaireData.timer)
-                {
-                  timerValue = digitsEnToFa(QuestionnaireData.timer);
-                }
-                else if(value && value.length)
-                {
-                  timerValue = value
-                }
-              return (
-                <TimePickerContainer active={TimerActive ? 'active' : null} onClick={e => TimerActive ?  openCalendar() : e.preventDefault()}>
-                  <input value={timerValue}
-                   placeholder='تنظیم زمان' 
-                    />
-                  <Icon name='time' />
-                </TimePickerContainer>
-              )}}
-            plugins={[
-              <TimePicker />
-            ]} 
-            calendar={persian}
-            locale={persian_fa}
-            calendarPosition="bottom-right"
-          />
-         
+            <DatePicker
+                disableDayPicker
+                format="HH:mm:ss"
+
+                onChange={TimerChangeHandler}
+                render={(value, openCalendar) => {
+                  let timerValue;
+                  if(QuestionnaireData.timer)
+                  {
+                    timerValue = digitsEnToFa(QuestionnaireData.timer);
+                  }
+                  else if(value && value.length)
+                  {
+                    timerValue = value
+                  }
+                  return (
+                      <TimePickerContainer active={TimerActive ? 'active' : null} onClick={e => TimerActive ?  openCalendar() : e.preventDefault()}>
+                        <input value={timerValue}
+                               placeholder='تنظیم زمان'
+                        />
+                        <Icon name='time' />
+                      </TimePickerContainer>
+                  )}}
+                plugins={[
+                  <TimePicker />
+                ]}
+                calendar={persian}
+                locale={persian_fa}
+                calendarPosition="bottom-right"
+            />
+
           </div>
         </QuestionnaireDatePickerContainer>
-        <SettignToggle ToggleName={'is_active'} ToggleText={'غیر فعال سازی موقت'}
-            ToggleCheckBoxHandler={ToggleCheckBoxHandler} QuestionnaireData={QuestionnaireData} />
+        { getItem('roleReq') && getItem('roleReq') === 'interview-api/interviews' &&
+            <InterviewSettingContainer ToggleCheckBoxHandler={ToggleCheckBoxHandler} refetch={refetch} Questionnaire={QuestionnaireData}/>}
+
+        { getItem('roleReq') !== 'interview-api/interviews' && <SettignToggle ToggleName={'is_active'} ToggleText={'غیر فعال سازی موقت'}
+                        ToggleCheckBoxHandler={ToggleCheckBoxHandler} QuestionnaireData={QuestionnaireData}/>}
         <SettignToggle ToggleName={'show_number'} ToggleText={'عدم نمایش شماره سوال'}
                        ToggleCheckBoxHandler={ToggleCheckBoxHandler} QuestionnaireData={QuestionnaireData} />
         <SettignToggle ToggleName={'progress_bar'} ToggleText={'حذف نوار پیشرفت'}

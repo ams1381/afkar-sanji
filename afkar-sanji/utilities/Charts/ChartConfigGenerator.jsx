@@ -2,6 +2,7 @@ import {digitsEnToFa} from "@persian-tools/persian-tools";
 import {objectToSparseArray} from "@/components/Charts/QuestionChart";
 import {generateRandomColors} from "@/components/Charts/QuestionChart";
 const regex = /(<([^>]+)>)/gi;
+
 export const ChartDataGenerator = (PlotDetail,currentSort,currentChartType,backgroundColors,borderColors) => {
     // console.log(backgr/oundColors)
     let data;

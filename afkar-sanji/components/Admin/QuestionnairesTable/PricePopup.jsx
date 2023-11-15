@@ -11,10 +11,20 @@ import {PopupContainer,
     PricePackContainer } from "@/styles/Admin/userInfoPopup";
 import {Icon} from "@/styles/icons";
 import {useEffect, useState} from "react";
-import {Tooltip} from "antd";
+import {Skeleton, Tooltip} from "antd";
+import {useQuery} from "@tanstack/react-query";
+import {axiosInstance} from "@/utilities/axios";
+import {digitsEnToFa} from "@persian-tools/persian-tools";
 
 export const PricePopup = ({ setActivePricePopup , activePricePopup , QuestionnaireList }) => {
     const [ ActivePricePack , setActivePricePack ] = useState(null);
+    const [ seletedPricePack , setSelectedPricePack ] = useState(null)
+    const PricePacksQuery = useQuery(['PricePacksQuery'],
+        async () => await axiosInstance.get('/admin-api/price-packs/'),{
+            refetchOnWindowFocus : false,
+            retry : false
+        })
+    console.log(PricePacksQuery)
     // useEffect(() => {
     //     if(document.querySelector(".price-items-container") && document.querySelector(".popupbody"))
     //         ScrollByDrag()
@@ -39,25 +49,45 @@ export const PricePopup = ({ setActivePricePopup , activePricePopup , Questionna
                 </div>
                 <PopupInfoContainer style={{ alignItems : 'flex-end' }} className={'popupbody'}>
                     <PricePacksItemsContainer className={'price-items-container'}>
-                        <PricePack>
-                            <PricePackEditButtonsContainer>
-                                <PricePackDeleteButton>
-                                   <Icon name={'WhiteTrash'} />
-                                </PricePackDeleteButton>
-                                <PricePaakEditButton>
-                                   <Icon name={'WhiteEdit'} />
-                                </PricePaakEditButton>
-                            </PricePackEditButtonsContainer>
-                            <PricePackContainer>
-                                <PricePackHeader>
-                                    <p>داده‌های غذایی</p>
-                                    <Tooltip overlayStyle={{ zIndex : 999999 , fontSize : 14 }} title={'لورم ایپسوم یک متن ساختگی است که در صنعت استفاده میشود و به کار می‌آید'}>
-                                        <Icon name={'InfoIcon'} />
-                                    </Tooltip>
-                                </PricePackHeader>
-                                <p className={'price-per-each'}>۲،۰۰۰ تومان برای هر پاسخ</p>
-                            </PricePackContainer>
-                        </PricePack>
+                        {
+                            PricePacksQuery.isLoading ? <>
+                                <PricePack>
+                                    <PricePackContainer>
+                                        <Skeleton.Input style={{ width : 40 , minWidth : 126 }} active />
+                                    </PricePackContainer>
+                                </PricePack>
+                                <PricePack>
+                                    <PricePackContainer>
+                                        <Skeleton.Input style={{ width : 40 , minWidth : 126 }} active />
+                                    </PricePackContainer>
+                                </PricePack>
+                                <PricePack>
+                                    <PricePackContainer>
+                                        <Skeleton.Input style={{ width : 40 , minWidth : 126 }} active />
+                                    </PricePackContainer>
+                                </PricePack>
+                            </> : PricePacksQuery.data.data.map(item => (<PricePack>
+                                { item.id === seletedPricePack && <PricePackEditButtonsContainer>
+                                    <PricePackDeleteButton>
+                                        <Icon name={'WhiteTrash'}/>
+                                    </PricePackDeleteButton>
+                                    <PricePaakEditButton>
+                                        <Icon name={'WhiteEdit'}/>
+                                    </PricePaakEditButton>
+                                </PricePackEditButtonsContainer>}
+                                <PricePackContainer onClick={() => setSelectedPricePack(item.id)}
+                                        selected={item.id === seletedPricePack}>
+                                    <PricePackHeader>
+                                        <p>{item.name}</p>
+                                        <Tooltip overlayStyle={{ zIndex : 999999 , fontSize : 14 }} title={item.description ? item.description : ''}>
+                                            <Icon name={'InfoIcon'} />
+                                        </Tooltip>
+                                    </PricePackHeader>
+                                    <p className={'price-per-each'}>{digitsEnToFa(item.price)} تومان برای هر پاسخ </p>
+                                </PricePackContainer>
+                            </PricePack>))
+                        }
+
 
                     </PricePacksItemsContainer>
                 </PopupInfoContainer>

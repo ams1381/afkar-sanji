@@ -49,12 +49,15 @@ const OTPSms = ({ cookies }) => {
       })
 
       setTimeout(() => {
-        setCookie('role','regular-user')
+        setCookie('role','regular-user');
+        setItem('roleReq','question-api/questionnaires')
         Auth.setIsAdmin(MeRes?.data?.is_staff);
         if(MeRes?.data?.resume)
           Auth.setHasResume(true)
+        if(MeRes?.data?.ask_for_interview_role)
+          Auth.setAskForInterviewRole(true)
           Auth.setUserRole(MeRes?.data.role)
-        // Auth.setReqRole('question-api/questionnaires');
+
         const returnUrl = router.query.returnUrl || '/';
         typeof window !== 'undefined' ? router.push(returnUrl)  : ''
       },3000)

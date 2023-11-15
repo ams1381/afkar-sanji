@@ -1,16 +1,19 @@
 import {TableColumns, TableDataSet} from "@/components/Admin/UsersTable/TableConfig";
 import { Table } from 'antd'
-import React, {useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {ResultBodyContainer} from "@/styles/Result/ResultPage";
 import {UsersTableContainer} from "@/styles/Admin/adminPanel";
 import {UserInfoPopup} from "@/components/Admin/UsersTable/UserInfoPopup";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
-import {SkeletonTable} from "@/components/ResultPage/ResultBody";
+import {ScrollByDrag, SkeletonTable} from "@/components/ResultPage/ResultBody";
 
 export const UsersTable = ({  ActivePopupUser , pageSize , setPageSize , setSelectedRows , SetCurrentPage , SetActivePopupUser , UserListQuery }) => {
     const [ TableBlockLoading , setTableBlockLoading ] = useState(null)
-
-
+    const tableRef = useRef()
+    useEffect(() => {
+        if(tableRef.current)
+            ScrollByDrag(UserListQuery?.data?.data?.results?.length ? true : false);
+    }, [document.querySelector("thead.ant-table-thead tr") , document.querySelector(".ant-table-tbody .ant-table-body")]);
     return <div style={{ marginTop : 16 }}>
         <ResultBodyContainer>
             {
@@ -20,6 +23,7 @@ export const UsersTable = ({  ActivePopupUser , pageSize , setPageSize , setSele
                     {
                         UserListQuery?.data?.data ?
                             <Table
+                                ref={tableRef}
                                 loading={UserListQuery.isRefetching}
                                 scroll={{ x : 1000 , y : 400 }}
                                 rowSelection={{

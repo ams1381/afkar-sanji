@@ -349,7 +349,8 @@ export const InterviewerBodyRow = styled.div`
   align-items: center;
   justify-content: space-between;
   flex-direction: row-reverse;
-  color: var(--Neutral-Gray9);
+  color: ${p => p.disabled ? '#00000059' : 'var(--Neutral-Gray9)'};
+  pointer-events: ${p => p.disabled ? 'none' : 'all'};
   
   .ant-btn-primary
   {

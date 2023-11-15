@@ -22,6 +22,7 @@ import {Icon} from "@/styles/icons";
 import {UsersHeader} from "@/components/Admin/UsersList/UsersListHeader";
 import {UsersTable} from "@/components/Admin/UsersTable/UsersTable";
 import {UserInfoPopup} from "@/components/Admin/UsersTable/UserInfoPopup";
+import {ResumeInfo} from "@/components/Admin/UsersTable/ResumeInfo";
 
 const UsersListPage = () => {
     const [ RightDrawerOpen , setRightDrawerOpen ] = useState(false);
@@ -33,7 +34,8 @@ const UsersListPage = () => {
     const [ roleFilterValue , setRoleFilterValue ] = useState('');
     const [ interviewRequestFilter , setInterviewRequestFilter ] = useState(null);
     const [ selectedRows , setSelectedRows ] = useState([]);
-    const [ InterviewSearch , setInterviewSearch ] = useState(null)
+    const [ InterviewSearch , setInterviewSearch ] = useState(null);
+    const [ PopupType , setPopupType ] = useState('user-info')
     const [ UserListQuery , MeQuery, RegionsQuery ] = useQueries({
         queries : [
             { queryKey : ['UsersListQuery'] ,
@@ -93,11 +95,17 @@ const UsersListPage = () => {
                     </AdminPanelContainer>
                 </ContentBox>
             </main>
-            {(ActivePopupUser && UserListQuery?.data?.data && RegionsQuery?.data?.data ) &&
+            {(ActivePopupUser && UserListQuery?.data?.data && RegionsQuery?.data?.data ) ? PopupType === 'user-info' ?
                 <UserInfoPopup SetActivePopupUser={SetActivePopupUser}
                  usersLists={UserListQuery.data.data.results}
                  RegoionsData={RegionsQuery.data.data}
-                 ActivePopupUser={ActivePopupUser} />}
+                  setPopupType={setPopupType}
+                 ActivePopupUser={ActivePopupUser} /> :
+                <ResumeInfo
+                    usersLists={UserListQuery.data.data.results}
+                    SetActivePopupUser={SetActivePopupUser}
+                    ActivePopupUser={ActivePopupUser}
+                    setPopupType={setPopupType} /> : ''}
         </PageBox>
     </>
 

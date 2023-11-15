@@ -7,6 +7,7 @@ const AuthContextProvider = ({ children }) => {
     const [ otpSMS , SetOTP ] = useState(null);
     const [ role , setRole ] = useState('question-api/questionnaires');
     const [ hasResume , setHasResume ] = useState(false);
+    const [ askForInterviewRole , setAskForInterviewRole ] = useState(false);
     const [ userRole , setUserRole ] = useState(null);
     const [ isAdmin , setIsAdmin ] = useState(false);
     const InitialValue = {
@@ -22,7 +23,9 @@ const AuthContextProvider = ({ children }) => {
          hasResume : hasResume ,
          setHasResume : setHasResume ,
          isAdmin : isAdmin ,
-         setIsAdmin : setIsAdmin
+         setIsAdmin : setIsAdmin ,
+         askForInterviewRole : askForInterviewRole ,
+         setAskForInterviewRole : setAskForInterviewRole
     }
     return <AuthContext.Provider value={InitialValue}>
         { children }

@@ -53,7 +53,7 @@ export default function Home({ cookies }) {
   useEffect(() => {
         queryClient.resetQueries({ queryKey : 'FolderFetch' })
        refetch();
-  }, [Auth.reqRole] , getItem('roleReq'));
+  }, [Auth.reqRole , getItem('roleReq')]);
 
   useEffect(() => {
 

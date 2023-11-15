@@ -431,6 +431,7 @@ export const CommonDrawerItemText = styled.div`
   height: 40px;
   transition: 0.3s;
   cursor: pointer;
+  user-select: none;
   background-color: ${p => p.active ? 'var(--drawer-active-item-bg)' : 'white'};
   border-left: ${p => p.active ? '1px solid var(--primary-color)' : 'none'};
   cursor: pointer;
@@ -610,6 +611,11 @@ export const ChatPromptContainer = styled.div`
 export const ChatMessageContainer = styled.div`
     flex: 1;
     padding: 24px;
+  
+  &::-webkit-scrollbar
+  {
+    width: 0;
+  }
 `
 export const SentMessageContainer = styled.div`
   font-size: 14px;
@@ -622,4 +628,24 @@ export const SentMessageContainer = styled.div`
   border-radius: var(--radius-XS, 2px);
   flex-direction: column;
   align-items: flex-end;
+`
+export const AskForAdminSign = styled.span`
+  width: 6px;
+  display: block;
+  height: 6px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  background: var(--primary-color);
+  border-radius: 50%;
+`
+export const AskForAdminText = styled.span`
+  border-radius: var(--radius-XS, 2px) var(--radius-XS, 2px) var(--radius-XS, 2px) 0px;
+  background: var(--Key-Primary, #5360ED);
+  position: absolute;
+  left: 0;
+  padding: 0px 8px;
+  font-size: 14px;
+  color: var(--On-Primary, #EEF0FF);
 `
