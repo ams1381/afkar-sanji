@@ -238,7 +238,7 @@ export default function ({meData, cookies}) {
                                 </Uploader>
                             </ResumeBox>
                         </div>
-                        <div style={{
+                        <div onClick={() => router.push('dashboard/collaboration')} style={{
                             marginRight: '0', width: '100%', display: 'flex', justifyContent: ' end'
                         }}>
                             <Button
@@ -271,7 +271,8 @@ export default function ({meData, cookies}) {
 export async function getServerSideProps(context) {
     const {req} = context;
     const cookies = req.headers.cookie;
-    let MeData
+    let MeData;
+    const urlDest = req.url;
     // Check if cookies are present
     if (cookies) {
         // Parse the cookies
@@ -298,7 +299,7 @@ export async function getServerSideProps(context) {
 
     return {
         redirect: {
-            permanent: false, destination: "/auth"
+            permanent: false, destination: "/auth?returnUrl=" + urlDest
         }
     };
 }

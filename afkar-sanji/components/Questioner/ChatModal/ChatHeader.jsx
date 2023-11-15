@@ -1,10 +1,13 @@
 import {Icon} from "@/styles/icons";
 import {ChatHeaderContainer, ChatHeaderTitle} from "@/styles/common";
 
-export const ChatHeader = () => {
+export const ChatHeader = ({
+                               isActive,
+                               setIsActive
+                           }) => {
     return <ChatHeaderContainer>
-        <div style={{ cursor : 'pointer' }}>
-            <Icon name={'GrayClose'} />
+        <div onClick={() => setIsActive(false)} style={{cursor: 'pointer'}}>
+            <Icon name={'GrayClose'}/>
         </div>
         <ChatHeaderTitle>
             <p className={'project-name'}>داده‌های غذایی نامی‌نو</p>

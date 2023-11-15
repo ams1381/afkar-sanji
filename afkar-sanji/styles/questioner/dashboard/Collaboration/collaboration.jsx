@@ -4,6 +4,7 @@ export const Collaboration = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+
 `
 
 export const CollaborationHeader = styled.div`
@@ -60,21 +61,40 @@ export const FilterBox = styled.div`
 
 export const CollaborationBody = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, auto);
+  grid-template-columns: repeat(2, 1fr);
   gap: 16px;
-  margin-top: 24px;
+
 `
 
 
 export const CollaborationItem = styled.div`
+  width: 100%;
   display: flex;
   padding: 10px;
   justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  border-radius: var(--radius-XS, 2px);
+  background: var(--surface);
+  cursor: pointer;
+
+ 
+`
+
+export const CollaborationItemHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
   flex: 1 0 0;
   border-radius: var(--radius-XS, 2px);
   background: var(--surface);
   cursor: pointer;
+  width: 100%;
+`
+
+
+export const CollaborationResult = styled.div`
+  width: 100%;
+  margin: 10px 0;
 `
 
 
@@ -83,37 +103,40 @@ export const CollaborationItemRight = styled.div`
   flex-direction: column;
   gap: 13px;
   direction: rtl;
-  
+  width: 100%;
+
+
   > .title {
     color: var(--Neutral-Gray9);
     text-overflow: ellipsis;
     font-size: 20px;
     font-style: normal;
     font-weight: 500;
-    line-height: 30px; 
+    line-height: 30px;
   }
-  
+
   > .caption {
     color: var(--Neutral-Gray9);
     text-overflow: ellipsis;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
-    line-height: 30px; 
+    line-height: 30px;
     position: relative;
     width: fit-content;
-    
-    &::before {
-      position: absolute;
-      content: '';
-      width: 6px;
-      height: 6px;
-      border-radius: 100px;
-      background: ${p => p.color};
-      border: none;
-      outline: none;
-      left: -10px;
-    }
+    opacity: 0.8;
+
+    // &::before {
+    //   position: absolute;
+    //   content: '';
+    //   width: 6px;
+    //   height: 6px;
+    //   border-radius: 100px;
+      //   background: ${p => p.color};
+    //   border: none;
+    //   outline: none;
+    //   left: -10px;
+    // }
   }
 `
 
@@ -161,7 +184,7 @@ export const DropDownItem = styled.div`
   justify-content: space-between;
   gap: 50px;
   padding: 5px 0;
-  
+
   > .text {
     color: var(--On-Surface, #525252);
     text-align: right;
@@ -171,6 +194,178 @@ export const DropDownItem = styled.div`
     font-weight: 300;
     line-height: 24px; /* 171.429% */
   }
-  
-  
+`
+
+export const ModalContainer = styled.div`
+  > .ant-modal-content {
+    padding: 0;
+
+
+    > .ant-modal-close {
+      top: 1.8rem;
+    }
+  }
+`
+
+export const ModalHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 24px;
+  align-items: center;
+  align-self: stretch;
+  box-shadow: 0px -1px 0px 0px #F0F0F0 inset;
+  width: 96%;
+
+  & .name {
+    overflow: hidden;
+    color: #525252;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 30px;
+  }
+`
+
+export const ModalBody = styled.div`
+  max-height: 400px;
+  overflow: auto;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+`
+
+export const GetResult = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  align-self: stretch;
+  direction: rtl;
+
+  > .title {
+    color: var(--Neutral-Gray9);
+    text-align: right;
+    font-family: 'IRANSans';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: 30px;
+  }
+
+  > .data {
+    color: var(--Neutral-Gray9);
+    text-align: right;
+    font-family: IRANSansX;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: 30px;
+  }
+`
+
+export const Level = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  direction: rtl;
+
+  > .title {
+    color: var(--primary-color);
+    text-align: right;
+    font-family: IRANSans;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+  }
+`
+
+export const ColumnOfData = styled(GetResult)`
+  > .title {
+    font-weight: 400;
+    opacity: 0.8;
+  }
+
+  > .data {
+    font-weight: 400;
+    opacity: 0.8;
+  }
+`
+
+
+export const CollapseTitle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  color: var(--Neutral-Gray9);
+  text-align: right;
+  font-family: IRANSans;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 900;
+  line-height: 30px;
+  margin-top: .8rem;
+`
+
+export const CollapseItem = styled.div`
+  display: flex;
+  padding: 12px 24px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  align-self: stretch;
+  box-shadow: 0px -1px 0px 0px #F0F0F0 inset;
+
+  > .text {
+    color: var(--Neutral-Gray9);
+    font-family: IRANSans;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 24px;
+  }
+`
+
+export const ModalBtnParent = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: .3rem;
+  gap: 10px;
+  border-radius: var(--radius-XS, 2px);
+  border: 1px solid var(--login-confirm-btn-border);
+  padding-top: .1rem;
+  padding-bottom: .1rem;
+  margin-top: 10px;
+
+  > .chat {
+  }
+
+  > img {
+    width: 100%;
+    height: 100%;
+  }
+`
+
+
+export const AddBtnContainer = styled.div`
+  margin-top: -2rem;
+
+  > .ant-btn.css-dev-only-do-not-override-pr0fja.ant-btn-default.addBtn {
+    display: flex;
+    gap: 17px;
+    direction: rtl;
+    width: 34px;
+    overflow: hidden;
+    transition: all .8s ease;
+    padding: 8.5px;
+    align-items: center;
+    
+    &:hover {
+      padding: 10px;
+      width: 130px;
+      gap: 10px;
+    }
+  }
 `

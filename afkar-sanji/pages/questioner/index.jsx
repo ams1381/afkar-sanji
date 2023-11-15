@@ -88,7 +88,7 @@ export default Questioner;
 export async function getServerSideProps(context) {
   const { req } = context;
   const cookies = req.headers.cookie;
-
+  const urlDest = req.url;
   // Check if cookies are present
   if (cookies) {
     // Parse the cookies
@@ -108,7 +108,7 @@ export async function getServerSideProps(context) {
   return {
     redirect: {
       permanent: false,
-      destination: "/auth",
+      destination: "/auth?returnUrl=" + urlDest
     },
   };
 }
