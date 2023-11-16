@@ -105,28 +105,30 @@ export const ResultHeader = ({ QuestionnaireQuery }) => {
                 moreIcon={<Icon name='close' />}
               />
             </QuestionnaireEditItemsInnerContainer>
+       <QuestionnaireEditButtonContainer>
        { getItem('roleReq') !== 'interview-api/interviews' && <Link onClick={(e) => {
            !Questionnaire.questions.length ? e.preventDefault() : ''
        }}
-                                                                    href={`/questionnaire/${Questionnaire.uuid}/view-questions/`} target='_blank'>
+                                                                    href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/view-questions/`} target='_blank'>
            <button
-               style={{pointerEvents: (Questionnaire.questions && Questionnaire.questions.length) ? 'all' : 'none'}}>
+               style={{pointerEvents: (QuestionnaireQuery.data?.data?.questions && QuestionnaireQuery.data?.data?.questions.length) ? 'all' : 'none'}}>
                <Icon name='BlackEye'/>
            </button>
        </Link>}
 
        { getItem('roleReq') !== 'interview-api/interviews' && <Popover
-           content={<SharePopOverContent Questionnaire={Questionnaire}/>}
+           content={<SharePopOverContent Questionnaire={QuestionnaireQuery.data?.data}/>}
            trigger="click"
            open={SharePopover}
            onOpenChange={() => setSharePopOver(false)}>
-           <button onClick={() => setSharePopOver(!SharePopover)}>
+           <button className={'header-button'} onClick={() => setSharePopOver(!SharePopover)}>
                <Icon name='Share'/>
            </button>
        </Popover>}
-       { getItem('roleReq') && getItem('roleReq') === 'interview-api/interviews' && <button>
+       { getItem('roleReq') && getItem('roleReq') === 'interview-api/interviews' && <button className={'header-button'}>
            <Icon style={{width: 14}} name={'ChatIcon'}/>
        </button>}
+       </QuestionnaireEditButtonContainer>
           {/* <QuestionnaireDirectoryContainer>
             <QuestionnaireDirectoryPath>
               <p style={{ marginRight : '0.5rem' }}>نتایج </p> <span style={{ color : '#00000073' }}>/</span>

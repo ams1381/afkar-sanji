@@ -24,6 +24,7 @@ import Image from "next/image";
 import arrowRightIcon from "@/public/Icons/Chevron Double.svg";
 import {ResumeActiveBox, BtnCom} from '@/styles/questioner/resume/resume'
 import {useQuery} from "@tanstack/react-query";
+import Head from "next/head";
 
 const {Search} = Input;
 export default function ({meData, cookies}) {
@@ -132,6 +133,9 @@ export default function ({meData, cookies}) {
     }
 
     return (<>
+            <Head>
+                <title> Afkar Sanji | Resume </title>
+            </Head>
             <RightLight/>
             <LeftLight/>
             <AnimatePresence>

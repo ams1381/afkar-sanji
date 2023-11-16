@@ -21,7 +21,7 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
     const { setItem , getItem } = useLocalStorage()
     const [ MessageApi , MessageContext ] = message.useMessage();
     const [ drawerSelectedItem , setDrawerSelecteditem ] = useState(null);
-
+    console.log(Auth)
     useEffect(() => {
         if(router.pathname === '/' || router.pathname.includes('questionnaire')) {
             if(getItem('roleReq') === 'question-api/questionnaires')
@@ -120,10 +120,10 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                                           onClick={() => {
                                               if(Auth.hasResume && !Auth.askForInterviewRole) {
                                                   router.push('/questioner/dashboard/collaboration/')
+                                                  return
                                               }
-                                              else if(!Auth.askForInterviewRole) {
-                                                  router.push('/')
-                                              }
+                                              if(!Auth.askForInterviewRole)
+                                                router.push('/questioner/')
                                           }}
                                           className='drawer_item_text interviewer'>
                                         { Auth.askForInterviewRole && <AskForAdminText>
@@ -213,10 +213,10 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                               onClick={() => {
                                   if(Auth.hasResume && !Auth.askForInterviewRole) {
                                       router.push('/questioner/dashboard/collaboration/')
+                                      return
                                   }
-                                  else if(!Auth.askForInterviewRole) {
-                                      router.push('/')
-                                  }
+                                  if(!Auth.askForInterviewRole)
+                                      router.push('/questioner/')
                               }}
                               active={drawerSelectedItem === 'interview-panel'}
                               className='drawer_item i_interviewer'>

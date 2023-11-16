@@ -206,7 +206,7 @@ export const QuestionnaireEditItemsInnerContainer = styled.div`
         background: var(--primary-color) !important;
         bottom: 5px;
     }
-  & button
+  & .header-button
   {
     background: #FEFEFE;
     border: 1px solid #D9D9D9;
@@ -219,7 +219,7 @@ export const QuestionnaireEditItemsInnerContainer = styled.div`
     transition : 0.3s;
     border-radius: 2px;
   }
-  & button:hover
+  & .header-button:hover
   {
     border : 1px solid var(--primary-color);
   }

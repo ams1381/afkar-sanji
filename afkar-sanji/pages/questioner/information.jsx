@@ -20,10 +20,12 @@ import arrowDownIcon from '@/public/Icons/selectDown.svg'
 import Image from "next/image";
 import closeIcon from "@/public/Icons/Dismiss.svg";
 import {useRouter} from "next/router";
+import Head from "next/head";
 
 export default function () {
     const [userData, setUserData] = useState();
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false);
+    const [ confirmButtonLoading , setConfirmButtonLoading ] = useState(false);
     const router = useRouter();
     useEffect(() => {
         setIsLoading(true)
@@ -68,20 +70,25 @@ export default function () {
     }, []);
 
     const handleSubmit = () => {
-        console.log(formData)
+        setConfirmButtonLoading(true)
         axiosInstance.patch('/user-api/users/me/', formData).then(res => {
             if (res?.status === 200) {
                 message.success('با موفقیت انجام شد')
+                setConfirmButtonLoading(false)
                 router.push('/questioner/resume/')
             }
 
         }).catch(error => {
+            setConfirmButtonLoading(false)
             const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
             message.error(ERROR_MESSAGE)
         })
     }
 
     return (<>
+        <Head>
+            <title> Afkar Sanji | Information </title>
+        </Head>
         <RightLight/>
         <LeftLight/>
         <AnimatePresence>
@@ -101,7 +108,7 @@ export default function () {
                         position: 'absolute', top: '20px', right: '20px', cursor: 'pointer',
                     }}
                 />
-                {userData && formData?.nationality && (
+                {userData && (
                     <Container>
                         <Title>لطفا اطلاعات خود را کامل‌کنید</Title>
                         <Form>
@@ -235,6 +242,7 @@ export default function () {
                             <ConfigProvider theme={themeContext}>
                                 <Button
                                     onClick={handleSubmit}
+                                    loading={confirmButtonLoading}
                                     style={{marginTop: '0px'}}
                                     className={StyleModules["confirm_button"]}
                                     type="primary"

@@ -17,6 +17,7 @@ import ResearchHistories from "@/components/Questioner/Resume/ResearchHistories"
 import {edu_types} from '@/utilities/data/date'
 // motion
 import {AnimatePresence, motion} from 'framer-motion';
+import Head from "next/head";
 
 export default function ({meData}) {
     const [work_backgrounds, setWork_backgrounds] = useState([{id: 1}])
@@ -44,6 +45,9 @@ export default function ({meData}) {
     };
 
     return (<>
+        <Head>
+            <title> Afkar Sanji | Resume | Creator </title>
+        </Head>
         <AnimatePresence>
             <motion.div transition={{duration: 1}} initial={{y: 220}} animate={{y: 0}}>
                 <BgSlide/>

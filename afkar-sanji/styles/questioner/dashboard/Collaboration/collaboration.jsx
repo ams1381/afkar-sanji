@@ -76,10 +76,56 @@ export const CollaborationItem = styled.div`
   border-radius: var(--radius-XS, 2px);
   background: var(--surface);
   cursor: pointer;
-
- 
 `
-
+export const CollaborationHeaderTopPart = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+  color: var(--Neutral-Gray9);
+`
+export const CollaborationResultButton = styled.div`
+  display: flex;
+  padding: 0px 7px;
+  align-items: center;
+  color: var(--primary-color);
+  font-size: 14px;
+  gap: 10px;
+`
+export const AddResultButton = styled.button`
+  border-radius: var(--radius-XS, 2px);
+  border: 1px solid var(--Outline, #D9D9D9);
+  background: var(--Surface, #FEFEFE);
+  box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.02);
+  display: flex;
+  height: 34px;
+  align-items: center;
+  width: 34px;
+  overflow: hidden;
+  transition: 0.3s;
+  flex-direction: row-reverse;
+  cursor: pointer;
+  
+  &:hover
+  {
+    width: 100%;
+    transition: 0.5s;
+    border: 1px solid var(--primary-color);
+  }
+  &:hover i
+  {
+    filter: invert(37%) sepia(74%) saturate(1045%) hue-rotate(210deg) brightness(91%) contrast(105%);
+  }
+`
+export const AddResultButtonContainer = styled.div`
+  width: 34px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  
+  
+`
 export const CollaborationItemHeader = styled.div`
   display: flex;
   justify-content: space-between;

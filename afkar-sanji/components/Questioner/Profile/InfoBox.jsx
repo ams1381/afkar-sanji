@@ -101,12 +101,8 @@ export const InfoContainer = ({ BoxName , BoxDataName ,MeQuery , UserData , bold
                         filterOption={(input, option) =>
                             (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
                         value={InputData ? {
-                            label : typeof InputData == 'string' ?
-                                InputData
-                                : regions[0].provinces.find(Province => Province.id == InputData).name ,
-                            value : typeof InputData == 'string' ?
-                                regions[0].provinces.find(Province => Province.name == InputData).id
-                                : InputData
+                            label : InputData.name,
+                            value : InputData.id
                         } : null}
                         onSelect={(e) => {
                             setInputData(e)
@@ -126,13 +122,9 @@ export const InfoContainer = ({ BoxName , BoxDataName ,MeQuery , UserData , bold
                             filterOption={(input, option) =>
                                 (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
                             value={InputData ? {
-                                label : typeof InputData == 'string' ?
-                                    InputData
-                                        : regions.find(Country => Country.id == InputData).name ,
-                                value : typeof InputData == 'string' ?
-                                    regions.find(Country => Country.name == InputData).id
-                                    : InputData
-                            } : null}
+                                    label : InputData.name,
+                                    value : InputData.id
+                                } : null}
                             onSelect={(e) => setInputData(e)}
                             options={regions.map(item => ({
                                 label : item.name ,

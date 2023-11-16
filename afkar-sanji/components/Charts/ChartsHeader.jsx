@@ -87,15 +87,15 @@ export const ChartsHeader = ({ QuestionnaireQuery }) => {
                 { getItem('roleReq') !== 'interview-api/interviews' && <Link onClick={(e) => {
                     !Questionnaire.questions.length ? e.preventDefault() : ''
                 }}
-                                                                             href={`/questionnaire/${Questionnaire.uuid}/view-questions/`} target='_blank'>
+                     href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/view-questions/`} target='_blank'>
                     <button
-                        style={{pointerEvents: (Questionnaire.questions && Questionnaire.questions.length) ? 'all' : 'none'}}>
+                        style={{pointerEvents: (QuestionnaireQuery.data?.data?.questions && QuestionnaireQuery.data?.data?.questions.length) ? 'all' : 'none'}}>
                         <Icon name='BlackEye'/>
                     </button>
                 </Link>}
 
                 { getItem('roleReq') !== 'interview-api/interviews' && <Popover
-                    content={<SharePopOverContent Questionnaire={Questionnaire}/>}
+                    content={<SharePopOverContent Questionnaire={QuestionnaireQuery.data?.data}/>}
                     trigger="click"
                     open={SharePopover}
                     onOpenChange={() => setSharePopOver(false)}>

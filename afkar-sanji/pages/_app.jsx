@@ -116,8 +116,8 @@ const RoleSetter = ({ UserData , setRefreshPage }) => {
   if(UserData.ask_for_interview_role)
     Auth.setAskForInterviewRole(true)
 
-  Auth.setUserRole(UserData.role)
-  console.log('app',getItem('roleReq'))
+  Auth.role = (UserData.role)
+  console.log(UserData)
   setRefreshPage(false)
 
   return <></>
