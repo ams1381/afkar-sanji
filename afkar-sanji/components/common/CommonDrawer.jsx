@@ -21,7 +21,6 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
     const { setItem , getItem } = useLocalStorage()
     const [ MessageApi , MessageContext ] = message.useMessage();
     const [ drawerSelectedItem , setDrawerSelecteditem ] = useState(null);
-    console.log(Auth)
     useEffect(() => {
         if(router.pathname === '/' || router.pathname.includes('questionnaire')) {
             if(getItem('roleReq') === 'question-api/questionnaires')
@@ -32,6 +31,8 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
         else {
             if(router.pathname.includes('profile'))
                 setDrawerSelecteditem('profile')
+            else if(router.pathname.includes('wallet'))
+                setDrawerSelecteditem('wallet')
             else if(router.pathname.includes('collaboration'))
                 setDrawerSelecteditem('interview-panel')
         }
@@ -74,6 +75,15 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
         router.push('/auth')
     }
     // console.log(Auth)
+    const QuestionerNavigator = () => {
+        if(!Auth.hasResume) {
+            router.push('/questioner/')
+            return
+        }
+        else if(Auth.hasResume && !Auth.askForInterviewRole) {
+            router.push('/questioner/dashboard/collaboration/')
+        }
+    }
   return (
     <CommonDrawerContainer open={RightDrawerOpen ? 'active' : null} >
         <div className={'drawer-inner-container'}>
@@ -103,9 +113,9 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                         </CommonDrawerItemText>
                         {
                             !isAdmin ? <>
-                                    { Auth.role === 'e' || Auth.role === 'ie' && <CommonDrawerItemText
+                                    { getItem('role') === 'e' || getItem('role') === 'ie' && <CommonDrawerItemText
                                         onClick={() => {
-                                            if (Auth.role === 'e' || Auth.role === 'ie') {
+                                            if (getItem('role') === 'e' || getItem('role') === 'ie') {
                                                 Auth.setReqRole('interview-api/interviews');
                                                 setItem('roleReq', 'interview-api/interviews')
                                                 router.push('/')
@@ -117,13 +127,13 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                                     </CommonDrawerItemText>}
                                 {/*<Link href={(Auth.role === 'e' || Auth.role === 'n' || !Auth.hasResume) ? '/questioner/' : '/questioner/dashboard/collaboration/'}>*/}
                                     <CommonDrawerItemText active={drawerSelectedItem === 'interview-panel'}
-                                          onClick={() => {
-                                              if(Auth.hasResume && !Auth.askForInterviewRole) {
-                                                  router.push('/questioner/dashboard/collaboration/')
-                                                  return
+                                          onClick={async () => {
+                                              if(!Auth.hasResume) {
+                                                  await router.push('/questioner/')
                                               }
-                                              if(!Auth.askForInterviewRole)
-                                                router.push('/questioner/')
+                                              else if(Auth.hasResume && !Auth.askForInterviewRole) {
+                                                  await router.push('/questioner/dashboard/collaboration/')
+                                              }
                                           }}
                                           className='drawer_item_text interviewer'>
                                         { Auth.askForInterviewRole && <AskForAdminText>
@@ -133,25 +143,18 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                                     </CommonDrawerItemText>
                                 {/*</Link>*/}
                                 <Link href={'/questioner/dashboard/wallet/'}>
-                                    <CommonDrawerItemText className='drawer_item_text wallet'>
+                                    <CommonDrawerItemText active={drawerSelectedItem === 'wallet'} className='drawer_item_text wallet'>
                                         <p>کیف پول</p>
                                     </CommonDrawerItemText>
                                 </Link>
-                                {/*<Link href={'/'}*/}
-                                {/*    // question-api/questionnaires*/}
-                                {/*      onClick={() => {*/}
-                                {/*          setItem('roleReq','question-api/questionnaires')*/}
-                                {/*          Auth.setReqRole('question-api/questionnaires')*/}
-                                {/*      }}>*/}
-                                    <CommonDrawerItemText onClick={() => {
+                                    <CommonDrawerItemText onClick={async () => {
                                         Auth.setReqRole('question-api/questionnaires')
                                         setItem('roleReq','question-api/questionnaires')
-                                        router.push('/')
+                                        await router.push('/')
                                     }} active={drawerSelectedItem === 'create-questionnaire'}
                                                           className='drawer_item_text create-questionaire'>
                                         <p>ساخت پرسشنامه</p>
                                     </CommonDrawerItemText>
-                                {/*</Link>*/}
                             </> :
                             <>
                                 <Link href={'/admin/users-list'}>
@@ -194,9 +197,9 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                             <Icon name='DrawerHome' />
                         </CommonDrawerItemIcon>
                         { !isAdmin ? <>
-                                { Auth.role === 'e' || Auth.role === 'ie' && <CommonDrawerItemIcon
+                                { getItem('role') === 'e' || getItem('role') === 'ie' && <CommonDrawerItemIcon
                                     onClick={() => {
-                                        if (Auth.role === 'e' || Auth.role === 'ie') {
+                                        if (getItem('role') === 'e' || getItem('role') === 'ie') {
                                             Auth.setReqRole('interview-api/interviews');
                                             setItem('roleReq', 'interview-api/interviews');
                                             router.push('/')
@@ -207,16 +210,14 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                                     className='drawer_item i_employer'>
                                     <Icon name='Projects'/>
                                 </CommonDrawerItemIcon>}
-                            {/*<Link href={(Auth.role === 'e' || Auth.role === 'n' || !Auth.hasResume)*/}
-                            {/*    ? '/questioner/' : '/questioner/dashboard/collaboration/'}>*/}
                         <CommonDrawerItemIcon open={RightDrawerOpen ? 'active' : null}
-                              onClick={() => {
-                                  if(Auth.hasResume && !Auth.askForInterviewRole) {
-                                      router.push('/questioner/dashboard/collaboration/')
-                                      return
+                              onClick={async () => {
+                                  if(!Auth.hasResume) {
+                                      await router.push('/questioner/')
                                   }
-                                  if(!Auth.askForInterviewRole)
-                                      router.push('/questioner/')
+                                  else if(Auth.hasResume && !Auth.askForInterviewRole) {
+                                      await router.push('/questioner/dashboard/collaboration/')
+                                  }
                               }}
                               active={drawerSelectedItem === 'interview-panel'}
                               className='drawer_item i_interviewer'>
@@ -226,7 +227,7 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                         </CommonDrawerItemIcon>
                     {/*</Link>*/}
                         <Link href={'/questioner/dashboard/wallet/'}>
-                            <CommonDrawerItemIcon open={RightDrawerOpen ? 'active' : null} className='drawer_item i_wallet'>
+                            <CommonDrawerItemIcon active={drawerSelectedItem === 'wallet'} open={RightDrawerOpen ? 'active' : null} className='drawer_item i_wallet'>
                                 <Icon name='DrawerWallet'/>
                             </CommonDrawerItemIcon>
                         </Link>

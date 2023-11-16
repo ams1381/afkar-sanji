@@ -17,6 +17,7 @@ export const QuestionnairesTable = ({
         setActivePricePopup,
         filteredIDQuestionnaires ,
         setSelectedRows ,
+        setPackPopupType ,
         SetCurrentPage ,
         setPageSize ,
         setActiveQuestionnairePopup}) => {
@@ -77,7 +78,7 @@ export const QuestionnairesTable = ({
 
                                     }
                                 }}
-                                columns={QuestionnaireTableColumns(setActiveQuestionnairePopup,setActivePricePopup)}
+                                columns={QuestionnaireTableColumns(setActiveQuestionnairePopup,setActivePricePopup,setPackPopupType)}
                                 locale={{
                                     emptyText : <p className='no_result_message'>نتیجه‌ای یافت نشد</p> ,
                                     triggerDesc: 'مرتب سازی نزولی',
@@ -136,7 +137,7 @@ export const QuestionnairesTable = ({
 
                                        }
                                    }}
-                                   columns={QuestionnaireTableColumns(setActiveQuestionnairePopup,setActivePricePopup)}
+                                   columns={QuestionnaireTableColumns(setActiveQuestionnairePopup,setActivePricePopup,setPackPopupType)}
                                    locale={{
                                        emptyText : <p className='no_result_message'>نتیجه‌ای یافت نشد</p> ,
                                        triggerDesc: 'مرتب سازی نزولی',

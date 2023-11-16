@@ -12,6 +12,7 @@ import {QuestionnairesTable} from "@/components/Admin/QuestionnairesTable/Questi
 import {UserInfoPopup} from "@/components/Admin/UsersTable/UserInfoPopup";
 import {QuestionnaireDataPopup} from "@/components/Admin/QuestionnairesTable/QuestionnaireDataPopup";
 import {PricePopup} from "@/components/Admin/QuestionnairesTable/PricePopup";
+import {AddPricePack} from "@/components/Admin/QuestionnairesTable/AddPricePack";
 
 const QuestionnairesList = () => {
     const [ RightDrawerOpen , setRightDrawerOpen ] = useState(false);
@@ -79,6 +80,7 @@ const QuestionnairesList = () => {
                          setHasQuestionerFilter={setHasQuestionerFilter}
                         />
                         <QuestionnairesTable pageSize={pageSize}
+                             setPackPopupType={setPackPopupType}
                              setPageSize={setPageSize}
                              setSelectedRows={setSelectedRows}
                              filteredIDQuestionnaires={filteredIDQuestionnaires}
@@ -94,15 +96,21 @@ const QuestionnairesList = () => {
                 <QuestionnaireDataPopup
                                 QuestionnaireList={QuestionnairesListQuery.data.data.results}
                                RegoionsData={RegionsQuery.data.data}
+                                setActivePricePopup={setActivePricePopup}
                                ActiveQuestionnairePopup={ActiveQuestionnairePopup}
                                 setActiveQuestionnairePopup={setActiveQuestionnairePopup}
                 />}
-            {(activePricePopup && QuestionnairesListQuery?.data?.data && RegionsQuery?.data?.data ) &&
+            {(activePricePopup && QuestionnairesListQuery?.data?.data && RegionsQuery?.data?.data ) ?
+                packPopupType === 'view' ?
                 <PricePopup
+                    refetch={QuestionnairesListQuery.refetch}
+                    setPackPopupType={setPackPopupType}
                     setActivePricePopup={setActivePricePopup}
                     QuestionnaireList={QuestionnairesListQuery.data.data.results}
                     activePricePopup={activePricePopup}
-                />}
+                /> : <AddPricePack activePricePopup={activePricePopup}
+                        QuestionnaireList={QuestionnairesListQuery.data.data.results}
+                        setActivePricePopup={setActivePricePopup} /> : ''}
         </PageBox>
     </>
 }

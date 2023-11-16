@@ -96,6 +96,7 @@ export const Interviewers = ({ Questionnaire , refetch , ToggleCheckBoxHandler }
                         {Questionnaire.approval_status === 'pending_price_admin' && 'در انتظار تایید قیمت توسط ادمین' }
                         {Questionnaire.approval_status === 'approved_price_employer' && 'قیمت تایید شده توسط کارفرما'}
                         {Questionnaire.approval_status === 'rejected_price_employer' && 'قیمت رد شده توسط کارفرما'}
+                        {Questionnaire.approval_status === 'rejected_content_admin' && 'محتوا رد شده توسط ادمین'}
                         <Button type={'primary'}>
                             شارژ کیف پول
                         </Button>

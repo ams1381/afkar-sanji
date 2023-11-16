@@ -209,3 +209,135 @@ export const TableBlockButton = styled(Button)`
   box-shadow: none;
   direction: ltr;
 `
+export const LevelAssignmentContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 10fr 1fr;
+  text-align: center;
+  height: 100%;
+  gap: 40px;
+  
+
+`
+export const SwipersController = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+  width: 150px;
+  //.next-question , .prev-question
+  //{
+  //  width: 100%;
+  //  display: flex;
+  //  justify-content: center;
+  //  align-items: center;
+  //}
+  //& i
+  //{
+  //  width: 12px;
+  //  height: 12px;
+  //}
+  //.prev-question i {
+  //  transform: rotate(-90deg);
+  //}
+  //.next-question i
+  //{
+  //  transform: rotate(90deg);
+  //}
+  //rotate(-90deg)
+  
+`
+export const NextSlideButton = styled(Button)`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & i
+  {
+    width: 12px;
+    height: 12px;
+    transform: rotate(90deg);
+  }
+`
+export const PrevSlideButton = styled(Button)`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & i
+  {
+    width: 12px;
+    height: 12px;
+    transform: rotate(-90deg);
+  }
+`
+export const QuestionsSliderContainer = styled.div`
+  height: 80vh;
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: ${p => p.loading ? 'center' : 'flex-end'};
+  flex-direction: ${p => p.loading ? 'column' : 'row'};
+  .swiper
+  {
+    width: 70%;
+    height: 100%;
+  }
+  .swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.3s;
+  }
+  .swiper-slide-active {
+    opacity: 1;
+  }
+  .swiper-slide-next , .swiper-slide-prev
+  {
+    opacity: 0.5;
+  }
+  .question_component
+  {
+    user-select: none;
+  }
+  .swiper-slide-next .question_component , .swiper-slide-prev  .question_component {
+    background: none;
+    box-shadow: none;
+  }
+`
+export const ProgressBarThumb = styled.span`
+  width: 6px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: var(--primary-color);
+  height: ${p => p.height ? `${p.height}%` : 0};
+  border-radius: 100px;
+  transition: 0.3s;
+`
+export const ProgressBar = styled.div`
+  border-radius: 100px;
+  background: var(--Surface, #FEFEFE);
+  width: 6px;
+  height: 100%;
+  position: relative;
+`
+export const ProgressBarContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+export const LevelButtonsContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 150px;
+`
+export const LevelButton = styled(Button)`
+    width: 100%;
+    border : ${p => p.active ? '1px solid var(--primary-color)' : '1px solid #d9d9d9'};
+    color  : ${p => p.active ? 'var(--primary-color)' : 'black'};
+`

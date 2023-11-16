@@ -5,10 +5,12 @@ import { axiosInstance } from '@/utilities/axios'
 import {Button, ConfigProvider, message, Modal} from 'antd'
 import React, {useContext, useState} from 'react'
 import {AuthContext} from "@/utilities/AuthContext";
+import {useLocalStorage} from "@/utilities/useLocalStorage";
 
 const AddQuestionnairePopUp = ({ AddQuestionnaireModal , FolderReload , folders , 
   SelectedFolderNumber , setQuestionnaireModalState  , SetSideBar }) => {
   const [ ErrMessage , SetErrMessage ] = useState(null);
+  const { getItem } = useLocalStorage();
   const [ NewQuestionnaireName , setNewQuestionnaireName ] = useState(null);
   const [ OperatingState , SetOperatingState ] = useState(false);
   const [ messageApi , messageContext ] = message.useMessage();
@@ -17,7 +19,9 @@ const AddQuestionnairePopUp = ({ AddQuestionnaireModal , FolderReload , folders 
         SetOperatingState(true);
         if(!NewQuestionnaireName)
         {
-            SetErrMessage('لطفا نام پرسشنامه را وارد کنید');
+            !getItem('roleReq') === 'interview-api/interviews' ?
+                SetErrMessage('لطفا نام پرسشنامه را وارد کنید') :
+                SetErrMessage('لطفا نام پروژه را وارد کنید')
             SetOperatingState(false);
             return
         }
@@ -72,8 +76,8 @@ const AddQuestionnairePopUp = ({ AddQuestionnaireModal , FolderReload , folders 
                     </Button>
                 </ModalButtonsContainer>}>
             <ModalContentContainer>
-                <p>عنوان نظرسنجی را وارد کنید</p>
-                <AddQuestionnaireModalInput placeholder='نظرسنجی 1'
+                { getItem('roleReq') === 'interview-api/interviews' ? <p>عنوان پروژه را وارد کنید</p> : <p>عنوان نظرسنجی را وارد کنید</p>}
+                <AddQuestionnaireModalInput placeholder={getItem('roleReq') === 'interview-api/interviews' ? 'پروژه ۱' : 'نظرسنجی ۱'}
             onKeyDown={e => e.key == 'Enter' ? AddQuestionnaireHandler() : ''}
                 onChange={(e) => {
                     setNewQuestionnaireName(e.target.value)

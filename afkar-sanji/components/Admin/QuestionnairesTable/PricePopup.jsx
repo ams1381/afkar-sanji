@@ -10,90 +10,124 @@ import {PopupContainer,
     PricePackEditButtonsContainer,
     PricePackContainer } from "@/styles/Admin/userInfoPopup";
 import {Icon} from "@/styles/icons";
-import {useEffect, useState} from "react";
-import {Skeleton, Tooltip} from "antd";
+import React, {useEffect, useState} from "react";
+import {Modal, Skeleton, Tooltip} from "antd";
 import {useQuery} from "@tanstack/react-query";
 import {axiosInstance} from "@/utilities/axios";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
 
-export const PricePopup = ({ setActivePricePopup , activePricePopup , QuestionnaireList }) => {
+export const PricePopup = ({ setActivePricePopup , refetch , activePricePopup , setPackPopupType , QuestionnaireList }) => {
     const [ ActivePricePack , setActivePricePack ] = useState(null);
-    const [ seletedPricePack , setSelectedPricePack ] = useState(null)
+    const [ selectedPricePack , setSelectedPricePack ] = useState(QuestionnaireList.find(item => item.id === activePricePopup.id).price_pack.id)
     const PricePacksQuery = useQuery(['PricePacksQuery'],
         async () => await axiosInstance.get('/admin-api/price-packs/'),{
             refetchOnWindowFocus : false,
             retry : false
         })
-    console.log(PricePacksQuery)
+    // console.log(QuestionnaireList.find(item => item.id === activePricePopup.id),selectedPricePack)
+    const setPricePack = async (PackID) => {
+        console.log(PackID)
+        try {
+            // if(selectedPricePack)
+            await axiosInstance.post(`/admin-api/interviews/${QuestionnaireList.find(item => item.id === activePricePopup.id).uuid}/set-price-pack/`,{
+                price_pack : PackID
+            })
+        }
+        catch (err) {
+            console.log(err)
+        }
+    }
     // useEffect(() => {
     //     if(document.querySelector(".price-items-container") && document.querySelector(".popupbody"))
     //         ScrollByDrag()
     // }, [document.querySelector(".price-items-container")]);
 
     return <>
-        <ChatMask onClick={() => setActivePricePopup(null)} />
-        <PopupContainer style={{ height : 'auto' }}>
-            <PopupHeader style={{ boxShadow : ''}}>
+        {/*<ChatMask onClick={() => setActivePricePopup(null)} />*/}
+        <Modal mask={true}
+               preserve={false}
+               destroyOnClose={true}
+               onCancel={() => setActivePricePopup(false)}
+               modalRender={(ReactNode) => <div style={{ direction : 'ltr' }}>{ReactNode}</div>}
+               centered={true}
+               closeIcon={true}
+               title={<></>}
+               maskClosable={true}
+               footer={<></>}
+               open={activePricePopup}>
+            <PopupContainer style={{ height : 'auto' }}>
+                <PopupHeader style={{ boxShadow : ''}}>
                     <div style={{ cursor : 'pointer' }} onClick={() => setActivePricePopup(null)}>
                         <Icon style={{ width : 12 , height : 12 }} name={'GrayClose'} />
                     </div>
-                <ChatHeaderTitle>
-                    <p>
-                        انتخاب بسته
-                    </p>
-                </ChatHeaderTitle>
-            </PopupHeader>
-            <ChatMessageContainer>
-                <div style={{ textAlign : 'right' , fontSize : 14 , color : 'var(--primary-color)' , cursor : 'pointer' }}>
-                    <p>یک بسته‌ جدید بسازید</p>
-                </div>
-                <PopupInfoContainer style={{ alignItems : 'flex-end' }} className={'popupbody'}>
-                    <PricePacksItemsContainer className={'price-items-container'}>
-                        {
-                            PricePacksQuery.isLoading ? <>
-                                <PricePack>
-                                    <PricePackContainer>
-                                        <Skeleton.Input style={{ width : 40 , minWidth : 126 }} active />
+                    <ChatHeaderTitle>
+                        <p>
+                            انتخاب بسته
+                        </p>
+                    </ChatHeaderTitle>
+                </PopupHeader>
+                <ChatMessageContainer>
+                    <div onClick={() => setPackPopupType('add-pack')} style={{ textAlign : 'right' , fontSize : 14 , color : 'var(--primary-color)' , cursor : 'pointer' }}>
+                        <p>یک بسته‌ جدید بسازید</p>
+                    </div>
+                    <PopupInfoContainer style={{ alignItems : 'flex-end' }} className={'popupbody'}>
+                        <PricePacksItemsContainer className={'price-items-container'}>
+                            {
+                                PricePacksQuery.isLoading ? <>
+                                    <PricePack>
+                                        <PricePackContainer>
+                                            <Skeleton.Input style={{ width : 40 , minWidth : 126 }} active />
+                                        </PricePackContainer>
+                                    </PricePack>
+                                    <PricePack>
+                                        <PricePackContainer>
+                                            <Skeleton.Input style={{ width : 40 , minWidth : 126 }} active />
+                                        </PricePackContainer>
+                                    </PricePack>
+                                    <PricePack>
+                                        <PricePackContainer>
+                                            <Skeleton.Input style={{ width : 40 , minWidth : 126 }} active />
+                                        </PricePackContainer>
+                                    </PricePack>
+                                </> :
+                                    PricePacksQuery.data.data.map(item => (<PricePack>
+                                    { item.id === selectedPricePack && <PricePackEditButtonsContainer>
+                                        <PricePackDeleteButton>
+                                            <Icon name={'WhiteTrash'}/>
+                                        </PricePackDeleteButton>
+                                        <PricePaakEditButton>
+                                            <Icon name={'WhiteEdit'}/>
+                                        </PricePaakEditButton>
+                                    </PricePackEditButtonsContainer>}
+                                    <PricePackContainer onClick={async () => {
+                                        // console.log(item)
+                                        setSelectedPricePack(item.id)
+                                        await setPricePack(item.id)
+                                        setTimeout(() => {
+                                            refetch()
+                                        })
+                                        // setTimeout(() =)
+                                    }}
+                                    selected={item.id === selectedPricePack}>
+                                        <PricePackHeader>
+                                            <p>{item.name}</p>
+                                            <Tooltip overlayStyle={{ zIndex : 999999 , fontSize : 14 }} title={item.description ? item.description : ''}>
+                                                <Icon name={'InfoIcon'} />
+                                            </Tooltip>
+                                        </PricePackHeader>
+                                        <p style={{ direction : 'rtl' }} className={'price-per-each'}>{item.price && digitsEnToFa(item.price)} تومان برای هر پاسخ </p>
                                     </PricePackContainer>
-                                </PricePack>
-                                <PricePack>
-                                    <PricePackContainer>
-                                        <Skeleton.Input style={{ width : 40 , minWidth : 126 }} active />
-                                    </PricePackContainer>
-                                </PricePack>
-                                <PricePack>
-                                    <PricePackContainer>
-                                        <Skeleton.Input style={{ width : 40 , minWidth : 126 }} active />
-                                    </PricePackContainer>
-                                </PricePack>
-                            </> : PricePacksQuery.data.data.map(item => (<PricePack>
-                                { item.id === seletedPricePack && <PricePackEditButtonsContainer>
-                                    <PricePackDeleteButton>
-                                        <Icon name={'WhiteTrash'}/>
-                                    </PricePackDeleteButton>
-                                    <PricePaakEditButton>
-                                        <Icon name={'WhiteEdit'}/>
-                                    </PricePaakEditButton>
-                                </PricePackEditButtonsContainer>}
-                                <PricePackContainer onClick={() => setSelectedPricePack(item.id)}
-                                        selected={item.id === seletedPricePack}>
-                                    <PricePackHeader>
-                                        <p>{item.name}</p>
-                                        <Tooltip overlayStyle={{ zIndex : 999999 , fontSize : 14 }} title={item.description ? item.description : ''}>
-                                            <Icon name={'InfoIcon'} />
-                                        </Tooltip>
-                                    </PricePackHeader>
-                                    <p className={'price-per-each'}>{digitsEnToFa(item.price)} تومان برای هر پاسخ </p>
-                                </PricePackContainer>
-                            </PricePack>))
-                        }
+                                </PricePack>))
+                            }
 
 
-                    </PricePacksItemsContainer>
-                </PopupInfoContainer>
-            </ChatMessageContainer>
+                        </PricePacksItemsContainer>
+                    </PopupInfoContainer>
+                </ChatMessageContainer>
 
-        </PopupContainer>
+            </PopupContainer>
+        </Modal>
+
     </>
 }
 const ScrollByDrag = () => {

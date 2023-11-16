@@ -57,6 +57,7 @@ const OTPSms = ({ cookies }) => {
         if(MeRes?.data?.ask_for_interview_role)
           Auth.setAskForInterviewRole(true)
           Auth.setUserRole(MeRes?.data.role)
+          setItem('role',MeRes?.data.role)
 
         const returnUrl = router.query.returnUrl || '/';
         typeof window !== 'undefined' ? router.push(returnUrl)  : ''

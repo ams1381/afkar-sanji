@@ -210,7 +210,7 @@ export const JobInfo = ({ Countries , userData ,MeQuery , regions }) => {
                         <p>:آخرین به روزرسانی</p>
                    </span>
                 </div>
-                <Link href={'/'}>
+                <Link href={'/questioner/resume/make'}>
                     <EditButton>
                         ویرایش
                     </EditButton>
@@ -218,7 +218,9 @@ export const JobInfo = ({ Countries , userData ,MeQuery , regions }) => {
             </InfoBox> :
                 <InfoBox bold>
                     <p>برای دریافت پروژه این بخش را کامل کنید</p>
-                    <Button type={'primary'}>وارد کردن رزومه</Button>
+                    <Link href={'/questioner/'}>
+                        <Button type={'primary'}>وارد کردن رزومه</Button>
+                    </Link>
             </InfoBox>}
         </div>
         <LocationSelectorContainer>

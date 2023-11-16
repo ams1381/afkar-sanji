@@ -21,65 +21,73 @@ import { liListData } from "@/utilities/data/questioner";
 import { Button } from "antd";
 // motion
 import { AnimatePresence, motion } from "framer-motion";
+import Head from "next/head";
+import React from "react";
 
 const Questioner = () => {
   const router = useRouter();
   return (
-    <AnimatePresence>
-      <motion.div
-        transition={{ duration: 1 }}
-        initial={{ y: 220 }}
-        animate={{ y: 0 }}
-      >
-        <Container>
-          <QuestionBox>
-            <Header>
-              <div>
-              <RightHeader>
-                <p>ثبت درخواست پرسشگری</p>
-                <h2>با جمع‌آوری دیدگاه‌های مختلف کسب درآمد کنید!</h2>
-              </RightHeader>
-              <Button
-                  style={{
-                    marginTop:'108px',
-                    display:'flex',
-                    alignItems:'center',
-                    gap:'5px'
-                  }}
-                  className={`bottom`}
-                  onClick={() => router.push("/questioner/information")}
-              >
-                <img src={arrowRightIcon?.src} />
-                تکمیل اطلاعات
-              </Button>
-              </div>
-              <LeftHeader>
-                {liListData?.map((item) => (
-                  <li key={item?.id}>
-                    <img className={`icon`} src={item?.icon} alt="" />
-                    <div className="text">{item?.text}</div>
-                  </li>
-                ))}
-              </LeftHeader>
-            </Header>
-            <AfterBox />
+      <>
+        <Head>
+          <title>Afkar Sanji | Resume | Index </title>
+        </Head>
+        <AnimatePresence>
+          <motion.div
+              transition={{ duration: 1 }}
+              initial={{ y: 220 }}
+              animate={{ y: 0 }}
+          >
+            <Container>
+              <QuestionBox>
+                <Header>
+                  <div>
+                    <RightHeader>
+                      <p>ثبت درخواست پرسشگری</p>
+                      <h2>با جمع‌آوری دیدگاه‌های مختلف کسب درآمد کنید!</h2>
+                    </RightHeader>
+                    <Button
+                        style={{
+                          marginTop:'108px',
+                          display:'flex',
+                          alignItems:'center',
+                          gap:'5px'
+                        }}
+                        className={`bottom`}
+                        onClick={() => router.push("/questioner/information")}
+                    >
+                      <img src={arrowRightIcon?.src} />
+                      تکمیل اطلاعات
+                    </Button>
+                  </div>
+                  <LeftHeader>
+                    {liListData?.map((item) => (
+                        <li key={item?.id}>
+                          <img className={`icon`} src={item?.icon} alt="" />
+                          <div className="text">{item?.text}</div>
+                        </li>
+                    ))}
+                  </LeftHeader>
+                </Header>
+                <AfterBox />
 
-              <ImageWallpaper src={backGround?.src} alt={""} />
+                <ImageWallpaper src={backGround?.src} alt={""} />
 
-          </QuestionBox>
+              </QuestionBox>
 
-          <Image
-            width={28}
-            height={28}
-            className={"close"}
-            src={closeIcon?.src}
-            alt={"بستن"}
-            onClick={() => router.push('/')}
-          />
+              <Image
+                  width={28}
+                  height={28}
+                  className={"close"}
+                  src={closeIcon?.src}
+                  alt={"بستن"}
+                  onClick={() => router.push('/')}
+              />
 
-        </Container>
-      </motion.div>
-    </AnimatePresence>
+            </Container>
+          </motion.div>
+        </AnimatePresence>
+      </>
+
   );
 };
 

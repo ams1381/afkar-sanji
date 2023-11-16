@@ -70,7 +70,10 @@ html::-webkit-scrollbar-thumb {
     border-radius: 9px;
     width: 10px;
 }
-
+.ant-message-notice-content
+{
+    border-radius: 2px !important;
+}
 .ant-drawer-header, .ant-drawer-body {
     padding: 0 !important;
 }

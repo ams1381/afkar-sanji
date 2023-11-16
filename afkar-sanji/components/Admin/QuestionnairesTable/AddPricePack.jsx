@@ -7,102 +7,121 @@ import {
     PopupTopButtonsContainer
 } from "@/styles/Admin/userInfoPopup";
 import {Icon} from "@/styles/icons";
-import {Button, message} from "antd";
+import {Button, Input, InputNumber, message, Modal} from "antd";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
+import React, {useState} from "react";
+import {styled} from "styled-components";
+import TextArea from "antd/lib/input/TextArea";
+import {axiosInstance} from "@/utilities/axios";
 
-export const AddPricePack = ({  }) => {
+export const AddPricePack = ({ activePricePopup , setActivePricePopup , QuestionnaireList}) => {
     const [ MessageApi , MessageContext ] = message.useMessage();
+    const [ priceValue , setPriceValue ] = useState(null);
+    const [ priceDescription , setPriceDescription ] = useState(null);
+    const [ priceTitle , setPriceTitle ] = useState(null);
+    const [ PriceLoading , setPriceLoading ] = useState(false);
+    const AddPricePackHandler = async () => {
+        setPriceLoading(true)
+        try {
+            await axiosInstance.post('/admin-api/price-packs/',{
+                name : priceTitle ,
+                price : priceValue ,
+                description : priceDescription
+            })
+        } catch (err) {
+            console.log(err)
+        } finally {
+            setPriceLoading(false);
+        }
+
+    }
 
     return <>
-        <ChatMask onClick={() => SetActivePopupUser(null)} />
-    <PopupContainer style={{ height : 'auto' }}>
-        {MessageContext}
-        <PopupHeader style={{ boxShadow : ''}}>
-            <div style={{ cursor : 'pointer' }} onClick={() => SetActivePopupUser(null)}>
-                <Icon style={{ width : 12 , height : 12 }} name={'GrayClose'} />
-            </div>
-            <ChatHeaderTitle>
-                <p className={'admin-name'}>
-                    {usersLists.find(item => item.id === ActivePopupUser.id).first_name}
-                </p>
-            </ChatHeaderTitle>
-        </PopupHeader>
-        <ChatMessageContainer>
-            <PopupTopButtonsContainer>
-                { UserData.resume && <Button type={'primary'} onClick={() => setPopupType('resume-popup')}>
-                    مشاهده رزومه
-                </Button>}
-                { usersLists.find(item => item.id === ActivePopupUser.id).ask_for_interview_role && <Button onClick={AcceptInterviewRole}>
-                    تایید درخواست پرسش‌گری
-                </Button>}
-            </PopupTopButtonsContainer>
-            <PopupInfoContainer>
-                <PopupRowContainer>
-                    <span>شماره تلفن</span>
-                    <p>{digitsEnToFa(usersLists.find(item => item.id === ActivePopupUser.id).phone_number)}</p>
-                </PopupRowContainer>
-                <PopupRowContainer>
-                    <span>ایمیل</span>
-                    <p>{(usersLists.find(item => item.id === ActivePopupUser.id).email)}</p>
-                </PopupRowContainer>
-                <PopupRowContainer>
-                    <span>جنسیت</span>
-                    <p>
-                        {
-                            usersLists.find(item => item.id === ActivePopupUser.id).gender === 'm' ? 'مرد' :
-                                usersLists.find(item => item.id === ActivePopupUser.id).gender === 'f' ? 'زن' : 'دوجنسه'
-                        }
-                    </p>
-                </PopupRowContainer>
-                <PopupRowContainer>
-                    <span>آدرس</span>
-                    <p>{(usersLists.find(item => item.id === ActivePopupUser.id).address)}</p>
-                </PopupRowContainer>
-                <PopupRowContainer>
-                    <span>تابعیت</span>
-                    <p>{
-                        (usersLists.find(item => item.id === ActivePopupUser.id).nationality &&
-                            RegoionsData.find(Country => Country.id === usersLists.find(item => item.id === ActivePopupUser.id).nationality).name
-                        )
-                    }</p>
-                </PopupRowContainer>
-                <PopupRowContainer>
-                    <span>استان محل سکونت</span>
-                    <p>{
-                        (usersLists.find(item => item.id === ActivePopupUser.id).province &&
-                            RegoionsData[0].provinces.find(Country => Country.id === usersLists.find(item => item.id === ActivePopupUser.id).province).name
-                        )
-                    }</p>
-                </PopupRowContainer>
-                <PopupRowContainer>
-                    <span>تعداد پرسش‌نامه‌ها</span>
-                    <p>{
-                        usersLists.find(item => item.id === ActivePopupUser.id).questionnaires_count ? digitsEnToFa(usersLists.find(item => item.id === ActivePopupUser.id).questionnaires_count)
-                            : ''
-                    }</p>
-                </PopupRowContainer>
-            </PopupInfoContainer>
-
-        </ChatMessageContainer>
-        <PopupFooter>
-            <PopupFooterButton
-                loading={interviewAcceptLoading}
-                onClick={() => SetActivePopupUser({
-                    id : usersLists[usersLists.findIndex(UserItem => UserItem.id === ActivePopupUser.id) + 1].id
-                })}
-                disabled={usersLists.findIndex(UserItem => UserItem.id === ActivePopupUser.id) === usersLists.length - 1}>
-                <Icon name={'ArrowDown'} />
-                <p>بعدی</p>
-            </PopupFooterButton>
-            <PopupFooterButton
-                onClick={() => SetActivePopupUser({
-                    id : usersLists[usersLists.findIndex(UserItem => UserItem.id === ActivePopupUser.id) - 1].id
-                })}
-                disabled={usersLists.findIndex(UserItem => UserItem.id === ActivePopupUser.id) === 0}>
-                <Icon style={{ transform : 'rotate(180deg)' }} name={'ArrowDown'} />
-                <p>قبلی</p>
-            </PopupFooterButton>
-        </PopupFooter>
-    </PopupContainer>
+        <Modal mask={true}
+               preserve={false}
+               destroyOnClose={true}
+               onCancel={() => setActivePricePopup(null)}
+               modalRender={(ReactNode) => <div style={{ direction : 'ltr' }}>{ReactNode}</div>}
+               centered={true}
+               closeIcon={true}
+               title={<></>}
+               maskClosable={true}
+               footer={<></>}
+               open={activePricePopup}>
+            <PopupContainer style={{ height : 'auto' }}>
+                <PopupHeader style={{ boxShadow : ''}}>
+                    <div style={{ cursor : 'pointer' }} onClick={() => setActivePricePopup(null)}>
+                        <Icon style={{ width : 12 , height : 12 }} name={'GrayClose'} />
+                    </div>
+                    <ChatHeaderTitle>
+                        <p style={{ fontSize : 16 , color : 'black' }}>
+                            اضافه کردن بسته
+                        </p>
+                    </ChatHeaderTitle>
+                </PopupHeader>
+                <ChatMessageContainer>
+                    <div>
+                        <div style={{ display : 'flex' , justifyContent : 'space-between' , gap : 10 }}>
+                            <AddPriceInputContainer>
+                                <p>ارزش هر نتیجه</p>
+                                <AddPriceNumberInput style={{ fontFamily : 'IRANSans' }} value={priceValue ? priceValue : ''}
+                                         onChange={(e) => setPriceValue(e)}
+                                     placeholder={'قیمت را وارد کنید'} />
+                            </AddPriceInputContainer>
+                            <AddPriceInputContainer>
+                                <p>عنوان بسته</p>
+                                <AddPriceInput onChange={e => setPriceTitle(e.target.value)} value={priceTitle} placeholder={'کوتاه بنویسید'} />
+                            </AddPriceInputContainer>
+                        </div>
+                        <AddPriceInputContainer style={{ marginTop : 5 }}>
+                            <p>توضیحات</p>
+                            <AddPriceTextarea value={priceDescription ? priceDescription : ''}
+                                 onChange={(e) => setPriceDescription(e.target.value)} placeholder={'چیزی بنویسید'} />
+                        </AddPriceInputContainer>
+                    </div>
+                    <AddPricePackButton loading={PriceLoading} type={'primary'} onClick={AddPricePackHandler}>
+                        <p>افزودن به کارت‌ها</p>
+                        <Icon style={{ width : 12 , height : 12 }} name={'Add'} />
+                    </AddPricePackButton>
+                </ChatMessageContainer>
+            </PopupContainer>
+        </Modal>
     </>
 }
+const AddPriceInput = styled(Input)`
+    border-radius: 2px;
+    font-family: IRANSans;
+    text-align: right;
+    direction: rtl;
+`
+const AddPriceTextarea = styled(TextArea)`
+  border-radius: 2px;
+  font-family: IRANSans;
+  text-align: right;
+  direction: rtl;
+`
+const AddPriceNumberInput = styled(InputNumber)`
+  border-radius: 2px;
+  font-family: IRANSans;
+  text-align: right;
+  direction: rtl;
+  width: 100%;
+`
+const AddPriceInputContainer = styled.div`
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+`
+
+const AddPricePackButton = styled(Button)`
+  width: 100%;
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  //flex-direction: row-reverse;
+  align-items: center;
+  gap: 8px;
+  direction: rtl;
+`

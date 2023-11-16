@@ -320,7 +320,10 @@ export const EmailInputContainer = styled.div`
     border: 1px solid #D9D9D9;
     align-items: center;
     height: 40px;
-    
+    .ant-skeleton
+    {
+      width: 100% !important;
+    }
     & input 
     {
         // border: none;

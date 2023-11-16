@@ -17,9 +17,11 @@ import { Skeleton } from 'antd'
 import {axiosInstance} from "@/utilities/axios";
 import {useRouter} from "next/router";
 import {AuthContext} from "@/utilities/AuthContext";
+import {useLocalStorage} from "@/utilities/useLocalStorage";
 
-export const QuestionerHeader = ({ pageName , meData }) => {
+export const QuestionerHeader = ({ pageName , meData , interviewData }) => {
    const router = useRouter();
+   const { getItem } = useLocalStorage();
    const Auth = useContext(AuthContext)
   const [ logoutPopOver , switchPopover ] = useState(false);
     const LogoutHandler = async () => {
@@ -62,10 +64,10 @@ export const QuestionerHeader = ({ pageName , meData }) => {
                               <Icon style={{ width : 24 , height : 24 }} name={'AdminIcon'} />
                           </Link>:
                           <>
-                              { Auth.role === '' && <Icon style={{ width : 24 , height : 24 }} name={'NormalUser'} /> }
-                              { Auth.role === 'e' && <Icon style={{ width : 24 , height : 24 }} name={'EmployerIcon'} /> }
-                              { Auth.role === 'i' && <Icon style={{ width : 24 , height : 24 }} name={'QuestionerIcon'} /> }
-                              { Auth.role === 'ie' && <Icon style={{ width : 24 , height : 24 }} name={'InterViewerEmployer'} /> }
+                              { getItem('role') === 'n' && <Icon style={{ width : 24 , height : 24 }} name={'NormalUser'} /> }
+                              { getItem('role') === 'e' && <Icon style={{ width : 24 , height : 24 }} name={'EmployerIcon'} /> }
+                              { getItem('role') === 'i' && <Icon style={{ width : 24 , height : 24 }} name={'QuestionerIcon'} /> }
+                              { getItem('role') === 'ie' && <Icon style={{ width : 24 , height : 24 }} name={'InterViewerEmployer'} /> }
                           </>
                   }
                   {/*InterViewerEmployer*/}
@@ -95,14 +97,14 @@ export const QuestionerHeader = ({ pageName , meData }) => {
                 </Popover>
         <QuestionnaireDirectoryContainer>
               <QuestionnaireDirectoryPath>
-              {pathComponentGenerator(pageName)}
+              {pathComponentGenerator(pageName,interviewData)}
               </QuestionnaireDirectoryPath>
             </QuestionnaireDirectoryContainer>
           </HeaderComponent>
       </HeaderContainer>
   )
 }
-const pathComponentGenerator = (PageName) => {
+const pathComponentGenerator = (PageName,interviewData) => {
   switch(PageName)
   {
     case 'profile':
@@ -132,8 +134,18 @@ const pathComponentGenerator = (PageName) => {
           </>
       case 'questionnaires-list':
           return  <>
-              <p> لیست پرسشنامه ها </p> /
+              <p> لیست پرسشنامه ها </p>
+              <span>/ صفحه ی اصلی </span>
+          </>
+      case 'level-assignment':
+          return  <>
+              <p>تعیین سطح سوالات</p>
+              <span>/ {interviewData?.name} /</span>
+              <span> لیست پرسشنامه ها /</span>
               <span> صفحه ی اصلی </span>
+              {/*<span> لیست پرسشنامه ها </span> /*/}
+
+
           </>
   }
 }

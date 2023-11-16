@@ -109,15 +109,16 @@ const RoleSetter = ({ UserData , setRefreshPage }) => {
     Auth.setHasResume(false);
   Auth.setIsAdmin(UserData.is_staff);
   if(getItem('roleReq'))
-    Auth.reqRole = (getItem('roleReq'))
+    Auth.setReqRole(getItem('roleReq'))
   else
-    Auth.reqRole = ('question-api/questionnaires')
+    Auth.setReqRole('question-api/questionnaires')
 
   if(UserData.ask_for_interview_role)
     Auth.setAskForInterviewRole(true)
 
-  Auth.role = (UserData.role)
-  console.log(UserData)
+  // Auth.role = (UserData.role)
+  setItem('role',UserData.role)
+  // console.log(Auth)
   setRefreshPage(false)
 
   return <></>

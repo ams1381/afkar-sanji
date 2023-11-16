@@ -4,28 +4,30 @@ import React, {useState} from "react";
 import {styled} from "styled-components";
 import {axiosInstance} from "@/utilities/axios";
 
-export const PricePopup = ({ Questionnaire , rejectPopup , setRejectPopup }) => {
+export const RejectQuestionsPopup = ({ rejectPopup , setRejectPopup , Questionnaire }) => {
     const [ MessageApi , MessageContext ] = message.useMessage();
-    const [ inputValue , setInputValue  ] = useState(null);
     const  [ confirmLoading , setConfirmLoading ] = useState(false)
-    const ConfirmComment = async () => {
+    const [ inputValue , setInputValue  ] = useState(null);
+
+
+    const RejectContent = async  () => {
         setConfirmLoading(true)
         try {
-            await axiosInstance.post(`/interview-api/interviews/${Questionnaire.uuid}/reject-price/`,{
+            await axiosInstance.post(`admin-api/interviews/${Questionnaire.uuid}/reject-content/`,{
                 message : inputValue
             })
         }
         catch (err) {
-            setConfirmLoading(false);
-            MessageApi.error({
-                content : Object.values(err.response?.data)[0]
-            })
+            console.log(err)
+            // setConfirmLoading(false);
+            // MessageApi.error({
+            //     content : Object.values(err.response?.data)[0]
+            // })
         }
         finally {
             setConfirmLoading(false)
         }
     }
-
     return <>
         {MessageContext}
         <Modal mask={true}
@@ -38,11 +40,10 @@ export const PricePopup = ({ Questionnaire , rejectPopup , setRejectPopup }) => 
                title={<p>پرسشگران موردنیاز</p>}
                maskClosable={true}
                footer={<RemoveModalButtonsContainer style={{ direction : 'ltr' }}>
-                   <Button type='primary' onClick={ConfirmComment} loading={confirmLoading}>
-                       ثبت
+                   <Button type='primary' onClick={RejectContent} loading={confirmLoading}>
+                       ارسال به پرسش‌گر
                    </Button>
-                   <Button style={{ border : '1px solid var(--neutral-5, #D9D9D9) !important' , color : 'auto !important' }}
-                           onClick={() => setRejectPopup(false)}>
+                   <Button  danger onClick={() => setRejectPopup(false)}>
                        انصراف
                    </Button>
                </RemoveModalButtonsContainer>}

@@ -4,7 +4,7 @@ import {digitsEnToFa} from "@persian-tools/persian-tools";
 import {convertDate, convertToRegularTime} from "@/components/QuestionnairePanel/QuestionnaireSetting/SettingPanel";
 import {Icon} from "@/styles/icons";
 
-export const QuestionnaireTableColumns = (setActiveQuestionnairePopup,setActivePricePopup) => {
+export const QuestionnaireTableColumns = (setActiveQuestionnairePopup,setActivePricePopup,setPackPopupType) => {
     return [
         {
             title : 'شناسه',
@@ -87,7 +87,10 @@ export const QuestionnaireTableColumns = (setActiveQuestionnairePopup,setActiveP
                 return <Space size="large" style={{display: 'flex', justifyContent: 'space-between'}}>
                     <span onClick={() => setActiveQuestionnairePopup({ id : record.key })} style={{color: 'var(--primary-color)', cursor: 'pointer'}}>اطلاعات</span>
                     <Divider type={'vertical'}/>
-                    <TableBlockButton onClick={() => setActivePricePopup({ id : record.key })} style={{color: 'var(--primary-color)', cursor: 'pointer'}}>
+                    <TableBlockButton onClick={() => {
+                        setActivePricePopup({id: record.key})
+                        setPackPopupType('view')
+                    }} style={{color: 'var(--primary-color)', cursor: 'pointer'}}>
                         { record.rowData.price_pack ? 'ویرایش بسته' : 'بسته قیمت' }
                         </TableBlockButton>
                 </Space>

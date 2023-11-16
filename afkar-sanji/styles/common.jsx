@@ -617,6 +617,10 @@ export const ChatMessageContainer = styled.div`
   {
     width: 0;
   }
+  .ant-input-number-input
+  {
+    font-family: IRANSans !important;
+  }
 `
 export const SentMessageContainer = styled.div`
   font-size: 14px;

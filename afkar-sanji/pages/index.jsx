@@ -47,7 +47,8 @@ export default function Home({ cookies }) {
   const [ SekeltonLoading , setSkeletonLoading ] = useState(true);
   const { data , isLoading, error , refetch , isFetching, isFetched } = useQuery(['FolderFetch'],
   async () => await axiosInstance.get(`/user-api/folders/?is_interview=${getItem('roleReq') && getItem('roleReq') === 'question-api/questionnaires' ? 0 : 1}`),{
-    refetchOnWindowFocus : false
+        refetchOnWindowFocus : false ,
+        retry : false
       })
 
   useEffect(() => {
