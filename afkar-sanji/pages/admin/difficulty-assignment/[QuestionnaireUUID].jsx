@@ -1,6 +1,6 @@
 import {useRouter} from "next/router";
 import Head from "next/head";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {CommonDrawer} from "@/components/common/CommonDrawer";
 import QuestionerHeader from "@/components/common/QuestionerHeader";
 import {PageBox} from "@/styles/common";
@@ -19,18 +19,10 @@ import {
     QuestionsSliderContainer,
     SwipersController, LevelButton
 } from "@/styles/Admin/adminPanel";
-import {Button, message, Skeleton} from "antd";
+import {Button, message} from "antd";
 import {Icon} from "@/styles/icons";
-import {Mousewheel, Pagination} from "swiper/modules";
-import {Swiper, SwiperSlide, useSwiper, useSwiperSlide} from "swiper/react";
 import {QuestionsSwiper} from "@/components/Admin/QuestionsSwiper";
 import {RejectQuestionsPopup} from "@/components/Admin/RejectQuestionsPopup";
-import QuestionComponent from "@/components/Questions/Question";
-import {
-    QuestionComponentContainer,
-    QuestionDescription,
-    QuestionTitle
-} from "@/styles/questionnairePanel/QuestionComponent";
 import {LevelPageSkeleton} from "@/components/Admin/QuestionnairesTable/LevelPageSkeleton";
 
 const LevelAssignmentPage = () => {
