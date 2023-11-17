@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 // style
 import {
     Container, Form, FromItem, Row, Title, TextAreaCom,
@@ -21,6 +21,7 @@ import Image from "next/image";
 import closeIcon from "@/public/Icons/Dismiss.svg";
 import {useRouter} from "next/router";
 import Head from "next/head";
+import {AuthContext} from "@/utilities/AuthContext";
 
 export default function () {
     const [userData, setUserData] = useState();
@@ -35,7 +36,8 @@ export default function () {
         });
     }, []);
 
-    const [country, setCountry] = useState([])
+    const [country, setCountry] = useState([]);
+    const Auth = useContext(AuthContext);
     const [provinceList, setProvinceList] = useState([])
     const [formData, setFormData] = useState({
         first_name: '', last_name: '', gender: '', email: '', address: '', nationality: '', province: '',
@@ -69,20 +71,43 @@ export default function () {
         })
     }, []);
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         setConfirmButtonLoading(true)
+
+        if(Object.values(formData).some(item => (item === null || item === '' || item === undefined)))  {
+            message.error({
+                content : 'لطفا اطلاعات را به طور کامل کنید'
+            })
+            setConfirmButtonLoading(false)
+            return
+        }
+
         axiosInstance.patch('/user-api/users/me/', formData).then(res => {
             if (res?.status === 200) {
                 message.success('با موفقیت انجام شد')
                 setConfirmButtonLoading(false)
-                router.push('/questioner/resume/')
+                // router.push('/questioner/resume/')
             }
+
 
         }).catch(error => {
             setConfirmButtonLoading(false)
             const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
             message.error(ERROR_MESSAGE)
         })
+        if (userData?.role === 'n' || userData.role === 'e') {
+             axiosInstance.patch('user-api/users/me', {
+                ask_for_interview_role: true
+            }).then(res => {
+                 Auth.setAskForInterviewRole(true)
+                router.push('/questioner/resume')
+            }).catch(error => {
+                const errorMessage = error.response?.data[Object.keys(error.response.data)[0]][0];
+                message.error(errorMessage)
+            })
+        } else {
+            router.push('/questioner/resume')
+        }
     }
 
     return (<>

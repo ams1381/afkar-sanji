@@ -89,7 +89,7 @@ export const UserInfoPopup = ({ usersLists , setPopupType , RegoionsData , Activ
                         <p>
                             {
                                 usersLists.find(item => item.id === ActivePopupUser.id).gender === 'm' ? 'مرد' :
-                                    usersLists.find(item => item.id === ActivePopupUser.id).gender === 'f' ? 'زن' : 'دوجنسه'
+                                    usersLists.find(item => item.id === ActivePopupUser.id).gender === 'f' ? 'زن' : ''
                             }
                         </p>
                     </PopupRowContainer>

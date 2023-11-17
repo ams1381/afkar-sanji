@@ -246,7 +246,7 @@ export default function ({meData, cookies}) {
                         <div onClick={() => router.push('dashboard/collaboration')} style={{
                             marginRight: '0', width: '100%', display: 'flex', justifyContent: ' end'
                         }}>
-                            <Button
+                            { (meData.role === 'i' || meData.role === 'ie') ? <Button
                                 disabled={isHaveResume}
                                 style={{
                                     marginTop: '100px',
@@ -258,10 +258,16 @@ export default function ({meData, cookies}) {
                                 className={`bottom`}
                                 // onClick={() => router.push("/questioner/information")}
                             >
-                                پنل پرسش‌گری
-                                <img src={arrowRightIcon?.src}/>
 
-                            </Button>
+                                <p>پنل پرسش‌گری</p>
+                                <img src={arrowRightIcon?.src}/>
+                            </Button> : <div style={{
+                                marginTop: '100px',
+                                padding: '0 15px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '5px'
+                            }}></div>}
                         </div>
                     </Container>
                 </motion.div>

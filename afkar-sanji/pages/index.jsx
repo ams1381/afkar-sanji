@@ -226,7 +226,9 @@ export default function Home({ cookies }) {
           <QuestionnaireBox FolderReload={refetch} folderNumber={SelectedFolder}
            Questionnaire={item} key={item.id} />)
           : <EmptyFolderContainer>
-          <p>یک پرسشنامه درست کنید</p>
+                { getItem('roleReq') === 'interview-api/interviews' ?
+                  <p>یک پروژه درست کنید</p> :
+                  <p>یک پرسشنامه درست کنید</p>}
           <AddQuestionnairePopUp AddQuestionnaireModal={AddQuestionnaireState}
           setQuestionnaireModalState={() => setAddQuestionnaireState(!AddQuestionnaireState)}
           FolderReload={refetch}
@@ -234,7 +236,7 @@ export default function Home({ cookies }) {
           SelectedFolderNumber={SelectedFolder}
           />
           <button onClick={() => setAddQuestionnaireState(true)}>
-              <p>ایجاد نظر سنجی</p>
+            { getItem('roleReq') === 'interview-api/interviews' ? <p>ایجاد پروژه</p> : <p>ایجاد نظر سنجی</p>}
               <Icon name='AddFile' style={{ width : 14 }}/>
              </button>
           </EmptyFolderContainer>

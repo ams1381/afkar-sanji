@@ -15,12 +15,15 @@ import {AuthContext} from "@/utilities/AuthContext";
 import {useRouter} from "next/router";
 import {useLocalStorage} from "@/utilities/useLocalStorage";
 import {axiosInstance} from "@/utilities/axios";
+import {WalletPopup} from "@/components/Folders/walletPopup";
 export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin }) => {
     const Auth = useContext(AuthContext);
     const router = useRouter();
-    const { setItem , getItem } = useLocalStorage()
+    const { setItem , getItem } = useLocalStorage();
+    const [ walletPopupOpen , setWalletPopupOpen ] = useState(false);
     const [ MessageApi , MessageContext ] = message.useMessage();
     const [ drawerSelectedItem , setDrawerSelecteditem ] = useState(null);
+    const [ distPage , setDistPage ] = useState(null);
     useEffect(() => {
         if(router.pathname === '/' || router.pathname.includes('questionnaire')) {
             if(getItem('roleReq') === 'question-api/questionnaires')
@@ -86,6 +89,7 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
     }
   return (
     <CommonDrawerContainer open={RightDrawerOpen ? 'active' : null} >
+        <WalletPopup distPage={distPage} walletPopupOpen={walletPopupOpen} setWalletPopupOpen={setWalletPopupOpen} />
         <div className={'drawer-inner-container'}>
             {MessageContext}
             <div className='drawerLogo' onClick={() => setRightDrawerOpen(!RightDrawerOpen)}>
@@ -113,18 +117,24 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                         </CommonDrawerItemText>
                         {
                             !isAdmin ? <>
-                                    { getItem('role') === 'e' || getItem('role') === 'ie' && <CommonDrawerItemText
+                                    {/*{ getItem('role') === 'e' || getItem('role') === 'ie' &&*/}
+                                        <CommonDrawerItemText
                                         onClick={() => {
                                             if (getItem('role') === 'e' || getItem('role') === 'ie') {
                                                 Auth.setReqRole('interview-api/interviews');
                                                 setItem('roleReq', 'interview-api/interviews')
                                                 router.push('/')
                                             }
+                                            else {
+                                                setWalletPopupOpen(true);
+                                                setDistPage('employer')
+                                            }
                                         }}
                                         className='drawer_item_text employer'
                                         active={drawerSelectedItem === 'employer-panel'}>
                                         <p>پنل کارفرمایی</p>
-                                    </CommonDrawerItemText>}
+                                    </CommonDrawerItemText>
+                                    {/*// }*/}
                                 {/*<Link href={(Auth.role === 'e' || Auth.role === 'n' || !Auth.hasResume) ? '/questioner/' : '/questioner/dashboard/collaboration/'}>*/}
                                     <CommonDrawerItemText active={drawerSelectedItem === 'interview-panel'}
                                           onClick={async () => {
@@ -137,16 +147,25 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                                           }}
                                           className='drawer_item_text interviewer'>
                                         { Auth.askForInterviewRole && <AskForAdminText>
-                                            در انتظار ادمین
+                                            در انتظار تایید
                                         </AskForAdminText>}
                                         <p>پنل پرسشگری</p>
                                     </CommonDrawerItemText>
                                 {/*</Link>*/}
-                                <Link href={'/questioner/dashboard/wallet/'}>
-                                    <CommonDrawerItemText active={drawerSelectedItem === 'wallet'} className='drawer_item_text wallet'>
+                                {/*<Link href={'/questioner/dashboard/wallet/'}>*/}
+                                    <CommonDrawerItemText active={drawerSelectedItem === 'wallet'}
+                                          onClick={async () => {
+                                              if (getItem('role') === 'e' || getItem('role') === 'ie')
+                                                  await router.push('/questioner/dashboard/wallet/')
+                                              else {
+                                                  setWalletPopupOpen(true);
+                                                  setDistPage('wallet')
+                                              }
+                                          }}
+                                          className='drawer_item_text wallet'>
                                         <p>کیف پول</p>
                                     </CommonDrawerItemText>
-                                </Link>
+                                {/*</Link>*/}
                                     <CommonDrawerItemText onClick={async () => {
                                         Auth.setReqRole('question-api/questionnaires')
                                         setItem('roleReq','question-api/questionnaires')
@@ -197,19 +216,25 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                             <Icon name='DrawerHome' />
                         </CommonDrawerItemIcon>
                         { !isAdmin ? <>
-                                { getItem('role') === 'e' || getItem('role') === 'ie' && <CommonDrawerItemIcon
+                                {/*{ getItem('role') === 'e' || getItem('role') === 'ie' &&*/}
+                                    <CommonDrawerItemIcon
                                     onClick={() => {
                                         if (getItem('role') === 'e' || getItem('role') === 'ie') {
                                             Auth.setReqRole('interview-api/interviews');
                                             setItem('roleReq', 'interview-api/interviews');
                                             router.push('/')
                                         }
+                                        else {
+                                            setWalletPopupOpen(true);
+                                            setDistPage('employer')
+                                        }
                                     }}
                                     open={RightDrawerOpen ? 'active' : null}
                                     active={drawerSelectedItem === 'employer-panel'}
                                     className='drawer_item i_employer'>
                                     <Icon name='Projects'/>
-                                </CommonDrawerItemIcon>}
+                                </CommonDrawerItemIcon>
+                        {/*}*/}
                         <CommonDrawerItemIcon open={RightDrawerOpen ? 'active' : null}
                               onClick={async () => {
                                   if(!Auth.hasResume) {
@@ -226,11 +251,21 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                             </Icon>
                         </CommonDrawerItemIcon>
                     {/*</Link>*/}
-                        <Link href={'/questioner/dashboard/wallet/'}>
-                            <CommonDrawerItemIcon active={drawerSelectedItem === 'wallet'} open={RightDrawerOpen ? 'active' : null} className='drawer_item i_wallet'>
+                    {/*    <Link href={'/questioner/dashboard/wallet/'}>*/}
+                            <CommonDrawerItemIcon active={drawerSelectedItem === 'wallet'}
+                                  onClick={async () => {
+                                      if (getItem('role') === 'e' || getItem('role') === 'ie')
+                                          await router.push('/questioner/dashboard/wallet/')
+                                      else {
+                                          setWalletPopupOpen(true);
+                                          setDistPage('wallet')
+                                      }
+                                      // setDistPage('employer')
+                                  }}
+                                  open={RightDrawerOpen ? 'active' : null} className='drawer_item i_wallet'>
                                 <Icon name='DrawerWallet'/>
                             </CommonDrawerItemIcon>
-                        </Link>
+                        {/*</Link>*/}
                         {/*<Link href={'/'} >*/}
                             <CommonDrawerItemIcon onClick={() => {
                                 Auth.setReqRole('question-api/questionnaires')
