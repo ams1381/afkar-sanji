@@ -23,6 +23,7 @@ import {UsersHeader} from "@/components/Admin/UsersList/UsersListHeader";
 import {UsersTable} from "@/components/Admin/UsersTable/UsersTable";
 import {UserInfoPopup} from "@/components/Admin/UsersTable/UserInfoPopup";
 import {ResumeInfo} from "@/components/Admin/UsersTable/ResumeInfo";
+import {digitsFaToEn} from "@persian-tools/persian-tools";
 
 const UsersListPage = () => {
     const [ RightDrawerOpen , setRightDrawerOpen ] = useState(false);
@@ -41,7 +42,7 @@ const UsersListPage = () => {
         queries : [
             { queryKey : ['UsersListQuery'] ,
                 queryFn : async () =>
-                    await axiosInstance.get(`/admin-api/users/${userSearchValue ? 'search-users/' : ''}?role=${roleFilterValue}${interviewRequestFilter ? interviewRequestFilter : ''}&interview_name=${InterviewSearch ? InterviewSearch : ''}${!userSearchValue ? `&page_size=${pageSize}` : ''}${!userSearchValue ? `&page=${CurrentPage}` : ''}&search=${userSearchValue ? userSearchValue : ''}`),
+                    await axiosInstance.get(`/admin-api/users/${userSearchValue ? 'search-users/' : ''}?role=${roleFilterValue}${interviewRequestFilter ? interviewRequestFilter : ''}&interview_name=${InterviewSearch ? InterviewSearch : ''}${!userSearchValue ? `&page_size=${pageSize}` : ''}${!userSearchValue ? `&page=${CurrentPage}` : ''}&search=${userSearchValue ? digitsFaToEn(userSearchValue) : ''}`),
                 refetchOnWindowFocus : false,
                 retry : false
             } ,

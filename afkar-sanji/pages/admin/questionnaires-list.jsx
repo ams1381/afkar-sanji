@@ -31,7 +31,7 @@ const QuestionnairesList = () => {
         queries : [
             {
                 queryKey : ['QuestionnairesListQuery'],
-                queryFn : async () => await axiosInstance.get(`/admin-api/interviews/${interviewSearch ? 'search-questions/' : ''}?page_size=${pageSize}&page=${CurrentPage}${levelFilter}${priceFilter}&search=${interviewSearch ? interviewSearch : ''}`),
+                queryFn : async () => await axiosInstance.get(`/admin-api/interviews/${interviewSearch ? 'search-questions/' : ''}?${!interviewSearch ? `page_size=${pageSize}&page=${CurrentPage}` : ''}${levelFilter}${priceFilter}&search=${interviewSearch ? interviewSearch : ''}`),
                 refetchOnWindowFocus : false,
                 retry : false
             }

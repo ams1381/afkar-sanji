@@ -25,7 +25,7 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
     const [ drawerSelectedItem , setDrawerSelecteditem ] = useState(null);
     const [ distPage , setDistPage ] = useState(null);
     useEffect(() => {
-        if(router.pathname === '/' || router.pathname.includes('questionnaire')) {
+        if(router.pathname === '/' || router.pathname.includes('questionnaire') && !router.pathname.includes('questionnaires-list')) {
             if(getItem('roleReq') === 'question-api/questionnaires')
                 setDrawerSelecteditem('create-questionnaire')
             else
@@ -38,9 +38,15 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                 setDrawerSelecteditem('wallet')
             else if(router.pathname.includes('collaboration'))
                 setDrawerSelecteditem('interview-panel')
+            else if(router.pathname.includes('users-list'))
+                setDrawerSelecteditem('users-list')
+            else if(router.pathname.includes('questionnaires-list'))
+                setDrawerSelecteditem('questionnaires-list')
+            // questionnaires-list
         }
 
     }, [router]);
+    console.log(drawerSelectedItem)
     useEffect(() => {
         window.addEventListener('scroll',(e) => {
             if(window.pageYOffset >= 57) {
@@ -160,10 +166,10 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                                 {/*<Link href={'/questioner/dashboard/wallet/'}>*/}
                                     <CommonDrawerItemText active={drawerSelectedItem === 'wallet'}
                                           onClick={async () => {
-                                              // if (getItem('role') === 'e' || getItem('role') === 'ie')
-                                              if(Auth.hasWallet)
+                                              if(Auth.hasWallet) {
                                                   await router.push('/questioner/dashboard/wallet/')
-                                              else if(!Auth.hasWallet)  {
+                                              }
+                                              else  {
                                                   setWalletPopupOpen(true);
                                                   setDistPage('wallet')
                                               }
@@ -183,13 +189,14 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                             </> :
                             <>
                                 <Link href={'/admin/users-list'}>
-                                    <CommonDrawerItemText
+                                    <CommonDrawerItemText active={drawerSelectedItem === 'users-list'}
                                                           className='drawer_item_text'>
                                         <p>لیست کاربران</p>
                                     </CommonDrawerItemText>
                                 </Link>
                                     <Link href={'/admin/questionnaires-list'}>
                                         <CommonDrawerItemText
+                                            active={drawerSelectedItem === 'questionnaires-list'}
                                             className='drawer_item_text'>
                                             <p>لیست پرسش‌نامه‌ها</p>
                                         </CommonDrawerItemText>
@@ -264,16 +271,15 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                     {/*</Link>*/}
                     {/*    <Link href={'/questioner/dashboard/wallet/'}>*/}
                             <CommonDrawerItemIcon active={drawerSelectedItem === 'wallet'}
-                                  onClick={async () => {
-                                      if(Auth.hasWallet)
-                                          await router.push('/questioner/dashboard/wallet/')
-                                      // if (getItem('role') === 'e' || getItem('role') === 'ie')
-                                      else if(!Auth.hasWallet)  {
-                                          setWalletPopupOpen(true);
-                                          setDistPage('wallet')
-                                      }
-                                      // setDistPage('employer')
-                                  }}
+                              onClick={async () => {
+                                  if(Auth.hasWallet) {
+                                      await router.push('/questioner/dashboard/wallet/')
+                                  }
+                                  else  {
+                                      setWalletPopupOpen(true);
+                                      setDistPage('wallet')
+                                  }
+                              }}
                                   open={RightDrawerOpen ? 'active' : null} className='drawer_item i_wallet'>
                                 <Icon name='DrawerWallet'/>
                             </CommonDrawerItemIcon>
@@ -291,12 +297,16 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                     </>
                     : <>
                         <Link href={'/admin/users-list/'}>
-                            <CommonDrawerItemIcon open={RightDrawerOpen ? 'active' : null} className='drawer_item i_wallet'>
+                            <CommonDrawerItemIcon open={RightDrawerOpen ? 'active' : null}
+                                      active={drawerSelectedItem === 'users-list'}
+                                      className='drawer_item i_wallet'>
                                 <Icon name='UsersList'/>
                             </CommonDrawerItemIcon>
                         </Link>
                         <Link href={'/admin/questionnaires-list/'}>
-                            <CommonDrawerItemIcon  open={RightDrawerOpen ? 'active' : null} className='drawer_item i_wallet'>
+                            <CommonDrawerItemIcon  open={RightDrawerOpen ? 'active' : null}
+                                       active={drawerSelectedItem === 'questionnaires-list'}
+                                       className='drawer_item i_wallet'>
                                 <Icon name='QuestionnairesList'/>
                             </CommonDrawerItemIcon>
                         </Link>
