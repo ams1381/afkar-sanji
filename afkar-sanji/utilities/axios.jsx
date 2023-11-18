@@ -32,8 +32,16 @@ axiosInstance.interceptors.response.use(function (response) {
         case 401:
             try
             {
-                await axios.post('/user-api/auth/refresh-token/', { refresh : axiosInstance.defaults.refresh_token })
-                window.location.reload()
+                let { data } = await axios.post('/user-api/auth/refresh-token/', { refresh : axiosInstance.defaults.refresh_token })
+                // console.log(data)
+                // let errorConfig = error.config;
+                error.config.headers['Authorization'] = 'Bearer ' + data.access;
+                // Update the refresh token in the error config
+                error.config.refresh_token = data.refresh;
+                // Update the default headers for future requests
+                axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + data.access;
+                // Update the refresh token in the Axios instance
+                axiosInstance.refresh_token = data.refresh;
             }
             catch(err)
             {

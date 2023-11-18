@@ -10,6 +10,8 @@ const AuthContextProvider = ({ children }) => {
     const [ askForInterviewRole , setAskForInterviewRole ] = useState(false);
     const [ userRole , setUserRole ] = useState(null);
     const [ isAdmin , setIsAdmin ] = useState(false);
+    const [ hasWallet , setHasWallet ] = useState(false);
+
     const InitialValue = {
          PhoneNumber : PhoneNumber , 
          changePhone : SetPhoneNumber ,
@@ -23,6 +25,8 @@ const AuthContextProvider = ({ children }) => {
          hasResume : hasResume ,
          setHasResume : setHasResume ,
          isAdmin : isAdmin ,
+         hasWallet : hasWallet,
+         setHasWallet : setHasWallet ,
          setIsAdmin : setIsAdmin ,
          askForInterviewRole : askForInterviewRole ,
          setAskForInterviewRole : setAskForInterviewRole

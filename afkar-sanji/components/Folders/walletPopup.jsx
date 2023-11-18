@@ -27,6 +27,7 @@ export const WalletPopup = ({ setWalletPopupOpen , distPage , walletPopupOpen })
                 card_number : WalletData.cardNumber
             })
             setWalletPopupOpen(false);
+            Auth.setHasWallet(true)
             await axiosInstance.patch('/user-api/users/me/',{
                 role : getItem('role') === 'n' ? 'e' : 'ie'
             })
@@ -37,6 +38,9 @@ export const WalletPopup = ({ setWalletPopupOpen , distPage , walletPopupOpen })
                 Auth.setReqRole('interview-api/interviews');
                 setItem('roleReq', 'interview-api/interviews');
                 await router.push('/')
+            }
+            else if(distPage === 'resume') {
+                router.push('/questioner/resume')
             }
             else {
                 await router.push('/questioner/dashboard/wallet/')
@@ -107,27 +111,32 @@ export const WalletPopup = ({ setWalletPopupOpen , distPage , walletPopupOpen })
                             </WalletInputContainer>
                             <WalletInputContainer>
                                 <p>شماره شبا</p>
-                                <WalletPopupInput
-                                    status={inputErrName === 'IBAN' ? 'error' : null}
-                                    onChange={(e) => {
-                                        setInputErrName(null)
-                                        if(!e.target.value) {
+                                <IBNInputContainer>
+                                    <IRLabelContainer>IR</IRLabelContainer>
+                                    <WalletPopupInput
+                                        status={inputErrName === 'IBAN' ? 'error' : null}
+                                        style={{ textAlign : 'left' }}
+                                        onChange={(e) => {
+                                            setInputErrName(null)
+                                            if(!e.target.value) {
+                                                setWalletData(prevState => ({
+                                                    ...prevState ,
+                                                    IBANNumber :null
+                                                }))
+                                                return
+                                            }
+                                            const inputValue = digitsFaToEn(e.target.value);
+                                            const cleanedValue = inputValue.replace(/[^0-9]/g, '');
+
                                             setWalletData(prevState => ({
                                                 ...prevState ,
-                                                IBANNumber :null
+                                                IBANNumber : cleanedValue
                                             }))
-                                            return
-                                        }
-                                        // const inputValue = digitsFaToEn(e.target.value);
-                                        // const cleanedValue = inputValue.replace(/[^0-9]/g, '');
+                                        }}
+                                        value={WalletData.IBANNumber ? digitsEnToFa(WalletData.IBANNumber) : ''}
+                                        placeholder={'35646XXXXXXXXXXXXXXXXXXXX'} />
+                                </IBNInputContainer>
 
-                                        setWalletData(prevState => ({
-                                            ...prevState ,
-                                            IBANNumber :digitsFaToEn(e.target.value)
-                                        }))
-                                    }}
-                                    value={WalletData.IBANNumber ? digitsEnToFa(WalletData.IBANNumber) : ''}
-                                      placeholder={'شماره شبا را وارد کنید'} />
                             </WalletInputContainer>
                             <div>
                                 { errMessage && <p style={{color: 'var(--Error-color)'}}>{errMessage}</p>}
@@ -165,4 +174,16 @@ const CreateWalletButton = styled(Button)`
   width: 100%;
   height: 35px;
   margin-top: 10px;
+`
+const IRLabelContainer = styled.label`
+  height: 31px;
+  display: flex;
+  align-items: center;
+  padding: 0 9px;
+  border-radius: 2px;
+  border: 1px solid var(--login-input-default-border);
+`
+const IBNInputContainer = styled.div`
+  display: flex;
+  gap: 10px;
 `

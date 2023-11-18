@@ -36,11 +36,12 @@ const UsersListPage = () => {
     const [ selectedRows , setSelectedRows ] = useState([]);
     const [ InterviewSearch , setInterviewSearch ] = useState(null);
     const [ PopupType , setPopupType ] = useState('user-info')
+    // await axiosInstance.get(`/admin-api/users/${userSearchValue ? 'search-users/' : ''}?role=${roleFilterValue}${interviewRequestFilter ? interviewRequestFilter : ''}&interview_name=${InterviewSearch ? InterviewSearch : ''}&page_size=${!userSearchValue ? pageSize : ''}&page=${(!userSearchValue && CurrentPage) ? CurrentPage : ''}&search=${userSearchValue ? userSearchValue : ''}`),
     const [ UserListQuery , MeQuery, RegionsQuery ] = useQueries({
         queries : [
             { queryKey : ['UsersListQuery'] ,
                 queryFn : async () =>
-                    await axiosInstance.get(`/admin-api/users/${userSearchValue ? 'search-users/' : ''}?role=${roleFilterValue}${interviewRequestFilter ? interviewRequestFilter : ''}&interview_name=${InterviewSearch ? InterviewSearch : ''}&page_size=${pageSize}&page=${CurrentPage ? CurrentPage : ''}&search=${userSearchValue ? userSearchValue : ''}`),
+                    await axiosInstance.get(`/admin-api/users/${userSearchValue ? 'search-users/' : ''}?role=${roleFilterValue}${interviewRequestFilter ? interviewRequestFilter : ''}&interview_name=${InterviewSearch ? InterviewSearch : ''}${!userSearchValue ? `&page_size=${pageSize}` : ''}${!userSearchValue ? `&page=${CurrentPage}` : ''}&search=${userSearchValue ? userSearchValue : ''}`),
                 refetchOnWindowFocus : false,
                 retry : false
             } ,

@@ -76,10 +76,13 @@ export default function ({data}) {
                     </div>
                     <div style={{ display : 'flex' , flexDirection : 'row-reverse' , gap : 10 }}>
                         <div style={{ display : 'flex' , gap : 10 , alignItems : 'center' }}>
-                            <p style={{ opacity : 0.5 }}>۲۱،۷۰۰،۲۴۲</p>
+                            { data.price_pack ? <p style={{ opacity : 0.5 }}>
+                                {data.price_pack.price && digitsEnToFa(data.price_pack.price)}
+                            </p> : '' }
+                            {/*<p style={{ opacity : 0.5 }}>۲۱،۷۰۰،۲۴۲</p>*/}
                             <Icon name={'Wallet3'}/>
                         </div>
-                        <CollaborationResultButton>
+                        <CollaborationResultButton onClick={() => router.push(`/questioner/dashboard/${data?.uuid}/questioner-result`)}>
                             <Icon name={'ArrowLeftBlue'}/>
                             <p>نتایج</p>
                         </CollaborationResultButton>
@@ -92,7 +95,7 @@ export default function ({data}) {
                     </div>
                     <div>
                         <div>
-                            <AddResultButton onClick={() => router.push(`/questioner/dashboard/${data?.uuid}/questioner-result`)}>
+                            <AddResultButton onClick={() => router.push(`/questioner/dashboard/${data?.uuid}/add-result`)}>
                                 {/*<img src={addIcon?.src} alt=""/>*/}
                                 <AddResultButtonContainer>
                                     <Icon style={{ width : 22 , height : 22 }} name={'AddDark'} />

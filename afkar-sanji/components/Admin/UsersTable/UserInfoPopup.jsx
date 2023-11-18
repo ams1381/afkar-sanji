@@ -15,9 +15,9 @@ import {
     PopupInfoContainer,
     PopupRowContainer, PopupTopButtonsContainer
 } from "@/styles/Admin/userInfoPopup";
-import {Button, Input, message} from "antd";
+import {Button, Input, message, Modal} from "antd";
 import {SentMessage} from "@/components/Questioner/ChatModal/SentMessage";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
 import {axiosInstance} from "@/utilities/axios";
 
@@ -53,96 +53,109 @@ export const UserInfoPopup = ({ usersLists , setPopupType , RegoionsData , Activ
         }
     }
     return<>
-    <ChatMask onClick={() => SetActivePopupUser(null)} />
-        <PopupContainer style={{ height : 'auto' }}>
-            {MessageContext}
-            <PopupHeader style={{ boxShadow : ''}}>
-                <div style={{ cursor : 'pointer' }} onClick={() => SetActivePopupUser(null)}>
-                    <Icon style={{ width : 12 , height : 12 }} name={'GrayClose'} />
-                </div>
-                <ChatHeaderTitle>
-                    <p className={'admin-name'}>
-                        {usersLists.find(item => item.id === ActivePopupUser.id).first_name}
-                    </p>
-                </ChatHeaderTitle>
-            </PopupHeader>
-            <ChatMessageContainer>
-                <PopupTopButtonsContainer>
-                    { UserData.resume && <Button type={'primary'} onClick={() => setPopupType('resume-popup')}>
-                        مشاهده رزومه
-                    </Button>}
-                    { usersLists.find(item => item.id === ActivePopupUser.id).ask_for_interview_role && <Button onClick={AcceptInterviewRole}>
-                        تایید درخواست پرسش‌گری
-                    </Button>}
-                </PopupTopButtonsContainer>
-                <PopupInfoContainer>
-                    <PopupRowContainer>
-                        <span>شماره تلفن</span>
-                        <p>{digitsEnToFa(usersLists.find(item => item.id === ActivePopupUser.id).phone_number)}</p>
-                    </PopupRowContainer>
-                    <PopupRowContainer>
-                        <span>ایمیل</span>
-                        <p>{(usersLists.find(item => item.id === ActivePopupUser.id).email)}</p>
-                    </PopupRowContainer>
-                    <PopupRowContainer>
-                        <span>جنسیت</span>
-                        <p>
-                            {
-                                usersLists.find(item => item.id === ActivePopupUser.id).gender === 'm' ? 'مرد' :
-                                    usersLists.find(item => item.id === ActivePopupUser.id).gender === 'f' ? 'زن' : ''
-                            }
+    {/*<ChatMask onClick={() => SetActivePopupUser(null)} />*/}
+        <Modal mask={true}
+               preserve={false}
+               destroyOnClose={true}
+               onCancel={() => SetActivePopupUser(null)}
+               modalRender={(ReactNode) => <div style={{ direction : 'ltr' }}>{ReactNode}</div>}
+               centered={true}
+               closeIcon={true}
+               title={<></>}
+               maskClosable={true}
+               footer={<></>}
+               open={ActivePopupUser}>
+            <PopupContainer style={{ height : 'auto' }}>
+                {MessageContext}
+                <PopupHeader style={{ boxShadow : ''}}>
+                    <div style={{ cursor : 'pointer' }} onClick={() => SetActivePopupUser(null)}>
+                        <Icon style={{ width : 12 , height : 12 }} name={'GrayClose'} />
+                    </div>
+                    <ChatHeaderTitle>
+                        <p className={'admin-name'}>
+                            {usersLists.find(item => item.id === ActivePopupUser.id).first_name}
                         </p>
-                    </PopupRowContainer>
-                    <PopupRowContainer>
-                        <span>آدرس</span>
-                        <p>{(usersLists.find(item => item.id === ActivePopupUser.id).address)}</p>
-                    </PopupRowContainer>
-                    <PopupRowContainer>
-                        <span>تابعیت</span>
-                        <p>{
-                            (usersLists.find(item => item.id === ActivePopupUser.id).nationality &&
-                                RegoionsData.find(Country => Country.id === usersLists.find(item => item.id === ActivePopupUser.id).nationality).name
-                            )
-                        }</p>
-                    </PopupRowContainer>
-                    <PopupRowContainer>
-                        <span>استان محل سکونت</span>
-                        <p>{
-                            (usersLists.find(item => item.id === ActivePopupUser.id).province &&
-                                RegoionsData[0].provinces.find(Country => Country.id === usersLists.find(item => item.id === ActivePopupUser.id).province).name
-                            )
-                        }</p>
-                    </PopupRowContainer>
-                    <PopupRowContainer>
-                        <span>تعداد پرسش‌نامه‌ها</span>
-                        <p>{
-                            usersLists.find(item => item.id === ActivePopupUser.id).questionnaires_count ? digitsEnToFa(usersLists.find(item => item.id === ActivePopupUser.id).questionnaires_count)
-                                : ''
-                        }</p>
-                    </PopupRowContainer>
-                </PopupInfoContainer>
+                    </ChatHeaderTitle>
+                </PopupHeader>
+                <ChatMessageContainer>
+                    <PopupTopButtonsContainer>
+                        { UserData.resume && <Button type={'primary'} onClick={() => setPopupType('resume-popup')}>
+                            مشاهده رزومه
+                        </Button>}
+                        { usersLists.find(item => item.id === ActivePopupUser.id).ask_for_interview_role && <Button onClick={AcceptInterviewRole}>
+                            تایید درخواست پرسش‌گری
+                        </Button>}
+                    </PopupTopButtonsContainer>
+                    <PopupInfoContainer>
+                        <PopupRowContainer>
+                            <span>شماره تلفن</span>
+                            <p>{digitsEnToFa(usersLists.find(item => item.id === ActivePopupUser.id).phone_number)}</p>
+                        </PopupRowContainer>
+                        <PopupRowContainer>
+                            <span>ایمیل</span>
+                            <p>{(usersLists.find(item => item.id === ActivePopupUser.id).email)}</p>
+                        </PopupRowContainer>
+                        <PopupRowContainer>
+                            <span>جنسیت</span>
+                            <p>
+                                {
+                                    usersLists.find(item => item.id === ActivePopupUser.id).gender === 'm' ? 'مرد' :
+                                        usersLists.find(item => item.id === ActivePopupUser.id).gender === 'f' ? 'زن' : ''
+                                }
+                            </p>
+                        </PopupRowContainer>
+                        <PopupRowContainer>
+                            <span>آدرس</span>
+                            <p>{(usersLists.find(item => item.id === ActivePopupUser.id).address)}</p>
+                        </PopupRowContainer>
+                        <PopupRowContainer>
+                            <span>تابعیت</span>
+                            <p>{
+                                (usersLists.find(item => item.id === ActivePopupUser.id).nationality &&
+                                    RegoionsData.find(Country => Country.id === usersLists.find(item => item.id === ActivePopupUser.id).nationality).name
+                                )
+                            }</p>
+                        </PopupRowContainer>
+                        <PopupRowContainer>
+                            <span>استان محل سکونت</span>
+                            <p>{
+                                (usersLists.find(item => item.id === ActivePopupUser.id).province &&
+                                    RegoionsData[0].provinces.find(Country => Country.id === usersLists.find(item => item.id === ActivePopupUser.id).province).name
+                                )
+                            }</p>
+                        </PopupRowContainer>
+                        <PopupRowContainer>
+                            <span>تعداد پرسش‌نامه‌ها</span>
+                            <p>{
+                                usersLists.find(item => item.id === ActivePopupUser.id).questionnaires_count ? digitsEnToFa(usersLists.find(item => item.id === ActivePopupUser.id).questionnaires_count)
+                                    : ''
+                            }</p>
+                        </PopupRowContainer>
+                    </PopupInfoContainer>
 
-            </ChatMessageContainer>
-            <PopupFooter>
-                <PopupFooterButton
-                    loading={interviewAcceptLoading}
-                    onClick={() => SetActivePopupUser({
-                        id : usersLists[usersLists.findIndex(UserItem => UserItem.id === ActivePopupUser.id) + 1].id
-                    })}
-                    disabled={usersLists.findIndex(UserItem => UserItem.id === ActivePopupUser.id) === usersLists.length - 1}>
-                    <Icon name={'ArrowDown'} />
-                    <p>بعدی</p>
-                </PopupFooterButton>
-                <PopupFooterButton
-                    onClick={() => SetActivePopupUser({
-                        id : usersLists[usersLists.findIndex(UserItem => UserItem.id === ActivePopupUser.id) - 1].id
-                    })}
-                    disabled={usersLists.findIndex(UserItem => UserItem.id === ActivePopupUser.id) === 0}>
-                    <Icon style={{ transform : 'rotate(180deg)' }} name={'ArrowDown'} />
-                    <p>قبلی</p>
-                </PopupFooterButton>
-            </PopupFooter>
-        </PopupContainer>
+                </ChatMessageContainer>
+                <PopupFooter>
+                    <PopupFooterButton
+                        loading={interviewAcceptLoading}
+                        onClick={() => SetActivePopupUser({
+                            id : usersLists[usersLists.findIndex(UserItem => UserItem.id === ActivePopupUser.id) + 1].id
+                        })}
+                        disabled={usersLists.findIndex(UserItem => UserItem.id === ActivePopupUser.id) === usersLists.length - 1}>
+                        <Icon name={'ArrowDown'} />
+                        <p>بعدی</p>
+                    </PopupFooterButton>
+                    <PopupFooterButton
+                        onClick={() => SetActivePopupUser({
+                            id : usersLists[usersLists.findIndex(UserItem => UserItem.id === ActivePopupUser.id) - 1].id
+                        })}
+                        disabled={usersLists.findIndex(UserItem => UserItem.id === ActivePopupUser.id) === 0}>
+                        <Icon style={{ transform : 'rotate(180deg)' }} name={'ArrowDown'} />
+                        <p>قبلی</p>
+                    </PopupFooterButton>
+                </PopupFooter>
+            </PopupContainer>
+        </Modal>
+
     </>
 
 

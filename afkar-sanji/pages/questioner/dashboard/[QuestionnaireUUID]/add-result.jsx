@@ -30,7 +30,8 @@ const AddResultPage = ({ questionnaire , meData }) => {
                 queryKey: ['QuestionnaireQuery'],
                 queryFn: async () =>
                     await axiosInstance.get(`/interview-api/interviews/${router.query.QuestionnaireUUID}`) ,
-                refetchOnWindowFocus : false
+                refetchOnWindowFocus : false,
+                retry : false
             },
         ],
     });
@@ -48,7 +49,16 @@ const AddResultPage = ({ questionnaire , meData }) => {
                 <CommonDrawer RightDrawerOpen={RightDrawerOpen} setRightDrawerOpen={setRightDrawerOpen} />
                 <main style={{ width : RightDrawerOpen ? '84%' : '100%', transition : '0.3s' }}>
                     <QuestionerHeader pageName='add-result' meData={MeQuery?.data?.data} />
-                    <PageContent questionnaire={QuestionnaireQuery?.data?.data} />
+                    { !QuestionnaireQuery.error ? <PageContent questionnaire={QuestionnaireQuery?.data?.data}/> :
+                        <QuestionerPageContainer>
+                            <QuestionerContentBox style={{ justifyContent : 'center' , alignItems : 'center' , height : '90vh' }}>
+                                {
+                                    QuestionnaireQuery.error.response?.status === 500 ? 'خطای داخلی سرور' : 'یافت  نشد | ۴۰۴ '
+                                }
+                            </QuestionerContentBox>
+                        </QuestionerPageContainer>
+
+                    }
                 </main>
             </Provider>
         </PageBox>

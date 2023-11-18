@@ -155,11 +155,11 @@ export const PageContent = ({ questionnaire }) => {
                             {SubComponentGenerator(item.question, setErrorQuestions, ErrorQuestions, AnswerSetsArray)}
                         </QuestionContainer>)
                 }
-            </QuestionsContainer> : <QuestionsContainer>
+            </QuestionsContainer> : <div  style={{ display : 'flex' , justifyContent : 'center' , alignItems : 'center' , height : '85vh' }}>
                 <p>سوالی جهت نمایش وجود ندارد</p>
-            </QuestionsContainer>}
+            </div>}
 
-            { questionnaire.questions.length && <AddResultFooter>
+            { questionnaire.questions.length ? <AddResultFooter>
                 <Button type='primary' loading={AnswerConfirmLoading} onClick={ConfirmAnswerHandler}>
                     ثبت پاسخ‌ها
                 </Button>
@@ -169,7 +169,7 @@ export const PageContent = ({ questionnaire }) => {
                     </Button>
                 </Link>
 
-            </AddResultFooter>}
+            </AddResultFooter> : ''}
         </QuestionerContentBox>
     </QuestionerPageContainer> : <QuestionerPageContainer>
         <QuestionerContentBox style={{ flexDirection : 'column' }}>

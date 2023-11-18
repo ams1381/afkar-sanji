@@ -56,6 +56,8 @@ const OTPSms = ({ cookies }) => {
           Auth.setHasResume(true)
         if(MeRes?.data?.ask_for_interview_role)
           Auth.setAskForInterviewRole(true)
+        if(MeRes?.data?.has_wallet)
+          Auth.setHasWallet(true)
           Auth.setUserRole(MeRes?.data.role)
           setItem('role',MeRes?.data.role)
 

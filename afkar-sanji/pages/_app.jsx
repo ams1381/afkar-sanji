@@ -53,7 +53,6 @@ export default function App({ Component, pageProps }) {
             }
           },1000)
         }
-        // return
       }
     }
     // console.log(readyToRender)
@@ -115,10 +114,11 @@ const RoleSetter = ({ UserData , setRefreshPage }) => {
 
   if(UserData.ask_for_interview_role)
     Auth.setAskForInterviewRole(true)
+  if(UserData.has_wallet)
+    Auth.setHasWallet(true)
 
-  // Auth.role = (UserData.role)
   setItem('role',UserData.role)
-  // console.log(Auth)
+
   setRefreshPage(false)
 
   return <></>

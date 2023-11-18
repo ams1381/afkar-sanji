@@ -22,11 +22,14 @@ import closeIcon from "@/public/Icons/Dismiss.svg";
 import {useRouter} from "next/router";
 import Head from "next/head";
 import {AuthContext} from "@/utilities/AuthContext";
+import {WalletPopup} from "@/components/Folders/walletPopup";
 
 export default function () {
     const [userData, setUserData] = useState();
     const [isLoading, setIsLoading] = useState(false);
     const [ confirmButtonLoading , setConfirmButtonLoading ] = useState(false);
+    const [ walletPopupOpen , setWalletPopupOpen ] = useState(false);
+    const [ distPage , setDistPage ] = useState(null);
     const router = useRouter();
     useEffect(() => {
         setIsLoading(true)
@@ -84,7 +87,7 @@ export default function () {
 
         axiosInstance.patch('/user-api/users/me/', formData).then(res => {
             if (res?.status === 200) {
-                message.success('با موفقیت انجام شد')
+                // message.success('با موفقیت انجام شد')
                 setConfirmButtonLoading(false)
                 // router.push('/questioner/resume/')
             }
@@ -95,18 +98,25 @@ export default function () {
             const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
             message.error(ERROR_MESSAGE)
         })
-        if (userData?.role === 'n' || userData.role === 'e') {
+        if(!Auth.hasWallet) {
+            setWalletPopupOpen(true);
+            setDistPage('resume')
+        }
+
+            if ((userData?.role === 'n' || userData.role === 'e') && !userData.ask_for_interview_role) {
              axiosInstance.patch('user-api/users/me', {
                 ask_for_interview_role: true
             }).then(res => {
                  Auth.setAskForInterviewRole(true)
-                router.push('/questioner/resume')
+                 if(Auth.hasWallet)
+                    router.push('/questioner/resume')
             }).catch(error => {
                 const errorMessage = error.response?.data[Object.keys(error.response.data)[0]][0];
                 message.error(errorMessage)
             })
         } else {
-            router.push('/questioner/resume')
+                if(Auth.hasWallet)
+                   router.push('/questioner/resume')
         }
     }
 
@@ -135,6 +145,7 @@ export default function () {
                 />
                 {userData && (
                     <Container>
+                        <WalletPopup distPage={distPage} walletPopupOpen={walletPopupOpen} setWalletPopupOpen={setWalletPopupOpen} />
                         <Title>لطفا اطلاعات خود را کامل‌کنید</Title>
                         <Form>
                             <Row direction={"rtl"}>

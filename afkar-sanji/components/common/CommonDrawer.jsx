@@ -125,7 +125,7 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                                                 setItem('roleReq', 'interview-api/interviews')
                                                 router.push('/')
                                             }
-                                            else {
+                                            else if(!Auth.hasWallet) {
                                                 setWalletPopupOpen(true);
                                                 setDistPage('employer')
                                             }
@@ -144,6 +144,11 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                                               else if(Auth.hasResume && !Auth.askForInterviewRole) {
                                                   await router.push('/questioner/dashboard/collaboration/')
                                               }
+                                              else {
+                                                  MessageApi.info({
+                                                      content : 'درخواست پرسشگری شما تایید نشده'
+                                                  })
+                                              }
                                           }}
                                           className='drawer_item_text interviewer'>
                                         { Auth.askForInterviewRole && <AskForAdminText>
@@ -155,9 +160,10 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                                 {/*<Link href={'/questioner/dashboard/wallet/'}>*/}
                                     <CommonDrawerItemText active={drawerSelectedItem === 'wallet'}
                                           onClick={async () => {
-                                              if (getItem('role') === 'e' || getItem('role') === 'ie')
+                                              // if (getItem('role') === 'e' || getItem('role') === 'ie')
+                                              if(Auth.hasWallet)
                                                   await router.push('/questioner/dashboard/wallet/')
-                                              else {
+                                              else if(!Auth.hasWallet)  {
                                                   setWalletPopupOpen(true);
                                                   setDistPage('wallet')
                                               }
@@ -224,7 +230,7 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                                             setItem('roleReq', 'interview-api/interviews');
                                             router.push('/')
                                         }
-                                        else {
+                                        else if(!Auth.hasWallet) {
                                             setWalletPopupOpen(true);
                                             setDistPage('employer')
                                         }
@@ -243,6 +249,11 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                                   else if(Auth.hasResume && !Auth.askForInterviewRole) {
                                       await router.push('/questioner/dashboard/collaboration/')
                                   }
+                                  else {
+                                      MessageApi.info({
+                                          content : 'درخواست پرسشگری شما تایید نشده'
+                                      })
+                                  }
                               }}
                               active={drawerSelectedItem === 'interview-panel'}
                               className='drawer_item i_interviewer'>
@@ -254,9 +265,10 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                     {/*    <Link href={'/questioner/dashboard/wallet/'}>*/}
                             <CommonDrawerItemIcon active={drawerSelectedItem === 'wallet'}
                                   onClick={async () => {
-                                      if (getItem('role') === 'e' || getItem('role') === 'ie')
+                                      if(Auth.hasWallet)
                                           await router.push('/questioner/dashboard/wallet/')
-                                      else {
+                                      // if (getItem('role') === 'e' || getItem('role') === 'ie')
+                                      else if(!Auth.hasWallet)  {
                                           setWalletPopupOpen(true);
                                           setDistPage('wallet')
                                       }

@@ -58,9 +58,9 @@ const QuestionerResult = () => {
         </Head>
         <PageBox>
             <CommonDrawer RightDrawerOpen={RightDrawerOpen} setRightDrawerOpen={setRightDrawerOpen} />
-            <main style={{ width : RightDrawerOpen ? '84%' : '100%', transition : '0.3s' }}>
                 <QuestionerHeader pageName='result' meData={MeQuery?.data?.data} />
-                <QuestionerPageContainer style={{ height : '100vh' , overflow : 'hidden' , maxHeight : '690px' }}>
+                <main style={{ width : RightDrawerOpen ? '84%' : '100%', transition : '0.3s' }}>
+                    <QuestionerPageContainer style={{ height : '100vh' , overflow : 'hidden' , maxHeight : '690px' }}>
                         <QuestionerResultHead SelectedRows={SelectedRows}
                           setSelectedRows={setSelectedRows} CurrentPage={CurrentPage}
                           SetCurrentPage={SetCurrentPage}    ResultQuery={ResultQuery}
