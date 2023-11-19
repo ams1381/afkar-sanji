@@ -216,20 +216,20 @@ export default function ({
                         </Row>
                         <RowCom>
                             {(index > 0 && index + 1 !== resumeData.length) &&
-                                <BtnComponent className="close" shape={'circle'}>
+                                <BtnComponent onClick={() => removeEducational(item.id || '')} className="close"
+                                              shape={'circle'}>
                                     <img
-                                        onClick={() => removeEducational(item.id || '')}
                                         src={close.src}
                                         alt=""
                                     />
                                 </BtnComponent>}
-                            {resumeData.length && index !== resumeData.length - 1 && <BtnComponent>
-                                <img
-                                    onClick={() => editEducation(item.id || '')}
-                                    className="close"
-                                    src={editIcon.src}
-                                    alt=""/>
-                            </BtnComponent>
+                            {resumeData.length && index !== resumeData.length - 1 &&
+                                <BtnComponent onClick={() => editEducation(item.id || '')}>
+                                    <img
+                                        className="close"
+                                        src={editIcon.src}
+                                        alt=""/>
+                                </BtnComponent>
                             }
                             <ResumeInputCom style={{
                                 width: '100%',
@@ -251,7 +251,8 @@ export default function ({
                 </FromStepScroll>
             )}
             <ButtonContainer justify={`flex-end`}>
-                <AddBtn color={errors?.length ? '#D9D9D9' : 'var(--primary-color)'} disabled={errors.length ? true : false}
+                <AddBtn color={errors?.length ? '#D9D9D9' : 'var(--primary-color)'}
+                        disabled={errors.length ? true : false}
                         onClick={addEducational}>
                     <h2 className={`text`}>افزودن</h2>
                     <img style={{opacity: errors?.length ? '0.2' : '1'}} src={add.src} alt="" className="icon"/>

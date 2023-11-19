@@ -98,27 +98,6 @@ export default function ({
         }
     };
 
-    // const editEducation = async (id) => {
-    //     try {
-    //         const updatedItem = skillsData.find(item => item.id === id);
-    //         const index = skillsData.findIndex(item => item.id === id);
-    //
-    //         const response = await axiosInstance.put(`/user-api/users/${me?.id}/resume/${me?.resume?.id}/skills/${id}/`, updatedItem);
-    //         if (response.status === 200) {
-    //             setSkillsData(prevData => {
-    //                 const newData = [...prevData];
-    //                 newData.splice(index, 1);
-    //                 newData.unshift(response.data);
-    //                 return newData;
-    //             });
-    //             message.success('با موفقیت ویرایش شد');
-    //         }
-    //     } catch (error) {
-    //         const errorMessage = error.response?.data[Object.keys(error.response.data)[0]][0];
-    //         message.error(errorMessage);
-    //     }
-    // };
-
     function submit() {
         setCurrent(p => p + 1)
         setTitle("افتخارات مرتبط با پرسش‌گری را در این بخش اضافه کنید")
@@ -137,23 +116,23 @@ export default function ({
             ) : (
                 <FromStepScroll>
                     {skillsData?.map((item, index) => (<FromResumeItem key={index}>
-                        {index > 0 && index + 1 !== skillsData.length && <BtnComponent>
-                            <img
-                                onClick={() => removeSkills(item?.id || '')}
-                                className="close"
-                                src={close.src}
-                                alt=""
-                            />
-                        </BtnComponent>
+                        {index > 0 && index + 1 !== skillsData.length &&
+                            <BtnComponent onClick={() => removeSkills(item?.id || '')}>
+                                <img
+                                    className="close"
+                                    src={close.src}
+                                    alt=""
+                                />
+                            </BtnComponent>
                         }
-                        {skillsData.length && index !== skillsData.length - 1 && <BtnComponent>
-                            <img
-                                onClick={() => editEducation(item.id || '')}
-                                className="close"
-                                src={editIcon.src}
-                                alt=""
-                            />
-                        </BtnComponent>
+                        {skillsData.length && index !== skillsData.length - 1 &&
+                            <BtnComponent onClick={() => editEducation(item.id || '')}>
+                                <img
+                                    className="close"
+                                    src={editIcon.src}
+                                    alt=""
+                                />
+                            </BtnComponent>
                         }
                         <ResumeInputCom>
                             <div className="title">سطح مهارت</div>
@@ -190,9 +169,12 @@ export default function ({
             )}
 
             <ButtonContainer justify={`flex-end`}>
-                <AddBtn color={skillsData.some(skill => !skill.level || !skill.field) ? '#D9D9D9' : 'var(--primary-color)'} disabled={skillsData.some(skill => !skill.level || !skill.field)} onClick={addSkills}>
+                <AddBtn
+                    color={skillsData.some(skill => !skill.level || !skill.field) ? '#D9D9D9' : 'var(--primary-color)'}
+                    disabled={skillsData.some(skill => !skill.level || !skill.field)} onClick={addSkills}>
                     <h2 className={`text`}>افزودن</h2>
-                    <img style={{opacity: skillsData.some(skill => !skill.level || !skill.field) ? '0.2' : '1'}} src={add.src} alt="" className="icon"/>
+                    <img style={{opacity: skillsData.some(skill => !skill.level || !skill.field) ? '0.2' : '1'}}
+                         src={add.src} alt="" className="icon"/>
                 </AddBtn>
             </ButtonContainer>
             <Button disabled={skillsData.length < 2} typeof='submit'

@@ -121,23 +121,23 @@ export default function ({year, setGender, me}) {
             active style={{height: '40px', minWidth: 'auto', width: '202px'}}/>
         </div>) : (<FromStepScroll>
             {resumeData.map((item, index) => (<FromResumeItem key={item.id}>
-                {index > 0 && index + 1 !== resumeData.length && <BtnComponent>
-                    <img
-                        onClick={() => removeResearch_histories(item?.id || '')}
-                        className="close"
-                        src={close.src}
-                        alt=""
-                    />
-                </BtnComponent>
+                {index > 0 && index + 1 !== resumeData.length &&
+                    <BtnComponent onClick={() => removeResearch_histories(item?.id || '')}>
+                        <img
+                            className="close"
+                            src={close.src}
+                            alt=""
+                        />
+                    </BtnComponent>
                 }
-                {resumeData.length && index !== resumeData.length - 1 && <BtnComponent>
-                    <img
-                        onClick={() => editResearch_histories(item.id)}
-                        className="close"
-                        src={editIcon.src}
-                        alt=""
-                    />
-                </BtnComponent>}
+                {resumeData.length && index !== resumeData.length - 1 &&
+                    <BtnComponent onClick={() => editResearch_histories(item.id)}>
+                        <img
+                            className="close"
+                            src={editIcon.src}
+                            alt=""
+                        />
+                    </BtnComponent>}
                 <ResumeInputCom>
                     <div className="title">سال پژوهش</div>
                     <Select

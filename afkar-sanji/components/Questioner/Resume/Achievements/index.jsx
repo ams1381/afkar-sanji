@@ -126,9 +126,8 @@ export default function ({
                     {resumeData?.map((item, index) => (
                         <FromResumeItem key={item.id}>
 
-                            {index > 0 && index + 1 !== resumeData.length && <BtnComponent>
+                            {index > 0 && index + 1 !== resumeData.length && <BtnComponent   onClick={() => removeAchievements(item.id || '')}>
                                 <img
-                                    onClick={() => removeAchievements(item.id || '')}
                                     className="close"
                                     src={close.src}
                                     alt=""
@@ -136,9 +135,8 @@ export default function ({
                             </BtnComponent>
                             }
 
-                            {resumeData.length && index !== resumeData.length - 1 && <BtnComponent>
+                            {resumeData.length && index !== resumeData.length - 1 && <BtnComponent  onClick={() => editEducation(item.id || '')}>
                                 <img
-                                    onClick={() => editEducation(item.id || '')}
                                     className="close"
                                     src={editIcon.src}
                                     alt=""
