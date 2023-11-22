@@ -29,10 +29,6 @@ const AddQuestionnairePopUp = ({ AddQuestionnaireModal , FolderReload , folders 
             await axiosInstance.post(`/${Auth.reqRole}/`,{
                 name : NewQuestionnaireName ,
                 folder: folders[SelectedFolderNumber].id ,
-                pub_date : '2024-05-05T23:14:24' ,
-                answer_count_goal : 2 ,
-                districts : [ 21 ]
-
             });
             folders.push({})
             setQuestionnaireModalState(false);
