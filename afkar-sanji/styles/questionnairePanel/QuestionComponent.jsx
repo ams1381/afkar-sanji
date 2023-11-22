@@ -424,7 +424,8 @@ export const RangeQuestionAnswerItem = styled.div`
 export const RangeLabelText = styled.p`
     margin : 0 auto;
     font-size: 12px;
-    text-align : ${p => p.leftL ? 'left' : p.rightL ? 'right' : p.midL ? 'center' : 'auto'};
+    //text-align : ${p => p.leftL ? 'left' : p.rightL ? 'right' : p.midL ? 'center' : 'auto'};
+    text-align: center;
     &::before
     {
         content: '';

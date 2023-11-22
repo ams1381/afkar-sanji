@@ -18,6 +18,8 @@ const SettingQWanswer = ({ QuestionInfo }) => {
   useEffect(() => {
     if(OcurredError && OcurredError.length)
     {
+        if(!OcurredError.find(item => item.qid == QuestionInfo.id))
+            return
         let QuestionErrorObject = OcurredError.find(item => item.qid == QuestionInfo.id).err_object;
         if(QuestionErrorObject.min)
             setInputError('min')
