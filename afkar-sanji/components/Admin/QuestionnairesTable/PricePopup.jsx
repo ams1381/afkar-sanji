@@ -18,12 +18,20 @@ import {digitsEnToFa} from "@persian-tools/persian-tools";
 
 export const PricePopup = ({ setActivePricePopup , refetch , activePricePopup , setPackPopupType , QuestionnaireList }) => {
     const [ ActivePricePack , setActivePricePack ] = useState(null);
-    const [ selectedPricePack , setSelectedPricePack ] = useState(QuestionnaireList.find(item => item.id === activePricePopup.id).price_pack.id)
+    const [ selectedPricePack , setSelectedPricePack ] = useState(null)
     const PricePacksQuery = useQuery(['PricePacksQuery'],
         async () => await axiosInstance.get('/admin-api/price-packs/'),{
             refetchOnWindowFocus : false,
             retry : false
         })
+    const [ errMessage , setErrMessage ] = useState(null);
+    useEffect(() => {
+        if(activePricePopup && QuestionnaireList.find(item => item.id === activePricePopup.id)) {
+            setSelectedPricePack(QuestionnaireList.find(item => item.id === activePricePopup.id).price_pack.id)
+            // console.log(QuestionnaireList.find(item => item.id === activePricePopup.id).price_pack)
+        }
+
+    }, [activePricePopup]);
     // console.log(QuestionnaireList.find(item => item.id === activePricePopup.id),selectedPricePack)
     const setPricePack = async (PackID) => {
         console.log(PackID)
@@ -32,9 +40,11 @@ export const PricePopup = ({ setActivePricePopup , refetch , activePricePopup , 
             await axiosInstance.post(`/admin-api/interviews/${QuestionnaireList.find(item => item.id === activePricePopup.id).uuid}/set-price-pack/`,{
                 price_pack : PackID
             })
+            setActivePricePopup(null)
         }
         catch (err) {
-            console.log(err)
+            if(err?.response?.data)
+                setErrMessage(Object.values(err?.response?.data)[0])
         }
     }
     // useEffect(() => {
@@ -105,7 +115,7 @@ export const PricePopup = ({ setActivePricePopup , refetch , activePricePopup , 
                                         await setPricePack(item.id)
                                         setTimeout(() => {
                                             refetch()
-                                        })
+                                        },300)
                                         // setTimeout(() =)
                                     }}
                                     selected={item.id === selectedPricePack}>

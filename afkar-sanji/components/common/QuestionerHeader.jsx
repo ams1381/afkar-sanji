@@ -22,6 +22,7 @@ import {useLocalStorage} from "@/utilities/useLocalStorage";
 export const QuestionerHeader = ({ pageName , meData , interviewData }) => {
    const router = useRouter();
    const { getItem } = useLocalStorage();
+
    const Auth = useContext(AuthContext)
   const [ logoutPopOver , switchPopover ] = useState(false);
     const LogoutHandler = async () => {
@@ -60,9 +61,11 @@ export const QuestionerHeader = ({ pageName , meData , interviewData }) => {
               <UserIconContainer>
                   {
                       Auth.isAdmin ?
-                          <Link href={'/admin/'} style={{ display : 'flex' , alignItems : 'center' }}>
+                          router?.pathname?.includes('admin')  ? <Link href={'/'}>
                               <Icon style={{ width : 24 , height : 24 }} name={'AdminIcon'} />
-                          </Link>:
+                              </Link> : <Link href={'/admin/'} style={{ display : 'flex' , alignItems : 'center' }}>
+                                  <Icon style={{ width : 24 , height : 24 }} name={'AdminIcon'} />
+                          </Link>  :
                           <>
                               { getItem('role') === 'n' && <Icon style={{ width : 24 , height : 24 }} name={'NormalUser'} /> }
                               { getItem('role') === 'e' && <Icon style={{ width : 24 , height : 24 }} name={'EmployerIcon'} /> }

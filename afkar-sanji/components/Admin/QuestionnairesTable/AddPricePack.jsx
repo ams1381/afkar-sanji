@@ -19,6 +19,7 @@ export const AddPricePack = ({ activePricePopup , setActivePricePopup , Question
     const [ priceValue , setPriceValue ] = useState(null);
     const [ priceDescription , setPriceDescription ] = useState(null);
     const [ priceTitle , setPriceTitle ] = useState(null);
+    const [ errMessage , setErrMessage ] = useState(null);
     const [ PriceLoading , setPriceLoading ] = useState(false);
     const AddPricePackHandler = async () => {
         setPriceLoading(true)
@@ -29,7 +30,8 @@ export const AddPricePack = ({ activePricePopup , setActivePricePopup , Question
                 description : priceDescription
             })
         } catch (err) {
-            console.log(err)
+            if(err?.response?.data)
+                setErrMessage(Object.values(err?.response?.data)[0])
         } finally {
             setPriceLoading(false);
         }
@@ -79,8 +81,13 @@ export const AddPricePack = ({ activePricePopup , setActivePricePopup , Question
                                  onChange={(e) => setPriceDescription(e.target.value)} placeholder={'چیزی بنویسید'} />
                         </AddPriceInputContainer>
                     </div>
+                    {
+                        errMessage && <div style={{ color : 'var(--Error-color)' , padding : '5px 0' , textAlign : 'right' }}>
+                            { errMessage }
+                        </div>
+                    }
                     <AddPricePackButton loading={PriceLoading} type={'primary'} onClick={AddPricePackHandler}>
-                        <p>افزودن به کارت‌ها</p>
+                        <p>افزودن</p>
                         <Icon style={{ width : 12 , height : 12 }} name={'Add'} />
                     </AddPricePackButton>
                 </ChatMessageContainer>

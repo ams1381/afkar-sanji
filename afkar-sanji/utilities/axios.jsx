@@ -3,7 +3,7 @@ import { getCookie } from "react-use-cookie";
 // export const baseURL = 'http://mah-api.ariomotion.com/';
 // export const baseURL = 'https://mostafarm7.pythonanywhere.com/'
 // axios.defaults.baseURL = 'https://mostafarm7.pythonanywhere.com/';
-export const baseurl = 'https://mah-api.codintofuture.ir'
+export const baseurl = 'https://mah.codintofuture.ir'
 axios.defaults.baseURL = '/api'
 getCookie('role')
 
@@ -29,9 +29,17 @@ axiosInstance.interceptors.response.use(function (response) {
         return
     switch(error.response.status)
     {
+
+        case 400:
+            console.log('sgsdgsdgd',error.config)
+            break;
         case 401:
             try
             {
+                if(error.response.data.code === 'user_inactive') {
+                    window.location.pathname = '/auth'
+                    return
+                }
                 let { data } = await axios.post('/user-api/auth/refresh-token/', { refresh : axiosInstance.defaults.refresh_token })
                 // console.log(data)
                 // let errorConfig = error.config;
