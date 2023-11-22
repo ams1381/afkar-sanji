@@ -23,14 +23,17 @@ const QuestionerResult = () => {
         queries: [
             {
                 queryKey: ['questionnaire'],
-                queryFn: async () => await axiosInstance.get(`/question-api/questionnaires/${router.query.QuestionnaireUUID}/`),
-                refetchOnWindowFocus : false
+                queryFn: async () => await axiosInstance.get(`/interview-api/interviews/${router.query.QuestionnaireUUID}/`),
+                refetchOnWindowFocus : false ,
+                retry : false
             },
+                // ?answered_at=&end_date=&page_size=${PageSize ? PageSize : ''}&page=${CurrentPage ? CurrentPage : 1}&start_date=
             {
                 queryKey: ['result'],
                 queryFn: async () =>
-                    await axiosInstance.get(`/result-api/${router.query.QuestionnaireUUID}/answer-sets/?answered_at=&end_date=&page_size=${PageSize ? PageSize : ''}&page=${CurrentPage ? CurrentPage : 1}&start_date=`) ,
-                refetchOnWindowFocus : false
+                    await axiosInstance.get(`/interview-api/interviews/${router.query.QuestionnaireUUID}/answer-sets/`) ,
+                refetchOnWindowFocus : false ,
+                retry : false
             },
             {
                 queryKey: ['MeQuery'],

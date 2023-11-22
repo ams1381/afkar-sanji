@@ -147,7 +147,7 @@ export const UsersHeader = ({
                             }
                             if(node.length === 2 && node.includes('کارفرما') && node.includes('پرسشگر'))
                                 setRoleFilterValue('ie');
-                            if(node.length <= 2 && (node.includes('بدون درخواست پرسشگری') || node.includes('نیاز به تایید'))) {
+                            if(node.includes('رد شده') || (node.includes('بدون درخواست پرسشگری') || node.includes('نیاز به تایید'))) {
                                 let interview_req_status = value.filter(item => (item!== 'e' && item !== 'i'))
 
                                 setInterviewRequestFilter('&interviewer_role_request_status=' + interview_req_status.join('&interviewer_role_request_status='))

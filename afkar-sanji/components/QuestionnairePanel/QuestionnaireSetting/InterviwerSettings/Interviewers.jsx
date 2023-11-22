@@ -42,6 +42,9 @@ export const Interviewers = ({ Questionnaire , ChangeDistrict , refetch , Toggle
             setTimeout(() => {
                 setEditPrice(false)
             },200)
+            MessageApi.success({
+                content : 'با موفقیت تایید شد'
+            })
         }
         catch(err) {
             setConfirmLoading(false);

@@ -97,7 +97,13 @@ const QuestionnaireBox = ({Questionnaire , FolderReload , folderNumber}) => {
                   }</InterviewerBadgeText>
                   {
                       getItem('roleReq') === 'interview-api/interviews' && <InterviewerBadgeText interview={true}>
-                          { Questionnaire.interviewer?.length ? 'دارای پرسش‌گر' : 'فاقد پرسش‌گر'}
+                          {Questionnaire.approval_status === 'pending_content_admin' &&  'در انتظار تایید محتوا توسط ادمین'}
+                          {Questionnaire.approval_status === 'pending_level_admin' && 'در انتظار تعیین سطح توسط ادمین'}
+                          {Questionnaire.approval_status === 'pending_price_admin' && 'در انتظار تایید قیمت توسط ادمین' }
+                          {Questionnaire.approval_status === 'approved_price_employer' && 'قیمت تایید شده توسط کارفرما'}
+                          {Questionnaire.approval_status === 'rejected_price_employer' && 'قیمت رد شده توسط کارفرما'}
+                          {Questionnaire.approval_status === 'rejected_content_admin' && 'محتوا رد شده توسط ادمین'}
+                          {Questionnaire.approval_status === 'searching_for_interviewers' && 'در جستجوی پرسشگر'}
                       </InterviewerBadgeText>
                   }
               </QuestionnaireBadgeTextContainer>}

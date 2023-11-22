@@ -15,10 +15,10 @@ export const userTreeData = [
                 title : 'بدون درخواست پرسشگری' ,
                 value : 'n'
             },
-            // {
-            //     title : 'رد شده' ,
-            //     value : 'r'
-            // },
+            {
+                title : 'رد شده' ,
+                value : 'r'
+            },
             // {
             //     title : 'تایید شده' ,
             //     value : 'a'
