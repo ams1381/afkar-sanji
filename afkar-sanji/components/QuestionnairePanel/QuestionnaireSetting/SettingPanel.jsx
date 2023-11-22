@@ -21,6 +21,7 @@ import {
   InterviewSettingContainer
 } from "@/components/QuestionnairePanel/QuestionnaireSetting/InterviwerSettings/SettingContainer";
 import {AuthContext} from "@/utilities/AuthContext";
+import {useQuery} from "@tanstack/react-query";
 
 
 export function convertToRegularTime(dateTimeString) {
@@ -36,7 +37,7 @@ export function convertToRegularTime(dateTimeString) {
 
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
-const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
+const SettingPanel = ({ Questionnaire , refetch , ChangeSide , regions }) => {
   const [QuestionnaireData, Dispatcher] = useReducer(QuestionnaireReducerFunction, Questionnaire);
   const [messageApi, contextHolder] = message.useMessage();
   const { getItem , setItem } = useLocalStorage();
@@ -46,6 +47,7 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
   const [SettingChanged, SetSettingChanged] = useState(false);
   const [SettingLoading, SetSettingLoading] = useState(false);
   const [ErrorType, SetErrorType] = useState(null);
+
   useEffect(() => {
     // console.log('Quesitonnaire Changed')
     Dispatcher({ ACTION : 'refresh_data' , refreshData : Questionnaire })
@@ -122,6 +124,12 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
     SetSettingChanged(false)
   }
 
+  const ChangeDistrict = (selectedRegions) => {
+      if(selectedRegions)
+        Dispatcher({ ACTION : 'change_district' , preferred_districts : selectedRegions })
+      else
+        Dispatcher({ ACTION : 'change_district' , preferred_districts : [] })
+  }
   const SaveQuestionnaireChanges = async () => {
     if (!SettingChanged)
       return
@@ -237,10 +245,16 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide }) => {
           </div>
         </QuestionnaireDatePickerContainer>
         { getItem('roleReq') && getItem('roleReq') === 'interview-api/interviews' &&
-            <InterviewSettingContainer ToggleCheckBoxHandler={ToggleCheckBoxHandler} refetch={refetch} Questionnaire={QuestionnaireData}/>}
-
-        { getItem('roleReq') !== 'interview-api/interviews' && <SettignToggle ToggleName={'is_active'} ToggleText={'غیر فعال سازی موقت'}
-                        ToggleCheckBoxHandler={ToggleCheckBoxHandler} QuestionnaireData={QuestionnaireData}/>}
+            <InterviewSettingContainer regions={regions}
+               ToggleCheckBoxHandler={ToggleCheckBoxHandler}
+               refetch={refetch}
+               ChangeDistrict={ChangeDistrict}
+               Questionnaire={QuestionnaireData}/>}
+        { getItem('roleReq') !== 'interview-api/interviews' &&
+            <SettignToggle ToggleName={'is_active'}
+                 ToggleText={'غیر فعال سازی موقت'}
+              ToggleCheckBoxHandler={ToggleCheckBoxHandler}
+                 QuestionnaireData={QuestionnaireData}/>}
         <SettignToggle ToggleName={'show_number'} ToggleText={'عدم نمایش شماره سوال'}
                        ToggleCheckBoxHandler={ToggleCheckBoxHandler} QuestionnaireData={QuestionnaireData} />
         <SettignToggle ToggleName={'progress_bar'} ToggleText={'حذف نوار پیشرفت'}

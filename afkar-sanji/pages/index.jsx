@@ -244,7 +244,8 @@ export default function Home({ cookies }) {
       </QuestionnaireContainer>
         </MainContainer>
         : data?.data ?  <EmptyFolderContainer>
-            <p>برای مدیریت بهتر نظر سنجی ها یک پوشه درست کن</p>
+              { getItem('roleReq') === 'interview-api/interviews' ? <p>برای مدیریت بهتر پروژه ها یک پوشه درست کنید</p> :
+                  <p>برای مدیریت بهتر نظر سنجی ها یک پوشه درست کن</p>}
             <button onClick={() => setOpen(true)}>
                 <p>پوشه ها</p>
                 <Icon name='Folder' />

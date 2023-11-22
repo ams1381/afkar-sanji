@@ -63,5 +63,10 @@ export const QuestionnaireReducerFunction = (State,ACTION) => {
                 ...State ,
                 ...ACTION.refreshData
             }
+        case 'change_district' :
+            return  {
+                ...State ,
+                'districts' : ACTION.preferred_districts
+            }
     }
 }

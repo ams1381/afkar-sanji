@@ -62,7 +62,7 @@ export const UsersTable = ({  ActivePopupUser , pageSize , setPageSize , setSele
                                     locale : {
                                         jump_to: "",
                                         page : 'رفتن به',
-                                        items_per_page : 'صفحه' ,
+                                        items_per_page : 'تعداد در صفحه' ,
                                     }
                                 }}
                                 columns={TableColumns(SetActivePopupUser,TableBlockLoading,setTableBlockLoading,UserListQuery.refetch)}

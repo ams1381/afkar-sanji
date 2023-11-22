@@ -5,6 +5,7 @@ import { Button, Image, Popover } from 'antd'
 import DefaultImage from '../../public/Images/DefaultThanks.png'
 import React, { useState } from 'react'
 import { SharePopOverContent } from '../Folders/SharePopover'
+import {baseurl} from "@/utilities/axios";
 
 export const DefaultThanks = ({ mobilepreview , QuestionnaireInfo  }) => {
   const [ copiedState , setCopiedState ] = useState(false);
@@ -23,7 +24,7 @@ export const DefaultThanks = ({ mobilepreview , QuestionnaireInfo  }) => {
             </div> 
             <div className='default_thanks_button_container'>
               <button onClick={() => {
-                navigator.clipboard.writeText(`http://mah.ariomotion.com/questionnaire/${QuestionnaireInfo.uuid}/AnswerPage/`)
+                navigator.clipboard.writeText(`${baseurl}/questionnaire/${QuestionnaireInfo.uuid}/AnswerPage/`)
                 setCopiedState(true);
                 }}>
              { copiedState ? <p>کپی شد</p> : <p>کپی لینک</p>}

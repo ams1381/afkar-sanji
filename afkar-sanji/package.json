@@ -22,6 +22,7 @@
     "antd-table-saveas-excel": "^2.2.1",
     "axios": "^1.4.0",
     "build": "^0.1.4",
+    "bx-stable-infinite-scroll": "^1.1.2",
     "chart.js": "^3.9.1",
     "chartjs-plugin-datalabels": "^2.2.0",
     "framer-motion": "^10.16.4",
@@ -42,6 +43,7 @@
     "react-draggable": "^4.4.6",
     "react-dropdown": "^1.11.0",
     "react-highlight-words": "^0.20.0",
+    "react-infinite-scroll-component": "^6.1.0",
     "react-loader-spinner": "^5.4.5",
     "react-loading-skeleton": "^3.3.1",
     "react-multi-date-picker": "^4.3.1",
@@ -55,7 +57,8 @@
     "sortablejs": "^1.15.0",
     "styled-components": "^6.0.7",
     "swiper": "^10.2.0",
-    "video-react": "^0.16.0"
+    "video-react": "^0.16.0",
+    "virtua": "^0.16.4"
   },
   "devDependencies": {
     "babel-plugin-styled-components": "^2.1.4",

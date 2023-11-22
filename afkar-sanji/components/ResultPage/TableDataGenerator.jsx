@@ -16,6 +16,7 @@ import DatePanel from "react-multi-date-picker/plugins/date_panel";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import {TimePickerContainer} from "@/styles/questionnairePanel/QuestionnaireSetting";
+import {baseurl} from "@/utilities/axios";
 export const TableColumnGenerator = (QuestionsArray,resultMessage,regex,DateFilterPopover
      ,setDateFilterPopover,InterviewerCodePopup,setInterviewerCodepopup,RoleReq) => {
 
@@ -50,8 +51,8 @@ export const TableColumnGenerator = (QuestionsArray,resultMessage,regex,DateFilt
                                defaultFileList={[{
                                    name: Answer.split('/')[6],
                                    status: 'done',
-                                   url: 'https://mah-api.ariomotion.com' + Answer,
-                                   thumbUrl : 'https://mah-api.ariomotion.com' + Answer
+                                   url: baseurl + Answer,
+                                   thumbUrl : baseurl + Answer
                                }]} />
             else if(typeof Answer == 'string' || typeof Answer == 'number')
                 return <div>

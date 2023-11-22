@@ -357,6 +357,22 @@ export const InterviewerBodyRow = styled.div`
     background-color: var(--primary-color);
   }
 `
+export const DistrictSelectorContainer = styled(InterviewerBodyRow)`
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  height: auto;
+  
+  .ant-select
+  {
+    direction: rtl;
+    width: 100%;
+  }
+  .ant-select-selector
+  {
+    border-radius: 2px;
+  }
+`
 export const InterViewAnswerPriceContainer = styled.div`
     display: flex;
     align-items: center;

@@ -130,10 +130,15 @@ export const JobInfo = ({ Countries , userData ,MeQuery , regions }) => {
     }
 
     const RegionConfirmHandler = async () => {
+        if(!selectedRegions)
+            return
         setRegionLoading(true)
         try {
             await axiosInstance.patch('/user-api/users/me/', {
-                'preferred_districts' :selectedRegions
+                'preferred_districts' : selectedRegions
+            })
+            userInfoMessage.success({
+                content : 'با موفقیت ثبت شد'
             })
         }
         catch (err) {

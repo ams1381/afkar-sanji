@@ -100,6 +100,7 @@ const UsersListPage = () => {
             {(ActivePopupUser && UserListQuery?.data?.data && RegionsQuery?.data?.data ) ? PopupType === 'user-info' ?
                 <UserInfoPopup SetActivePopupUser={SetActivePopupUser}
                  usersLists={UserListQuery.data.data.results}
+                    UserListQuery={UserListQuery}
                  RegoionsData={RegionsQuery.data.data}
                   setPopupType={setPopupType}
                  ActivePopupUser={ActivePopupUser} /> :

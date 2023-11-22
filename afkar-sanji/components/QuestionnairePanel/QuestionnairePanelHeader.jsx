@@ -14,6 +14,7 @@ import { handleInputWidth } from '@/utilities/RenameFunctions';
 import { SharePopOverContent } from '../Folders/SharePopover';
 import { useLocalStorage } from '@/utilities/useLocalStorage';
 import {AuthContext} from "@/utilities/AuthContext";
+import {ChatModal} from "@/components/Questioner/ChatModal/ChatModal";
 
 const QuestionnairePanelHeader = ({ FolderName , isFetched , Questionnaire , SideState , ChangeSide }) => {
   const router = useRouter();
@@ -21,6 +22,7 @@ const QuestionnairePanelHeader = ({ FolderName , isFetched , Questionnaire , Sid
   const Auth = useContext(AuthContext);
   const [ QuestionnaireName , SetQuestionnaireName ]= useState(Questionnaire ? Questionnaire.name : null);
   const [ RenameState , SetRenameState ] = useState(false);
+  const [ chatModalActive , setChatModalActive ] = useState(false);
   const [ SharePopover , setSharePopOver] = useState(false);
   const [ QuestionnairePopoverState , SetQuestionnairePopoverState ] = useState(false);
   const QuestionnaireNameInputRef = useRef(null);
@@ -103,6 +105,8 @@ const QuestionnairePanelHeader = ({ FolderName , isFetched , Questionnaire , Sid
     Questionnaire ? 
     <>
         <QuestionnaireEditItemsContainer>
+          { Questionnaire && chatModalActive && <ChatModal isAdmin={false}
+                           Questionnaire={Questionnaire} isActive={chatModalActive} setIsActive={setChatModalActive}/>}
             <QuestionnaireEditItemsInnerContainer>
             <Tabs
                 items={TabHeadItems}
@@ -133,7 +137,8 @@ const QuestionnairePanelHeader = ({ FolderName , isFetched , Questionnaire , Sid
                   <Icon name='Share'/>
                 </button>
               </Popover>}
-              { getItem('roleReq') && getItem('roleReq') === 'interview-api/interviews' && <button>
+              { getItem('roleReq') && getItem('roleReq') === 'interview-api/interviews' &&
+                  <button onClick={() => setChatModalActive(true)} >
                 <Icon style={{width: 14}} name={'ChatIcon'}/>
               </button>}
             </QuestionnaireEditButtonContainer>

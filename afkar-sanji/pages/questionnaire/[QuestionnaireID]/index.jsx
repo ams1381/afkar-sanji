@@ -34,6 +34,9 @@ const QuestionnairePanel = ({ cookies }) => {
     const [ SideState , SetSideState ] = useState('question_design');
     const [ QuestionnaireReloader , SetQuestionnaireReloader ] = useState(false);
     const [ RightDrawerOpen , setRightDrawerOpen ] = useState(false);
+    const RegionQuery = useQuery(['RegionQuery'],async () => await axiosInstance.get(`/user-api/nested-countries/`),{
+        refetchOnWindowFocus : false
+    })
     // axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + cookies?.access_token;
     const { data , isLoading , refetch , error , isFetched} = useQuery(['QuestionnaireRetrieve'],
     async () => await axiosInstance.get(`/${getItem('roleReq') ? getItem('roleReq') : 'question-api/questionnaires'}/${router?.query?.QuestionnaireID}/`),{
@@ -72,6 +75,18 @@ const QuestionnairePanel = ({ cookies }) => {
               padding: 10px;
               color: var(--Neutral-Gray6);
             }
+            .ant-cascader-menus
+            {
+              direction: rtl;
+            }
+            .ant-cascader-menu-item-expand-icon
+            {
+              transform: rotate(180deg);
+            }
+            .ant-select-dropdown.css-dev-only-do-not-override-byeoj0, .ant-select-dropdown.css-17a39f8
+            {
+              width: 400px !important;
+            }
             @media screen and (max-width : 768px)
             {
               html,
@@ -99,7 +114,7 @@ const QuestionnairePanel = ({ cookies }) => {
             {
               SideState == 'question_design' ? <QuestionDesignPanel QuestionnaireReloader={refetch}
               Questionnaire={data?.data} RightDrawerOpen={RightDrawerOpen}  />
-              : data?.data ? <SettingPanel Questionnaire={data?.data}  ChangeSide={SetSideState}
+              : (data?.data && !RegionQuery.isLoading )? <SettingPanel Questionnaire={data?.data} regions={RegionQuery.data?.data}  ChangeSide={SetSideState}
               refetch={refetch}/> : <SettingSekelton />
               }
             </PanelInnerContainer>
@@ -107,7 +122,7 @@ const QuestionnairePanel = ({ cookies }) => {
         </main>
       </PageBox>
       </Provider>
-      {/*<ChatModal />*/}
+
     </>
   )
 }

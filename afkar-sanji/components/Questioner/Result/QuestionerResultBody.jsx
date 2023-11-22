@@ -13,6 +13,7 @@ import EmptyImage from "@/public/Images/empty-image.png";
 import Link from "next/link";
 import {Icon} from "@/styles/icons";
 import {QuestionTypeIcon} from "@/utilities/QuestionTypes";
+import {baseurl} from "@/utilities/axios";
 const regex = /(<([^>]+)>)/gi;
 export const QuestionerResultBody = ({ ResultQuery , PageSize , setPageSize , SetCurrentPage , SelectedTypeFilter , QuestionnaireQuery , setSelectedRows , SelectedRows }) => {
     let [ TableColumns , setTableColumns ] = useState(null);
@@ -103,8 +104,8 @@ export const QuestionerResultBody = ({ ResultQuery , PageSize , setPageSize , Se
                                                     defaultFileList={[{
                                                         name: Answer.split('/')[6],
                                                         status: 'done',
-                                                        url: 'https://mah-api.ariomotion.com' + Answer,
-                                                        thumbUrl : 'https://mah-api.ariomotion.com' + Answer
+                                                        url: baseurl + Answer,
+                                                        thumbUrl : baseurl + Answer
                                                     }]} />:
                                             <div ><p></p></div>,
                                         dataIndex : item.question?.title  ,

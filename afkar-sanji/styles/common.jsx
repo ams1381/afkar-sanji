@@ -621,18 +621,29 @@ export const ChatMessageContainer = styled.div`
   {
     font-family: IRANSans !important;
   }
+  .VListContainer
+  { 
+    scroll-behavior: smooth;
+  }
+  .VListContainer::-webkit-scrollbar
+  {
+    width: 0;
+  }
 `
 export const SentMessageContainer = styled.div`
   font-size: 14px;
   text-align: right;
   display: flex;
-  max-width: 400px;
+  //max-width: 400px;
   padding: 0px 10px;
   justify-content: flex-end;
   gap: 10px;
   border-radius: var(--radius-XS, 2px);
   flex-direction: column;
   align-items: flex-end;
+
+  max-width: 50%;
+  word-break: break-word;
 `
 export const AskForAdminSign = styled.span`
   width: 6px;
@@ -653,4 +664,52 @@ export const AskForAdminText = styled.span`
   padding: 0px 8px;
   font-size: 14px;
   color: var(--On-Primary, #EEF0FF);
+`
+export const SentMessageTextContainer = styled.div`
+  background: #EEEEEE;
+  padding: 6px;
+  display: flex;
+  gap: 10px;
+`
+export const MessageMenuToggle = styled.span`
+  padding-top: 5px;
+  height: 30px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: 0.3s;
+  
+  &:hover
+  {
+    background-color: #01010117;
+  }
+`
+export const RecievedMessageTextContainer = styled.div`
+  border: 1px solid var(--Outline, #D9D9D9);
+  padding: 6px;
+`
+
+export const RecommandedContainer = styled.div`
+    display: flex;
+    padding: 0 24px 24px 24px;
+    gap: 8px;
+    justify-content: flex-end;
+  
+`
+export const RecommandedMessage = styled.div`
+  border-radius: 2px;
+  border: 1px solid var(--Outline, #D9D9D9);
+  background: var(--Surface, #FEFEFE);
+  display: flex;
+  padding: 1px 8px;
+  align-items: center;
+  gap: 3px;
+  font-size: 12px;
+  transition: 0.3s;
+  cursor: pointer;
+  
+  &:hover
+  {
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+  }
 `

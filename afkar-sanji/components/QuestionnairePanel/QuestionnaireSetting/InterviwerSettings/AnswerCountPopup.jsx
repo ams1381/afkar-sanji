@@ -15,6 +15,7 @@ export const AnswerCountPopup = ({ Questionnaire , refetch , countPopupOpen , se
                  required_interviewer_count : answerCount
              })
              refetch()
+             setCountPopupOpen(false)
          }
          catch (err) {
              setLoading(false)

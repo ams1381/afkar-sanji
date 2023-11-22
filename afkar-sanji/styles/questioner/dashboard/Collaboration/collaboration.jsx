@@ -64,6 +64,17 @@ export const CollaborationBody = styled.div`
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
 
+  .infinite-scroll-component__outerdiv
+  {
+    width: 100%;
+    
+  }
+  .infinite-scroll-component
+  {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
 `
 
 

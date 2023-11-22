@@ -56,7 +56,10 @@ export const TableColumns = (SetActivePopupUser,TableBlockLoading,setTableBlockL
                             color = 'error';
                             IconToRender = <Icon name={'RejectedInterviewRole'} />
                         }
-
+                        if(tag === 'پرسشگر')
+                            IconToRender = <Icon name={'QuestionerIcon'} />
+                        if(tag === 'کارفرما')
+                            IconToRender = <Icon name={'EmployerIcon'} />
                         return (
                             <UserTag pending={tag === 'afir p' ? true : null} rejected={tag === 'afir r' ? true : null}  color={color} key={tag}>
                                 { tag?.includes('afir') ? 'درخواست پرسشگری'
@@ -100,7 +103,7 @@ export const TableColumns = (SetActivePopupUser,TableBlockLoading,setTableBlockL
                 }
               return <Space size="large" style={{display: 'flex', justifyContent: 'space-between'}}>
                     <span onClick={() => SetActivePopupUser({ id : record.key })}
-                          style={{color: 'var(--primary-color)', cursor: 'pointer'}}>مشاهده کاریر</span>
+                          style={{color: 'var(--primary-color)', cursor: 'pointer'}}>مشاهده کاربر</span>
                     <Divider type={'vertical'}/>
                   {
                       !record.isBlocked ? <TableBlockButton loading={TableBlockLoading === record.key}
@@ -146,8 +149,19 @@ export const TableDataSet = (UsersListData) => {
         }
         if(UserItem.is_staff)
             UsersTag.push('ادمین')
-       else
+       else {
+           if(UserItem.role === 'n')
             UsersTag.push('کاربر')
+            else if(UserItem.role === 'i')
+                UsersTag.push('پرسشگر')
+            else if(UserItem.role === 'e')
+                UsersTag.push('کارفرما')
+            else if(UserItem.role === 'ie') {
+               UsersTag.push('پرسشگر')
+               UsersTag.push('کارفرما')
+           }
+        }
+
 
        return ({
            key : UserItem.id ,

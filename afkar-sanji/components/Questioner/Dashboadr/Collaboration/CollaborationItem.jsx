@@ -29,7 +29,6 @@ import {useRouter} from "next/router";
 import {axiosInstance} from "@/utilities/axios";
 
 export default function ({data, isInterview, getRecommended}) {
-    console.log(data)
     const text = `۱. نام کامل شما چیست؟`;
     const items = [
         {

@@ -5,6 +5,7 @@ import {SubComponentGenerator} from "@/components/Questioner/AddResult/QuestionS
 import React from "react";
 import {Icon} from "@/styles/icons";
 import {Upload} from "antd";
+import {baseurl} from "@/utilities/axios";
 
 export const ModalSubComponentGenerator = (QuestionData , Answer,EditAnswerSetState,setErrorQuestions,ErrorQuestions) => {
     switch(QuestionData.question_type)
@@ -103,9 +104,9 @@ export const ModalSubComponentGenerator = (QuestionData , Answer,EditAnswerSetSt
                     defaultFileList={[{
                             name: Answer.find(item => item.question_id == QuestionData.id)?.answer.split('/')[6],
                             status: 'done',
-                            url: 'https://mah-api.ariomotion.com' +
+                            url: baseurl +
                                 Answer.find(item => item.question_id == QuestionData.id)?.answer,
-                            thumbUrl : 'https://mah-api.ariomotion.com' +
+                            thumbUrl : baseurl +
                                 Answer.find(item => item.question_id == QuestionData.id)?.answer
                         }]} /> :  <NoAnswerBoxContainer>
                 <p>به این سوال پاسخ داده نشده</p>

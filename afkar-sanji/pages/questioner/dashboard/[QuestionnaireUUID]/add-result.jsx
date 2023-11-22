@@ -4,7 +4,7 @@ import Head from "next/head";
 import {PageBox, QuestionerPageContainer , QuestionerContentBox } from "@/styles/common";
 import {CommonDrawer} from "@/components/common/CommonDrawer";
 import QuestionerHeader from "@/components/common/QuestionerHeader";
-import {axiosInstance} from "@/utilities/axios";
+import {axiosInstance, baseurl} from "@/utilities/axios";
 import {Button} from "antd";
 import {AddResultFooter, QuestionContainer, QuestionsContainer} from "@/styles/Result/AddResult";
 import {SubComponentGenerator} from "@/components/Questioner/AddResult/QuestionSubCompGenerator";
@@ -81,14 +81,14 @@ export async function getServerSideProps(context) {
         try
         {
             let QuestionnaireResponse  =  await
-                fetch('https://mah-api.ariomotion.com/question-api/questionnaires/' + context.query.QuestionnaireUUID.replace('}',''),
+                fetch(`${baseurl}/question-api/questionnaires/` + context.query.QuestionnaireUUID.replace('}',''),
                     {
                         headers: {
                             Authorization: `Bearer ${parsedCookies.access_token}`,
                         },
                     })
              QuestionnaireData = await QuestionnaireResponse.json();
-            let MeResponse = await fetch('https://mah-api.ariomotion.com/user-api/users/me/',{
+            let MeResponse = await fetch(`${baseurl}/user-api/users/me/`,{
                 headers : {
                     Authorization: `Bearer ${parsedCookies.access_token}`,
                 }

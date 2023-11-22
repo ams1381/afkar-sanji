@@ -4,7 +4,7 @@ import { Icon } from '@/styles/icons';
 import { Skeleton , Table , Upload, message, Tooltip, Input } from 'antd';
 import React, {useContext, useEffect} from 'react'
 import Link from 'next/link';
-import { axiosInstance } from '@/utilities/axios';
+import {axiosInstance, baseurl} from '@/utilities/axios';
 import EmptyImage from '../../public/Images/empty-image.png'
 import { digitsEnToFa, digitsFaToEn } from '@persian-tools/persian-tools';
 import { convertDate } from '../QuestionnairePanel/QuestionnaireSetting/SettingPanel';
@@ -394,8 +394,8 @@ const ResultSearchHandler = async (e) => {
                       defaultFileList={[{
                       name: Answer.split('/')[6],
                       status: 'done',
-                      url: 'https://mah-api.ariomotion.com' + Answer,
-                      thumbUrl : 'https://mah-api.ariomotion.com' + Answer
+                      url: baseurl + Answer,
+                      thumbUrl : baseurl + Answer
                     }]} />: 
                     <div ><p></p></div>,
                     dataIndex : item.question?.title  , 

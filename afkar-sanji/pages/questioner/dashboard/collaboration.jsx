@@ -28,17 +28,20 @@ import {useQueries, useQuery} from "@tanstack/react-query";
 import {axiosInstance} from "@/utilities/axios";
 import CollaborationInterView from "@/components/Questioner/Dashboadr/Collaboration/CollaborationInterView";
 import Head from "next/head";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const {Search} = Input;
 
 const onSearch = (value, _e, info) => console.log(info?.source, value);
-export default function ({cookies}) {
+export default function ({cookies})  {
     const [RightDrawerOpen, setRightDrawerOpen] = useState(false);
     const [StartDate, setStartDate] = useState('');
     const [EndDate, setEndDate] = useState('');
     const [recommended, setRecommended] = useState([])
     const [myInterView, setMyInterView] = useState([])
-    const [isGetData, setIsGetData] = useState(false)
+    const [isGetData, setIsGetData] = useState(false);
+    const [ nextPage , setNextPage ] = useState(null);
+    const [ interviewsNextPage , setInterviewsNextPage ] = useState(null);
     const [MeQuery] = useQueries({
         queries: [
             {
@@ -79,6 +82,7 @@ export default function ({cookies}) {
     const getRecommended = async () => {
         axiosInstance.get('/interview-api/interviews/recommended-interviews/').then(res => {
             setRecommended(res?.data?.results)
+            setNextPage(res?.data?.next)
         })
     }
 
@@ -88,6 +92,7 @@ export default function ({cookies}) {
         axiosInstance.get('/interview-api/interviews/my-interviews/').then(res => {
             setIsGetData(false)
             setMyInterView(res?.data?.results)
+            setInterviewsNextPage(res?.data?.next)
         })
     }
 
@@ -96,6 +101,52 @@ export default function ({cookies}) {
         getInterViews()
     }, []);
 
+    const handleScroll = () => {
+        if (document.getElementById('test').innerHeight + document.getElementById('test').scrollTop !== document.getElementById('test').offsetHeight ) {
+            return;
+        }
+        console.log('we,re at the end');
+    };
+
+    useEffect(() => {
+        if(!document.getElementById('test'))
+            return
+        document.getElementById('test').addEventListener('scroll', handleScroll);
+        // return () => document.getElementById('test').removeEventListener('scroll', handleScroll);
+    }, [isLoading]);
+
+    const FetchMoreData = async () => {
+        if(!nextPage)
+            return
+        try {
+                let { data } = await axiosInstance.get(`${nextPage.replace('http://mah-api.codintofuture.ir','')}`);
+                setNextPage(data.next)
+                setRecommended(prevState => [
+                    ...prevState ,
+                    ...data.results
+                ])
+
+        } catch (err) {
+            console.log(err)
+        }
+
+    }
+
+    const FetchMoreInterview = async  () => {
+        if(!interviewsNextPage)
+            return
+        try {
+            let { data } = await axiosInstance.get(`${interviewsNextPage.replace('http://mah-api.codintofuture.ir','')}`);
+            setInterviewsNextPage(data.next)
+            setMyInterView(prevState => [
+                ...prevState ,
+                ...data.results
+            ])
+
+        } catch (err) {
+            console.log(err)
+        }
+    }
 
     return (
         <>
@@ -115,7 +166,7 @@ export default function ({cookies}) {
                                 <CollaborationHeader>
                                 </CollaborationHeader>
                                 <CollaborationBody>
-                                    <div style={{
+                                    <div id={'scrollableDiv'} style={{
                                         width: '100%',
                                         display: 'flex',
                                         alignItems: 'center',
@@ -143,11 +194,20 @@ export default function ({cookies}) {
                                             <div style={{width: '100%', textAlign: 'right'}}>
                                                 <p style={{color: '#1D1D1D'}}>درخواست‌های همکاری </p>
                                             </div>
-                                            {(!error && recommended) ? recommended.map((interview, index) => {
-                                                return <CollaborationItem getRecommended={getRecommended}
-                                                                          isInterview={false} data={interview}
-                                                                          key={interview?.id}/>
-                                            }) : error && error.response?.status === 500 && <div>خطای داخلی سرور</div>}
+                                            <InfiniteScroll
+                                                dataLength={recommended?.length} //This is important field to render the next data
+                                                next={FetchMoreData}
+                                                hasMore={nextPage}
+                                                style={{ width : '100%' }}
+                                                loader={<h4>Loading...</h4>}
+                                                scrollableTarget="scrollableDiv">
+                                                {(!error && recommended) ? recommended.map((interview, index) => {
+                                                    return <CollaborationItem getRecommended={getRecommended}
+                                                                              isInterview={false} data={interview}
+                                                                              key={interview?.id}/>
+                                                }) : error && error.response?.status === 500 && <div>خطای داخلی سرور</div>}
+                                            </InfiniteScroll>
+
                                             {!recommended.length && (
                                                 <div
                                                     style={{
@@ -159,13 +219,14 @@ export default function ({cookies}) {
                                             )}
                                         </>
                                     </div>
-                                    <div style={{
+                                    <div id={'interviewsColumn'} style={{
                                         width: '100%',
                                         display: 'flex',
                                         alignItems: 'center',
                                         gap: '10px',
                                         flexDirection: 'column'
                                     }}>
+
                                         {isGetData && (
                                             <div style={{
                                                 width: '100%',
@@ -185,10 +246,19 @@ export default function ({cookies}) {
                                                 <p style={{color: '#1D1D1D'}}>لیست پرسش‌نامه‌ها</p>
                                             </div>
                                             <>
-                                                {(!error && myInterView) && myInterView.map((interview, index) => {
-                                                    return <CollaborationInterView data={interview}
-                                                                                   key={interview?.id}/>
-                                                })}
+                                                <InfiniteScroll
+                                                    dataLength={myInterView?.length} //This is important field to render the next data
+                                                    next={FetchMoreInterview}
+                                                    hasMore={interviewsNextPage}
+                                                    style={{ width : '100%' }}
+                                                    loader={<h4>Loading...</h4>}
+                                                    scrollableTarget="interviewsColumn">
+                                                    {(!error && myInterView) && myInterView.map((interview, index) => {
+                                                        return <CollaborationInterView data={interview}
+                                                                                       key={interview?.id}/>
+                                                    })}
+                                                </InfiniteScroll>
+
                                                 {!myInterView.length && (
                                                     <div
                                                         style={{

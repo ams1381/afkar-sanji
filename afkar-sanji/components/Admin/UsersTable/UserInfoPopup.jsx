@@ -21,7 +21,7 @@ import React, {useEffect, useState} from "react";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
 import {axiosInstance} from "@/utilities/axios";
 
-export const UserInfoPopup = ({ usersLists , setPopupType , RegoionsData , ActivePopupUser , SetActivePopupUser }) => {
+export const UserInfoPopup = ({ usersLists , UserListQuery , setPopupType , RegoionsData , ActivePopupUser , SetActivePopupUser }) => {
     const [ UserData , setUserData ] = useState(usersLists.find(item => item.id === ActivePopupUser.id));
     const [ interviewAcceptLoading , setInterviewAcceptLoading ] = useState(false);
     const [ MessageApi , MessageContext ] = message.useMessage();
@@ -33,6 +33,10 @@ export const UserInfoPopup = ({ usersLists , setPopupType , RegoionsData , Activ
         setInterviewAcceptLoading(true)
         try {
             await axiosInstance.post(`/admin-api/users/${UserData.id}/grant-interviewer-role/`)
+            MessageApi.success({
+                content : 'با موفقیت تایید شد'
+            })
+            UserListQuery.refetch();
         }
         catch (err) {
             if(err?.response?.status === 500)
@@ -44,9 +48,16 @@ export const UserInfoPopup = ({ usersLists , setPopupType , RegoionsData , Activ
                         zIndex : 66668888888
                     }
                 })
-            MessageApi.error({
-                content : Object.values(err?.response?.data)[0]
-            })
+            if(err?.response?.data && Object.values(err?.response?.data))
+                Object.values(err?.response?.data).forEach(ErrorItem => {
+                    MessageApi.error({
+                        content : ErrorItem
+                    })
+                })
+
+            // MessageApi.error({
+            //     content : Object.values(err?.response?.data)[0]
+            // })
         }
         finally {
             setInterviewAcceptLoading(false);
@@ -82,7 +93,8 @@ export const UserInfoPopup = ({ usersLists , setPopupType , RegoionsData , Activ
                         { UserData.resume && <Button type={'primary'} onClick={() => setPopupType('resume-popup')}>
                             مشاهده رزومه
                         </Button>}
-                        { usersLists.find(item => item.id === ActivePopupUser.id).ask_for_interview_role && <Button onClick={AcceptInterviewRole}>
+                        { usersLists.find(item => item.id === ActivePopupUser.id).ask_for_interview_role &&
+                            <Button loading={interviewAcceptLoading} onClick={AcceptInterviewRole}>
                             تایید درخواست پرسش‌گری
                         </Button>}
                     </PopupTopButtonsContainer>
@@ -136,7 +148,6 @@ export const UserInfoPopup = ({ usersLists , setPopupType , RegoionsData , Activ
                 </ChatMessageContainer>
                 <PopupFooter>
                     <PopupFooterButton
-                        loading={interviewAcceptLoading}
                         onClick={() => SetActivePopupUser({
                             id : usersLists[usersLists.findIndex(UserItem => UserItem.id === ActivePopupUser.id) + 1].id
                         })}
