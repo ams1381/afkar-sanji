@@ -130,7 +130,6 @@ export const UsersHeader = ({
                     // treeCheckStrictly={true}
                     multiple={true}
                     onChange={(value, node, extra) => {
-                        console.log(value, node)
                         // if(!node)
                         //     return;
                         setTreeSelectValue(value)
@@ -148,8 +147,14 @@ export const UsersHeader = ({
                             }
                             if(node.length === 2 && node.includes('کارفرما') && node.includes('پرسشگر'))
                                 setRoleFilterValue('ie');
+                            if(node.length <= 2 && (node.includes('بدون درخواست پرسشگری') || node.includes('نیاز به تایید'))) {
+                                let interview_req_status = value.filter(item => (item!== 'e' && item !== 'i'))
+
+                                setInterviewRequestFilter('&interviewer_role_request_status=' + interview_req_status.join('&interviewer_role_request_status='))
+                            }
                             if(node.length > 2) {
                                 let interview_req_status = value.filter(item => (item!== 'e' && item !== 'i'))
+
                                 setInterviewRequestFilter('&interviewer_role_request_status=' + interview_req_status.join('&interviewer_role_request_status='))
                             }
                         }
@@ -187,6 +192,10 @@ export const UsersHeader = ({
                                 }
 
                             }
+
+
+                            // let interview_req_status = value.filter(item => (item!== 'e' && item !== 'i'))
+                            // setInterviewRequestFilter('&interviewer_role_request_status=' + interview_req_status.join('&interviewer_role_request_status='))
                         }
                     }}
                 />

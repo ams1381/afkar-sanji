@@ -26,8 +26,8 @@ html {
 
 body {
     background: var(--page-bg);
-    scrollbar-width: thin;
-    scrollbar-color: transparent transparent;
+    /*scrollbar-width: thin;*/
+    /*scrollbar-color: transparent transparent;*/
 }
 
 body::-webkit-scrollbar {

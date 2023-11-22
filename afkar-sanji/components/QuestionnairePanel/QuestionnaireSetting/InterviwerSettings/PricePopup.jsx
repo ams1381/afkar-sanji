@@ -14,6 +14,8 @@ export const PricePopup = ({ Questionnaire , rejectPopup , setRejectPopup }) => 
             await axiosInstance.post(`/interview-api/interviews/${Questionnaire.uuid}/reject-price/`,{
                 message : inputValue
             })
+            setRejectPopup(false)
+
         }
         catch (err) {
             setConfirmLoading(false);
@@ -49,7 +51,10 @@ export const PricePopup = ({ Questionnaire , rejectPopup , setRejectPopup }) => 
                open={rejectPopup}>
             <ContentContainer>
                 <p>چرا این قیمت را تایید نمی‌کنید؟</p>
-                <CommentInput placeholder={'کوتاه و مختصر بنویسید'} inputValue={inputValue} onChange={(e) => setInputValue(e.target.value)} />
+                <CommentInput placeholder={'کوتاه و مختصر بنویسید'}
+                              inputValue={inputValue}
+                              onKeyDown={e => e.key === 'Enter' ? ConfirmComment() : ''}
+                              onChange={(e) => setInputValue(e.target.value)} />
             </ContentContainer>
         </Modal>
     </>

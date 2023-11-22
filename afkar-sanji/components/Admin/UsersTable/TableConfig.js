@@ -138,7 +138,6 @@ export const TableDataSet = (UsersListData) => {
 
 
         if(UserItem.ask_for_interview_role) {
-            console.log(UserItem)
             if(UserItem.is_interview_role_accepted)
                 UsersTag.push('afir a');
             else if(UserItem.is_interview_role_accepted === null)

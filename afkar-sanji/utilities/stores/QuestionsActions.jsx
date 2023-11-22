@@ -140,6 +140,13 @@ export const QuestionPatcher = async (SetSaveButtonLoadingState , UUID , questio
     {
         if(err?.response?.status == 401)
             return
+        if(err?.response?.status === 500) {
+            SavedMessage.error({
+                content : 'خطای داخلی سرور'
+            })
+            SetSaveButtonLoadingState(false)
+            return
+        }
         if(err.response)
         {
             QuestionDispatcher(ChangeErrorData({
@@ -255,6 +262,13 @@ export const QuestionCreator = async (questionsData , QuestionsArray , setQuesti
     {
         if(err?.response?.status == 401)
             return
+        if(err?.response?.status === 500) {
+            SavedMessage.error({
+                content : 'خطای داخلی سرور'
+            })
+            SetSaveButtonLoadingState(false)
+            return
+        }
         if(err.response)
         {
             QuestionDispatcher(ChangeErrorData({

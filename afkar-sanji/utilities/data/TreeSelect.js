@@ -12,17 +12,17 @@ export const userTreeData = [
         value: 'u',
         children : [
             {
-                title : 'بدون درخواست' ,
+                title : 'بدون درخواست پرسشگری' ,
                 value : 'n'
             },
-            {
-                title : 'رد شده' ,
-                value : 'r'
-            },
-            {
-                title : 'تایید شده' ,
-                value : 'a'
-            },
+            // {
+            //     title : 'رد شده' ,
+            //     value : 'r'
+            // },
+            // {
+            //     title : 'تایید شده' ,
+            //     value : 'a'
+            // },
             {
                 title : 'نیاز به تایید' ,
                 value : 'p'

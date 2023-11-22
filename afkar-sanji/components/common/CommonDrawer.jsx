@@ -46,7 +46,7 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
         }
 
     }, [router]);
-    console.log(drawerSelectedItem)
+
     useEffect(() => {
         window.addEventListener('scroll',(e) => {
             if(window.pageYOffset >= 57) {

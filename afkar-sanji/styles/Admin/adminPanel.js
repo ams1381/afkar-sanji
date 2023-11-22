@@ -291,6 +291,7 @@ export const QuestionsSliderContainer = styled.div`
     justify-content: center;
     align-items: center;
     transition: 0.3s;
+    //height : auto !important;
   }
   .swiper-slide-active {
     opacity: 1;

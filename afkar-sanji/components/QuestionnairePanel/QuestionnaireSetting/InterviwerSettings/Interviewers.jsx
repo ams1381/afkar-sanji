@@ -72,7 +72,9 @@ export const Interviewers = ({ Questionnaire , ChangeDistrict , refetch , Toggle
 
     return <InterviewContainer>
         {MessageContext}
-        { rejectPopup && <PricePopup Questionnaire={Questionnaire} setRejectPopup={setRejectPopup} rejectPopup={rejectPopup} /> }
+        { rejectPopup && <PricePopup Questionnaire={Questionnaire}
+             setRejectPopup={setRejectPopup}
+             rejectPopup={rejectPopup} /> }
         <AnswerCountPopup refetch={refetch} Questionnaire={Questionnaire}
               setCountPopupOpen={setCountPopupOpen}
               countPopupOpen={countPopupOpen} />

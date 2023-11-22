@@ -122,7 +122,7 @@ const MultipleAnswer = ({ QuestionInfo }) => {
               </button>
             </div>
               </div>
-            { ErrorObject?.length ? ErrorObject.find(OptionItem => OptionItem?.optionID == item?.id) && 
+            { (Array.isArray(ErrorObject) && ErrorObject?.length) ? ErrorObject.find(OptionItem => OptionItem?.optionID == item?.id) &&
             <p className='options_error_message'>
               متن گزینه نمیتواند خالی باشد
               </p> : ''} 

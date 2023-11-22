@@ -158,7 +158,7 @@ export const QuestionnaireDataPopup = ({ setActiveQuestionnairePopup
                                 }
                                     <span style={{ opacity : 0.5 , marginRight : 5 }}>
 
-                                       ریال
+                                       تومان
                                    </span>
                                 </p>
                                 {/*<Link href={'/'}>*/}

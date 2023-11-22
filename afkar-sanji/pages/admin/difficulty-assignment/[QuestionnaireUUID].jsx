@@ -54,8 +54,8 @@ const LevelAssignmentPage = () => {
     });
     const [ QuestionLevel , setQuestionLevel ] = useState(0);
     useEffect(() => {
-        if(InterviewQuery.data?.data?.questions[currentSlide])
-        setQuestionLevel(InterviewQuery.data?.data?.questions[currentSlide].question.level)
+        if(InterviewQuery.data?.data?.questions[currentSlide] && InterviewQuery.data?.data?.questions[currentSlide].question)
+            setQuestionLevel(InterviewQuery.data?.data?.questions[currentSlide].question.level)
     },[currentSlide])
     console.log(QuestionLevel)
     const assignLevel = async (LevelNumber) => {

@@ -219,7 +219,7 @@ export const QuestionChartBodyContainer = styled.div`
     flex-direction: column;
     display: flex;
     overflow: scroll;
-    scrollbar-width: thin;
+    //scrollbar-width: thin;
     scrollbar-color: transparent transparent; 
 
     .childChartsContainer
