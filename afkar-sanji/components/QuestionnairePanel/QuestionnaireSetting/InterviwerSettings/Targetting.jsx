@@ -31,7 +31,7 @@ export const Targetting = ({ Questionnaire , refetch }) => {
                 { Questionnaire.goal_start_date && <span>{digitsEnToFa(convertDate(Questionnaire.goal_start_date,'jalali'))}</span>}
                 <p>الی</p>
                 { Questionnaire.goal_end_date && <span>{digitsEnToFa(convertDate(Questionnaire.goal_end_date,'jalali'))}</span>}
-                <p>باید { digitsEnToFa(Questionnaire.answer_count_goal) } نتیجه ثبت شود</p>
+                <p>باید { Questionnaire.answer_count_goal && digitsEnToFa(Questionnaire.answer_count_goal) } نتیجه ثبت شود</p>
             </InterViewerTimeRangeContainer>
 
             <Button onClick={() => setCountPopupOpen(true)}>
