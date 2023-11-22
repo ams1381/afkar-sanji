@@ -291,10 +291,13 @@ export const QuestionsSliderContainer = styled.div`
     justify-content: center;
     align-items: center;
     transition: 0.3s;
+    opacity: 0.5;
     //height : auto !important;
+    //height : 400px !important;
   }
   .swiper-slide-active {
-    opacity: 1;
+    opacity: 1 !important;
+    //height : auto !important;
   }
   .swiper-slide-next , .swiper-slide-prev
   {
@@ -304,9 +307,13 @@ export const QuestionsSliderContainer = styled.div`
   {
     user-select: none;
   }
-  .swiper-slide-next .question_component , .swiper-slide-prev  .question_component {
-    background: none;
+  .swiper-slide .question_component , .swiper-slide-next .question_component , .swiper-slide-prev  .question_component {
+    background: none !important;
     box-shadow: none;
+  }
+  .swiper-slide-active .question_component {
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.15) !important;
+    background: white !important;
   }
 `
 export const ProgressBarThumb = styled.span`

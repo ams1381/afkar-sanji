@@ -12,10 +12,12 @@ export const QuestionsSwiper = ({ setSwiperInstance  , questionnaireData , setCu
     return  <Provider store={AnswerStore}>
         <Swiper
         direction={'vertical'}
-        slidesPerView={3}
+        slidesPerView={'auto'}
         navigation
         centeredSlides={true}
         // spaceBetween={20}
+        // spaceBetween={100}
+
         onSlideChange={(e) => setCurrentSlide(e.activeIndex)}
         onSwiper={setSwiperInstance}
         mousewheel={true}
