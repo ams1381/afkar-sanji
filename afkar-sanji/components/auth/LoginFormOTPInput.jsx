@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, {useContext, useEffect, useRef, useState} from 'react'
 import OtpClasses from '@/styles/auth/LoginStyles.module.css'
 import { ClearLoginInputButton, InputBox, LoginErrorMessage, LoginInput } from '@/styles/auth/Login'
 import { AuthContext } from '@/utilities/AuthContext'
@@ -22,6 +22,7 @@ export const LoginFormOTPInput = ({ErrorHandler , authentication}) => {
     const [timeRemaining, setTimeRemaining] = useState(60);
     const [ resendLoading , SetResendLoading ] = useState(false);
     const LoginContext =  useContext(AuthContext);
+    const InputRef = useRef();
 
     useEffect(() => {
         LoginContext.ChangeOTP(null);
@@ -93,9 +94,9 @@ export const LoginFormOTPInput = ({ErrorHandler , authentication}) => {
       };
   return (
     <>
-    <InputBox className={ErrorHandler.message ? OtpClasses['input_error_occur'] : '' }
+    <InputBox  className={ErrorHandler.message ? OtpClasses['input_error_occur'] : '' }
         focused={!InputFocusState ? 'true' : null}>
-        <LoginInput type="text"  name="otp_code" maxLength="5" 
+        <LoginInput type="text" autoFocus={true} name="otp_code" maxLength="5"
         disabled={timeOutState}
         
         required pattern="[0-9]{5}"

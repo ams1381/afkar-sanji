@@ -62,7 +62,7 @@ export default function App({ Component, pageProps }) {
       if(router.pathname !== '/auth'
       && router.pathname !== '/404' &&
       router.pathname !== '/403' &&
-      router.pathname != '/505'
+      router.pathname !== '/500'
       && router.pathname !== '/auth/otpSms'
        && !router.pathname.includes('answer-page'))
           authentication();

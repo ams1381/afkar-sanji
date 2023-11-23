@@ -6,57 +6,78 @@ import {Button, Popover} from "antd";
 import {useState} from "react";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
 import {styled} from "styled-components";
+import { AnimatePresence, motion } from 'framer-motion';
 
-export const SentMessage = ({ messageData , Questionnaire , setEditableMessage }) => {
+export const SentMessage = ({ messageData , ChatQuery , isAdmin , Questionnaire , setEditableMessage }) => {
     const [ messagePopover , setMessagePopover ] = useState(false);
     const [ deleteMessageLoading , setDeleteLoading ] = useState(false);
     const deleteMessage = async () => {
         setDeleteLoading(true)
         try {
-            await axiosInstance.delete(`/admin-api/tickets/${messageData.id}/`)
+            await axiosInstance.delete(`/${!isAdmin ? 'interview' :'admin'}-api/tickets/${messageData.id}/?interview_id=${Questionnaire.id}`);
+
+            ChatQuery.refetch();
+            setTimeout(() => {
+                setMessagePopover(false)
+            },200)
         } catch (err) {
 
         } finally {
             setDeleteLoading(false);
+
         }
     }
 
-    // console.log(convertToRegularTime(messageData.sent_at).split(' ')[1])
-    return <div style={{ display : 'flex' , justifyContent : 'flex-end' }}>
-        <SentMessageContainer>
-        <SentMessageTextContainer>
-            <Popover open={messagePopover}
-                     onOpenChange={() => setMessagePopover(false)}
-                     trigger={'click'}
-                     placement={'bottomRight'}
-                     content={<PopoverContainer>
-                         <DeleteMessageButton style={{ width : '100%' }} loading={deleteMessageLoading} danger onClick={deleteMessage}>
-                             <p>حذف</p>
-                             <Icon name={'OutlineTrashRed'} />
-                         </DeleteMessageButton>
-                         <EditMessageButton onClick={() => setEditableMessage({ id : messageData.id , text : messageData.text })}>
-                             <p>ویرایش</p>
-                             <Icon name={'OutlinePen'} />
-                         </EditMessageButton>
-                     </PopoverContainer>}>
-                <MessageMenuToggle onClick={() => setMessagePopover(!messagePopover)}>
-                    <Icon name={'Menu'} />
-                </MessageMenuToggle>
-            </Popover>
-            <p>{messageData.text}</p>
+    return <motion.div initial={{ x : 80 }} animate={{ x : 0 }} transition={{ duration: 0.4 }}>
+        <div style={{ display : 'flex' , justifyContent : 'flex-end' }}>
+            <SentMessageContainer>
+                <SentMessageTextContainer>
+                    <Popover open={messagePopover}
+                             onOpenChange={() => setMessagePopover(false)}
+                             trigger={'click'}
+                             placement={'bottomRight'}
+                             content={<PopoverContainer>
+                                 <DeleteMessageButton style={{ width : '100%' }} loading={deleteMessageLoading} danger onClick={deleteMessage}>
+                                     { !deleteMessageLoading && <Icon name={'OutlineTrashRed'}/>}
+                                     <p>حذف</p>
+                                 </DeleteMessageButton>
+                                 <EditMessageButton onClick={() => {
+                                     setEditableMessage({ id : messageData.id , text : messageData.text })
+                                     setMessagePopover(false)
+                                 }}>
+                                     <p>ویرایش</p>
+                                     <Icon name={'OutlinePen'} />
+                                 </EditMessageButton>
+                             </PopoverContainer>}>
+                        <MessageMenuToggle onClick={() => setMessagePopover(!messagePopover)}>
+                            <Icon name={'Menu'} />
+                        </MessageMenuToggle>
+                    </Popover>
+                    <p>{messageData.text}</p>
 
-        </SentMessageTextContainer>
-            <div style={{ display : 'flex' , gap : 10 , alignItems : 'center' }}>
-                <p style={{ fontSize : 12 }}>
-                    {digitsEnToFa(convertToRegularTime(messageData.sent_at).split(' ')[1])}
-                </p>
-                <span>
+                </SentMessageTextContainer>
+                <div style={{ display : 'flex' , gap : 10 , alignItems : 'center' }}>
+                    <p style={{ fontSize : 12 }}>
+                        {digitsEnToFa(convertTimeTo12HourFormat(convertToRegularTime(messageData.sent_at).split(' ')[1]))}
+                    </p>
+                    <span>
                     <Icon style={{ width : 12 , height : 12 }} name={'GrayCheck'} />
                 </span>
-            </div>
+                </div>
+            </SentMessageContainer>
+        </div>
+    </motion.div>
+}
+function convertTimeTo12HourFormat(timeString) {
+    const [hour24, minutes] = timeString.split(':').map(Number);
 
-    </SentMessageContainer>
-    </div>
+    let hour12 = hour24 % 12 || 12; // Convert 0 to 12
+    const period = hour24 < 12 ? 'AM' : 'PM';
+
+    // Pad single-digit minutes with leading zero
+    const paddedMinutes = String(minutes).padStart(2, '0');
+
+    return `${hour12}:${paddedMinutes} ${period}`;
 }
 const PopoverContainer = styled.div`
   padding: 8px;
@@ -73,6 +94,7 @@ const DeleteMessageButton = styled(Button)`
   gap: 10px;
   flex-direction: row-reverse;
   border: none !important;
+  direction: rtl;
 `
 const EditMessageButton = styled(Button)`
   width: 100%;

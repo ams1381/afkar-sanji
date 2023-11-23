@@ -42,7 +42,7 @@ const UsersListPage = () => {
         queries : [
             { queryKey : ['UsersListQuery'] ,
                 queryFn : async () =>
-                    await axiosInstance.get(`/admin-api/users/${userSearchValue ? 'search-users/' : ''}?role=${roleFilterValue}${interviewRequestFilter ? interviewRequestFilter : ''}&interview_name=${InterviewSearch ? InterviewSearch : ''}${!userSearchValue ? `&page_size=${pageSize}` : ''}${!userSearchValue ? `&page=${CurrentPage}` : ''}&search=${userSearchValue ? digitsFaToEn(userSearchValue) : ''}`),
+                    await axiosInstance.get(`/admin-api/users/${userSearchValue ? 'search-users/' : ''}?role=${roleFilterValue}${interviewRequestFilter ? interviewRequestFilter : ''}&interview_name=${InterviewSearch ? InterviewSearch : ''}${!userSearchValue ? `&page_size=${pageSize}` : ''}${(!userSearchValue && !interviewRequestFilter) ? `&page=${CurrentPage}` : ''}&search=${userSearchValue ? digitsFaToEn(userSearchValue) : ''}`),
                 refetchOnWindowFocus : false,
                 retry : false
             } ,

@@ -11,6 +11,8 @@ import {axiosInstance} from "@/utilities/axios";
 
 
 import { VList } from "virtua";
+import {ReadyMessageToSend} from "@/components/Questioner/ChatModal/ReadyMessageToSend";
+import {FidgetSpinner, TailSpin} from "react-loader-spinner";
 
 export const ChatModal = ({
           isActive,
@@ -116,11 +118,19 @@ export const ChatModal = ({
                footer={<></>}
                open={isActive}>
                 <ChatHeader isActive={isActive}
-                            // ChatDada=
-                            isAdmin={isAdmin}
-                            setIsActive={setIsActive}/>
+                    isAdmin={isAdmin}
+                    setIsActive={setIsActive}/>
                 <ChatMessageContainer>
-                    { messagesItems.length &&
+                    { ChatQuery.isLoading ? <div style={{ width : '100%' , display : 'flex' , justifyContent : 'center' }}> <TailSpin
+                            height="25"
+                            width="25"
+                            color="#5360ED"
+                            ariaLabel="tail-spin-loading"
+                            radius="1"
+                            wrapperStyle={{}}
+                            wrapperClass=""
+                            visible={true}
+                        /> </div>:
                         <VList onScroll={() => console.log('check')} className={'VListContainer'}
                                ref={ref} style={{height: 300}}
                                autoHeight={true}
@@ -129,18 +139,13 @@ export const ChatModal = ({
                                rowCount={ChatQuery.data?.data.count} shift={shifting}
                             onRangeChange={async (start, end) => {
                                 if (!ready.current) return;
-                                // console.log(start, end)
                                 if (end + THRESHOLD >  ChatQuery.data?.data.count && endFetchedCountRef.current <  ChatQuery.data?.data.count) {
                                     endFetchedCountRef.current = ChatQuery.data?.data.count;
                                     console.log('fetch more from end')
-
                                     // setItems(prev => [...prev, ...createRows(ITEM_BATCH_COUNT)]);
                                 } else if (start - THRESHOLD < 0 && startFetchedCountRef.current <  ChatQuery.data?.data.count) {
                                     startFetchedCountRef.current = ChatQuery.data?.data.count;
-                                    // console.log('fetch more from top')
                                     await fetchItemsFromTop()
-                                    // await fetchItems(true);
-                                    // setItems(prev => [...createRows(ITEM_BATCH_COUNT).reverse(), ...prev]);
                                 }
                             }}>
 
@@ -148,29 +153,28 @@ export const ChatModal = ({
                             {
                                 messagesItems.map(MessageItem => MessageItem.sender === 'me'
                                     ? <SentMessage setEditableMessage={setEditableMessage}
-                                                   Questionnaire={Questionnaire}
-                                                   messageData={MessageItem}/> :
+                                           ChatQuery={ChatQuery}
+                                           isAdmin={isAdmin}
+                                           Questionnaire={Questionnaire}
+                                           messageData={MessageItem}/> :
                                     <RecievedMessage messageData={MessageItem}
-                                                     isAdmin={isAdmin}
-                                                     Questionnaire={Questionnaire}
-                                    />)
+                                         isAdmin={isAdmin}
+                                         Questionnaire={Questionnaire}/>)
                             }
-
                         </>
-
                     </VList>
                 }
-                        {/*<SentMessage />*/}
-                        {/*<RecievedMessage />*/}
                 </ChatMessageContainer>
-            <RecommandedContainer>
-                <RecommandedMessage>
-                    <p>لطفا در مورد پروژه بیشتر توضیح بدید</p>
-                </RecommandedMessage>
-                <RecommandedMessage>
-                    <p>چرا قیمت پایینه؟</p>
-                </RecommandedMessage>
-            </RecommandedContainer>
+            { !!ChatQuery.isLoading && <RecommandedContainer>
+                <ReadyMessageToSend MessageText={'لطفا در مورد پروژه بیشتر توضیح بدید'}
+                                    Questionnaire={Questionnaire}
+                                    isAdmin={isAdmin}
+                                    ChatQuery={ChatQuery}/>
+                <ReadyMessageToSend MessageText={'چرا قیمت پایینه؟'}
+                                    Questionnaire={Questionnaire}
+                                    isAdmin={isAdmin}
+                                    ChatQuery={ChatQuery}/>
+            </RecommandedContainer>}
                 <ChatPrompt isAdmin={isAdmin}
                     ChatQuery={ChatQuery}
                     setEditableMessage={setEditableMessage}
@@ -187,56 +191,3 @@ const ChatModalContainer = styled.div`
       padding: 0;
     }
 `
-const MessageList = ({ messages }) => {
-    const rowRenderer = ({ index, style }) => {
-        const message = messages[index];
-        return (
-            <div style={{ width : 200 , height : 100 , background : 'red' }}>
-                {message.sender === 'me' ? (
-                    <SentMessage messageData={message} />
-                ) : (
-                    <ReceivedMessage messageData={message} />
-                )}
-            </div>
-        );
-    };
-
-    return (
-        <VList
-            height={400} // Set the height of your virtual list
-            rowCount={messages.length} // Total number of messages
-            rowHeight={50}
-            rowRenderer={rowRenderer}
-        />
-    );
-};
-// function rowRenderer({
-//                          index, // Index of row
-//                          isScrolling, // The List is currently being scrolled
-//                          isVisible, // This row is visible within the List (eg it is not an overscanned row)
-//                          key, // Unique key within array of rendered rows
-//                          parent, // Reference to the parent List (instance)
-//                          style, // Style object to be applied to row (to position it);
-//                          // This must be passed through to the rendered row element.
-//                      }) {
-//     const user = list[index];
-//
-//     // If row content is complex, consider rendering a light-weight placeholder while scrolling.
-//     const content = isScrolling ? '...' : <User user={user} />;
-//
-//     // Style is required since it specifies how the row is to be sized and positioned.
-//     // React Virtualized depends on this sizing/positioning for proper scrolling behavior.
-//     // By default, the List component provides following style properties:
-//     //    position
-//     //    left
-//     //    top
-//     //    height
-//     //    width
-//     // You can add additional class names or style properties as you would like.
-//     // Key is also required by React to more efficiently manage the array of rows.
-//     return (
-//         <div key={key} style={style}>
-//             {content}
-//         </div>
-//     );
-// }

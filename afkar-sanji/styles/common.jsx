@@ -695,7 +695,7 @@ export const RecommandedContainer = styled.div`
     justify-content: flex-end;
   
 `
-export const RecommandedMessage = styled.div`
+export const RecommandedMessage = styled(Button)`
   border-radius: 2px;
   border: 1px solid var(--Outline, #D9D9D9);
   background: var(--Surface, #FEFEFE);

@@ -30,17 +30,18 @@ export const InfoContainer = ({ BoxName , BoxDataName ,MeQuery , UserData , bold
           if(regions)
           {
               if(BoxDataName == 'province' && InputData) {
+                  // console.log(InputData)
                   if(typeof InputData === "number")
                       InputID = regions[0].provinces.find(item => item.id === InputData).id;
                   else
-                    InputID = regions[0].provinces.find(item => item.name === InputData).id;
+                    InputID = regions[0].provinces.find(item => item.id === InputData.id).id;
               }
               else if(BoxDataName == 'nationality' && InputData) {
-                  console.log(InputData,regions)
+                  // console.log(InputData,regions)
                   if(typeof InputData === "number")
                       InputID = regions.find(item => item.id === InputData).id
                   else
-                    InputID = regions.find(item => item.name === InputData).id
+                    InputID = regions.find(item => item.name === InputData.name).id
               }
           }
         const dataToUpdate = {
@@ -98,6 +99,7 @@ export const InfoContainer = ({ BoxName , BoxDataName ,MeQuery , UserData , bold
                         showSearch
                         suffixIcon={<Icon name={'suffixIcon'} style={{ width : 11 }} />}
                         placeholder="استان محل سکونت را انتخاب کنید"
+                        notFoundContent={<div style={{ textAlign : 'right' , padding : 5 , color : '#A3A3A3' }}><p>موردی یافت نشد</p></div>}
                         filterOption={(input, option) =>
                             (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
                         value={InputData ? {
@@ -105,7 +107,8 @@ export const InfoContainer = ({ BoxName , BoxDataName ,MeQuery , UserData , bold
                             value : InputData.id
                         } : null}
                         onSelect={(e) => {
-                            setInputData(e)
+                            if(regions[0] && regions[0].provinces)
+                                setInputData(regions[0].provinces.find(item => item.id === e))
                         }}
                         options={regions[0].provinces.map(item => ({
                             label : item.name ,
@@ -117,6 +120,7 @@ export const InfoContainer = ({ BoxName , BoxDataName ,MeQuery , UserData , bold
                         regions && <Select
                             disabled={!editState}
                             showSearch
+                            notFoundContent={<div style={{ textAlign : 'right' , padding : 5 , color : '#A3A3A3' }}><p>موردی یافت نشد</p></div>}
                             suffixIcon={<Icon name={'suffixIcon'} style={{ width : 11 }} />}
                             placeholder={'ملیت را انتخاب کنید'}
                             filterOption={(input, option) =>
@@ -125,7 +129,10 @@ export const InfoContainer = ({ BoxName , BoxDataName ,MeQuery , UserData , bold
                                     label : InputData.name,
                                     value : InputData.id
                                 } : null}
-                            onSelect={(e) => setInputData(e)}
+                            onSelect={(e) => {
+                                if(regions)
+                                    setInputData(regions.find(item => item.id === e))
+                            }}
                             options={regions.map(item => ({
                                 label : item.name ,
                                 value : item.id

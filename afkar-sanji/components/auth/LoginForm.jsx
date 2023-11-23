@@ -91,7 +91,7 @@ export const Login_form = ({ setLoggedIn }) => {
             <p className='input_label_message' style={{ padding : '10px 0' }}>{LoginContext.Login_Context_value.FormBodyMessage}</p>
           { LoginContext.Login_Context_value.FormType == 'PhoneNumber' ? 
           <LoginFormInput ErrorHandler={{message : errMessage , SetNull : setErMessage}} authentication={authentication}/> :
-            <LoginFormOTPInput  ErrorHandler={{message : errMessage , SetNull : setErMessage}} authentication={authentication}  /> 
+            <LoginFormOTPInput ErrorHandler={{message : errMessage , SetNull : setErMessage}} authentication={authentication}  />
           }
          
          </motion.div>

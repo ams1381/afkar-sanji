@@ -18,14 +18,12 @@ export const ChatPrompt = ({ isAdmin , Questionnaire , ChatQuery , setEditableMe
     const SendMessage = async () => {
         if(!promptValue)
             return
-
         setSendMessageLoading(true)
         try {
             await axiosInstance.post(`/${!isAdmin ? 'interview' :'admin'}-api/tickets/`,{
                 interview : Questionnaire.id ,
                 text : promptValue
             })
-
             setPromptValue(null)
             ChatQuery.refetch()
         } catch (err) {
@@ -34,7 +32,6 @@ export const ChatPrompt = ({ isAdmin , Questionnaire , ChatQuery , setEditableMe
         finally {
             setSendMessageLoading(false)
         }
-
     }
     const EditMessage = async  () => {
         setSendMessageLoading(true)
