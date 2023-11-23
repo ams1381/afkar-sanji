@@ -58,7 +58,6 @@ export default function ({data, loading, setFilterParams}) {
     const [StartDate, setStartDate] = useState('');
     const [EndDate, setEndDate] = useState('')
     const DateFilterHandler = async (_, filterDate) => {
-        // console.log(filterDate.validatedValue)
         if (!filterDate.validatedValue?.length) {
             setStartDate('');
             setEndDate('')
@@ -83,7 +82,7 @@ export default function ({data, loading, setFilterParams}) {
 
     return (<TransactionContainer>
         <FilterParent>
-            <DatePicker disabled={!data?.transactions?.length} format="YYYY-MM-DD"
+            <DatePicker  format="YYYY-MM-DD"
                         onChange={DateFilterHandler}
                         render={(value, openCalendar) => {
                             return (<TimePickerContainer style={{
@@ -102,7 +101,6 @@ export default function ({data, loading, setFilterParams}) {
                         locale={persian_fa}
             />
             <Dropdown
-                disabled={!data?.transactions?.length}
                 menu={{
                     items
                 }}

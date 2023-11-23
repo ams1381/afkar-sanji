@@ -9,23 +9,90 @@ export const Container = styled.div`
   width: 100%;
 `
 
+export const ModalContainer = styled.div`
+  & .ant-modal-content {
+    text-align: center;
+    padding: 12px;
+    direction: rtl;
+  }
+
+  & .modal_title {
+    color: var(rgba(0, 0, 0, 0.85));
+    text-align: center;
+    font-family: IRANSans;
+    font-size: 16px;
+    line-height: 30px;
+  }
+
+  & .anticon.anticon-close.ant-modal-close-icon {
+    display: none;
+  }
+
+
+  & .bodyOfWalletModal {
+    margin: 22px 0;
+
+    & .head {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+
+      & .icon {
+        font-size: 14px;
+      }
+
+      & .input {
+        direction: ltr;
+        width: 96px;
+        height: 42px;
+        border-radius: 2px;
+        text-align: center;
+        font-family: IRANSans;
+
+        & .ant-input.css-dev-only-do-not-override-pr0fja {
+          text-align: center;
+        }
+      }
+    }
+
+    & .body {
+      & .title {
+        padding: 10px 0;
+        color: var(--Neutral-Gray6);
+        text-align: center;
+        font-family: IRANSans;
+        font-size: 12px;
+      }
+
+      & .offers {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+    }
+  }
+`
+
 export const WalletHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
   padding: 10px 0;
+  
+ 
 `
 
 export const Refresh = styled(Button)`
   display: flex;
   max-width: fit-content;
   max-height: fit-content;
-  padding: 18px 12px;
+  padding: 4px 10px;
   justify-content: center;
   align-items: center;
   gap: 10px;
-  flex: 1 0 0;
   border-radius: 2px;
   border: 1px solid  var(--login-input-default-border);
   background: var(--surface);

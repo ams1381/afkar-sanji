@@ -42,6 +42,9 @@ export default function ({cookies})  {
     const [isGetData, setIsGetData] = useState(false);
     const [ nextPage , setNextPage ] = useState(null);
     const [ interviewsNextPage , setInterviewsNextPage ] = useState(null);
+    const [recommendedError, setRecommendedError] = useState('')
+    const [myInterViewError, setMyInterViewError] = useState('')
+    const [isGetData, setIsGetData] = useState(false)
     const [MeQuery] = useQueries({
         queries: [
             {
@@ -82,6 +85,9 @@ export default function ({cookies})  {
     const getRecommended = async () => {
         axiosInstance.get('/interview-api/interviews/recommended-interviews/').then(res => {
             setRecommended(res?.data?.results)
+        }).catch(error => {
+            const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
+            setRecommendedError(ERROR_MESSAGE)
             setNextPage(res?.data?.next)
         })
     }
@@ -92,6 +98,9 @@ export default function ({cookies})  {
         axiosInstance.get('/interview-api/interviews/my-interviews/').then(res => {
             setIsGetData(false)
             setMyInterView(res?.data?.results)
+        }).catch(error => {
+            const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
+            setMyInterViewError(ERROR_MESSAGE)
             setInterviewsNextPage(res?.data?.next)
         })
     }

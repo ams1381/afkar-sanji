@@ -158,137 +158,135 @@ export default function () {
                                                 ...formData, first_name: e?.target?.value,
                                             });
 
-                                        }}
-                                        required
-                                    />
-                                </FromItem>
-                                <FromItem>
-                                    <div className="title">نام خانوادگی *</div>
-                                    <InputCom
-                                        required
-                                        value={formData.last_name}
-                                        onChange={(e) => {
-                                            setFormData({
-                                                ...formData, last_name: e?.target?.value,
-                                            });
-                                        }}
-                                    />
-                                </FromItem>
-                            </Row>
+                                    }}
+                                    required
+                                />
+                            </FromItem>
+                            <FromItem>
+                                <div className="title">نام خانوادگی *</div>
+                                <InputCom
+                                    required
+                                    value={formData.last_name}
+                                    onChange={(e) => {
+                                        setFormData({
+                                            ...formData, last_name: e?.target?.value,
+                                        });
+                                    }}
+                                />
+                            </FromItem>
+                        </Row>
 
-                            <Row direction={"rtl"}>
-                                <FromItem>
-                                    <div className="title">ایمیل *</div>
-                                    <InputCom
-                                        value={formData.email}
-                                        onChange={(e) => {
-                                            setFormData({
-                                                ...formData, email: e?.target?.value,
-                                            });
-                                        }}
-                                        type={"email"}
-                                    />
-                                </FromItem>
-                            </Row>
+                        <Row direction={"rtl"}>
+                            <FromItem>
+                                <div className="title">ایمیل *</div>
+                                <InputCom
+                                    value={formData.email}
+                                    onChange={(e) => {
+                                        setFormData({
+                                            ...formData, email: e?.target?.value,
+                                        });
+                                    }}
+                                    type={"email"}
+                                />
+                            </FromItem>
+                        </Row>
 
-                            <Row direction={"rtl"}>
-                                <FromItem>
-                                    <div className="title">جنسیت *</div>
-                                    <Select
-                                        suffixIcon={<img src={arrowDownIcon?.src}/>}
-                                        options={[{value: "f", label: "زن"}, {value: "m", label: "مرد"},]}
-                                        value={formData.gender}
-                                        onChange={(e) => {
-                                            setFormData({...formData, gender: e});
-                                        }}
-                                        style={{
-                                            width: "100%",
-                                            textAlign: "right",
-                                            height: "40px",
-                                            padding: "0",
-                                            boxShadow: "none",
-                                        }}
-                                        placeholder={"انتخاب کنید"}
-                                    />
-                                </FromItem>
-                            </Row>
+                        <Row direction={"rtl"}>
+                            <FromItem>
+                                <div className="title">جنسیت *</div>
+                                <Select
+                                    suffixIcon={<img src={arrowDownIcon?.src}/>}
+                                    options={[{value: "f", label: "زن"}, {value: "m", label: "مرد"},]}
+                                    value={formData.gender}
+                                    onChange={(e) => {
+                                        setFormData({...formData, gender: e});
+                                    }}
+                                    style={{
+                                        width: "100%",
+                                        textAlign: "right",
+                                        height: "40px",
+                                        padding: "0",
+                                        boxShadow: "none",
+                                    }}
+                                    placeholder={"انتخاب کنید"}
+                                />
+                            </FromItem>
+                        </Row>
 
-                            <Row direction={"rtl"}>
-                                <FromItem>
-                                    <div className="title">آدرس محل سکونت *</div>
-                                    <TextAreaCom
-                                        value={formData.address}
-                                        onChange={(e) => {
-                                            setFormData({
-                                                ...formData, address: e?.target?.value,
-                                            });
-                                        }}
-                                        required
-                                        direction={`rtl`}
-                                        placeholder="آدرس خود را بنویسید"
-                                    />
-                                </FromItem>
-                            </Row>
+                        <Row direction={"rtl"}>
+                            <FromItem>
+                                <div className="title">آدرس محل سکونت *</div>
+                                <TextAreaCom
+                                    value={formData.address}
+                                    onChange={(e) => {
+                                        setFormData({
+                                            ...formData, address: e?.target?.value,
+                                        });
+                                    }}
+                                    required
+                                    direction={`rtl`}
+                                    placeholder="آدرس خود را بنویسید"
+                                />
+                            </FromItem>
+                        </Row>
 
-                            <Row direction={"rtl"}>
-                                <FromItem>
-                                    <div className="title">ملیت *</div>
-                                    <Select
-                                        options={country}
-                                        className={'notBorder'}
-                                        suffixIcon={<img src={arrowDownIcon?.src}/>}
-                                        value={[formData?.nationality]}
-                                        style={{
-                                            width: "100%",
-                                            height: "40px",
-                                            textAlign: "right",
-                                            padding: "0",
-                                            boxShadow: "none",
-                                            direction: "rtl",
-                                        }}
-                                        placeholder={"انتخاب کنید"}
-                                        onChange={(e) => {
-                                            setFormData({...formData, nationality: e});
-                                            console.log(e)
-                                        }}
-                                    />
-                                </FromItem>
-                                <FromItem>
-                                    <div className="title">استان محل سکونت</div>
-                                    <Select
-                                        className={'notBorder'}
-                                        suffixIcon={<img src={arrowDownIcon?.src}/>}
-                                        options={provinceList}
-                                        value={formData.province}
-                                        onChange={(e) => {
-                                            setFormData({...formData, province: e});
-                                        }}
-                                        style={{
-                                            width: "100%",
-                                            height: "40px",
-                                            textAlign: "right",
-                                            padding: "0",
-                                            boxShadow: "none",
-                                            direction: "rtl",
-                                        }}
-                                        placeholder={"انتخاب کنید"}
-                                    />
-                                </FromItem>
-                            </Row>
-                            <ConfigProvider theme={themeContext}>
-                                <Button
-                                    onClick={handleSubmit}
-                                    loading={confirmButtonLoading}
-                                    style={{marginTop: '0px'}}
-                                    className={StyleModules["confirm_button"]}
-                                    type="primary"
-                                >
-                                    ارسال اطلاعات
-                                </Button>
-                            </ConfigProvider>
-                        </Form>
-                    </Container>
-                )}
+                        <Row direction={"rtl"}>
+                            <FromItem>
+                                <div className="title">ملیت *</div>
+                                <Select
+                                    options={country}
+                                    className={'notBorder'}
+                                    suffixIcon={<img src={arrowDownIcon?.src}/>}
+                                    value={[formData?.nationality]}
+                                    style={{
+                                        width: "100%",
+                                        height: "40px",
+                                        textAlign: "right",
+                                        padding: "0",
+                                        boxShadow: "none",
+                                        direction: "rtl",
+                                    }}
+                                    placeholder={"انتخاب کنید"}
+                                    onChange={(e) => {
+                                        setFormData({...formData, nationality: e});
+                                        console.log(e)
+                                    }}
+                                />
+                            </FromItem>
+                            <FromItem>
+                                <div className="title">استان محل سکونت</div>
+                                <Select
+                                    className={'notBorder'}
+                                    suffixIcon={<img src={arrowDownIcon?.src}/>}
+                                    options={provinceList}
+                                    value={formData.province}
+                                    onChange={(e) => {
+                                        setFormData({...formData, province: e});
+                                    }}
+                                    style={{
+                                        width: "100%",
+                                        height: "40px",
+                                        textAlign: "right",
+                                        padding: "0",
+                                        boxShadow: "none",
+                                        direction: "rtl",
+                                    }}
+                                    placeholder={"انتخاب کنید"}
+                                />
+                            </FromItem>
+                        </Row>
+                        <ConfigProvider theme={themeContext}>
+                            <Button
+                                onClick={handleSubmit}
+                                style={{marginTop: '0px'}}
+                                className={StyleModules["confirm_button"]}
+                                type="primary"
+                            >
+                                ارسال اطلاعات
+                            </Button>
+                        </ConfigProvider>
+                    </Form>
+                </Container>
             </motion.div>
         </AnimatePresence>
     </>);
@@ -316,7 +314,7 @@ export async function getServerSideProps(context) {
 
     return {
         redirect: {
-            permanent: false,  destination: "/auth?returnUrl=" + urlDest
+            permanent: false, destination: "/auth?returnUrl=" + urlDest
         },
     };
 }

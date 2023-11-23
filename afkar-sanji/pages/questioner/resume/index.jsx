@@ -1,24 +1,18 @@
 import React, {useEffect, useState, useRef} from "react";
 import {useRouter} from "next/router";
-// style
 import {
     ButtonUploader, Container, CreateResume, Email, Header, InputCom, ResumeBg, Uploader, UploaderHeader
 } from "@/styles/questioner/resume/resume";
-// component
 import ResumeBox from "@/components/Questioner/Resume/ResumeBox";
-// icons
 import Linkedin from 'public/Icons/2.svg'
 import UploaderIcon from 'public/Icons/wrapper.svg'
 import closeIcon from "public/Icons/Dismiss.svg";
 import arrowUrl from 'public/Icons/arrowUrl.svg'
-// ant design
 import {Button, message, Upload} from 'antd';
 import StyleModules from "@/styles/auth/LoginStyles.module.css";
 import {axiosInstance} from "@/utilities/axios";
 import {Input} from 'antd';
-// motion
 import {AnimatePresence, motion} from 'framer-motion';
-// style
 import {LeftLight, RightLight} from "@/styles/auth/Login";
 import Image from "next/image";
 import arrowRightIcon from "@/public/Icons/Chevron Double.svg";
@@ -29,37 +23,51 @@ import Head from "next/head";
 const {Search} = Input;
 export default function ({meData, cookies}) {
     const [fileSize, setFileSize] = useState(null)
-    const [link, setLink] = useState('')
+    const [link, setLink] = useState(meData?.resume?.linkedin || '')
     const [isUpload, setIsUpload] = useState(false)
     const router = useRouter()
     const [loading, setLoading] = useState(false)
     const [uploadOk, setUploadOk] = useState(false);
     const [isHaveResume, setIsHaveResume] = useState(false);
     const status = useRef(true);
+    const [resumeData, setResumeData] = useState(null)
 
     useEffect(() => {
-        if (status.current) {
+        if (meData?.resume?.file !== '') setIsUpload(true)
+        else setIsUpload(false)
+    }, [meData]);
+
+    useEffect(() => {
+        if (!meData.resume) {
             let formData = new FormData();
             formData.append('linkedin', '')
             if (meData?.resume === null) {
                 axiosInstance.post(`/user-api/users/${meData?.id}/resume/`, formData)
                     .then(res => {
-                        return true
+                        setResumeData(res?.data)
                     })
                     .catch(error => {
-                        message.error('مشکلی پیش آمده است')
+                        const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
+                        message.error(ERROR_MESSAGE)
                     });
-
             }
+        } else {
+            setResumeData(meData.resume)
         }
-        status.current = false;
     }, []);
+    const urlHandler = () => {
+        if (link.length > 0) {
+            resumeHandler('patch', 'linkedin', link.trim(), false)
+        } else {
+            message.info('لطفا لینک را وارد کنید')
+        }
+    }
 
     const resumeHandler = (method, type, value, is_file) => {
         let formData = new FormData()
         formData.append(type, value)
         if (method === 'patch') {
-            axiosInstance.patch(`/user-api/users/${meData?.id}/resume/${meData?.resume?.id}`, formData, {
+            axiosInstance.patch(`/user-api/users/${meData?.id}/resume/${resumeData?.id}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -121,15 +129,13 @@ export default function ({meData, cookies}) {
         },
     };
 
-    const urlHandler = () => {
-        if (link.length > 0) {
-            if (meData?.resume?.id) {
-                resumeHandler('patch', 'linkedin', link.trim(), false)
-            }
-
-        } else {
-            message.info('لطفا لینک را وارد کنید')
+    const removeFileHandler = () => {
+        if (meData?.resume?.file) {
+            axiosInstance.patch(`/user-api/users/${meData?.resume?.id}/resume/`, {
+                file: null
+            })
         }
+        setIsUpload(false);
     }
 
     return (<>
@@ -153,7 +159,7 @@ export default function ({meData, cookies}) {
                     />
                     <Header>
                         <div className="title">نحوه‌ی تحویل رزومه‌ی خود را انتخاب کنید</div>
-                        <div className="caption">رزومه‌ساز ماح اجباری هست</div>
+                        <div className="caption"> حداقل یک مورد را کامل کنید</div>
                     </Header>
                     <Container>
                         <div className={`container_box`}>
@@ -217,10 +223,14 @@ export default function ({meData, cookies}) {
                                     <Upload {...props}
                                             maxCount={1}
                                             className="upload-list-inline"
-                                            listType="picture"
+                                            listType="text"
                                             multiple={false}
                                             method={null}
                                             accept=".pdf,image/*"
+                                            defaultFileList={[{
+                                                name: meData?.resume?.file?.split('http://mah-api.codintofuture.ir/media/resume/'),
+                                                url: meData?.resume?.file
+                                            }]}
                                             beforeUpload={file => {
                                                 const isImageOrPDF = file.type.includes('pdf') || file.type.includes('image/');
                                                 if (!isImageOrPDF) {
@@ -232,7 +242,7 @@ export default function ({meData, cookies}) {
                                                 return true;
                                             }}
                                             onRemove={() => {
-                                                setIsUpload(false);
+                                                removeFileHandler()
                                             }}
                                     >
                                         {isUpload ? ('') : (<ButtonUploader disabled={false}>
@@ -243,7 +253,8 @@ export default function ({meData, cookies}) {
                                 </Uploader>
                             </ResumeBox>
                         </div>
-                        <div onClick={() => router.push('dashboard/collaboration')} style={{
+                        {/*onClick={() => router.push('dashboard/collaboration')}*/}
+                        <div style={{
                             marginRight: '0', width: '100%', display: 'flex', justifyContent: ' end'
                         }}>
                             { (meData.role === 'i' || meData.role === 'ie') ? <Button
@@ -256,10 +267,11 @@ export default function ({meData, cookies}) {
                                     gap: '5px'
                                 }}
                                 className={`bottom`}
-                                // onClick={() => router.push("/questioner/information")}
+                                onClick={() => router.push("/questioner/information")}
                             >
 
                                 <p>پنل پرسش‌گری</p>
+                                ارسال به ادمین
                                 <img src={arrowRightIcon?.src}/>
                             </Button> : <div style={{
                                 marginTop: '100px',
@@ -298,6 +310,7 @@ export async function getServerSideProps(context) {
                 Authorization: `Bearer ${parsedCookies.access_token}`,
             }
         })
+
         MeData = await MeResponse.json();
         return {
             props: {

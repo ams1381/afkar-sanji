@@ -7,9 +7,7 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  height: 100vh;
   margin-bottom: 60px;
-  
  
 `
 
@@ -35,32 +33,35 @@ export const Form = styled.form`
   border: 1px solid #D9D9D9;
   background: #FEFEFE;
   gap: 24px;
-  
 `
 
 
 export const Row = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 24px;
   width: 100%;
   direction: ${p => p.direction};
+
+ 
 `
 
 export const FromItem = styled.div`
   width: 100% !important;
+
   > .title {
     color: var(--Neutral-Gray9);
     font-size: 16px;
-    margin-bottom: 12px;
+    margin-bottom: 4px;
     font-style: normal;
     font-weight: 500;
-    line-height: 30px; 
+    line-height: 30px;
   }
 
   & .ant-select-selector {
-    border-radius: 2px !important;
+    border-radius: 2px !important ;
   }
+ 
 `
 
 export const TextAreaCom = styled(TextArea)`

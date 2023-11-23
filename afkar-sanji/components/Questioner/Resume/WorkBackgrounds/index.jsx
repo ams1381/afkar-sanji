@@ -81,36 +81,6 @@ export default function ({
             setWorkData(prevItems => prevItems.filter((item, index) => index !== id));
             message.success('با موفقیت حذف شد')
         }
-
-
-        // if (id) {
-        // await axiosInstance.delete(`/user-api/users/${me?.id}/resume/${me?.resume?.id}/educational-backgrounds/${id}/`).then(res => {
-        //     if (res?.status === 204) {
-        //         message.error('حذف شد')
-        //         setWorkData(workData.filter(item => item.id !== id))
-        //     }
-        // })
-        // .catch(error => {
-        //     const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
-        //     message.error(ERROR_MESSAGE)
-        // })
-        // }
-        // if (id) {
-        //     console.log(id)
-        //     // await axiosInstance.delete(`/user-api/users/${me?.id}/resume/${me?.resume?.id}/work-backgrounds/${id}/`).then(res => {
-        //     //     if (res?.status === 204) {
-        //     //         message.error('حذف شد')
-        //     //         setWorkData(workData.filter(item => item.id !== id))
-        //     //     }
-        //     // })
-        // } else {
-        //     const index = workData.findIndex(item => item.id === id);
-        //     const updatedData = [...workData];
-        //     updatedData.splice(index, 1);
-        //     setWorkData(updatedData);
-        // }
-        // // setWorkData(prevItems => prevItems.filter((item, index) => index !== id));
-        // // message.success('با موفقیت حذف شد')
     }
 
 
@@ -160,23 +130,23 @@ export default function ({
                 <FromStepScroll>
                     {workData.map((item, index) => (
                         <FromResumeItem key={index}>
-                            {(index > 0 && index + 1 !== workData.length) && <BtnComponent>
-                                <img
-                                    onClick={() => removeWork(item?.id)}
-                                    className="close"
-                                    src={close.src}
-                                    alt=""
-                                />
-                            </BtnComponent>
+                            {(index > 0 && index + 1 !== workData.length) &&
+                                <BtnComponent onClick={() => removeWork(item?.id)}>
+                                    <img
+                                        className="close"
+                                        src={close.src}
+                                        alt=""
+                                    />
+                                </BtnComponent>
                             }
-                            {workData.length && index !== workData.length - 1 && <BtnComponent>
-                                <img
-                                    onClick={() => editEducation(item?.id)}
-                                    className="close"
-                                    src={editIcon.src}
-                                    alt=""
-                                />
-                            </BtnComponent>
+                            {workData.length && index !== workData.length - 1 &&
+                                <BtnComponent onClick={() => editEducation(item?.id)}>
+                                    <img
+                                        className="close"
+                                        src={editIcon.src}
+                                        alt=""
+                                    />
+                                </BtnComponent>
                             }
                             <ResumeInputCom>
                                 <div className="title">سال پایان</div>

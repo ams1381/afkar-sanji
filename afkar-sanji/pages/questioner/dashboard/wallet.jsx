@@ -1,55 +1,106 @@
 import {
-     QuestionerPageContainer
-    , PageBox, QuestionerContentBox
+    QuestionerPageContainer, PageBox, QuestionerContentBox
 } from '@/styles/common';
-
 import React, {useEffect} from 'react'
 import {useState} from 'react';
 import {CommonDrawer} from '@/components/common/CommonDrawer';
 import QuestionerHeader from '@/components/common/QuestionerHeader';
 import {useRouter} from 'next/router';
-// style
-import {WalletHeader, Refresh, Title, Container, WalletContainer} from "@/styles/questioner/dashboard/Wallet/wallet";
-// antd
-import {Button,} from "antd";
-// icon
+import {
+    WalletHeader, Refresh, Title, Container, WalletContainer, ModalContainer
+} from "@/styles/questioner/dashboard/Wallet/wallet";
 import refresh from '@/public/Icons/ArrowCounterclockwise.svg'
-
-// component
 import TransactionList from "@/components/Questioner/Dashboadr/Wallet/TransactionList";
 import Statistics from "@/components/Questioner/Dashboadr/Wallet/Statistics/Statistics";
 import Bank from "@/components/Questioner/Dashboadr/Wallet/Bank/Bank"
 import {axiosInstance} from "@/utilities/axios";
-import {useQuery} from "@tanstack/react-query";
+import {useQueries, useQuery} from "@tanstack/react-query";
 import SetQueryParams from "@/utilities/filtering/filter";
 import {Icon} from "@/styles/icons";
 import Head from "next/head";
+import {Button, Modal, Space} from 'antd';
+import {Input, Tooltip} from 'antd';
+import {digitsEnToFa, digitsFaToEn} from "@persian-tools/persian-tools";
 
+const formatNumber = (value) => new Intl.NumberFormat().format(value);
+const NumericInput = (props) => {
+    const {value, onChange} = props;
+    const handleChange = (e) => {
+
+        const {value: inputValue} = e.target;
+        const reg = /^-?\d*(\.\d*)?$/;
+        if (reg.test(inputValue) || inputValue === '' || inputValue === '-') {
+            onChange(inputValue);
+        }
+    };
+
+    // const handleBlur = () => {
+    //     let valueTemp = value;
+    //     if (value.charAt(value.length - 1) === '.' || value === '-') {
+    //         valueTemp = value.slice(0, -1);
+    //     }
+    //     onChange(valueTemp.replace(/0*(\d+)/, '$1'));
+    // };
+
+    return (<Input
+        {...props}
+        onChange={onChange}
+        // onBlur={handleBlur}
+    />);
+};
 export default function () {
+    const [chargingWallet, setChargingWallet] = useState(false)
     const [RightDrawerOpen, setRightDrawerOpen] = useState(false);
+    const [chargingWalletValue, setChargingWalletValue] = useState(0)
     const router = useRouter()
-    const [meData,setMeData] = useState([])
+    const [meData, setMeData] = useState([])
     const [filterParams, setFilterParams] = useState({
         transaction_type: undefined,
         transaction_created_at_from: undefined,
         transaction_created_at_to: undefined,
         amount_ordering: undefined
     })
-    // get me
+
+    const [filterChart, setFilterChart] = useState({
+        transaction_type: undefined,
+    })
     useEffect(() => {
         axiosInstance.get('/user-api/users/me/').then(res => {
             setMeData(res?.data)
         })
     }, []);
+    //
+    // const {
+    //     data, isLoading, error, refetch
+    // } = useQuery(['Wallet'], async () => await axiosInstance.get(`/wallet-api/wallet/my-wallet/${SetQueryParams(filterParams)}`), {
+    //     refetchOnWindowFocus: false
+    // })
+    //
+    // useEffect(() => {
+    //     refetch()
+    // }, [filterParams]);
 
-    const {data, isLoading, error, refetch} = useQuery(['Wallet'],
-        async () => await axiosInstance.get(`/wallet-api/wallet/my-wallet/${SetQueryParams(filterParams)}`)
-    ,{
-        refetchOnWindowFocus : false
-        })
+
+    const [walletData, walletChart] = useQueries({
+        queries: [
+            {
+                queryKey: ['wallet'],
+                queryFn: async () => await axiosInstance.get(`/wallet-api/wallet/my-wallet/${SetQueryParams(filterParams)}`),
+                refetchOnWindowFocus: false,
+                retry: false
+            },
+            {
+                queryKey: ['walletChart'],
+                queryFn: async () =>
+                    await axiosInstance.get(`/wallet-api/wallet/my-wallet/${SetQueryParams(filterChart)}`),
+                refetchOnWindowFocus: false,
+                retry: false
+            },
+        ],
+    });
 
     useEffect(() => {
-        refetch()
+        walletData.refetch()
     }, [filterParams]);
 
     return (
@@ -116,16 +167,14 @@ export async function getServerSideProps(context) {
         return {
             props: {
                 // Pass the cookies as props to the component
-                cookies: parsedCookies,
-                // wallet: data
+                cookies: parsedCookies, // wallet: data
             },
         };
     }
 
     return {
         redirect: {
-            permanent: false,
-            destination: "/auth?returnUrl=" + urlDest
+            permanent: false, destination: "/auth?returnUrl=" + urlDest
         }
     };
 }
