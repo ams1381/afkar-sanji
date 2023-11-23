@@ -48,6 +48,10 @@ const Profile = () => {
                 }
                   .ant-select-dropdown.css-dev-only-do-not-override-byeoj0, .ant-select-dropdown.css-17a39f8
                   {
+                   width: auto !important;
+                  }
+                  .ant-cascader-menus
+                  {
                     width: 370px !important;
                   }
                   .ant-cascader-checkbox-inner , .ant-select-selection-item

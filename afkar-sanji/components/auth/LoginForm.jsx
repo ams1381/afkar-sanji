@@ -74,7 +74,7 @@ export const Login_form = ({ setLoggedIn }) => {
         <LoginFormHeader title="ورود با رمز یکبار مصرف" />
         {/* <LoginFormBody body_message={LoginContext.Login_Context_value.FormBodyMessage} /> */}
           <FormChildDiv>
-          <p style={{ marginTop : 12 }}>!سلام</p>
+          <p style={{ marginTop : 12 , fontSize : 16 }}>!سلام</p>
       </FormChildDiv>
         <div className='animation_container'>
         <AnimatePresence >

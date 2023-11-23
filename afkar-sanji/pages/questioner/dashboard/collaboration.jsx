@@ -98,10 +98,10 @@ export default function ({cookies})  {
         axiosInstance.get('/interview-api/interviews/my-interviews/').then(res => {
             setIsGetData(false)
             setMyInterView(res?.data?.results)
+            setInterviewsNextPage(res?.data?.next)
         }).catch(error => {
             const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
             setMyInterViewError(ERROR_MESSAGE)
-            setInterviewsNextPage(res?.data?.next)
         })
     }
 

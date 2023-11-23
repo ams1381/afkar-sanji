@@ -20,6 +20,7 @@ const AvatarComponent = ({ cookies }) => {
             axiosInstance.post('/user-api/auth/logout/',{
                  refresh_token : cookies.refresh_token ,
                 })
+            Auth.setHasResume(false)
         }
         catch(Err)
         {

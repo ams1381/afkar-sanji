@@ -83,6 +83,8 @@ export const InfoContainer = ({ BoxName , BoxDataName ,MeQuery , UserData , bold
             { BoxDataName == 'gender' ?
                 <Select
                     disabled={!editState}
+                    className={'ams'}
+                    dropdownRender={(a) => <div className={'ams'}>{a}</div>}
                     suffixIcon={<Icon name={'suffixIcon'} style={{ width : 11 }} />}
                     value={InputData == 'm' ? { label : 'مرد' , value : 'm' } : { label : 'زن' , value : 'f' }}
                     onChange={(e) => setInputData(e)}
@@ -141,6 +143,7 @@ export const InfoContainer = ({ BoxName , BoxDataName ,MeQuery , UserData , bold
                         </Select>
                 : <input style={{pointerEvents: editState ? 'all' : 'none'}}
                          disabled={!editState}
+                         placeholder={!InputData ? 'وارد نشده' : ''}
                     value={InputData ? digitsEnToFa(InputData) : ''}
                      ref={InputRef}
                      onKeyDown={e => e.key === 'Enter' ? EditHandler() : ''}

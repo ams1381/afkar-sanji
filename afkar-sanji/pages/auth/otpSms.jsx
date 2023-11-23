@@ -54,6 +54,8 @@ const OTPSms = ({ cookies }) => {
         Auth.setIsAdmin(MeRes?.data?.is_staff);
         if(MeRes?.data?.resume)
           Auth.setHasResume(true)
+        else if(!MeRes?.data?.resume)
+          Auth.setHasResume(false)
         if(MeRes?.data?.ask_for_interview_role)
           Auth.setAskForInterviewRole(true)
         if(MeRes?.data?.has_wallet)

@@ -34,6 +34,7 @@ export const QuestionerHeader = ({ pageName , meData , interviewData }) => {
             await axiosInstance.post('/user-api/auth/logout/',{
                 refresh_token : axiosInstance.refresh_token ,
             })
+            Auth.setHasResume(false)
         }
         catch(Err)
         {
