@@ -26,14 +26,18 @@ export const Targetting = ({ Questionnaire , refetch }) => {
             </p>
         </InterViewerTargetHeader>
         <InterViewerTargetingInfoContainer>
-            <InterViewerTimeRangeContainer>
+            { Questionnaire.answer_count_goal ? <InterViewerTimeRangeContainer>
                 <p>:در بازه‌ی زمانی </p>
-                { Questionnaire.goal_start_date && <span>{digitsEnToFa(convertDate(Questionnaire.goal_start_date,'jalali'))}</span>}
+                {Questionnaire.goal_start_date &&
+                    <span>{digitsEnToFa(convertDate(Questionnaire.goal_start_date, 'jalali'))}</span>}
                 <p>الی</p>
-                { Questionnaire.goal_end_date && <span>{digitsEnToFa(convertDate(Questionnaire.goal_end_date,'jalali'))}</span>}
-                <p>باید { Questionnaire.answer_count_goal && digitsEnToFa(Questionnaire.answer_count_goal) } نتیجه ثبت شود</p>
-            </InterViewerTimeRangeContainer>
-
+                {Questionnaire.goal_end_date &&
+                    <span>{digitsEnToFa(convertDate(Questionnaire.goal_end_date, 'jalali'))}</span>}
+                <p>باید {Questionnaire.answer_count_goal && digitsEnToFa(Questionnaire.answer_count_goal)} نتیجه ثبت
+                    شود</p>
+            </InterViewerTimeRangeContainer> : <InterViewerTimeRangeContainer>
+                <p>تعیین نشده</p>
+            </InterViewerTimeRangeContainer> }
             <Button onClick={() => setCountPopupOpen(true)}>
                 <p>ویرایش</p>
                 <Icon name={'ArrowLeftBlue'} />

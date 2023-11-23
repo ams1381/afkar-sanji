@@ -1,5 +1,5 @@
 import {RemoveModalButtonsContainer} from "@/styles/folders/Popup";
-import {Button, InputNumber, message, Modal} from "antd";
+import {Button, Input, InputNumber, message, Modal} from "antd";
 import React, {useEffect, useState} from "react";
 import {styled} from "styled-components";
 import DatePicker, {DateObject} from "react-multi-date-picker";
@@ -21,6 +21,7 @@ export const GoalPopup = ({ setCountPopupOpen , countPopupOpen , refetch , Quest
     const [ goalStartDate , setGoalStartDate ] = useState(null);
     const [ goalEndDate , setGoalEndDate ] = useState(null);
     const [ confirmLoading , setConfirmLoading ] = useState(false);
+    const [ goalCountError , setGoalCountError ] = useState(false);
     useEffect(() => {
         if(Questionnaire.goal_start_date)
             setGoalStartDate(digitsEnToFa(convertDate(Questionnaire.goal_start_date,'jalali')))
@@ -63,6 +64,9 @@ export const GoalPopup = ({ setCountPopupOpen , countPopupOpen , refetch , Quest
             MessageApi.error({
                 content : Object.values(err?.response?.data)[0]
             })
+            if(Object.keys(err?.response.data).includes('answer_count_goal'))
+                setGoalCountError(true)
+
         }
 
     }
@@ -81,7 +85,9 @@ export const GoalPopup = ({ setCountPopupOpen , countPopupOpen , refetch , Quest
                    <Button type='primary' onClick={ConfirmChanges} loading={confirmLoading}>
                        ثبت
                    </Button>
-                   <Button style={{ border : '1px solid var(--neutral-5, #D9D9D9) !important' , color : 'auto !important' }} onClick={() => setCountPopupOpen(false)}>
+                   <Button style={{ border : '1px solid var(--neutral-5, #D9D9D9) !important' , color : 'auto !important' }}
+                           danger
+                           onClick={() => setCountPopupOpen(false)}>
                        انصراف
                    </Button>
                </RemoveModalButtonsContainer>}
@@ -123,8 +129,12 @@ export const GoalPopup = ({ setCountPopupOpen , countPopupOpen , refetch , Quest
                     <p>تعداد نتایج موردنیاز</p>
                     <div>
                         <NumberInput min={1} style={{ fontFamily : 'IRANSans' }}
-                                     onChange={(e) => setGoalCount(e) }
-                                     value={goalCount} />
+                             status={goalCountError ? 'error' : null}
+                             onChange={(e) => {
+                                 setGoalCount(e.target.value)
+                                 setGoalCountError(false);
+                             }}
+                             value={goalCount ? digitsEnToFa(goalCount) : ''} />
                     </div>
                 </ContentColumn>
             </ContentContainer>
@@ -147,7 +157,7 @@ const arabicNumber = (input) => {
     const arabicDigits = input.toString().replace(/[۰-۹]/g, (digit) => digit.charCodeAt(0) - 1728);
     return arabicDigits.replace(/[٠-٩]/g, (digit) => digit.charCodeAt(0) - 1632);
 };
-const NumberInput = styled(InputNumber)`
+const NumberInput = styled(Input)`
   direction: ltr;
   width: 100%;
   border-radius: 2px;

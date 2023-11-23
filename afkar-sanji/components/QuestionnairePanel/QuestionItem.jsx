@@ -319,7 +319,7 @@ export const QuestionItem = ({  ActiveQuestion , childPlacement ,setActiveQuesti
         </QuestionDesignItem>
         {questionsData.question.question_type === 'group' && questionsData.question.child_questions
          ? questionsData.question.child_questions.length ?
-          <ReactSortable {...SortableConfigGenerator(childQuestion,UUID,QuestionDispatcher,SavedMessage,QuestionsArray)}
+          <ReactSortable {...SortableConfigGenerator(childQuestion,UUID,QuestionDispatcher,SavedMessage,QuestionsArray,Auth)}
                          id={'group-container-' + questionsData.question.id} className='child_container'
           list={questionsData.question.child_questions.map(item =>
            item?.question ? ({ ...item?.question , chosen : true }) : '')} setList={(e) => {}}>

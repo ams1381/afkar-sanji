@@ -8,12 +8,11 @@ import {
 } from "@/styles/questionnairePanel/QuestionSetting";
 import {Icon} from "@/styles/icons";
 
-export const AdminContact = () => {
+export const AdminContact = ({ setChatModalActive }) => {
     return <AminContactContainer>
         <AdminContactHeader>
-            <Button type={'primary'} >
-                <p>صفحه پیام‌ها</p>
-                <Icon name={'message'} />
+            <Button  onClick={() => setChatModalActive(true)}>
+                <Icon name={'SettingChatIcon'} />
             </Button>
             <p className={'admin-header-text'}>ارتباط با ادمین</p>
         </AdminContactHeader>

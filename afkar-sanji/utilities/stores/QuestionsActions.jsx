@@ -341,6 +341,7 @@ export const SortableConfigGenerator = (childQuestion,UUID,QuestionDispatcher,Sa
                         questionIndex : evt.oldDraggableIndex ,
                         questionNewIndex : evt.newDraggableIndex
                     }))
+                    console.log(Auth)
                     axiosInstance.defaults.headers['Content-Type'] = 'application/json';
                     if(!childQuestion[evt.oldDraggableIndex]?.question?.newFace)
                         await axiosInstance.patch(`/${Auth.reqRole}/${UUID}/${childQuestion[evt.oldDraggableIndex]?.question?.url_prefix}/
@@ -357,7 +358,7 @@ export const SortableConfigGenerator = (childQuestion,UUID,QuestionDispatcher,Sa
                     if(reOrderedArray.includes(undefined) || reOrderedArray.includes(null))
                         return
 
-                    await axiosInstance.post(`/${Auth.reqRole}/${UUID}/change-questions-placements/`,{
+                    await axiosInstance.post(`/question-api/questionnaires/${UUID}/change-questions-placements/`,{
                         'placements' : reOrderedArray
                     })
 
@@ -406,7 +407,7 @@ export const SortableConfigGenerator = (childQuestion,UUID,QuestionDispatcher,Sa
                             ReorderArray.push({ question_id : item.question.id , new_placement : index + 1 })
                     })
                     axiosInstance.defaults.headers['Content-Type'] = 'application/json';
-                    await axiosInstance.post(`/${Auth.reqRole}/${UUID}/change-questions-placements/`,{
+                    await axiosInstance.post(`/question-api/questionnaires/${UUID}/change-questions-placements/`,{
                         'placements' : ReorderArray
                     })
                 }
@@ -443,7 +444,7 @@ export const SortableConfigGenerator = (childQuestion,UUID,QuestionDispatcher,Sa
                                 new_placement : ChildItem.question.placement
                             })
                     })
-                    await axiosInstance.post(`/${Auth.reqRole}/${UUID}/change-questions-placements/`,{
+                    await axiosInstance.post(`/question-api/questionnaires/${UUID}/change-questions-placements/`,{
                         'placements' : NewGroupOrder
                     })
                     // console.log(QuestionsArray.find(item => item.question.id == newGroup))

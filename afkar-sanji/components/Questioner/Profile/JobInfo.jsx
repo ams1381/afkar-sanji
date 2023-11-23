@@ -238,8 +238,8 @@ export const JobInfo = ({ Countries , userData ,MeQuery , regions }) => {
               onFocus={() => setCaseCaderOpen(true)}
               onBlur={() => setCaseCaderOpen(false)}
               defaultValue={
-                  MeQuery?.data?.data?.preferred_districts['2'] ?
-                      generateOutputArray(MeQuery?.data?.data?.preferred_districts['2'].provinces) : []
+                  MeQuery?.data?.data?.preferred_districts['1'] ?
+                      generateOutputArray(MeQuery?.data?.data?.preferred_districts['1'].provinces) : []
               }
               notFoundContent={'موردی یافت نشد'}
              onChange={CascaderSelectHandler}
@@ -265,9 +265,11 @@ export const JobInfo = ({ Countries , userData ,MeQuery , regions }) => {
     </UserInfoContainer>
   )
 }
-function generateOutputArray(dataArray) {
+export function generateOutputArray(dataArray) {
     const outputArray = [];
-
+    console.log(dataArray)
+    if(!dataArray)
+        return
     for (const province of dataArray) {
         const provinceId = province.id;
 

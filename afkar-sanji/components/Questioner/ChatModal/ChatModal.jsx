@@ -21,7 +21,7 @@ export const ChatModal = ({
           isAdmin
       }) => {
     const ChatQuery = useQuery(['ChatQuery'],
-        async () => await axiosInstance.get(`/${!isAdmin ? 'interview' :'admin'}-api/tickets/?interview_id=${Questionnaire.id}`) ,{
+        async () => await axiosInstance.get(`/${!isAdmin ? 'interview' :'admin'}-api/tickets/?interview_id=${Questionnaire.id}&page_size=15`) ,{
             enabled : true,
             refetchOnWindowFocus : false
         })
@@ -31,7 +31,7 @@ export const ChatModal = ({
     const [ nextPageUrl , setNextPageUrl ] = useState(null);
     const [ prevPageUrl , setPrevPageUrl ] = useState(null);
     useEffect(() => {
-        if(ChatQuery.data?.data?.results) {
+        if(ChatQuery.data?.data) {
             setMessagesItems(ChatQuery.data?.data.results)
             setNextPageUrl(ChatQuery.data?.data?.next)
             setPrevPageUrl(ChatQuery.data?.data?.prev)
@@ -56,23 +56,7 @@ export const ChatModal = ({
         });
     };
     const ref = useRef();
-    const [shifting, setShifting] = useState(false);
-    const [startFetching, setStartFetching] = useState(false);
-    const [endFetching, setEndFetching] = useState(false);
-    const fetchItems = async (isStart = false) => {
-        setShifting(isStart);
-        const setFetching = isStart ? setStartFetching : setEndFetching;
-        setFetching(true);
-        console.log('fetching items')
-        // await delay(1000);
-        setFetching(false);
-    };
-    const startFetchedCountRef = useRef(-1);
-    const endFetchedCountRef = useRef(-1);
     const ready = useRef(false);
-    const ITEM_BATCH_COUNT = 5;
-    const [items, setItems] = useState(() => createRows(ITEM_BATCH_COUNT * 2))
-    const THRESHOLD = 3;
 
     useEffect(() => {
         // if(messagesItems.length) {
@@ -85,10 +69,10 @@ export const ChatModal = ({
             ready.current = true;
         // }
 
-    }, [messagesItems]);
+    }, []);
     const fetchItemsFromTop = async () => {
-        setShifting(true)
-        console.log(nextPageUrl)
+        // setShifting(true)
+
         if(!nextPageUrl)
             return
         try {
@@ -131,24 +115,26 @@ export const ChatModal = ({
                             wrapperClass=""
                             visible={true}
                         /> </div>:
-                        <VList onScroll={() => console.log('check')} className={'VListContainer'}
+                        <VList className={'VListContainer'}
                                ref={ref} style={{height: 300}}
-                               autoHeight={true}
-                               overscan={4}
-                               // rowHeight={50}
-                               rowCount={ChatQuery.data?.data.count} shift={shifting}
-                            onRangeChange={async (start, end) => {
-                                if (!ready.current) return;
-                                if (end + THRESHOLD >  ChatQuery.data?.data.count && endFetchedCountRef.current <  ChatQuery.data?.data.count) {
-                                    endFetchedCountRef.current = ChatQuery.data?.data.count;
-                                    console.log('fetch more from end')
-                                    // setItems(prev => [...prev, ...createRows(ITEM_BATCH_COUNT)]);
-                                } else if (start - THRESHOLD < 0 && startFetchedCountRef.current <  ChatQuery.data?.data.count) {
-                                    startFetchedCountRef.current = ChatQuery.data?.data.count;
-                                    await fetchItemsFromTop()
-                                }
-                            }}>
+                                // count={2}
+                               initialItemSize={7}
+                               initialItemCount={messagesItems?.length}
+                                onRangeChange={async (start, end) => {
+                                    console.log("Start Index:", start, "End Index:", end);
+                                    setTimeout(() => {
+                                        fetchItemsFromTop()
+                                    },500)
 
+                                // if (!ready.current) return;
+                                // if (end + THRESHOLD >  ChatQuery.data?.data.count && endFetchedCountRef.current <  ChatQuery.data?.data.count) {
+                                //     // endFetchedCountRef.current = ChatQuery.data?.data.count;
+                                //
+                                // } else if (start - THRESHOLD < 0 && startFetchedCountRef.current <  ChatQuery.data?.data.count) {
+                                //     // startFetchedCountRef.current = ChatQuery.data?.data.count;
+                                //     // await fetchItemsFromTop()
+                                // }
+                            }}>
                         <>
                             {
                                 messagesItems.map(MessageItem => MessageItem.sender === 'me'

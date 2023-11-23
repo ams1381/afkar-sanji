@@ -295,10 +295,14 @@ export const AdminContactHeader = styled.div`
   }
   .ant-btn
   {
-    background-color: var(--primary-color);
+    //background-color: var(--primary-color);
     display: flex;
     gap: 8px;
     align-items: center;
+  }
+  .ant-btn:hover i
+  {
+    filter: invert(37%) sepia(74%) saturate(1045%) hue-rotate(210deg) brightness(91%) contrast(105%);
   }
   .ant-btn i
   {
@@ -368,9 +372,31 @@ export const DistrictSelectorContainer = styled(InterviewerBodyRow)`
     direction: rtl;
     width: 100%;
   }
-  .ant-select-selector
+  .ant-select-selector , .ant-select-selection-item
   {
+    border-radius: 2px !important;
+  }
+  .selected_districts
+  {
+    margin-top: 14px;
+    text-align: right;
+    font-size: 14px;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+    gap: 5px;
+    align-items: flex-end;
+  }
+  .selected_districts p {
+    cursor: pointer;
+    width: fit-content;
     border-radius: 2px;
+    transition: 0.3s;
+    padding: 0 7px 0 7px;
+
+  }
+  .selected_districts p:hover {
+    background: var(--SideBar-header-border);
   }
 `
 export const InterViewAnswerPriceContainer = styled.div`
@@ -423,6 +449,7 @@ export const InterViewerNumber = styled.div`
     gap: 10px;
     flex-direction: row-reverse;
     color: var(--primary-color);
+    border: none;
   }
 `
 export const InterViewerStatusContainer = styled.div`
@@ -472,6 +499,7 @@ export const InterViewerTargetingInfoContainer = styled.div`
     gap: 10px;
     flex-direction: row-reverse;
     color: var(--primary-color);
+    border: none;
   }
 `
 export const InterViewerTargetHeader = styled.div`

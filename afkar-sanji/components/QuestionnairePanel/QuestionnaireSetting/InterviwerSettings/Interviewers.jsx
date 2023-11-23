@@ -11,12 +11,13 @@ import {
 } from "@/styles/questionnairePanel/QuestionSetting";
 import {Icon} from "@/styles/icons";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {
     AnswerCountPopup
 } from "@/components/QuestionnairePanel/QuestionnaireSetting/InterviwerSettings/AnswerCountPopup";
 import {axiosInstance} from "@/utilities/axios";
 import {PricePopup} from "@/components/QuestionnairePanel/QuestionnaireSetting/InterviwerSettings/PricePopup";
+import {generateOutputArray} from "@/components/Questioner/Profile/JobInfo";
 
 export const Interviewers = ({ Questionnaire , ChangeDistrict , refetch , ToggleCheckBoxHandler , regions }) => {
     const [ countPopupOpen , setCountPopupOpen ] = useState(false)
@@ -25,15 +26,33 @@ export const Interviewers = ({ Questionnaire , ChangeDistrict , refetch , Toggle
     const [ rejectPopup , setRejectPopup ] = useState(false);
     const [ MessageApi , MessageContext ] = message.useMessage();
     const [ confirmPriceLoading ,setConfirmLoading ] = useState(false);
+    const [ caseCaderOpen , setCaseCaderOpen ] = useState(false);
+    const [ RegionError , setRegionError ] = useState(false);
+    const [ selectedRegions , setSelectedRegions ] = useState(null);
     const [ SelectedZone , setSelectedZone ] = useState([]);
+    const casecaderRef = useRef();
+    function generateDistrictsLabel(Provinces) {
+        const pTags = [];
 
-    // useEffect(() => {
-    //     if(Questionnaire.districts?.length)
-    //     {
-    //         setSelectedZone(MeQuery.data?.data.preferred_districts['2'].provinces)
-    //     }
-    // },[])
+        Provinces.forEach((province) => {
+            const provinceName = province.name;
+            const cities = province.cities;
 
+            cities.forEach((city) => {
+                const cityName = city.name;
+                const districtNames = city.districts.map((district) => district.name);
+
+                const pTag = <p onClick={() => {
+                    setCaseCaderOpen(true)
+                    if(casecaderRef.current)
+                        casecaderRef.current.focus();
+                }} key={city.id}>{cityName + ' / ' + districtNames.join('، ')}</p>;
+                pTags.push(pTag);
+            });
+        });
+
+        return pTags;
+    }
     const ConfirmPrice = async () => {
         setConfirmLoading(true)
         try {
@@ -72,7 +91,12 @@ export const Interviewers = ({ Questionnaire , ChangeDistrict , refetch , Toggle
                 }))
             })))
     },[regions])
-
+    useEffect(() => {
+        if(Questionnaire && Questionnaire.districts['1'])
+        {
+            setSelectedZone(Questionnaire.districts['1'].provinces)
+        }
+    },[])
     return <InterviewContainer>
         {MessageContext}
         { rejectPopup && <PricePopup Questionnaire={Questionnaire}
@@ -102,6 +126,7 @@ export const Interviewers = ({ Questionnaire , ChangeDistrict , refetch , Toggle
                         </Button>
                         { <p style={{ display : 'flex' , gap : 5 }}><span>تومان</span>{digitsEnToFa(Questionnaire.price_pack.price)}</p>}
                     </InterViewAnswerPriceContainer> : <InterViewAnswerPriceContainer>
+                                <p style={{ display : 'flex' , gap : 5 }}><span>تومان</span>{digitsEnToFa(Questionnaire.price_pack.price)}</p>
                                 <Button onClick={() => setEditPrice(true)}>
                                     <p style={{ color : 'var(--primary-color)' }}>درخواست ویرایش</p>
                                     <Icon name={'OutlinePen'} />
@@ -120,7 +145,6 @@ export const Interviewers = ({ Questionnaire , ChangeDistrict , refetch , Toggle
                                 <p>ویرایش</p>
                                 <Icon name={'ArrowLeftBlue'} />
                             </Button>
-
                     </InterViewerNumber>
                 </InterviewerBodyRow>
                 <InterviewerBodyRow>
@@ -153,21 +177,31 @@ export const Interviewers = ({ Questionnaire , ChangeDistrict , refetch , Toggle
                 <Cascader options={countriesData}
                           showSearch
                           multiple
-                          // ref={casecaderRef}
-                          // open={caseCaderOpen}
-                          // onFocus={() => setCaseCaderOpen(true)}
-                          // onBlur={() => setCaseCaderOpen(false)}
-                          // defaultValue={
-                          //     MeQuery?.data?.data?.preferred_districts['2'] ?
-                          //         generateOutputArray(MeQuery?.data?.data?.preferred_districts['2'].provinces) : []
-                          // }
-                          // notFoundContent={'موردی یافت نشد'}
-                          // onChange={CascaderSelectHandler}
+                          ref={casecaderRef}
+                          open={caseCaderOpen}
+                          onFocus={() => setCaseCaderOpen(true)}
+                          onBlur={() => setCaseCaderOpen(false)}
+                          defaultValue={
+                              (Questionnaire?.districts['1'] &&  Questionnaire.districts['1'].provinces)  ?
+                                  generateOutputArray(Questionnaire?.districts['1'].provinces) : []
+                          }
+                          notFoundContent={'موردی یافت نشد'}
+                          onChange={(SelectedList) => {
+                              CascaderSelectHandler(SelectedList,regions,setSelectedZone,setSelectedRegions,setRegionError,ChangeDistrict)
+
+                            }}
                           // status={RegionError ? 'error' : null}
                           showCheckedStrategy={Cascader.SHOW_PARENT}
                           suffixIcon={<Icon name={'suffixIcon'} style={{ width : 11 }} />}
                           placement={'bottomRight'}
                           placeholder="انتخاب کنید" />
+                { (SelectedZone.length) ?
+                    <div className={'selected_districts'}>
+                        {
+                            generateDistrictsLabel(SelectedZone).map(item => item)
+                        }
+                    </div>
+                    : ''}
             </DistrictSelectorContainer>
             </InterviewInnerContainer>
     </InterviewContainer>

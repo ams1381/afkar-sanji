@@ -106,6 +106,7 @@ export const PricePacksItemsContainer = styled.div`
   gap: 12px;
   overflow: auto;
   width: fit-content;
+  direction: rtl;
   
   .price-per-each {
     font-size: 12px;

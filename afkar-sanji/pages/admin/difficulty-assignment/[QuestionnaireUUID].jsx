@@ -54,30 +54,42 @@ const LevelAssignmentPage = () => {
     });
     const [ QuestionLevel , setQuestionLevel ] = useState(0);
     useEffect(() => {
-        if(InterviewQuery.data?.data?.questions[currentSlide] && InterviewQuery.data?.data?.questions[currentSlide].question)
-            setQuestionLevel(InterviewQuery.data?.data?.questions[currentSlide].question.level)
+        if(!InterviewQuery.data?.data.questions || !InterviewQuery.data?.data.questions)
+            return
+        let QuestionsArray = InterviewQuery.data?.data.questions;
+        QuestionsArray = QuestionsArray.filter(item => item.question !== null)
+
+        if(QuestionsArray[currentSlide]?.question)
+            setQuestionLevel(QuestionsArray[currentSlide].question.level)
+
+        // if(InterviewQuery.data?.data?.questions[currentSlide] && InterviewQuery.data?.data?.questions[currentSlide].question)
+        //     setQuestionLevel(InterviewQuery.data?.data?.questions[currentSlide].question.level)
     },[currentSlide])
     const assignLevel = async (LevelNumber) => {
         setLevelLoading(LevelNumber)
+        let QuestionsArray = InterviewQuery.data?.data.questions;
+        QuestionsArray = QuestionsArray.filter(item => item.question !== null)
         try {
             // console.log(`/admin-api/interviews/${InterviewQuery?.data?.data?.uuid}/${InterviewQuery.data?.data.questions[currentSlide]?.question.url_prefix}/${InterviewQuery.data?.data.questions[currentSlide]?.question.id}/`)
-            await axiosInstance.patch(`/interview-api/interviews/${InterviewQuery?.data?.data?.uuid}/${InterviewQuery.data?.data.questions[currentSlide]?.question.url_prefix}/${InterviewQuery.data?.data.questions[currentSlide]?.question.id}/`,{
+            await axiosInstance.patch(`/interview-api/interviews/${InterviewQuery?.data?.data?.uuid}/${QuestionsArray[currentSlide]?.question?.url_prefix}/${QuestionsArray[currentSlide]?.question?.id}/`,{
                 level : LevelNumber
             })
             setQuestionLevel(LevelNumber)
             InterviewQuery.refetch()
         }
         catch (err) {
-            MessageApi.error({
-                content : Object.values(err.response?.data)[0],
-            })
+            if(err.response?.data)
+                MessageApi.error({
+                    content : Object.values(err.response?.data)[0],
+                })
+            else
+                console.log(err)
         }
         finally {
             setLevelLoading(null);
         }
         // axiosInstance.pos
 
-        console.log(InterviewQuery.data?.data.questions[currentSlide]?.question.url_prefix)
     }
     const ApproveContent = async () => {
         setApproveLoading(true)
@@ -170,8 +182,10 @@ const LevelAssignmentPage = () => {
                                                onClick={() => {
                                                    setEditLevelActive(true)
                                                    // console.log(InterviewQuery,InterviewQuery.data?.data?.questions[currentSlide])
-                                                   if(InterviewQuery.data?.data?.questions[currentSlide].question)
-                                                    setQuestionLevel(InterviewQuery.data?.data?.questions[currentSlide].question.level)
+                                                   let QuestionsArray = InterviewQuery.data?.data?.questions;
+                                                   QuestionsArray = QuestionsArray.filter(item => item.question !== null)
+                                                   // if(InterviewQuery.data?.data?.questions[currentSlide].question)
+                                                    setQuestionLevel(QuestionsArray[currentSlide].question.level)
 
                                                }}>
                                            <p>ویرایش تعیین سطح</p>
@@ -202,7 +216,9 @@ const LevelAssignmentPage = () => {
                                             else {
                                                 setContentEvaluate(false)
                                                 setEditLevelActive(true)
-                                                setQuestionLevel(InterviewQuery.data?.data?.questions[currentSlide].question.level)
+                                                let QuestionsList = InterviewQuery.data?.data?.questions;
+                                                QuestionsList = QuestionsList.filter(item => item.question !== null)
+                                                setQuestionLevel(QuestionsList[currentSlide]?.question?.level)
                                             }
                                         }}>
                                         { !contentEvaluate ? <p>ویرایش وضعیت</p> : <p>ویرایش تعیین سطح</p>}

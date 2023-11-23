@@ -112,6 +112,7 @@ const QuestionnairesList = () => {
                     setEditPricePack={setEditPricePack}
                 /> : <AddPricePack activePricePopup={activePricePopup}
                          EditMode={EditPricePack}
+                        setEditPricePack={setEditPricePack}
                          setPackPopupType={setPackPopupType}
                         QuestionnaireList={QuestionnairesListQuery.data.data.results}
                         setActivePricePopup={setActivePricePopup} /> : ''}

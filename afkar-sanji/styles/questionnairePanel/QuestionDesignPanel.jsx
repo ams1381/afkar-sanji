@@ -307,12 +307,12 @@ export const LoadingQuestionItem = styled(QuestionDesignItem)`
         }
 `
 export const PreviewContainer = styled.div`
-        position: fixed;
-        width: ${p => p.RightDrawerOpen ? '37%' : '44%'};
-        left: ${p => p.RightDrawerOpen ? '5%' : '6%'};
+        position: fixed !important;
+        width: ${p => p.RightDrawerOpen ? '37%' : '44%'} !important;
+        left: ${p => p.RightDrawerOpen ? '5%' : '6%'} !important;
         max-height: 591px;
         overflow: scroll;
-        top: ${p => p.QuestionTopDis ? p.QuestionTopDis + 'px' : '138px'};
+        top: ${p => p.QuestionTopDis ? p.QuestionTopDis + 'px' : '138px'} !important;
         transition: 0.3s;
     
     &::-webkit-scrollbar

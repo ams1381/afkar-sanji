@@ -103,6 +103,11 @@ export default function () {
         walletData.refetch()
     }, [filterParams]);
 
+    useEffect(() => {
+        walletChart.refetch()
+    }, [filterChart]);
+
+
     return (
         <>
             <Head>
@@ -131,12 +136,12 @@ export default function () {
                                     </Button>
                                 </WalletHeader>
                                 <WalletContainer>
-                                    <Bank filterParams={filterParams} setFilterParams={setFilterParams} data={data?.data}
-                                          loading={isLoading}/>
-                                    <Statistics filterParams={filterParams} setFilterParams={setFilterParams} data={data?.data}
-                                                loading={isLoading}/>
+                                    <Bank filterParams={filterParams} setFilterParams={setFilterParams} data={walletData.data?.data}
+                                          loading={walletData.isLoading}/>
+                                    <Statistics filterParams={filterChart} setFilterParams={setFilterChart} data={walletChart.data?.data}
+                                                loading={walletChart.isLoading}/>
                                     <TransactionList filterParams={filterParams} setFilterParams={setFilterParams}
-                                                     data={data?.data} loading={isLoading}/>
+                                                     data={walletData.data?.data} loading={walletData.isLoading}/>
                                 </WalletContainer>
                             </Container>
                         </QuestionerContentBox>

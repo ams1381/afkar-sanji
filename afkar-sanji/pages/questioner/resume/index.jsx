@@ -24,7 +24,7 @@ const {Search} = Input;
 export default function ({meData, cookies}) {
     const [fileSize, setFileSize] = useState(null)
     const [link, setLink] = useState(meData?.resume?.linkedin || '')
-    const [isUpload, setIsUpload] = useState(false)
+    const [isUpload, setIsUpload] = useState(true)
     const router = useRouter()
     const [loading, setLoading] = useState(false)
     const [uploadOk, setUploadOk] = useState(false);
@@ -33,7 +33,8 @@ export default function ({meData, cookies}) {
     const [resumeData, setResumeData] = useState(null)
 
     useEffect(() => {
-        if (meData?.resume?.file !== '') setIsUpload(true)
+        if (meData?.resume?.file)
+            setIsUpload(true)
         else setIsUpload(false)
     }, [meData]);
 
@@ -227,10 +228,10 @@ export default function ({meData, cookies}) {
                                             multiple={false}
                                             method={null}
                                             accept=".pdf,image/*"
-                                            defaultFileList={[{
+                                            defaultFileList={meData?.resume?.file ? [{
                                                 name: meData?.resume?.file?.split('http://mah-api.codintofuture.ir/media/resume/'),
                                                 url: meData?.resume?.file
-                                            }]}
+                                            }] : null}
                                             beforeUpload={file => {
                                                 const isImageOrPDF = file.type.includes('pdf') || file.type.includes('image/');
                                                 if (!isImageOrPDF) {

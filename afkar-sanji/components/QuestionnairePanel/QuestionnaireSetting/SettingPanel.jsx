@@ -37,7 +37,7 @@ export function convertToRegularTime(dateTimeString) {
 
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
-const SettingPanel = ({ Questionnaire , refetch , ChangeSide , regions }) => {
+const SettingPanel = ({ Questionnaire , refetch , setChatModalActive , ChangeSide , regions }) => {
   const [QuestionnaireData, Dispatcher] = useReducer(QuestionnaireReducerFunction, Questionnaire);
   const [messageApi, contextHolder] = message.useMessage();
   const { getItem , setItem } = useLocalStorage();
@@ -125,6 +125,7 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide , regions }) => {
   }
 
   const ChangeDistrict = (selectedRegions) => {
+    SetSettingChanged(true)
       if(selectedRegions)
         Dispatcher({ ACTION : 'change_district' , preferred_districts : selectedRegions })
       else
@@ -140,11 +141,12 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide , regions }) => {
       delete QuestionnaireData.welcome_page;
       delete QuestionnaireData.questions;
       delete QuestionnaireData.thanks_page;
+      delete QuestionnaireData.interviewers;
      let { data } = await axiosInstance.patch(`/${Auth.reqRole}/${Questionnaire.uuid}/`, QuestionnaireData);
      if(data)
      {
       SetSettingChanged(false)
-      refetch()
+      // refetch()
       setItem('tabType','question_design');
       ChangeSide('question_design')
 
@@ -248,6 +250,7 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide , regions }) => {
             <InterviewSettingContainer regions={regions}
                ToggleCheckBoxHandler={ToggleCheckBoxHandler}
                refetch={refetch}
+               setChatModalActive={setChatModalActive}
                ChangeDistrict={ChangeDistrict}
                Questionnaire={QuestionnaireData}/>}
         { getItem('roleReq') !== 'interview-api/interviews' &&
@@ -255,20 +258,22 @@ const SettingPanel = ({ Questionnaire , refetch , ChangeSide , regions }) => {
                  ToggleText={'غیر فعال سازی موقت'}
               ToggleCheckBoxHandler={ToggleCheckBoxHandler}
                  QuestionnaireData={QuestionnaireData}/>}
-        <SettignToggle ToggleName={'show_number'} ToggleText={'عدم نمایش شماره سوال'}
-                       ToggleCheckBoxHandler={ToggleCheckBoxHandler} QuestionnaireData={QuestionnaireData} />
-        <SettignToggle ToggleName={'progress_bar'} ToggleText={'حذف نوار پیشرفت'}
-                       ToggleCheckBoxHandler={ToggleCheckBoxHandler} QuestionnaireData={QuestionnaireData} />
-        <QuestionnaireDatePickerContainer disabled={!QuestionnaireData.show_question_in_pages}
-         style={{ borderBottom: 'none', paddingBottom: 0, marginRight: '30px' }}>
-          <div className='picker_header' onClick={e => ToggleCheckBoxHandler(QuestionnaireData.previous_button, 'previous_button')}>
+        { getItem('roleReq') !== 'interview-api/interviews' && <SettignToggle ToggleName={'show_number'} ToggleText={'عدم نمایش شماره سوال'}
+                        ToggleCheckBoxHandler={ToggleCheckBoxHandler} QuestionnaireData={QuestionnaireData}/>}
+        { getItem('roleReq') !== 'interview-api/interviews' &&
+            <SettignToggle ToggleName={'progress_bar'} ToggleText={'حذف نوار پیشرفت'}
+                        ToggleCheckBoxHandler={ToggleCheckBoxHandler} QuestionnaireData={QuestionnaireData}/>}
+        { getItem('roleReq') !== 'interview-api/interviews' && <QuestionnaireDatePickerContainer disabled={!QuestionnaireData.show_question_in_pages}
+                                           style={{borderBottom: 'none', paddingBottom: 0, marginRight: '30px'}}>
+          <div className='picker_header'
+               onClick={e => ToggleCheckBoxHandler(QuestionnaireData.previous_button, 'previous_button')}>
             <p>دکمه‌ی قبل</p>
             <Switch disabled={!QuestionnaireData.show_question_in_pages}
-             checked={QuestionnaireData.previous_button && QuestionnaireData.show_question_in_pages} />
+                    checked={QuestionnaireData.previous_button && QuestionnaireData.show_question_in_pages}/>
           </div>
-         { !QuestionnaireData.show_question_in_pages &&
-          <p className='disable_warning'>دکمه‌ها فقط در صورتی که در هر صفحه یک سوال نمایش داده‌شود فعال هستند.</p>}
-        </QuestionnaireDatePickerContainer>
+          {!QuestionnaireData.show_question_in_pages &&
+              <p className='disable_warning'>دکمه‌ها فقط در صورتی که در هر صفحه یک سوال نمایش داده‌شود فعال هستند.</p>}
+        </QuestionnaireDatePickerContainer>}
         <div className='questionnaire_setting_footer'>
           <Button type='primary' icon={SettingChanged ? <Icon name='Check' /> : null} disabled={!SettingChanged}
             onClick={SaveQuestionnaireChanges} loading={SettingLoading}>

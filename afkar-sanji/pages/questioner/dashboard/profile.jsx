@@ -3,7 +3,7 @@ import { HeaderContainer , HeaderComponent , QuestionerPageContainer
 import { QuestionnaireDirectoryContainer , QuestionnaireDirectoryPath
 } from '@/styles/questionnairePanel/QuestionnairePanelHeader';
 import Head from 'next/head';
-import React from 'react'
+import React, {useRef} from 'react'
 import { useState } from 'react';
 import { CommonDrawer } from '@/components/common/CommonDrawer';
 import QuestionerHeader from '@/components/common/QuestionerHeader';
@@ -18,6 +18,7 @@ import {EditInfoBox, InfoBox} from "@/styles/Questioner/profile";
 const Profile = () => {
     const [ logoutPopOver , switchPopover ] = useState(false);
     const [ RightDrawerOpen , setRightDrawerOpen ] = useState(false);
+
     // axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + cookies?.access_token;
     const [ MeQuery , regions ] = useQueries({
         queries: [

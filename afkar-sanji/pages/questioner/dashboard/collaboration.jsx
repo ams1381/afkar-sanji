@@ -44,7 +44,6 @@ export default function ({cookies})  {
     const [ interviewsNextPage , setInterviewsNextPage ] = useState(null);
     const [recommendedError, setRecommendedError] = useState('')
     const [myInterViewError, setMyInterViewError] = useState('')
-    const [isGetData, setIsGetData] = useState(false)
     const [MeQuery] = useQueries({
         queries: [
             {
@@ -85,10 +84,11 @@ export default function ({cookies})  {
     const getRecommended = async () => {
         axiosInstance.get('/interview-api/interviews/recommended-interviews/').then(res => {
             setRecommended(res?.data?.results)
+            setNextPage(res?.data?.next)
         }).catch(error => {
             const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
             setRecommendedError(ERROR_MESSAGE)
-            setNextPage(res?.data?.next)
+
         })
     }
 
@@ -224,7 +224,7 @@ export default function ({cookies})  {
                                                         alignItems: 'center',
                                                         justifyContent: 'center',
                                                         height: '80vh'
-                                                    }}>درخواست‌های همکاری ای وجود ندارد</div>
+                                                    }}>{recommendedError}</div>
                                             )}
                                         </>
                                     </div>
@@ -275,7 +275,7 @@ export default function ({cookies})  {
                                                             alignItems: 'center',
                                                             justifyContent: 'center',
                                                             height: '80vh'
-                                                        }}>پرسشنامه ای وجود ندارد</div>
+                                                        }}>{myInterViewError}</div>
                                                 )}
                                             </>
                                         </>

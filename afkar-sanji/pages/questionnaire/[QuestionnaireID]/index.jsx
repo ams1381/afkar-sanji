@@ -34,6 +34,7 @@ const QuestionnairePanel = ({ cookies }) => {
     const [ SideState , SetSideState ] = useState('question_design');
     const [ QuestionnaireReloader , SetQuestionnaireReloader ] = useState(false);
     const [ RightDrawerOpen , setRightDrawerOpen ] = useState(false);
+    const [ chatModalActive , setChatModalActive ] = useState(false);
     const RegionQuery = useQuery(['RegionQuery'],async () => await axiosInstance.get(`/user-api/nested-countries/`),{
         refetchOnWindowFocus : false
     })
@@ -110,11 +111,12 @@ const QuestionnairePanel = ({ cookies }) => {
         <QuestionnairePanelContainer>
           <PanelInnerContainer> 
             {  <QuestionnairePanelHeader SideState={SideState} isFetched={isFetched}
+                 setChatModalActive={setChatModalActive} chatModalActive={chatModalActive}
             ChangeSide={SetSideState} Questionnaire={data?.data}/>}
             {
               SideState == 'question_design' ? <QuestionDesignPanel QuestionnaireReloader={refetch}
               Questionnaire={data?.data} RightDrawerOpen={RightDrawerOpen}  />
-              : (data?.data && !RegionQuery.isLoading )? <SettingPanel Questionnaire={data?.data} regions={RegionQuery.data?.data}  ChangeSide={SetSideState}
+              : (data?.data && !RegionQuery.isLoading )? <SettingPanel setChatModalActive={setChatModalActive} Questionnaire={data?.data} regions={RegionQuery.data?.data}  ChangeSide={SetSideState}
               refetch={refetch}/> : <SettingSekelton />
               }
             </PanelInnerContainer>

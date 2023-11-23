@@ -14,7 +14,12 @@ import {styled} from "styled-components";
 import TextArea from "antd/lib/input/TextArea";
 import {axiosInstance} from "@/utilities/axios";
 
-export const AddPricePack = ({ EditMode , activePricePopup , setActivePricePopup , QuestionnaireList}) => {
+export const AddPricePack = ({ EditMode ,
+         setEditPricePack
+         ,setPackPopupType
+         , activePricePopup ,
+         setActivePricePopup ,
+         QuestionnaireList}) => {
     const [ MessageApi , MessageContext ] = message.useMessage();
     const [ priceValue , setPriceValue ] = useState(EditMode ? QuestionnaireList.find(item => item.id === activePricePopup.id).price_pack.price : null);
     const [ priceDescription , setPriceDescription ] = useState(EditMode ? QuestionnaireList.find(item => item.id === activePricePopup.id).price_pack.description : null);
@@ -46,6 +51,8 @@ export const AddPricePack = ({ EditMode , activePricePopup , setActivePricePopup
                 price : priceValue ,
                 description : priceDescription
             })
+            setEditPricePack(false)
+            setPackPopupType('view')
         } catch (err) {
 
         } finally {
@@ -83,7 +90,7 @@ export const AddPricePack = ({ EditMode , activePricePopup , setActivePricePopup
                                 <p>ارزش هر نتیجه</p>
                                 <AddPriceNumberInput style={{ fontFamily : 'IRANSans' }}
                                          value={priceValue ? digitsEnToFa(priceValue) : ''}
-                                         onChange={(e) => setPriceValue(e)}
+                                         onChange={(e) => setPriceValue(e.target.value)}
                                      placeholder={'قیمت را وارد کنید'} />
                             </AddPriceInputContainer>
                             <AddPriceInputContainer>

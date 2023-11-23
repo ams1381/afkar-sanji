@@ -3,11 +3,13 @@ import {RemoveModalButtonsContainer} from "@/styles/folders/Popup";
 import React, {useState} from "react";
 import styled from 'styled-components'
 import {axiosInstance} from "@/utilities/axios";
+import {digitsEnToFa} from "@persian-tools/persian-tools";
 
 export const AnswerCountPopup = ({ Questionnaire , refetch , countPopupOpen , setCountPopupOpen }) => {
     const [ answerCount , setAnswerCount ] = useState(Questionnaire.required_interviewer_count);
     const [ MessageApi , MessageContext ] = message.useMessage();
     const [ Loading , setLoading ] = useState(false);
+    const [countInputError , setCountInputError ] = useState(false);
      const ConfirmCount = async () => {
          setLoading(true)
          try {
@@ -22,6 +24,8 @@ export const AnswerCountPopup = ({ Questionnaire , refetch , countPopupOpen , se
              MessageApi.error({
                  content : Object.values(err?.response?.data)[0]
              })
+             if(Object.keys(err.response.data).includes('required_interviewer_count'))
+                 setCountInputError(true)
          }
          finally {
              setLoading(false);
@@ -53,18 +57,23 @@ export const AnswerCountPopup = ({ Questionnaire , refetch , countPopupOpen , se
                 <p>تعداد</p>
                 <div>
                     <NumberInput
-                        onChange={(e) => setAnswerCount(e)}
-                        value={answerCount ? answerCount : ''} />
+                        status={countInputError ? 'error' : ''}
+                        onChange={(e) => {
+                            setAnswerCount(e.target.value)
+                            setCountInputError(false)
+                        }}
+                        value={answerCount ? digitsEnToFa(answerCount) : ''} />
                 </div>
             </ContentContainer>
         </Modal>
     </>
 
 }
-const NumberInput = styled(InputNumber)`
+const NumberInput = styled(Input)`
   direction: ltr;
   width: 100%;
   border-radius: 2px;
+  font-family: IRANSans;
 `
 const ContentContainer = styled.div`
   display: flex;

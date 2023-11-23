@@ -16,13 +16,13 @@ import { useLocalStorage } from '@/utilities/useLocalStorage';
 import {AuthContext} from "@/utilities/AuthContext";
 import {ChatModal} from "@/components/Questioner/ChatModal/ChatModal";
 
-const QuestionnairePanelHeader = ({ FolderName , isFetched , Questionnaire , SideState , ChangeSide }) => {
+const QuestionnairePanelHeader = ({ FolderName ,setChatModalActive , chatModalActive , isFetched , Questionnaire , SideState , ChangeSide }) => {
   const router = useRouter();
   const { getItem , setItem } = useLocalStorage();
   const Auth = useContext(AuthContext);
   const [ QuestionnaireName , SetQuestionnaireName ]= useState(Questionnaire ? Questionnaire.name : null);
   const [ RenameState , SetRenameState ] = useState(false);
-  const [ chatModalActive , setChatModalActive ] = useState(false);
+
   const [ SharePopover , setSharePopOver] = useState(false);
   const [ QuestionnairePopoverState , SetQuestionnairePopoverState ] = useState(false);
   const QuestionnaireNameInputRef = useRef(null);
