@@ -1,6 +1,5 @@
 import {
-    QuestionerPageContainer
-    , PageBox, QuestionerContentBox
+    QuestionerPageContainer, PageBox, QuestionerContentBox
 } from '@/styles/common';
 import React, {useEffect} from 'react'
 import {useState} from 'react';
@@ -8,29 +7,25 @@ import {CommonDrawer} from '@/components/common/CommonDrawer';
 import QuestionerHeader from '@/components/common/QuestionerHeader';
 import {useRouter} from 'next/router';
 import {
-    WalletHeader,
-    Refresh,
-    Title,
-    Container,
-    WalletContainer,
-    ModalContainer
+    WalletHeader, Refresh, Title, Container, WalletContainer, ModalContainer
 } from "@/styles/questioner/dashboard/Wallet/wallet";
 import refresh from '@/public/Icons/ArrowCounterclockwise.svg'
 import TransactionList from "@/components/Questioner/Dashboadr/Wallet/TransactionList";
 import Statistics from "@/components/Questioner/Dashboadr/Wallet/Statistics/Statistics";
 import Bank from "@/components/Questioner/Dashboadr/Wallet/Bank/Bank"
 import {axiosInstance} from "@/utilities/axios";
-import {useQuery} from "@tanstack/react-query";
+import {useQueries, useQuery} from "@tanstack/react-query";
 import SetQueryParams from "@/utilities/filtering/filter";
 import {Icon} from "@/styles/icons";
 import {Button, Modal, Space} from 'antd';
 import {Input, Tooltip} from 'antd';
-import {digitsEnToFa} from "@persian-tools/persian-tools";
+import {digitsEnToFa, digitsFaToEn} from "@persian-tools/persian-tools";
 
 const formatNumber = (value) => new Intl.NumberFormat().format(value);
 const NumericInput = (props) => {
     const {value, onChange} = props;
     const handleChange = (e) => {
+
         const {value: inputValue} = e.target;
         const reg = /^-?\d*(\.\d*)?$/;
         if (reg.test(inputValue) || inputValue === '' || inputValue === '-') {
@@ -38,21 +33,19 @@ const NumericInput = (props) => {
         }
     };
 
-    const handleBlur = () => {
-        let valueTemp = value;
-        if (value.charAt(value.length - 1) === '.' || value === '-') {
-            valueTemp = value.slice(0, -1);
-        }
-        onChange(valueTemp.replace(/0*(\d+)/, '$1'));
-    };
+    // const handleBlur = () => {
+    //     let valueTemp = value;
+    //     if (value.charAt(value.length - 1) === '.' || value === '-') {
+    //         valueTemp = value.slice(0, -1);
+    //     }
+    //     onChange(valueTemp.replace(/0*(\d+)/, '$1'));
+    // };
 
-    return (
-        <Input
-            {...props}
-            onChange={handleChange}
-            onBlur={handleBlur}
-        />
-    );
+    return (<Input
+        {...props}
+        onChange={onChange}
+        // onBlur={handleBlur}
+    />);
 };
 export default function () {
     const [chargingWallet, setChargingWallet] = useState(false)
@@ -66,117 +59,144 @@ export default function () {
         transaction_created_at_to: undefined,
         amount_ordering: undefined
     })
-    // get me
+
+    const [filterChart, setFilterChart] = useState({
+        transaction_type: undefined,
+    })
     useEffect(() => {
         axiosInstance.get('/user-api/users/me/').then(res => {
             setMeData(res?.data)
         })
     }, []);
+    //
+    // const {
+    //     data, isLoading, error, refetch
+    // } = useQuery(['Wallet'], async () => await axiosInstance.get(`/wallet-api/wallet/my-wallet/${SetQueryParams(filterParams)}`), {
+    //     refetchOnWindowFocus: false
+    // })
+    //
+    // useEffect(() => {
+    //     refetch()
+    // }, [filterParams]);
 
-    const {data, isLoading, error, refetch} = useQuery(['Wallet'],
-        async () => await axiosInstance.get(`/wallet-api/wallet/my-wallet/${SetQueryParams(filterParams)}`)
-        , {
-            refetchOnWindowFocus: false
-        })
+
+    const [walletData, walletChart] = useQueries({
+        queries: [
+            {
+                queryKey: ['wallet'],
+                queryFn: async () => await axiosInstance.get(`/wallet-api/wallet/my-wallet/${SetQueryParams(filterParams)}`),
+                refetchOnWindowFocus: false,
+                retry: false
+            },
+            {
+                queryKey: ['walletChart'],
+                queryFn: async () =>
+                    await axiosInstance.get(`/wallet-api/wallet/my-wallet/${SetQueryParams(filterChart)}`),
+                refetchOnWindowFocus: false,
+                retry: false
+            },
+        ],
+    });
 
     useEffect(() => {
-        refetch()
+        walletData.refetch()
     }, [filterParams]);
 
-    return (
-        <PageBox>
-            <CommonDrawer RightDrawerOpen={RightDrawerOpen} setRightDrawerOpen={setRightDrawerOpen}/>
-            <main style={{width: RightDrawerOpen ? '80%' : '100%', transition: '0.3s'}}>
-                <QuestionerHeader meData={meData} pageName='profile'/>
-                <QuestionerPageContainer>
-                    <QuestionerContentBox>
-                        <Container>
-                            <Modal
-                                modalRender={(ReactNode) => <ModalContainer>{ReactNode}</ModalContainer>}
-                                open={chargingWallet}
-                                centered
-                                onOk={void 0}
-                                onCancel={() => setChargingWallet(false)}
-                                footer={(
-                                    <div style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'flex-end',
-                                    }}>
-                                        <Button onClick={() => setChargingWallet(false)} type="default">
-                                            لغو
-                                        </Button>
-                                        <Button type="primary">
-                                            صفحه‌ پرداخت
-                                        </Button>
-                                    </div>
-                                )}
-                                width={416}
-                            >
-                                <div className="modal_title">چقدر حساب شما شارژ شود؟</div>
-                                <div className="bodyOfWalletModal">
-                                    <div className="head">
-                                        <Button onClick={() => setChargingWalletValue(chargingWalletValue + 10)}
-                                                className={'icon'} shape={'circle'}>+</Button>
-                                        <NumericInput
-                                            value={chargingWalletValue}
-                                            onChange={setChargingWalletValue}
-                                            rootClassName={'input'}
 
-                                        />
-                                        <Button disabled={!chargingWalletValue} onClick={() => {
-                                            if (chargingWalletValue > 0)
-                                                setChargingWalletValue(chargingWalletValue - 10)
-                                        }} className={'icon'} shape={'circle'}>-</Button>
+    useEffect(() => {
+        walletChart.refetch()
+    }, [filterChart]);
+
+
+    return (<PageBox>
+        <CommonDrawer RightDrawerOpen={RightDrawerOpen} setRightDrawerOpen={setRightDrawerOpen}/>
+        <main style={{width: RightDrawerOpen ? '80%' : '100%', transition: '0.3s'}}>
+            <QuestionerHeader meData={meData} pageName='profile'/>
+            <QuestionerPageContainer>
+                <QuestionerContentBox>
+                    <Container>
+                        <Modal
+                            modalRender={(ReactNode) => <ModalContainer>{ReactNode}</ModalContainer>}
+                            open={chargingWallet}
+                            centered
+                            onOk={void 0}
+                            onCancel={() => setChargingWallet(false)}
+                            footer={(<div style={{
+                                display: 'flex', alignItems: 'center', justifyContent: 'flex-end',
+                            }}>
+                                <Button onClick={() => setChargingWallet(false)} type="default">
+                                    لغو
+                                </Button>
+                                <Button type="primary">
+                                    صفحه‌ پرداخت
+                                </Button>
+                            </div>)}
+                            width={416}
+                        >
+                            <div className="modal_title">چقدر حساب شما شارژ شود؟</div>
+                            <div className="bodyOfWalletModal">
+                                <div className="head">
+                                    <Button onClick={() => setChargingWalletValue(chargingWalletValue + 10)}
+                                            className={'icon'} shape={'circle'}>+</Button>
+                                    <NumericInput
+                                        value={chargingWalletValue ? digitsEnToFa(chargingWalletValue) : ''}
+                                        onChange={(e) => {
+                                            setChargingWalletValue(e.target.value)
+                                        }}
+                                        rootClassName={'input'}
+                                    />
+                                    <Button disabled={!chargingWalletValue} onClick={() => {
+                                        if (chargingWalletValue > 0) setChargingWalletValue(chargingWalletValue - 10)
+                                    }} className={'icon'} shape={'circle'}>-</Button>
+                                </div>
+                                <div className="body">
+                                    <div
+                                        className="title">{chargingWalletValue === 0 ? 'صفر' : digitsEnToFa(chargingWalletValue)} تومان
                                     </div>
-                                    <div className="body">
-                                        <div
-                                            className="title">{chargingWalletValue === 0 ? 'صفر' : digitsEnToFa(chargingWalletValue)} تومان
-                                        </div>
-                                        <div className="offers">
-                                            <Button
-                                                onClick={(e) => {
-                                                    setChargingWalletValue(20000)
-                                                }}>{digitsEnToFa(20000).toLocaleString()}</Button>
-                                            <Button
-                                                onClick={(e) => {
-                                                    setChargingWalletValue(40000)
-                                                }}>{digitsEnToFa(40000).toLocaleString()}</Button>
-                                            <Button
-                                                onClick={(e) => {
-                                                    setChargingWalletValue(60000)
-                                                }}>{digitsEnToFa(60000).toLocaleString()}</Button>
-                                        </div>
+                                    <div className="offers">
+                                        <Button
+                                            onClick={(e) => {
+                                                setChargingWalletValue(20000)
+                                            }}>{digitsEnToFa(20000).toLocaleString()}</Button>
+                                        <Button
+                                            onClick={(e) => {
+                                                setChargingWalletValue(40000)
+                                            }}>{digitsEnToFa(40000).toLocaleString()}</Button>
+                                        <Button
+                                            onClick={(e) => {
+                                                setChargingWalletValue(60000)
+                                            }}>{digitsEnToFa(60000).toLocaleString()}</Button>
                                     </div>
                                 </div>
-                            </Modal>
-                            <WalletHeader>
-                                <Refresh onClick={() => router.reload()}>
-                                    <Icon style={{width: '14px', height: '14px'}} name={'ArrowCounterclockwise'}/>
-                                </Refresh>
-                                <Title>کیف پول</Title>
-                                <Button onClick={() => setChargingWallet(true)} className={`flex notBorder`}
-                                        typeof='submit'
-                                        type="primary">
-                                    شارژ کیف‌پول
-                                    <Icon name={'Wallet2'}/>
-                                </Button>
-                            </WalletHeader>
-                            <WalletContainer>
-                                <Bank filterParams={filterParams} setFilterParams={setFilterParams} data={data?.data}
-                                      loading={isLoading}/>
-                                <Statistics filterParams={filterParams} setFilterParams={setFilterParams}
-                                            data={data?.data}
-                                            loading={isLoading}/>
-                                <TransactionList filterParams={filterParams} setFilterParams={setFilterParams}
-                                                 data={data?.data} loading={isLoading}/>
-                            </WalletContainer>
-                        </Container>
-                    </QuestionerContentBox>
-                </QuestionerPageContainer>
-            </main>
-        </PageBox>
-    )
+                            </div>
+                        </Modal>
+                        <WalletHeader>
+                            <Refresh onClick={() => router.reload()}>
+                                <Icon style={{width: '14px', height: '14px'}} name={'ArrowCounterclockwise'}/>
+                            </Refresh>
+                            <Title>کیف پول</Title>
+                            <Button onClick={() => setChargingWallet(true)} className={`flex notBorder`}
+                                    typeof='submit'
+                                    type="primary">
+                                شارژ کیف‌پول
+                                <Icon name={'Wallet2'}/>
+                            </Button>
+                        </WalletHeader>
+                        <WalletContainer>
+                            <Bank filterParams={filterParams} setFilterParams={setFilterParams}
+                                  data={walletData?.data?.data}
+                                  loading={walletData?.isLoading}/>
+                            <Statistics filterParams={filterChart} setFilterParams={setFilterChart}
+                                        data={walletChart?.data?.data}
+                                        loading={walletChart?.isLoading}/>
+                            <TransactionList filterParams={filterParams} setFilterParams={setFilterParams}
+                                             data={walletData?.data?.data} loading={walletData?.isLoading}/>
+                        </WalletContainer>
+                    </Container>
+                </QuestionerContentBox>
+            </QuestionerPageContainer>
+        </main>
+    </PageBox>)
 }
 
 export async function getServerSideProps(context) {
@@ -198,16 +218,14 @@ export async function getServerSideProps(context) {
         return {
             props: {
                 // Pass the cookies as props to the component
-                cookies: parsedCookies,
-                // wallet: data
+                cookies: parsedCookies, // wallet: data
             },
         };
     }
 
     return {
         redirect: {
-            permanent: false,
-            destination: "/auth?returnUrl=" + urlDest
+            permanent: false, destination: "/auth?returnUrl=" + urlDest
         }
     };
 }

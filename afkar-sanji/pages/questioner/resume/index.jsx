@@ -22,7 +22,6 @@ import * as url from "url";
 
 const {Search} = Input;
 export default function ({meData, cookies}) {
-    console.log(meData)
     const [fileSize, setFileSize] = useState(null)
     const [link, setLink] = useState(meData?.resume?.linkedin || '')
     const [isUpload, setIsUpload] = useState(false)
@@ -31,6 +30,7 @@ export default function ({meData, cookies}) {
     const [uploadOk, setUploadOk] = useState(false);
     const [isHaveResume, setIsHaveResume] = useState(false);
     const status = useRef(true);
+    const [resumeData, setResumeData] = useState(null)
 
     useEffect(() => {
         if (meData?.resume?.file !== '') setIsUpload(true)
@@ -38,28 +38,36 @@ export default function ({meData, cookies}) {
     }, [meData]);
 
     useEffect(() => {
-        if (status.current) {
+        if (!meData.resume) {
             let formData = new FormData();
             formData.append('linkedin', '')
             if (meData?.resume === null) {
                 axiosInstance.post(`/user-api/users/${meData?.id}/resume/`, formData)
                     .then(res => {
-                        return true
+                        setResumeData(res?.data)
                     })
                     .catch(error => {
-                        message.error('مشکلی پیش آمده است')
+                        const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
+                        message.error(ERROR_MESSAGE)
                     });
-
             }
+        } else {
+            setResumeData(meData.resume)
         }
-        status.current = false;
     }, []);
+    const urlHandler = () => {
+        if (link.length > 0) {
+            resumeHandler('patch', 'linkedin', link.trim(), false)
+        } else {
+            message.info('لطفا لینک را وارد کنید')
+        }
+    }
 
     const resumeHandler = (method, type, value, is_file) => {
         let formData = new FormData()
         formData.append(type, value)
         if (method === 'patch') {
-            axiosInstance.patch(`/user-api/users/${meData?.id}/resume/${meData?.resume?.id}`, formData, {
+            axiosInstance.patch(`/user-api/users/${meData?.id}/resume/${resumeData?.id}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -120,18 +128,6 @@ export default function ({meData, cookies}) {
             }
         },
     };
-
-    const urlHandler = () => {
-        if (link.length > 0) {
-            if (meData?.resume?.id) {
-                resumeHandler('patch', 'linkedin', link.trim(), false)
-            }
-
-        } else {
-            message.info('لطفا لینک را وارد کنید')
-        }
-    }
-
 
     const removeFileHandler = () => {
         if (meData?.resume?.file) {

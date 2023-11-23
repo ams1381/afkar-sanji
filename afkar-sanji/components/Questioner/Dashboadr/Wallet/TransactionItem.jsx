@@ -8,20 +8,18 @@ import {digitsEnToFa} from "@persian-tools/persian-tools";
 
 
 export default function ({data}) {
-    // convert date
-    const date = new Date(data?.created_at).toLocaleString('fa-IR').slice(0, 16).split(',')
+    const date = new Date(data?.created_at).toLocaleString('fa-IR').slice(0, 15).split(',')
     return (
         <TransactionItem>
             <TransactionHead>
                 <div className={`date`}>
-                    <div>dsvs</div>
+                    <div>{date}</div>
                 </div>
                 <div className={`title`}>پرکردن پرس‌نامه</div>
             </TransactionHead>
             <TransactionBody success={data?.transaction_type === 'i' ? '#52C41A' : '#FF4D4F'}>
                 <div className="text">
-                    {/*{data?.amount?.toLocaleString('fa-IR')}*/}
-                    { digitsEnToFa(3000) }
+                    {data?.amount?.toLocaleString('fa-IR')}
                 </div>
                 {data?.transaction_type === 'i' && (
                     <img src={upIcon?.src} alt=""/>
