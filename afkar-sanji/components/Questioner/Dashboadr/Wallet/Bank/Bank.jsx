@@ -1,23 +1,16 @@
 import React, {useState, useMemo, useRef, useEffect} from 'react';
-// style
 import {Bank, BankCard, BankHead} from "@/styles/questioner/dashboard/Wallet/Bank/Bank";
-// icon
 import bank from 'public/Icons/Building Bank.svg'
 import edit from 'public/Icons/EditCard.svg'
 import {message, Skeleton} from "antd";
-// ant
 import {CheckOutlined, HighlightOutlined, SmileFilled, SmileOutlined} from '@ant-design/icons';
 import {Divider, Radio, Typography} from 'antd';
-
 const {Paragraph} = Typography;
-
-// styled
 import styled from 'styled-components'
 import {QuestionnaireNameInput, RenameSpan} from "@/styles/folders/Questionnaire";
 import {Icon} from "@/styles/icons";
 import {handleInputWidth} from "@/utilities/RenameFunctions";
 import {axiosInstance} from "@/utilities/axios";
-
 export default function ({loading, data}) {
     const ibanRef = useRef(null);
     const [IBAN, setIBAN] = useState('');
@@ -144,9 +137,9 @@ export default function ({loading, data}) {
                     </BankCard>
                     <BankCard>
                         <div className="type_text" style={BankCardStyle}>
-                            <QuestionnaireNameInput style={QuestionnaireNameInputStyle} ref={cardNumberRef}
+                            <QuestionnaireNameInput className={'input'} style={QuestionnaireNameInputStyle} ref={cardNumberRef}
                                                     onKeyDown={e => e.key == 'Enter' ? cardNumberRename() : 'ندارد'}
-                                                    type="text" onChange={cardNumberInputHanlder}
+                                                    type="number" placeholder={data?.card_number || 'ندارد'} onChange={cardNumberInputHanlder}
                                                     value={card_number} disabled={!card_numberActive}/>
                             <RenameSpan style={RenameStyle}
                                         clickable={(card_numberActive && !card_number) ? null : 'active'}

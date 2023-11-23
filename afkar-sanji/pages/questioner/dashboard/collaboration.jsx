@@ -37,6 +37,8 @@ export default function ({cookies}) {
     const [EndDate, setEndDate] = useState('');
     const [recommended, setRecommended] = useState([])
     const [myInterView, setMyInterView] = useState([])
+    const [recommendedError, setRecommendedError] = useState('')
+    const [myInterViewError, setMyInterViewError] = useState('')
     const [isGetData, setIsGetData] = useState(false)
     const [MeQuery] = useQueries({
         queries: [
@@ -78,6 +80,9 @@ export default function ({cookies}) {
     const getRecommended = async () => {
         axiosInstance.get('/interview-api/interviews/recommended-interviews/').then(res => {
             setRecommended(res?.data?.results)
+        }).catch(error => {
+            const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
+            setRecommendedError(ERROR_MESSAGE)
         })
     }
 
@@ -87,6 +92,9 @@ export default function ({cookies}) {
         axiosInstance.get('/interview-api/interviews/my-interviews/').then(res => {
             setIsGetData(false)
             setMyInterView(res?.data?.results)
+        }).catch(error => {
+            const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
+            setMyInterViewError(ERROR_MESSAGE)
         })
     }
 
@@ -147,7 +155,7 @@ export default function ({cookies}) {
                                                     alignItems: 'center',
                                                     justifyContent: 'center',
                                                     height: '80vh'
-                                                }}>درخواست‌های همکاری ای وجود ندارد</div>
+                                                }}>{recommendedError}</div>
                                         )}
                                     </>
                                 </div>
@@ -188,7 +196,7 @@ export default function ({cookies}) {
                                                         alignItems: 'center',
                                                         justifyContent: 'center',
                                                         height: '80vh'
-                                                    }}>پرسشنامه ای وجود ندارد</div>
+                                                    }}>{myInterViewError}</div>
                                             )}
                                         </>
                                     </>

@@ -11,6 +11,9 @@ export const TransactionContainer = styled.div`
     display: flex;
     flex-direction: column;
     gap: 12px;
+    &::-webkit-scrollbar{
+      display: none;
+    }
   }
 `
 

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="72d35a05-fe4b-4200-a59b-91b87770b012" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Questioner/Dashboadr/Wallet/Bank/Bank.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Dashboadr/Wallet/Bank/Bank.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/questioner/dashboard/collaboration.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/questioner/dashboard/collaboration.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/questioner/dashboard/wallet.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/questioner/dashboard/wallet.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/questioner/information.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/questioner/information.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/questioner/resume/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/questioner/resume/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/styles/questioner/dashboard/Wallet/Bank/Bank.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/styles/questioner/dashboard/Wallet/Bank/Bank.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/styles/questioner/dashboard/Wallet/Statistics/StatisticsChart.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/styles/questioner/dashboard/Wallet/Statistics/StatisticsChart.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/styles/questioner/dashboard/Wallet/Statistics/StatisticsHead.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/styles/questioner/dashboard/Wallet/Statistics/StatisticsHead.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/styles/questioner/dashboard/Wallet/transactionList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/styles/questioner/dashboard/Wallet/transactionList.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/styles/questioner/dashboard/Wallet/wallet.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/styles/questioner/dashboard/Wallet/wallet.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/styles/questioner/information.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/styles/questioner/information.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/styles/questioner/questioner.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/styles/questioner/questioner.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/styles/questioner/resume/resume.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/styles/questioner/resume/resume.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utilities/axios.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/utilities/axios.jsx" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: -1
+}</component>
+  <component name="ProjectId" id="2YYHwn13UPvt0n0PnompD6cBcOQ" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "questioner",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="72d35a05-fe4b-4200-a59b-91b87770b012" name="Changes" comment="" />
+      <created>1700695834462</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1700695834462</updated>
+      <workItem from="1700695835979" duration="4026000" />
+      <workItem from="1700721000897" duration="559000" />
+      <workItem from="1700721573757" duration="755000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

@@ -4,7 +4,7 @@ export const Bank = styled.div`
   width: 33%;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 12px;
 `
 
 export const BankHead = styled.div`
@@ -36,7 +36,23 @@ export const BankCard = styled.div`
   background: var(--surface);
   display: flex;
   align-items: center;
-  
+
+  & .input {
+    /* Chrome, Safari, Edge, Opera */
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    /* Firefox */
+
+    &[type=number] {
+      -moz-appearance: textfield;
+    }
+  }
+
   > .type_text {
     color: var(--Neutral-Gray9);
     font-family: IRANSans;
@@ -45,7 +61,7 @@ export const BankCard = styled.div`
     font-weight: 400;
     line-height: 24px;
   }
-  
+
   > img {
     cursor: pointer;
   }

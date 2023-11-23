@@ -18,8 +18,8 @@ export const Container = styled.div`
   & .container_box {
     width: 100%;
     align-items: center;
-    justify-content: space-between;
-    gap: 60px;
+    justify-content: center;
+    gap: 40px;
     display: flex;
     margin-top: 120px;
   }

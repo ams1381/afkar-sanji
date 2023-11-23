@@ -16,7 +16,7 @@ export const StatisticsHead = styled.div`
   > .text {
     color: var(--primary-color);
     text-align: right;
-    font-size: 24px;
+    font-size: 20px;
     font-style: normal;
     font-weight: 500;
     line-height: 30px; 

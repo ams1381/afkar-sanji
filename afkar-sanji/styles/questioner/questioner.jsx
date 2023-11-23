@@ -66,7 +66,6 @@ export const QuestionBox = styled.div`
   height: 90%;
   position: relative;
   padding: 40px;
-  
 `
 
 export const ImageWallpaper = styled.img`
@@ -75,7 +74,7 @@ export const ImageWallpaper = styled.img`
   width: 100%;
   left: 50%;
   transform: translateX(-50%);
-  mix-blend-mode: multiply;
+  mix-blend-mode: overlay;
   z-index: -1;
 `
 
@@ -98,7 +97,7 @@ export const Header = styled.div`
   display: flex;
   //align-items: center;
   flex-direction: row;
-  gap: 40px;
+  gap: 24px;
   padding-top: 40px;
   z-index: 2;
 
@@ -153,12 +152,12 @@ export const RightHeader = styled.div`
 export const LeftHeader = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: 33px;
+  gap: 24px;
   
   > li {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 12px;
     
     > .text {
       color: var(--questioner-text-white);

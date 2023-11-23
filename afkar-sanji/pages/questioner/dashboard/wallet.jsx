@@ -1,21 +1,21 @@
 import {
-     QuestionerPageContainer
+    QuestionerPageContainer
     , PageBox, QuestionerContentBox
 } from '@/styles/common';
-
 import React, {useEffect} from 'react'
 import {useState} from 'react';
 import {CommonDrawer} from '@/components/common/CommonDrawer';
 import QuestionerHeader from '@/components/common/QuestionerHeader';
 import {useRouter} from 'next/router';
-// style
-import {WalletHeader, Refresh, Title, Container, WalletContainer} from "@/styles/questioner/dashboard/Wallet/wallet";
-// antd
-import {Button,} from "antd";
-// icon
+import {
+    WalletHeader,
+    Refresh,
+    Title,
+    Container,
+    WalletContainer,
+    ModalContainer
+} from "@/styles/questioner/dashboard/Wallet/wallet";
 import refresh from '@/public/Icons/ArrowCounterclockwise.svg'
-
-// component
 import TransactionList from "@/components/Questioner/Dashboadr/Wallet/TransactionList";
 import Statistics from "@/components/Questioner/Dashboadr/Wallet/Statistics/Statistics";
 import Bank from "@/components/Questioner/Dashboadr/Wallet/Bank/Bank"
@@ -23,11 +23,43 @@ import {axiosInstance} from "@/utilities/axios";
 import {useQuery} from "@tanstack/react-query";
 import SetQueryParams from "@/utilities/filtering/filter";
 import {Icon} from "@/styles/icons";
+import {Button, Modal, Space} from 'antd';
+import {Input, Tooltip} from 'antd';
+import {digitsEnToFa} from "@persian-tools/persian-tools";
 
+const formatNumber = (value) => new Intl.NumberFormat().format(value);
+const NumericInput = (props) => {
+    const {value, onChange} = props;
+    const handleChange = (e) => {
+        const {value: inputValue} = e.target;
+        const reg = /^-?\d*(\.\d*)?$/;
+        if (reg.test(inputValue) || inputValue === '' || inputValue === '-') {
+            onChange(inputValue);
+        }
+    };
+
+    const handleBlur = () => {
+        let valueTemp = value;
+        if (value.charAt(value.length - 1) === '.' || value === '-') {
+            valueTemp = value.slice(0, -1);
+        }
+        onChange(valueTemp.replace(/0*(\d+)/, '$1'));
+    };
+
+    return (
+        <Input
+            {...props}
+            onChange={handleChange}
+            onBlur={handleBlur}
+        />
+    );
+};
 export default function () {
+    const [chargingWallet, setChargingWallet] = useState(false)
     const [RightDrawerOpen, setRightDrawerOpen] = useState(false);
+    const [chargingWalletValue, setChargingWalletValue] = useState(0)
     const router = useRouter()
-    const [meData,setMeData] = useState([])
+    const [meData, setMeData] = useState([])
     const [filterParams, setFilterParams] = useState({
         transaction_type: undefined,
         transaction_created_at_from: undefined,
@@ -43,8 +75,8 @@ export default function () {
 
     const {data, isLoading, error, refetch} = useQuery(['Wallet'],
         async () => await axiosInstance.get(`/wallet-api/wallet/my-wallet/${SetQueryParams(filterParams)}`)
-    ,{
-        refetchOnWindowFocus : false
+        , {
+            refetchOnWindowFocus: false
         })
 
     useEffect(() => {
@@ -59,21 +91,82 @@ export default function () {
                 <QuestionerPageContainer>
                     <QuestionerContentBox>
                         <Container>
+                            <Modal
+                                modalRender={(ReactNode) => <ModalContainer>{ReactNode}</ModalContainer>}
+                                open={chargingWallet}
+                                centered
+                                onOk={void 0}
+                                onCancel={() => setChargingWallet(false)}
+                                footer={(
+                                    <div style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'flex-end',
+                                    }}>
+                                        <Button onClick={() => setChargingWallet(false)} type="default">
+                                            لغو
+                                        </Button>
+                                        <Button type="primary">
+                                            صفحه‌ پرداخت
+                                        </Button>
+                                    </div>
+                                )}
+                                width={416}
+                            >
+                                <div className="modal_title">چقدر حساب شما شارژ شود؟</div>
+                                <div className="bodyOfWalletModal">
+                                    <div className="head">
+                                        <Button onClick={() => setChargingWalletValue(chargingWalletValue + 10)}
+                                                className={'icon'} shape={'circle'}>+</Button>
+                                        <NumericInput
+                                            value={chargingWalletValue}
+                                            onChange={setChargingWalletValue}
+                                            rootClassName={'input'}
+
+                                        />
+                                        <Button disabled={!chargingWalletValue} onClick={() => {
+                                            if (chargingWalletValue > 0)
+                                                setChargingWalletValue(chargingWalletValue - 10)
+                                        }} className={'icon'} shape={'circle'}>-</Button>
+                                    </div>
+                                    <div className="body">
+                                        <div
+                                            className="title">{chargingWalletValue === 0 ? 'صفر' : digitsEnToFa(chargingWalletValue)} تومان
+                                        </div>
+                                        <div className="offers">
+                                            <Button
+                                                onClick={(e) => {
+                                                    setChargingWalletValue(20000)
+                                                }}>{digitsEnToFa(20000).toLocaleString()}</Button>
+                                            <Button
+                                                onClick={(e) => {
+                                                    setChargingWalletValue(40000)
+                                                }}>{digitsEnToFa(40000).toLocaleString()}</Button>
+                                            <Button
+                                                onClick={(e) => {
+                                                    setChargingWalletValue(60000)
+                                                }}>{digitsEnToFa(60000).toLocaleString()}</Button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Modal>
                             <WalletHeader>
                                 <Refresh onClick={() => router.reload()}>
-                                    <Icon name={'ArrowCounterclockwise'} />
+                                    <Icon style={{width: '14px', height: '14px'}} name={'ArrowCounterclockwise'}/>
                                 </Refresh>
                                 <Title>کیف پول</Title>
-                                <Button className={`flex notBorder`} typeof='submit'
+                                <Button onClick={() => setChargingWallet(true)} className={`flex notBorder`}
+                                        typeof='submit'
                                         type="primary">
                                     شارژ کیف‌پول
-                                    <Icon name={'Wallet2'} />
+                                    <Icon name={'Wallet2'}/>
                                 </Button>
                             </WalletHeader>
                             <WalletContainer>
                                 <Bank filterParams={filterParams} setFilterParams={setFilterParams} data={data?.data}
                                       loading={isLoading}/>
-                                <Statistics filterParams={filterParams} setFilterParams={setFilterParams} data={data?.data}
+                                <Statistics filterParams={filterParams} setFilterParams={setFilterParams}
+                                            data={data?.data}
                                             loading={isLoading}/>
                                 <TransactionList filterParams={filterParams} setFilterParams={setFilterParams}
                                                  data={data?.data} loading={isLoading}/>

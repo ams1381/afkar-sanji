@@ -18,7 +18,7 @@ export const ChartBody = styled.div`
 `
 
 export const ChartHeader = styled.div`
-  padding: 8px 0;
+  padding: 12px 0;
   width: 100%;
   text-align: center;
   border-bottom: 1px solid #eee;
