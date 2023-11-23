@@ -42,6 +42,7 @@ const ResultsPage = ({ cookies }) => {
         },
     ],
   });
+
   const SearchQuery = useQuery(['ResultSearch'],
     async () => await axiosInstance.get(`/result-api/${router.query.QuestionnaireID}/answer-sets/search/?search=${SearchValue}`),{
     enabled : SearchValue ? true : false

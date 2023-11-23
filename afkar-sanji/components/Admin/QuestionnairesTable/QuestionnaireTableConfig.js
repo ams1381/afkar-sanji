@@ -1,4 +1,4 @@
-import {Divider, Space} from "antd";
+import {Divider, Space, Tooltip} from "antd";
 import {TableBlockButton, UserTag} from "@/styles/Admin/adminPanel";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
 import {convertDate, convertToRegularTime} from "@/components/QuestionnairePanel/QuestionnaireSetting/SettingPanel";
@@ -16,8 +16,13 @@ export const QuestionnaireTableColumns = (setActiveQuestionnairePopup,setActiveP
             title: 'نام',
             dataIndex: 'name',
             key: 'name',
+            render : (QuestionnaireName) => {
+              return <Tooltip title={QuestionnaireName}>
+                    {QuestionnaireName}
+              </Tooltip>
+            },
             sorter : (a , b) => a.name?.localeCompare(b.name) ,
-            width: 64
+            width: 100
         },
         {
             title: 'تاریخ ایجاد',
@@ -69,6 +74,7 @@ export const QuestionnaireTableColumns = (setActiveQuestionnairePopup,setActiveP
                                 {tag?.includes('price') && ' قیمت'}
                                 {tag?.includes('level') && 'سطح'}
                                 {tag?.includes('content') && 'محتوا'}
+                                { tag?.includes('searching_for_interviewers') && 'در جستجوی پرسشگر' }
                                 {/*content*/}
                                 { IconToRender && IconToRender }
                             </UserTag>

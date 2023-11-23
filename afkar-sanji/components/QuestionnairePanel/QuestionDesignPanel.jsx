@@ -29,9 +29,10 @@ export const getListStyle = (isDraggingOver) => ({
 
 export const ReorderPoster = async (UUID,reOrderedArray,Auth) => {
   axiosInstance.defaults.headers['Content-Type'] = 'application/json';
+  // ${Auth.reqRole}
   try 
      {
-      await axiosInstance.post(`/${Auth.reqRole}/${UUID}/change-questions-placements/`,{
+      await axiosInstance.post(`/question-api/interviews/${UUID}/change-questions-placements/`,{
         'placements' : reOrderedArray
       })
      }

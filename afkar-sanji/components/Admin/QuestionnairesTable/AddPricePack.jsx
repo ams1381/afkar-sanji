@@ -14,13 +14,15 @@ import {styled} from "styled-components";
 import TextArea from "antd/lib/input/TextArea";
 import {axiosInstance} from "@/utilities/axios";
 
-export const AddPricePack = ({ activePricePopup , setActivePricePopup , QuestionnaireList}) => {
+export const AddPricePack = ({ EditMode , activePricePopup , setActivePricePopup , QuestionnaireList}) => {
     const [ MessageApi , MessageContext ] = message.useMessage();
-    const [ priceValue , setPriceValue ] = useState(null);
-    const [ priceDescription , setPriceDescription ] = useState(null);
-    const [ priceTitle , setPriceTitle ] = useState(null);
+    const [ priceValue , setPriceValue ] = useState(EditMode ? QuestionnaireList.find(item => item.id === activePricePopup.id).price_pack.price : null);
+    const [ priceDescription , setPriceDescription ] = useState(EditMode ? QuestionnaireList.find(item => item.id === activePricePopup.id).price_pack.description : null);
+    const [ priceTitle , setPriceTitle ] = useState(EditMode ? QuestionnaireList.find(item => item.id === activePricePopup.id).price_pack.name : null);
     const [ errMessage , setErrMessage ] = useState(null);
     const [ PriceLoading , setPriceLoading ] = useState(false);
+
+
     const AddPricePackHandler = async () => {
         setPriceLoading(true)
         try {
@@ -35,7 +37,20 @@ export const AddPricePack = ({ activePricePopup , setActivePricePopup , Question
         } finally {
             setPriceLoading(false);
         }
+    }
+    const EditPricePackHandler = async  () => {
+        setPriceLoading(true)
+        try {
+            await axiosInstance.patch(`/admin-api/price-packs/${QuestionnaireList.find(item => item.id === activePricePopup.id).price_pack.id}`,{
+                name : priceTitle ,
+                price : priceValue ,
+                description : priceDescription
+            })
+        } catch (err) {
 
+        } finally {
+            setPriceLoading(false);
+        }
     }
 
     return <>
@@ -66,7 +81,8 @@ export const AddPricePack = ({ activePricePopup , setActivePricePopup , Question
                         <div style={{ display : 'flex' , justifyContent : 'space-between' , gap : 10 }}>
                             <AddPriceInputContainer>
                                 <p>ارزش هر نتیجه</p>
-                                <AddPriceNumberInput style={{ fontFamily : 'IRANSans' }} value={priceValue ? priceValue : ''}
+                                <AddPriceNumberInput style={{ fontFamily : 'IRANSans' }}
+                                         value={priceValue ? digitsEnToFa(priceValue) : ''}
                                          onChange={(e) => setPriceValue(e)}
                                      placeholder={'قیمت را وارد کنید'} />
                             </AddPriceInputContainer>
@@ -86,9 +102,13 @@ export const AddPricePack = ({ activePricePopup , setActivePricePopup , Question
                             { errMessage }
                         </div>
                     }
-                    <AddPricePackButton loading={PriceLoading} type={'primary'} onClick={AddPricePackHandler}>
-                        <p>افزودن</p>
-                        <Icon style={{ width : 12 , height : 12 }} name={'Add'} />
+                    <AddPricePackButton loading={PriceLoading} type={'primary'} onClick={EditMode ? EditPricePackHandler : AddPricePackHandler}>
+                        { EditMode ? <p>
+                            ثبت تغییرات
+                        </p> : <>
+                            <p>افزودن</p>
+                            <Icon style={{width : 12 , height : 12}} name={'Add'}/>
+                        </> }
                     </AddPricePackButton>
                 </ChatMessageContainer>
             </PopupContainer>
@@ -107,7 +127,7 @@ const AddPriceTextarea = styled(TextArea)`
   text-align: right;
   direction: rtl;
 `
-const AddPriceNumberInput = styled(InputNumber)`
+const AddPriceNumberInput = styled(Input)`
   border-radius: 2px;
   font-family: IRANSans;
   text-align: right;

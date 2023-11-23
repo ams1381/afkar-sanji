@@ -6,7 +6,7 @@ import {Button, Popover} from "antd";
 import {useState} from "react";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
 import {styled} from "styled-components";
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 export const SentMessage = ({ messageData , ChatQuery , isAdmin , Questionnaire , setEditableMessage }) => {
     const [ messagePopover , setMessagePopover ] = useState(false);
@@ -68,7 +68,7 @@ export const SentMessage = ({ messageData , ChatQuery , isAdmin , Questionnaire 
         </div>
     </motion.div>
 }
-function convertTimeTo12HourFormat(timeString) {
+export function convertTimeTo12HourFormat(timeString) {
     const [hour24, minutes] = timeString.split(':').map(Number);
 
     let hour12 = hour24 % 12 || 12; // Convert 0 to 12

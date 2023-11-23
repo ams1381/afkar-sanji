@@ -57,7 +57,6 @@ const LevelAssignmentPage = () => {
         if(InterviewQuery.data?.data?.questions[currentSlide] && InterviewQuery.data?.data?.questions[currentSlide].question)
             setQuestionLevel(InterviewQuery.data?.data?.questions[currentSlide].question.level)
     },[currentSlide])
-    console.log(QuestionLevel)
     const assignLevel = async (LevelNumber) => {
         setLevelLoading(LevelNumber)
         try {
@@ -170,7 +169,9 @@ const LevelAssignmentPage = () => {
                                                justifyContent : 'center' }}
                                                onClick={() => {
                                                    setEditLevelActive(true)
-                                                   setQuestionLevel(InterviewQuery.data?.data?.questions[currentSlide].question.level)
+                                                   // console.log(InterviewQuery,InterviewQuery.data?.data?.questions[currentSlide])
+                                                   if(InterviewQuery.data?.data?.questions[currentSlide].question)
+                                                    setQuestionLevel(InterviewQuery.data?.data?.questions[currentSlide].question.level)
 
                                                }}>
                                            <p>ویرایش تعیین سطح</p>

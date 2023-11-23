@@ -510,6 +510,10 @@ export const QuestionerContentBox = styled.div`
     gap: 16px;
     margin: 0 auto;
     flex-direction: row-reverse;
+  
+  @media screen and (max-width: 768px) {
+    flex-wrap: wrap;
+  }
 `
 export const LogoutPopoverItem = styled.div`
   display: flex;

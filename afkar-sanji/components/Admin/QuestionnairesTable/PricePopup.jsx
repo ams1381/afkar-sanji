@@ -11,14 +11,15 @@ import {PopupContainer,
     PricePackContainer } from "@/styles/Admin/userInfoPopup";
 import {Icon} from "@/styles/icons";
 import React, {useEffect, useState} from "react";
-import {Modal, Skeleton, Tooltip} from "antd";
+import {message, Modal, Skeleton, Tooltip} from "antd";
 import {useQuery} from "@tanstack/react-query";
 import {axiosInstance} from "@/utilities/axios";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
 
-export const PricePopup = ({ setActivePricePopup , refetch , activePricePopup , setPackPopupType , QuestionnaireList }) => {
+export const PricePopup = ({ setActivePricePopup , setEditPricePack , refetch , activePricePopup , setPackPopupType , QuestionnaireList }) => {
     const [ ActivePricePack , setActivePricePack ] = useState(null);
     const [ selectedPricePack , setSelectedPricePack ] = useState(null)
+    const [ MessageApi , MessageContext ] = message.useMessage();
     const PricePacksQuery = useQuery(['PricePacksQuery'],
         async () => await axiosInstance.get('/admin-api/price-packs/'),{
             refetchOnWindowFocus : false,
@@ -34,17 +35,26 @@ export const PricePopup = ({ setActivePricePopup , refetch , activePricePopup , 
     }, [activePricePopup]);
     // console.log(QuestionnaireList.find(item => item.id === activePricePopup.id),selectedPricePack)
     const setPricePack = async (PackID) => {
-        console.log(PackID)
         try {
             // if(selectedPricePack)
             await axiosInstance.post(`/admin-api/interviews/${QuestionnaireList.find(item => item.id === activePricePopup.id).uuid}/set-price-pack/`,{
                 price_pack : PackID
             })
             setActivePricePopup(null)
+            setTimeout(() => {
+                refetch()
+            },300)
         }
         catch (err) {
-            if(err?.response?.data)
-                setErrMessage(Object.values(err?.response?.data)[0])
+            if(err?.response?.data) {
+                Object.values(err?.response?.data).forEach(item => {
+                    MessageApi.error({
+                        content : item
+                    })
+                })
+
+            }
+                // setErrMessage(Object.values(err?.response?.data)[0])
         }
     }
     // useEffect(() => {
@@ -54,6 +64,7 @@ export const PricePopup = ({ setActivePricePopup , refetch , activePricePopup , 
 
     return <>
         {/*<ChatMask onClick={() => setActivePricePopup(null)} />*/}
+        {MessageContext}
         <Modal mask={true}
                preserve={false}
                destroyOnClose={true}
@@ -105,7 +116,10 @@ export const PricePopup = ({ setActivePricePopup , refetch , activePricePopup , 
                                         <PricePackDeleteButton>
                                             <Icon name={'WhiteTrash'}/>
                                         </PricePackDeleteButton>
-                                        <PricePaakEditButton>
+                                        <PricePaakEditButton onClick={() => {
+                                            setEditPricePack(true)
+                                            setPackPopupType('add-price')
+                                        }}>
                                             <Icon name={'WhiteEdit'}/>
                                         </PricePaakEditButton>
                                     </PricePackEditButtonsContainer>}
@@ -113,9 +127,7 @@ export const PricePopup = ({ setActivePricePopup , refetch , activePricePopup , 
                                         // console.log(item)
                                         setSelectedPricePack(item.id)
                                         await setPricePack(item.id)
-                                        setTimeout(() => {
-                                            refetch()
-                                        },300)
+
                                         // setTimeout(() =)
                                     }}
                                     selected={item.id === selectedPricePack}>

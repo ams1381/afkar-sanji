@@ -177,8 +177,8 @@ export const LoginHeaderText = styled.h2`
 export const TextProgress = styled.div`
   font-size: 40px;
   white-space: nowrap;
-  -webkit-text-fill-color: transparent;
-  -webkit-text-stroke: 0.5px var(--primary-color);
+  -webkit-text-fill-color: #f5f5f5;
+  //-webkit-text-stroke: 0.5px var(--primary-color);
   position: relative;
   text-align: center;
   margin: 0 auto;
@@ -189,6 +189,7 @@ export const TextProgress = styled.div`
   font-family: 'IRANSANS';
   animation-delay: 800ms;
   font-weight: 800;
+  text-shadow: 0px -1px 4px #000000ab;
 
   @keyframes LoginTitleAnim
   {
@@ -207,14 +208,15 @@ export const TextInnerProgress = styled.div`
   position: absolute;
   -webkit-text-fill-color: var(--primary-color);
   top: 0;
-  left: 0;
+  right: 0;
   text-align: center;
   width: ${p => p.filltext ? '100%' : p.halffill ? '50%' : '0'};
   white-space: nowrap;
   font-size: 40px;
   overflow: hidden;
   transition: 0.3s;
-  
+  text-shadow: 0px -1px 4px white;
+  direction: rtl;
   
   @media screen and (max-width: 480px)
   {

@@ -17,6 +17,7 @@ import {QuestionnaireNameInput, RenameSpan} from "@/styles/folders/Questionnaire
 import {Icon} from "@/styles/icons";
 import {handleInputWidth} from "@/utilities/RenameFunctions";
 import {axiosInstance} from "@/utilities/axios";
+import {digitsEnToFa} from "@persian-tools/persian-tools";
 
 export default function ({loading, data}) {
     const ibanRef = useRef(null);
@@ -132,11 +133,11 @@ export default function ({loading, data}) {
                                     </div>}
                             </RenameSpan>
                             {ibanActive && <RenameSpan clickable={true}
-                                                       onClick={() => {
-                                                           setIBAN(IBAN)
-                                                           setChangeIban(false)
-                                                           handleInputWidth(ibanRef, IBAN);
-                                                       }} style={{marginRight: 10}}>
+                                       onClick={() => {
+                                           setIBAN(IBAN)
+                                           setChangeIban(false)
+                                           handleInputWidth(ibanRef, IBAN);
+                                       }} style={{marginRight: 10}}>
                                 <Icon name='BlackClose' style={{width: 14}}/>
                             </RenameSpan>}
                         </div>
@@ -145,9 +146,9 @@ export default function ({loading, data}) {
                     <BankCard>
                         <div className="type_text" style={BankCardStyle}>
                             <QuestionnaireNameInput style={QuestionnaireNameInputStyle} ref={cardNumberRef}
-                                                    onKeyDown={e => e.key == 'Enter' ? cardNumberRename() : 'ندارد'}
-                                                    type="text" onChange={cardNumberInputHanlder}
-                                                    value={card_number} disabled={!card_numberActive}/>
+                                onKeyDown={e => e.key == 'Enter' ? cardNumberRename() : 'ندارد'}
+                                type="text" onChange={cardNumberInputHanlder}
+                                value={card_number ? digitsEnToFa(card_number) : ''} disabled={!card_numberActive}/>
                             <RenameSpan style={RenameStyle}
                                         clickable={(card_numberActive && !card_number) ? null : 'active'}
                                         onClick={cardNumberRenameHandler}>

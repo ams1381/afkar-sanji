@@ -54,6 +54,10 @@ export const UserInfoContainer = styled.div`
       {
         margin-inline : 0 !important;
       }
+  
+    @media screen and (max-width: 768px) {
+      width: 100%;
+    }
 `
 export const InfoBox = styled.div`
     display: flex;

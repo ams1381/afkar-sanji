@@ -26,7 +26,8 @@ const QuestionnairesList = () => {
     const [ priceFilter , setPriceFilter ] = useState('');
     const [ filteredIDQuestionnaires , setFilteredIDQuestionnaires ] = useState([]);
     const [ hasQuestionerFilter , setHasQuestionerFilter ] = useState('');
-    const [ packPopupType , setPackPopupType ] = useState('view')
+    const [ packPopupType , setPackPopupType ] = useState('view');
+    const [ EditPricePack , setEditPricePack ] = useState(false);
     const [ QuestionnairesListQuery , MeQuery , RegionsQuery ] = useQueries({
         queries : [
             {
@@ -108,7 +109,10 @@ const QuestionnairesList = () => {
                     setActivePricePopup={setActivePricePopup}
                     QuestionnaireList={QuestionnairesListQuery.data.data.results}
                     activePricePopup={activePricePopup}
+                    setEditPricePack={setEditPricePack}
                 /> : <AddPricePack activePricePopup={activePricePopup}
+                         EditMode={EditPricePack}
+                         setPackPopupType={setPackPopupType}
                         QuestionnaireList={QuestionnairesListQuery.data.data.results}
                         setActivePricePopup={setActivePricePopup} /> : ''}
         </PageBox>
