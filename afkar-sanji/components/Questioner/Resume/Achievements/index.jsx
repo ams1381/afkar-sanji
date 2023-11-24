@@ -13,7 +13,6 @@ import add from "@/public/Icons/addBlue.svg";
 import StyleModules from "@/styles/auth/LoginStyles.module.css";
 import {achievementsSchema, skillsSchema} from "@/utilities/validators/resumeMaker";
 import {axiosInstance} from "@/utilities/axios";
-// icon
 import arrowDownIcon from '@/public/Icons/selectDown.svg'
 import editIcon from "@/public/Icons/editEesume.svg";
 
@@ -105,8 +104,24 @@ export default function ({
 
 
     const submit = () => {
-        setCurrent(3)
-        setTitle('سوابق شغلی مرتبط با پرسش‌گری را در این بخش اضافه کنید')
+        if (!resumeData[resumeData.length - 1]?.year || !resumeData[resumeData.length - 1]?.field || !resumeData[resumeData.length - 1]?.institute) {
+            setCurrent(3)
+            setTitle('سوابق شغلی مرتبط با پرسش‌گری را در این بخش اضافه کنید')
+        } else {
+            axiosInstance.post(`user-api/users/${me?.id}/resume/${me?.resume?.id}/achievements/`, resumeData[resumeData.length - 1]).then(res => {
+                if (res?.status === 201) {
+                    setResumeData([...resumeData.slice(0, resumeData.length - 1), res.data, {
+                        field: undefined, year: undefined, institute: undefined
+                    }]);
+                    message.success('با موفقیت اضافه شد')
+                    setCurrent(3)
+                    setTitle('سوابق شغلی مرتبط با پرسش‌گری را در این بخش اضافه کنید')
+                }
+            }).catch(error => {
+                const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
+                message.error(ERROR_MESSAGE)
+            })
+        }
     }
 
     return (
@@ -126,22 +141,24 @@ export default function ({
                     {resumeData?.map((item, index) => (
                         <FromResumeItem key={item.id}>
 
-                            {index > 0 && index + 1 !== resumeData.length && <BtnComponent   onClick={() => removeAchievements(item.id || '')}>
-                                <img
-                                    className="close"
-                                    src={close.src}
-                                    alt=""
-                                />
-                            </BtnComponent>
+                            {index > 0 && index + 1 !== resumeData.length &&
+                                <BtnComponent onClick={() => removeAchievements(item.id || '')}>
+                                    <img
+                                        className="close"
+                                        src={close.src}
+                                        alt=""
+                                    />
+                                </BtnComponent>
                             }
 
-                            {resumeData.length && index !== resumeData.length - 1 && <BtnComponent  onClick={() => editEducation(item.id || '')}>
-                                <img
-                                    className="close"
-                                    src={editIcon.src}
-                                    alt=""
-                                />
-                            </BtnComponent>
+                            {resumeData.length && index !== resumeData.length - 1 &&
+                                <BtnComponent onClick={() => editEducation(item.id || '')}>
+                                    <img
+                                        className="close"
+                                        src={editIcon.src}
+                                        alt=""
+                                    />
+                                </BtnComponent>
                             }
                             <ResumeInputCom>
                                 <div className="title">سال دریافت</div>
@@ -197,10 +214,12 @@ export default function ({
                         src={add.src} alt="" className="icon"/>
                 </AddBtn>
             </ButtonContainer>
-            <Button disabled={resumeData.length < 2} typeof='submit'
-                    onClick={submit}
-                    className={StyleModules['confirm_button']}
-                    type="primary">
+            <Button
+                disabled={resumeData.length < 2 && errors.length}
+                typeof='submit'
+                onClick={submit}
+                className={StyleModules['confirm_button']}
+                type="primary">
                 بعدی
             </Button>
         </>

@@ -96,7 +96,32 @@ export default function ({year, setGender, me}) {
 
 
     const finishHandler = async () => {
-
+        if (!resumeData[resumeData.length - 1]?.link || !resumeData[resumeData.length - 1]?.year || !resumeData[resumeData.length - 1]?.field) {
+            if (me?.role === 'n') {
+                await axiosInstance.patch('user-api/users/me', {
+                    ask_for_interview_role: true
+                }).then(res => {
+                    router.push('/questioner/resume')
+                }).catch(error => {
+                    const errorMessage = error.response?.data[Object.keys(error.response.data)[0]][0];
+                    message.error(errorMessage)
+                })
+            } else {
+                router.push('/questioner/resume')
+            }
+        } else {
+            axiosInstance.post(`user-api/users/${me?.id}/resume/${me?.resume?.id}/research-histories/`, resumeData[resumeData.length - 1]).then(res => {
+                if (res?.status === 201) {
+                    setResumeData([...resumeData.slice(0, resumeData.length - 1), res.data, {
+                        link: undefined, year: undefined, field: undefined
+                    }]);
+                    message.success('با موفقیت اضافه شد')
+                }
+            }).catch(error => {
+                const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
+                message.error(ERROR_MESSAGE)
+            })
+        }
         if (me?.role === 'n') {
             await axiosInstance.patch('user-api/users/me', {
                 ask_for_interview_role: true
@@ -109,7 +134,6 @@ export default function ({year, setGender, me}) {
         } else {
             router.push('/questioner/resume')
         }
-
     }
 
     return (<>
@@ -191,7 +215,7 @@ export default function ({year, setGender, me}) {
                     src={add.src} alt="" className="icon"/>
             </AddBtn>
         </ButtonContainer>
-        <Button onClick={finishHandler} disabled={resumeData.length < 2} typeof='submit'
+        <Button onClick={finishHandler} disabled={resumeData.length < 2 && errors.length} typeof='submit'
                 className={StyleModules['confirm_button']}
                 type="primary">
             اتمام

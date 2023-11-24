@@ -127,7 +127,7 @@ export default function ({data, loading, setFilterParams}) {
             {data?.transactions?.length ? data?.transactions?.map((item, index) => {
                 return <TransactionItem data={item} key={item?.id}/>
             }) : (
-                <EmptyBox>خالی است</EmptyBox>
+                <EmptyBox>هیچ تراکنشی وجود ندارد</EmptyBox>
             )}
         </div>
     </TransactionContainer>)

@@ -81,8 +81,27 @@ export const WalletHeader = styled.div`
   justify-content: space-between;
   width: 100%;
   padding: 10px 0;
+
+  @media screen and (max-width: 768px) {
+    width: 95%;
+  }
+
+  @media screen and (max-width: 550px) {
+    width: 90%;
+  }
+
+  @media screen and (max-width: 450px) {
+    width: 85%;
+  }
   
- 
+  @media screen and (max-width: 768px) {
+    & .wallet_head_btn {
+      & .text {
+        display: none;
+      }
+    }
+  }
+
 `
 
 export const Refresh = styled(Button)`
@@ -100,12 +119,16 @@ export const Refresh = styled(Button)`
 `
 
 export const Title = styled.h2`
-  color:  #1D1D1D;
+  color: #1D1D1D;
   text-align: right;
   font-size: 30px;
   font-style: normal;
   font-weight: 700;
   line-height: 50px; /* 166.667% */
+
+  @media screen and (max-width: 400px) {
+    font-size: 20px;
+  }
 `
 
 export const WalletContainer = styled.div`
@@ -119,5 +142,14 @@ export const WalletContainer = styled.div`
   @media screen and (max-width: 768px) {
     flex-direction: column;
     justify-content: center;
+    width: 95%;
+  }
+
+  @media screen and (max-width: 550px) {
+    width: 90%;
+  }
+
+  @media screen and (max-width: 450px) {
+    width: 85%;
   }
 `

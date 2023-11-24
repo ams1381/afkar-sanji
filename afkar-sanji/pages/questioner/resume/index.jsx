@@ -1,7 +1,16 @@
 import React, {useEffect, useState, useRef} from "react";
 import {useRouter} from "next/router";
 import {
-    ButtonUploader, Container, CreateResume, Email, Header, InputCom, ResumeBg, Uploader, UploaderHeader
+    ButtonUploader,
+    Container,
+    ContainerResumeIndex,
+    CreateResume,
+    Email,
+    Header,
+    InputCom,
+    ResumeBg,
+    Uploader,
+    UploaderHeader
 } from "@/styles/questioner/resume/resume";
 import ResumeBox from "@/components/Questioner/Resume/ResumeBox";
 import Linkedin from 'public/Icons/2.svg'
@@ -17,10 +26,7 @@ import {LeftLight, RightLight} from "@/styles/auth/Login";
 import Image from "next/image";
 import arrowRightIcon from "@/public/Icons/Chevron Double.svg";
 import {ResumeActiveBox, BtnCom} from '@/styles/questioner/resume/resume'
-import {useQuery} from "@tanstack/react-query";
-import * as url from "url";
 
-const {Search} = Input;
 export default function ({meData, cookies}) {
     const [fileSize, setFileSize] = useState(null)
     const [link, setLink] = useState(meData?.resume?.linkedin || '')
@@ -33,9 +39,9 @@ export default function ({meData, cookies}) {
     const [resumeData, setResumeData] = useState(null)
 
     useEffect(() => {
-        if (meData?.resume?.file !== '') setIsUpload(true)
+        if (meData?.resume?.file) setIsUpload(true)
         else setIsUpload(false)
-    }, [meData]);
+    }, []);
 
     useEffect(() => {
         if (!meData.resume) {
@@ -131,8 +137,10 @@ export default function ({meData, cookies}) {
 
     const removeFileHandler = () => {
         if (meData?.resume?.file) {
-            axiosInstance.patch(`/user-api/users/${meData?.resume?.id}/resume/`, {
+            axiosInstance.patch(`/user-api/users/${meData?.resume?.id}/resume/${resumeData?.id}`, {
                 file: null
+            }).catch(err => {
+                console.log(err)
             })
         }
         setIsUpload(false);
@@ -157,8 +165,12 @@ export default function ({meData, cookies}) {
                         <div className="title">نحوه‌ی تحویل رزومه‌ی خود را انتخاب کنید</div>
                         <div className="caption"> حداقل یک مورد را کامل کنید</div>
                     </Header>
-                    <Container>
+                    <ContainerResumeIndex>
                         <div className={`container_box`}>
+                            <div className={'head'}>
+                                <div className="title">نحوه‌ی تحویل رزومه‌ی خود را انتخاب کنید</div>
+                                <div className="caption"> حداقل یک مورد را کامل کنید</div>
+                            </div>
                             <ResumeBox padding={'true'}>
                                 <Email>
                                     <img className={'icon'} src={Linkedin?.src} alt=""/>
@@ -223,10 +235,10 @@ export default function ({meData, cookies}) {
                                             multiple={false}
                                             method={null}
                                             accept=".pdf,image/*"
-                                            defaultFileList={[{
+                                            defaultFileList={meData?.resume?.file ? [{
                                                 name: meData?.resume?.file?.split('http://mah-api.codintofuture.ir/media/resume/'),
                                                 url: meData?.resume?.file
-                                            }]}
+                                            }] : null}
                                             beforeUpload={file => {
                                                 const isImageOrPDF = file.type.includes('pdf') || file.type.includes('image/');
                                                 if (!isImageOrPDF) {
@@ -248,29 +260,31 @@ export default function ({meData, cookies}) {
                                     </Upload>
                                 </Uploader>
                             </ResumeBox>
+                            <div className={'bottom_mobile_container'}>
+                                <Button
+                                    disabled={isHaveResume}
+
+                                    className={`bottom_mobile`}
+                                    onClick={() => router.push("/questioner/information")}
+                                >
+                                    ارسال به ادمین
+                                    <img src={arrowRightIcon?.src}/>
+
+                                </Button>
+                            </div>
                         </div>
-                        {/*onClick={() => router.push('dashboard/collaboration')}*/}
-                        <div style={{
-                            marginRight: '0', width: '100%', display: 'flex', justifyContent: ' end'
-                        }}>
+                        <div className={'btnContainer'}>
                             <Button
                                 disabled={isHaveResume}
-                                style={{
-                                    marginTop: '100px',
-                                    padding: '0 15px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '5px'
-                                }}
+
                                 className={`bottom`}
                                 onClick={() => router.push("/questioner/information")}
                             >
                                 ارسال به ادمین
                                 <img src={arrowRightIcon?.src}/>
-
                             </Button>
                         </div>
-                    </Container>
+                    </ContainerResumeIndex>
                 </motion.div>
             </AnimatePresence>
 

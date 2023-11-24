@@ -66,6 +66,12 @@ export const QuestionBox = styled.div`
   height: 90%;
   position: relative;
   padding: 40px;
+
+  @media screen and (max-width: 868px) {
+    width: 99vw;
+    padding: 4px;
+    margin-top: 60px;
+  }
 `
 
 export const ImageWallpaper = styled.img`
@@ -101,9 +107,33 @@ export const Header = styled.div`
   padding-top: 40px;
   z-index: 2;
 
-  @media screen and (max-width: 768px) {
+  & .bottom {
+    margin-top: 108px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 15px;
+  }
+  
+  & .mobile_btn {
+    display: none;
+    @media screen and (max-width: 868px) {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 25px;
+      height: 40px;
+    }
+  }
+
+  @media screen and (max-width: 868px) {
     flex-direction: column;
     justify-content: center;
+    padding-top: 68px;
+    & .bottom {
+      display: none;
+    }
   }
 `
 
@@ -142,7 +172,7 @@ export const RightHeader = styled.div`
     border: 1px solid var(--login-input-default-border);
   }
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 868px) {
     > .bottom {
       margin-top: 10px;
     }
@@ -153,6 +183,10 @@ export const LeftHeader = styled.ul`
   display: flex;
   flex-direction: column;
   gap: 24px;
+  
+  @media screen and (max-width: 868px) {
+    gap: 33px;
+  } 
   
   > li {
     display: flex;
@@ -166,7 +200,8 @@ export const LeftHeader = styled.ul`
       font-weight: 400;
       line-height: 30px;
     }
-    
   }
+  
+ 
 `
 

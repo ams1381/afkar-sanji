@@ -323,6 +323,12 @@ input:-webkit-autofill:active {
     display: flex !important;
     flex-direction: row-reverse !important;
     gap: 25px !important;
+
+    @media screen and (max-width: 1114px) {
+        & .ant-steps-item-title {
+            display: none !important;
+        }
+    }
 }
 
 .ant-steps-item-tail {
@@ -331,6 +337,10 @@ input:-webkit-autofill:active {
 
 .ant-input-group-wrapper.ant-input-search.css-dev-only-do-not-override-pr0fja {
     background: red !important;
+}
+
+#scrollableDiv::-webkit-scrollbar {
+    display: none;
 }
 
 /*.ant-select-selector {*/

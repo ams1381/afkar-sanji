@@ -4,6 +4,10 @@ export const TransactionContainer = styled.div`
   width: 33%;
   height: 60vh;
 
+    @media screen and (max-width:768px) {
+    width: 100%;
+  }
+
   & .transactioContainer {
     margin-top: 24px;
     max-height: 100%;

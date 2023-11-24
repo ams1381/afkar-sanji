@@ -1,7 +1,7 @@
 import {
     BtnComponent, FromResumeItem, InputCom, ResumeInputCom, RowCom, FromStepScroll, ButtonContainer, AddBtn, Btn
 } from "@/styles/questioner/resume/resume";
-import {Row} from "@/styles/questioner/information";
+import {Row} from "@/styles/questioner/resume/resume";
 import {Button, message, Select, Skeleton} from "antd";
 import close from "@/public/Icons/Close.svg";
 import React, {useEffect, useState} from "react";
@@ -15,8 +15,7 @@ import editIcon from '@/public/Icons/editEesume.svg'
 
 
 export default function ({
-                             educations, year, setCurrent,
-                             me, setTitle
+                             educations, year, setCurrent, me, setTitle
                          }) {
     const [resumeData, setResumeData] = useState([]);
     const [isLoading, setIsLoading] = useState(false)
@@ -25,16 +24,14 @@ export default function ({
         axiosInstance.get(`/user-api/users/${me?.id}/resume/${me?.resume?.id}/educational-backgrounds/`).then(res => {
             setIsLoading(false)
             // setIsData(res?.data)
-            setResumeData([...res?.data,
-                {
-                    university: undefined,
-                    field: undefined,
-                    end_date: undefined,
-                    start_date: undefined,
-                    degree: undefined,
-                    edu_type: undefined
-                }
-            ])
+            setResumeData([...res?.data, {
+                university: undefined,
+                field: undefined,
+                end_date: undefined,
+                start_date: undefined,
+                degree: undefined,
+                edu_type: undefined
+            }])
         })
     }
 
@@ -48,8 +45,7 @@ export default function ({
         let errorsValus = [];
         resumeData.forEach(object => {
             let result = educationalSchema.validate(object, {abortEarly: false});
-            if (result.error?.details?.length > 0)
-                errorsValus.push(errors)
+            if (result.error?.details?.length > 0) errorsValus.push(errors)
         })
         setErrors(errorsValus);
     }, [resumeData]);
@@ -71,11 +67,9 @@ export default function ({
             const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
             message.error(ERROR_MESSAGE)
         })
-
     }
 
     async function removeEducational(id) {
-        console.log(id)
         if (id) {
             await axiosInstance.delete(`/user-api/users/${me?.id}/resume/${me?.resume?.id}/educational-backgrounds/${id}/`).then(res => {
                 if (res?.status === 204) {
@@ -96,7 +90,6 @@ export default function ({
         try {
             const updatedItem = resumeData.find(item => item.id === id);
             const index = resumeData.findIndex(item => item.id === id);
-
             const response = await axiosInstance.put(`/user-api/users/${me?.id}/resume/${me?.resume?.id}/educational-backgrounds/${id}/`, updatedItem);
             if (response.status === 200) {
                 setResumeData(prevData => {
@@ -116,140 +109,151 @@ export default function ({
     };
 
     const educationHandler = () => {
-        setCurrent(p => p + 1)
-        setTitle('مهارت‌های خود را در این بخش وارد کنید')
+        if (errors.length) {
+            setCurrent(p => p + 1)
+            setTitle('مهارت‌های خود را در این بخش وارد کنید')
+        } else {
+            axiosInstance.post(`user-api/users/${me?.id}/resume/${me?.resume?.id}/educational-backgrounds/`, resumeData[resumeData.length - 1]).then(res => {
+                if (res?.status === 201) {
+                    setResumeData([...resumeData.slice(0, resumeData.length - 1), res.data, {
+                        university: undefined,
+                        field: undefined,
+                        end_date: undefined,
+                        start_date: undefined,
+                        degree: undefined,
+                        edu_type: undefined
+                    }]);
+                    message.success('با موفقیت اضافه شد')
+                    setCurrent(p => p + 1)
+                    setTitle('مهارت‌های خود را در این بخش وارد کنید')
+                }
+            }).catch(error => {
+                const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
+                message.error(ERROR_MESSAGE)
+            })
+        }
     }
 
-    return (
-        <>
-            {isLoading ? (
-                <div style={{
-                    display: 'flex',
-                    alignItems: "center",
-                    gap: '20px', flexWrap: 'wrap'
-                }}>
-                    <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '200px'}}/>
-                    <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '200px'}}/>
-                    <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '200px'}}/>
-                    <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: ' 646px'}}/>
-                </div>
-            ) : (
-                <FromStepScroll>
-                    {resumeData.map((item, index) => (<FromResumeItem flexDirection={'column'} key={index}>
-                        <Row>
-                            <ResumeInputCom>
-                                <div className="title">مقطع مدرک</div>
-                                <Select
-                                    suffixIcon={<img src={arrowDownIcon?.src}/>}
-                                    className={'ant-select-selector'}
-                                    style={{
-                                        width: '100%',
-                                        height: '40px',
-                                        textAlign: 'right',
-                                        padding: '0',
-                                        boxShadow: 'none',
-                                        direction: 'rtl'
-                                    }}
-                                    placeholder={'PHD : مثال'}
-                                    options={educations}
-                                    value={resumeData[index]?.degree}
-                                    onChange={e => setResumeData(prevData => {
-                                        const updatedData = [...prevData];
-                                        updatedData[index].degree = e;
-                                        return updatedData;
-                                    })}
+    return (<>
+            {isLoading ? (<div style={{
+                display: 'flex', alignItems: "center", gap: '20px', flexWrap: 'wrap'
+            }}>
+                <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '200px'}}/>
+                <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '200px'}}/>
+                <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '200px'}}/>
+                <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: ' 646px'}}/>
+            </div>) : (<FromStepScroll>
+                {resumeData.map((item, index) => (<FromResumeItem flexDirection={'column'} key={index}>
+                    <Row>
+                        <ResumeInputCom>
+                            <div className="title">مقطع مدرک</div>
+                            <Select
+                                suffixIcon={<img src={arrowDownIcon?.src}/>}
+                                className={'ant-select-selector'}
+                                style={{
+                                    width: '100%',
+                                    height: '40px',
+                                    textAlign: 'right',
+                                    padding: '0',
+                                    boxShadow: 'none',
+                                    direction: 'rtl'
+                                }}
+                                placeholder={'PHD : مثال'}
+                                options={educations}
+                                value={resumeData[index]?.degree}
+                                onChange={e => setResumeData(prevData => {
+                                    const updatedData = [...prevData];
+                                    updatedData[index].degree = e;
+                                    return updatedData;
+                                })}
+                            />
+                        </ResumeInputCom>
+                        <ResumeInputCom>
+                            <div className="title">سال پایان</div>
+                            <Select
+                                suffixIcon={<img src={arrowDownIcon?.src}/>}
+                                style={{
+                                    width: '100%',
+                                    height: '40px',
+                                    textAlign: 'right',
+                                    padding: '0',
+                                    boxShadow: 'none',
+                                    direction: 'rtl'
+                                }}
+                                placeholder={'انتخاب کنید'}
+                                options={year}
+                                value={resumeData[index]?.end_date}
+                                onChange={e => setResumeData(prevData => {
+                                    const updatedData = [...prevData];
+                                    updatedData[index].end_date = e;
+                                    return updatedData;
+                                })}
+                            />
+                        </ResumeInputCom>
+                        <ResumeInputCom>
+                            <div className="title">سال شروع</div>
+                            <Select
+                                suffixIcon={<img src={arrowDownIcon?.src}/>}
+                                style={{
+                                    width: '100%',
+                                    height: '40px',
+                                    textAlign: 'right',
+                                    padding: '0',
+                                    boxShadow: 'none',
+                                    direction: 'rtl'
+                                }}
+                                placeholder={'انتخاب کنید'}
+                                options={year}
+                                value={resumeData[index]?.start_date}
+                                onChange={e => setResumeData(prevData => {
+                                    const updatedData = [...prevData];
+                                    updatedData[index].start_date = e;
+                                    return updatedData;
+                                })}
+                            />
+                        </ResumeInputCom>
+                        <ResumeInputCom>
+                            <div className="title">نام مرکز</div>
+                            <InputCom placeholder={`مثال: دانشگاه‌قم`} value={resumeData[index].university}
+                                      onChange={e => setResumeData(prevData => {
+                                          const updatedData = [...prevData];
+                                          updatedData[index].university = e?.target?.value;
+                                          return updatedData;
+                                      })} direction="rtl"/>
+                        </ResumeInputCom>
+                    </Row>
+                    <RowCom>
+                        {(index > 0 && index + 1 !== resumeData.length) &&
+                            <BtnComponent onClick={() => removeEducational(item.id || '')} className="close"
+                                          shape={'circle'}>
+                                <img
+                                    src={close.src}
+                                    alt=""
                                 />
-                            </ResumeInputCom>
-                            <ResumeInputCom>
-                                <div className="title">سال پایان</div>
-                                <Select
-                                    suffixIcon={<img src={arrowDownIcon?.src}/>}
-                                    style={{
-                                        width: '100%',
-                                        height: '40px',
-                                        textAlign: 'right',
-                                        padding: '0',
-                                        boxShadow: 'none',
-                                        direction: 'rtl'
-                                    }}
-                                    placeholder={'انتخاب کنید'}
-                                    options={year}
-                                    value={resumeData[index]?.end_date}
-                                    onChange={e => setResumeData(prevData => {
-                                        const updatedData = [...prevData];
-                                        updatedData[index].end_date = e;
-                                        return updatedData;
-                                    })}
-                                />
-                            </ResumeInputCom>
-                            <ResumeInputCom>
-                                <div className="title">سال شروع</div>
-                                <Select
-                                    suffixIcon={<img src={arrowDownIcon?.src}/>}
-                                    style={{
-                                        width: '100%',
-                                        height: '40px',
-                                        textAlign: 'right',
-                                        padding: '0',
-                                        boxShadow: 'none',
-                                        direction: 'rtl'
-                                    }}
-                                    placeholder={'انتخاب کنید'}
-                                    options={year}
-                                    value={resumeData[index]?.start_date}
-                                    onChange={e => setResumeData(prevData => {
-                                        const updatedData = [...prevData];
-                                        updatedData[index].start_date = e;
-                                        return updatedData;
-                                    })}
-                                />
-                            </ResumeInputCom>
-                            <ResumeInputCom>
-                                <div className="title">نام مرکز</div>
-                                <InputCom placeholder={`مثال: دانشگاه‌قم`} value={resumeData[index].university}
-                                          onChange={e => setResumeData(prevData => {
-                                              const updatedData = [...prevData];
-                                              updatedData[index].university = e?.target?.value;
-                                              return updatedData;
-                                          })} direction="rtl"/>
-                            </ResumeInputCom>
-                        </Row>
-                        <RowCom>
-                            {(index > 0 && index + 1 !== resumeData.length) &&
-                                <BtnComponent onClick={() => removeEducational(item.id || '')} className="close"
-                                              shape={'circle'}>
-                                    <img
-                                        src={close.src}
-                                        alt=""
-                                    />
-                                </BtnComponent>}
-                            {resumeData.length && index !== resumeData.length - 1 &&
-                                <BtnComponent onClick={() => editEducation(item.id || '')}>
-                                    <img
-                                        className="close"
-                                        src={editIcon.src}
-                                        alt=""/>
-                                </BtnComponent>
-                            }
-                            <ResumeInputCom style={{
-                                width: '100%',
-                                display: 'flex',
-                                alignItems: 'flex-end'
-                            }}>
-                                <div className="title">رشته</div>
-                                <InputCom style={{width: '67%'}} direction="rtl"
-                                          value={resumeData[index].field || ''}
-                                          onChange={e => setResumeData(prevData => {
-                                              const updatedData = [...prevData];
-                                              updatedData[index].field = e?.target?.value;
-                                              return updatedData;
-                                          })}
-                                          placeholder="مثال: زبان انگلیسی، زبان عربی و"/>
-                            </ResumeInputCom>
-                        </RowCom>
-                    </FromResumeItem>))}
-                </FromStepScroll>
-            )}
+                            </BtnComponent>}
+                        {resumeData.length && index !== resumeData.length - 1 &&
+                            <BtnComponent onClick={() => editEducation(item.id || '')}>
+                                <img
+                                    className="close"
+                                    src={editIcon.src}
+                                    alt=""/>
+                            </BtnComponent>}
+                        <ResumeInputCom style={{
+                            width: '100%', display: 'flex', alignItems: 'flex-end'
+                        }}>
+                            <div className="title">رشته</div>
+                            <InputCom style={{width: '67%'}} direction="rtl"
+                                      value={resumeData[index].field || ''}
+                                      onChange={e => setResumeData(prevData => {
+                                          const updatedData = [...prevData];
+                                          updatedData[index].field = e?.target?.value;
+                                          return updatedData;
+                                      })}
+                                      placeholder="مثال: زبان انگلیسی، زبان عربی و"/>
+                        </ResumeInputCom>
+                    </RowCom>
+                </FromResumeItem>))}
+            </FromStepScroll>)}
             <ButtonContainer justify={`flex-end`}>
                 <AddBtn color={errors?.length ? '#D9D9D9' : 'var(--primary-color)'}
                         disabled={errors.length ? true : false}
@@ -259,7 +263,7 @@ export default function ({
                 </AddBtn>
             </ButtonContainer>
             <Button
-                disabled={resumeData.length < 2}
+                disabled={resumeData.length < 2 && errors.length ? true : false}
                 typeof='submit'
                 onClick={educationHandler}
                 className={StyleModules['confirm_button']}

@@ -1,12 +1,10 @@
 import React, {useEffect, useState} from "react";
-// style
 import {
     Container,
     FromStep,
     MakeHead,
 } from "@/styles/questioner/resume/resume";
-// component
-import Step from '@/components/Questioner/Resume/Step'
+import {Step} from '@/components/Questioner/Resume/Step'
 import BgSlide from "@/components/common/BgSlide";
 import {yearDete, educationsMenu, lavelMenu, edu_type} from '@/utilities/data/date'
 import Achievements from "@/components/Questioner/Resume/Achievements";
@@ -15,8 +13,8 @@ import Skills from "@/components/Questioner/Resume/Skills";
 import WorkBackgrounds from "@/components/Questioner/Resume/WorkBackgrounds";
 import ResearchHistories from "@/components/Questioner/Resume/ResearchHistories";
 import {edu_types} from '@/utilities/data/date'
-// motion
 import {AnimatePresence, motion} from 'framer-motion';
+import {StepMobile} from "@/components/Questioner/Resume/Step";
 
 export default function ({meData}) {
     const [work_backgrounds, setWork_backgrounds] = useState([{id: 1}])
@@ -32,7 +30,7 @@ export default function ({meData}) {
         0: 'سوابق تحصیلی خود را در این بخش وارد کنید',
         1: 'مهارت‌های خود را در این بخش وارد کنید',
         2: "افتخارات مرتبط با پرسش‌گری را در این بخش اضافه کنید",
-        3:'سوابق شغلی مرتبط با پرسش‌گری را در این بخش اضافه کنید',
+        3: 'سوابق شغلی مرتبط با پرسش‌گری را در این بخش اضافه کنید',
         4: 'اگر در پژوهشی شرکت داشتید در این بخش وارد کنید',
     }
 
@@ -48,6 +46,9 @@ export default function ({meData}) {
             <motion.div transition={{duration: 1}} initial={{y: 220}} animate={{y: 0}}>
                 <BgSlide/>
                 <Step current={current} onChange={onChange}/>
+                <div style={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                    <StepMobile current={current} onChange={onChange}/>
+                </div>
                 <MakeHead>
                     <div className="title">رزومه‌ساز ماح</div>
                     <div className="caption">{title}</div>
@@ -94,7 +95,7 @@ export default function ({meData}) {
                         </>)}
                         {current === 4 && (<>
                             <div className="title"> : سابقه پژوهشی ۵</div>
-                            <ResearchHistories  me={meData} research_histories={research_histories} setGender={setGender}
+                            <ResearchHistories me={meData} research_histories={research_histories} setGender={setGender}
                                                setResearch_histories={setResearch_histories} year={year}/>
                         </>)}
                     </FromStep>

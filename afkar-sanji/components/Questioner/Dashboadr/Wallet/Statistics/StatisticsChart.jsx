@@ -5,7 +5,7 @@ import {
     ChartBody,
     ChartFilter, ChartFilterRight, ChartFilterRightText, ChartFilterLeft,
     ChartHeader, Income,
-    Cost, ChartBox
+    Cost, ChartBox, ChartFilterRightEmpty
 } from "@/styles/questioner/dashboard/Wallet/Statistics/StatisticsChart";
 // lib
 import {Doughnut, ArcElement} from 'react-chartjs-2';
@@ -20,6 +20,7 @@ import styled from "styled-components";
 export default function ({data, setFilterParams}) {
     const [incomeActive, setIncomeActive] = useState(false)
     const [costActive, setCostActive] = useState(false)
+    const [isHaveData, setIsHaveState] = useState(false)
     const [chartData, setChartData] = useState({
         datasets: [
             {
@@ -69,41 +70,64 @@ export default function ({data, setFilterParams}) {
                 </div>
             </ChartHeader>
             <ChartBody>
-                {data?.plot && data?.plot ? (
-                    <ChartFilter>
-                        <ChartFilterLeft>
-                            <Income onClick={incomeHandler}
-                                    filter={incomeActive ? 'grayscale(100%) contrast(500%)' : ''}
-                                    background={incomeActive ? '#52C41A' : 'transparent'}
-                                    color={!incomeActive ? '#52C41A' : '#fff'}>
-                                <div className="text">
-                                    <img className={`icon`} src={income?.src} alt=""/>
-                                    <div>درآمد</div>
-                                </div>
-                            </Income>
-                            <Cost onClick={costHandler} filter={costActive ? 'brightness(103.5)' : ''}
-                                  background={costActive ? '#FF4D4F' : 'transparent'}
-                                  color={!costActive ? '#FF4D4F' : '#fff'}>
-                                <div className="text">
-                                    <img className={`icon`} src={cost?.src} alt=""/>
-                                    <div>هزینه</div>
-                                </div>
-                            </Cost>
-                        </ChartFilterLeft>
-                        <ChartFilterRight>
-                            <ChartFilterRightText color={`#52C41A`}>انجام پروژه پرسش‌گری</ChartFilterRightText>
-                            <ChartFilterRightText color={`#1890FF`}>پر کردن پرسش‌نامه</ChartFilterRightText>
-                        </ChartFilterRight>
-                    </ChartFilter>
-                ) : (<EmptyBox>خالی از دیتا</EmptyBox>)}
+                <ChartFilter>
+                    <ChartFilterLeft>
+                        <Income disabled={!data} onClick={incomeHandler}
+                                filter={incomeActive ? 'grayscale(100%) contrast(500%)' : ''}
+                                background={incomeActive ? '#52C41A' : 'transparent'}
+                                color={!incomeActive ? '#52C41A' : '#fff'}>
+                            <div className="text">
+                                <img className={`icon`} src={income?.src} alt=""/>
+                                <div>درآمد</div>
+                            </div>
+                        </Income>
+                        <Cost disabled={!data} onClick={costHandler} filter={costActive ? 'brightness(103.5)' : ''}
+                              background={costActive ? '#FF4D4F' : 'transparent'}
+                              color={!costActive ? '#FF4D4F' : '#fff'}>
+                            <div className="text">
+                                <img className={`icon`} src={cost?.src} alt=""/>
+                                <div>هزینه</div>
+                            </div>
+                        </Cost>
+                    </ChartFilterLeft>
+                    <ChartFilterRight>
+                        {data?.plot && data?.plot ? (
+                            <>
+                                <ChartFilterRightText color={`#52C41A`}>انجام پروژه پرسش‌گری</ChartFilterRightText>
+                                <ChartFilterRightText color={`#1890FF`}>پر کردن پرسش‌نامه</ChartFilterRightText>
+                            </>
+                        ) : <ChartFilterRightEmpty>هنوز هیچ هزینه‌ای نکرده‌اید</ChartFilterRightEmpty>}
+                    </ChartFilterRight>
+                </ChartFilter>
                 <ChartBox>
                     {data?.plot && data?.plot ? (
                         <>
-                            <Doughnut data={chartData}/>
+                            <Doughnut options={{
+                                elements: {
+                                    arc: {
+                                        borderColor: '#5360ED'
+                                    }
+                                }
+                            }} data={chartData}/>
                             <div className="text">{digitsEnToFa(data?.balance)}</div>
                         </>
                     ) : (
                         <>
+                            <Doughnut options={{
+                                elements: {
+                                    arc: {
+                                        borderColor: '#5360ED'
+                                    }
+                                }
+                            }} data={{
+                                datasets: [
+                                    {
+                                        data: [100, 0],
+                                        backgroundColor: ['#fff', '#fff']
+                                    }
+                                ]
+                            }}/>
+                            <div className="text">{digitsEnToFa(0)}</div>
                         </>
                     )}
                 </ChartBox>

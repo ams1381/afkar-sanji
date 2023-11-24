@@ -33,18 +33,9 @@ const NumericInput = (props) => {
         }
     };
 
-    // const handleBlur = () => {
-    //     let valueTemp = value;
-    //     if (value.charAt(value.length - 1) === '.' || value === '-') {
-    //         valueTemp = value.slice(0, -1);
-    //     }
-    //     onChange(valueTemp.replace(/0*(\d+)/, '$1'));
-    // };
-
     return (<Input
         {...props}
         onChange={onChange}
-        // onBlur={handleBlur}
     />);
 };
 export default function () {
@@ -68,16 +59,6 @@ export default function () {
             setMeData(res?.data)
         })
     }, []);
-    //
-    // const {
-    //     data, isLoading, error, refetch
-    // } = useQuery(['Wallet'], async () => await axiosInstance.get(`/wallet-api/wallet/my-wallet/${SetQueryParams(filterParams)}`), {
-    //     refetchOnWindowFocus: false
-    // })
-    //
-    // useEffect(() => {
-    //     refetch()
-    // }, [filterParams]);
 
 
     const [walletData, walletChart] = useQueries({
@@ -175,10 +156,10 @@ export default function () {
                                 <Icon style={{width: '14px', height: '14px'}} name={'ArrowCounterclockwise'}/>
                             </Refresh>
                             <Title>کیف پول</Title>
-                            <Button onClick={() => setChargingWallet(true)} className={`flex notBorder`}
+                            <Button onClick={() => setChargingWallet(true)} className={`flex notBorder wallet_head_btn`}
                                     typeof='submit'
                                     type="primary">
-                                شارژ کیف‌پول
+                                <div className="text">شارژ کیف‌پول</div>
                                 <Icon name={'Wallet2'}/>
                             </Button>
                         </WalletHeader>
