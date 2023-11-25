@@ -17,7 +17,7 @@ export const Container = styled.div`
   margin: 50px auto;
 
   @media screen and (500px <= width <= 868px) {
-    height: 70vh;
+    height: 90vh;
     margin: 0 auto;
   }
 
@@ -81,6 +81,7 @@ export const ContainerResumeIndex = styled.div`
     width: 100%;
     display: flex;
     justify-content: end;
+    margin-top: 5rem;
     @media screen and (max-width: 686px) {
       display: none;
     }
@@ -166,7 +167,6 @@ export const ContainerResumeIndex = styled.div`
   @media screen and (max-width: 898px) {
     .container_box {
       flex-direction: column;
-
       height: 100vh;
     }
   }

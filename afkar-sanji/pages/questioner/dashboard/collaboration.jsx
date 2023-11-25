@@ -19,8 +19,6 @@ import Head from "next/head";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {Tabs} from 'antd';
 
-const {Search} = Input;
-const onSearch = (value, _e, info) => console.log(info?.source, value);
 export default function ({cookies}) {
     const [RightDrawerOpen, setRightDrawerOpen] = useState(false);
     const [StartDate, setStartDate] = useState('');
