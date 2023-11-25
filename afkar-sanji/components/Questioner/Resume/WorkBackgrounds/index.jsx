@@ -108,8 +108,7 @@ export default function ({
         if (!workData[workData.length - 1]?.position || !workData[workData.length - 1]?.company || !workData[workData.length - 1]?.start_date || !workData[workData.length - 1]?.end_date) {
             setCurrent(4)
             setTitle('اگر در پژوهشی شرکت داشتید در این بخش وارد کنید')
-        }
-        else {
+        } else {
             axiosInstance.post(`user-api/users/${me?.id}/resume/${me?.resume?.id}/work-backgrounds/`, workData[workData.length - 1]).then(res => {
                 if (res?.status === 201) {
                     setWorkData([...workData.slice(0, workData.length - 1), res.data, {
@@ -126,11 +125,26 @@ export default function ({
         }
     }
 
+
+    const [width, setWidth] = useState(0)
+
+    useEffect(() => {
+        function handleResize() {
+            setWidth(window.innerWidth);
+        }
+
+        window.addEventListener('resize', handleResize);
+
+        handleResize();
+
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     return (
         <>
             {isLoading ? (
                 <div style={{
-                    display: 'flex',
+                    display: width < 470 ? 'none' : 'flex',
                     alignItems: "center",
                     gap: '20px', flexWrap: 'wrap'
                 }}>

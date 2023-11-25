@@ -117,10 +117,25 @@ export default function ({
         }
     }
 
+
+    const [width, setWidth] = useState(0)
+
+    useEffect(() => {
+        function handleResize() {
+            setWidth(window.innerWidth);
+        }
+
+        window.addEventListener('resize', handleResize);
+
+        handleResize();
+
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     return (<>
             {isLoading ? (
                 <div style={{
-                    display: 'flex',
+                    display: width < 470 ? 'none' : 'flex',
                     alignItems: "center",
                     gap: '20px', flexWrap: 'wrap'
                 }}>
@@ -192,7 +207,8 @@ export default function ({
                 </AddBtn>
             </ButtonContainer>
 
-            <Button disabled={skillsData.length < 2 && skillsData.some(skill => !skill.level || !skill.field)} typeof='submit'
+            <Button disabled={skillsData.length < 2 && skillsData.some(skill => !skill.level || !skill.field)}
+                    typeof='submit'
                     onClick={submit}
                     className={StyleModules['confirm_button']}
                     type="primary">

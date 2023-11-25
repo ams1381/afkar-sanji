@@ -5,35 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="29154757-47a8-4881-a86b-6567ed6d5799" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Questioner/Dashboadr/Collaboration/CollaborationInterView.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Dashboadr/Collaboration/CollaborationInterView.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Questioner/Dashboadr/Collaboration/CollaborationItem.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Dashboadr/Collaboration/CollaborationItem.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Questioner/Dashboadr/Wallet/Statistics/StatisticsChart.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Dashboadr/Wallet/Statistics/StatisticsChart.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Questioner/Dashboadr/Wallet/TransactionList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Dashboadr/Wallet/TransactionList.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/Questioner/Resume/Achievements/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Resume/Achievements/index.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/Questioner/Resume/EducationalBackgrounds/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Resume/EducationalBackgrounds/index.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/Questioner/Resume/ResearchHistories/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Resume/ResearchHistories/index.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/Questioner/Resume/Skills/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Resume/Skills/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Questioner/Resume/Step.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Resume/Step.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/Questioner/Resume/WorkBackgrounds/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Resume/WorkBackgrounds/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/questioner/dashboard/collaboration.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/questioner/dashboard/collaboration.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/questioner/dashboard/wallet.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/questioner/dashboard/wallet.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/questioner/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/questioner/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/questioner/information.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/questioner/information.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/questioner/resume/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/questioner/resume/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/questioner/resume/make.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/questioner/resume/make.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/styles/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/styles/globals.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/styles/questioner/dashboard/Collaboration/collaboration.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/styles/questioner/dashboard/Collaboration/collaboration.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/styles/questioner/dashboard/Wallet/Bank/Bank.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/styles/questioner/dashboard/Wallet/Bank/Bank.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/styles/questioner/dashboard/Wallet/Statistics/Statistics.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/styles/questioner/dashboard/Wallet/Statistics/Statistics.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/styles/questioner/dashboard/Wallet/Statistics/StatisticsChart.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/styles/questioner/dashboard/Wallet/Statistics/StatisticsChart.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/styles/questioner/dashboard/Wallet/transactionList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/styles/questioner/dashboard/Wallet/transactionList.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/styles/questioner/dashboard/Wallet/wallet.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/styles/questioner/dashboard/Wallet/wallet.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/styles/questioner/information.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/styles/questioner/information.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/styles/questioner/questioner.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/styles/questioner/questioner.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/styles/questioner/resume/resume.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/styles/questioner/resume/resume.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utilities/axios.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/utilities/axios.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,7 +43,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.editor",
+    "settings.editor.selected.configurable": "editor.preferences.fonts.default",
     "ts.external.directory.path": "/home/afazsad/JetBrains.WebStorm.2023.2/WebStorm-232.8660.143/plugins/javascript-impl/jsLanguageServicesImpl/external",
     "vue.rearranger.settings.migration": "true"
   }
@@ -81,7 +59,8 @@
       <workItem from="1700834418299" duration="68000" />
       <workItem from="1700834495059" duration="220000" />
       <workItem from="1700834723031" duration="43000" />
-      <workItem from="1700834778668" duration="17348000" />
+      <workItem from="1700834778668" duration="17758000" />
+      <workItem from="1700887571400" duration="2731000" />
     </task>
     <servers />
   </component>

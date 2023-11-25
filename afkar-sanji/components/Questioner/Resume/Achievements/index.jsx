@@ -124,17 +124,35 @@ export default function ({
         }
     }
 
+
+    const [width, setWidth] = useState(0);
+
+    useEffect(() => {
+        function handleResize() {
+            setWidth(window.innerWidth);
+        }
+
+        window.addEventListener('resize', handleResize);
+
+        handleResize();
+
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     return (
         <>
             {isLoading ? (
                 <div style={{
-                    display: 'flex',
+                    display: width < 470 ? 'none' : 'flex',
                     alignItems: "center",
                     gap: '20px', flexWrap: 'wrap'
                 }}>
-                    <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '202px'}}/>
-                    <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '202px'}}/> <Skeleton.Input
-                    active style={{height: '40px', minWidth: 'auto', width: '202px'}}/>
+                    <Skeleton.Input active
+                                    style={{height: '40px', minWidth: 'auto', width: width > 470 ? '201px' : '106px'}}/>
+                    <Skeleton.Input active
+                                    style={{height: '40px', minWidth: 'auto', width: width > 470 ? '201px' : '106px'}}/>
+                    <Skeleton.Input
+                        active style={{height: '40px', minWidth: 'auto', width: width > 470 ? '201px' : '106px'}}/>
                 </div>
             ) : (
                 <FromStepScroll>
@@ -150,7 +168,6 @@ export default function ({
                                     />
                                 </BtnComponent>
                             }
-
                             {resumeData.length && index !== resumeData.length - 1 &&
                                 <BtnComponent onClick={() => editEducation(item.id || '')}>
                                     <img
