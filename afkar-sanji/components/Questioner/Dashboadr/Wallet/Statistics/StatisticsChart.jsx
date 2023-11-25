@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+
 import {
     CharContainer,
     ChartBody,
@@ -6,14 +7,16 @@ import {
     ChartHeader, Income,
     Cost, ChartBox, ChartFilterRightEmpty
 } from "@/styles/questioner/dashboard/Wallet/Statistics/StatisticsChart";
+
 import {Doughnut, ArcElement} from 'react-chartjs-2';
+import Chart from 'chart.js/auto';
 import income from 'public/Icons/ArrowGren.svg'
 import cost from 'public/Icons/Arrow Circle Down.svg'
 import {digitsEnToFa} from "@persian-tools/persian-tools";
 import styled from "styled-components";
 
 export default function ({data, setFilterParams}) {
-
+    console.log(data)
     const [incomeActive, setIncomeActive] = useState(false)
     const [costActive, setCostActive] = useState(false)
     const [chartData, setChartData] = useState({
