@@ -7,8 +7,11 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  margin-bottom: 60px;
- 
+  margin-bottom: 10px;
+
+  & .skeleton {
+    margin-top: 50px;
+  }
 `
 
 export const Title = styled.h2`
@@ -26,6 +29,7 @@ export const Form = styled.form`
   display: flex;
   padding: 40px;
   width: 538px;
+  max-width: 95%;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -42,8 +46,6 @@ export const Row = styled.div`
   gap: 24px;
   width: 100%;
   direction: ${p => p.direction};
-
- 
 `
 
 export const FromItem = styled.div`
@@ -56,12 +58,16 @@ export const FromItem = styled.div`
     font-style: normal;
     font-weight: 500;
     line-height: 30px;
+
+    @media screen and (max-width: 768px) {
+      font-size: 12px;
+    }
   }
 
   & .ant-select-selector {
-    border-radius: 2px !important ;
+    border-radius: 2px !important;
   }
- 
+
 `
 
 export const TextAreaCom = styled(TextArea)`

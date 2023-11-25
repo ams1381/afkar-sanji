@@ -96,25 +96,61 @@ export default function ({year, setGender, me}) {
 
 
     const finishHandler = async () => {
-
-        // if (me?.role === 'n') {
-        //     await axiosInstance.patch('user-api/users/me', {
-        //         ask_for_interview_role: true
-        //     }).then(res => {
-        //         router.push('/questioner/resume')
-        //     }).catch(error => {
-        //         const errorMessage = error.response?.data[Object.keys(error.response.data)[0]][0];
-        //         message.error(errorMessage)
-        //     })
-        // } else {
+        if (!resumeData[resumeData.length - 1]?.link || !resumeData[resumeData.length - 1]?.year || !resumeData[resumeData.length - 1]?.field) {
+            if (me?.role === 'n') {
+                await axiosInstance.patch('user-api/users/me', {
+                    ask_for_interview_role: true
+                }).then(res => {
+                    router.push('/questioner/resume')
+                }).catch(error => {
+                    const errorMessage = error.response?.data[Object.keys(error.response.data)[0]][0];
+                    message.error(errorMessage)
+                })
+            } else {
+                router.push('/questioner/resume')
+            }
+        } else {
+            axiosInstance.post(`user-api/users/${me?.id}/resume/${me?.resume?.id}/research-histories/`, resumeData[resumeData.length - 1]).then(res => {
+                if (res?.status === 201) {
+                    setResumeData([...resumeData.slice(0, resumeData.length - 1), res.data, {
+                        link: undefined, year: undefined, field: undefined
+                    }]);
+                    message.success('با موفقیت اضافه شد')
+                }
+            }).catch(error => {
+                const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
+                message.error(ERROR_MESSAGE)
+            })
+        }
+        if (me?.role === 'n') {
+            await axiosInstance.patch('user-api/users/me', {
+                ask_for_interview_role: true
+            }).then(res => {
+                router.push('/questioner/resume')
+            }).catch(error => {
+                const errorMessage = error.response?.data[Object.keys(error.response.data)[0]][0];
+                message.error(errorMessage)
+            })
+        } else {
             router.push('/questioner/resume')
-        // }
-
+        }
     }
+
+
+    const [width, setWidth] = useState(0)
+    useEffect(() => {
+        function handleResize() {
+            setWidth(window.innerWidth);
+        }
+
+        window.addEventListener('resize', handleResize);
+        handleResize();
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     return (<>
         {isLoading ? (<div style={{
-            display: 'flex', alignItems: "center", gap: '20px', flexWrap: 'wrap'
+            display: width < 470 ? 'none' : 'flex', alignItems: "center", gap: '20px', flexWrap: 'wrap'
         }}>
             <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '202px'}}/>
             <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '202px'}}/> <Skeleton.Input
@@ -191,7 +227,7 @@ export default function ({year, setGender, me}) {
                     src={add.src} alt="" className="icon"/>
             </AddBtn>
         </ButtonContainer>
-        <Button onClick={finishHandler} disabled={resumeData.length < 2} typeof='submit'
+        <Button onClick={finishHandler} disabled={resumeData.length < 2 && errors.length} typeof='submit'
                 className={StyleModules['confirm_button']}
                 type="primary">
             اتمام

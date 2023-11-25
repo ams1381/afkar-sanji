@@ -55,8 +55,8 @@ export const ChartFilterRightText = styled.div`
   line-height: 24px;
   position: relative;
   margin-right: 10px;
-  
-  &::after{
+
+  &::after {
     position: absolute;
     content: '';
     width: 14px;
@@ -69,17 +69,29 @@ export const ChartFilterRightText = styled.div`
   }
 `
 
+export const ChartFilterRightEmpty = styled.div`
+  text-align: right;
+  color: var(--Neutral-Gray9);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 24px;
+  position: relative;
+  margin-right: 10px;
+`
 
-//left
+
 export const ChartFilterLeft = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  border-radius:  2px;
+  border-radius: 2px;
   border: 1px solid rgba(143, 143, 143, 0.20);
 `
 
-export const Income = styled.div`
+export const Income = styled.button`
+  outline: none;
+  border: none;
   display: flex;
   align-content: center;
   justify-content: space-between;
@@ -110,7 +122,9 @@ export const Income = styled.div`
   }
 `
 
-export const Cost = styled.div`
+export const Cost = styled.button`
+  outline: none;
+  border: none;
   display: flex;
   align-content: center;
   justify-content: space-between;

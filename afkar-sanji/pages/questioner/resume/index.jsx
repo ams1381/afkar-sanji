@@ -1,7 +1,16 @@
 import React, {useEffect, useState, useRef} from "react";
 import {useRouter} from "next/router";
 import {
-    ButtonUploader, Container, CreateResume, Email, Header, InputCom, ResumeBg, Uploader, UploaderHeader
+    ButtonUploader,
+    Container,
+    ContainerResumeIndex,
+    CreateResume,
+    Email,
+    Header,
+    InputCom,
+    ResumeBg,
+    Uploader,
+    UploaderHeader
 } from "@/styles/questioner/resume/resume";
 import ResumeBox from "@/components/Questioner/Resume/ResumeBox";
 import Linkedin from 'public/Icons/2.svg'
@@ -17,14 +26,11 @@ import {LeftLight, RightLight} from "@/styles/auth/Login";
 import Image from "next/image";
 import arrowRightIcon from "@/public/Icons/Chevron Double.svg";
 import {ResumeActiveBox, BtnCom} from '@/styles/questioner/resume/resume'
-import {useQuery} from "@tanstack/react-query";
-import Head from "next/head";
 
-const {Search} = Input;
 export default function ({meData, cookies}) {
     const [fileSize, setFileSize] = useState(null)
     const [link, setLink] = useState(meData?.resume?.linkedin || '')
-    const [isUpload, setIsUpload] = useState(true)
+    const [isUpload, setIsUpload] = useState(false)
     const router = useRouter()
     const [loading, setLoading] = useState(false)
     const [uploadOk, setUploadOk] = useState(false);
@@ -33,10 +39,9 @@ export default function ({meData, cookies}) {
     const [resumeData, setResumeData] = useState(null)
 
     useEffect(() => {
-        if (meData?.resume?.file)
-            setIsUpload(true)
+        if (meData?.resume?.file) setIsUpload(true)
         else setIsUpload(false)
-    }, [meData]);
+    }, []);
 
     useEffect(() => {
         if (!meData.resume) {
@@ -132,17 +137,16 @@ export default function ({meData, cookies}) {
 
     const removeFileHandler = () => {
         if (meData?.resume?.file) {
-            axiosInstance.patch(`/user-api/users/${meData?.resume?.id}/resume/`, {
+            axiosInstance.patch(`/user-api/users/${meData?.resume?.id}/resume/${resumeData?.id}`, {
                 file: null
+            }).catch(err => {
+                console.log(err)
             })
         }
         setIsUpload(false);
     }
 
     return (<>
-            <Head>
-                <title> Afkar Sanji | Resume </title>
-            </Head>
             <RightLight/>
             <LeftLight/>
             <AnimatePresence>
@@ -150,7 +154,6 @@ export default function ({meData, cookies}) {
                     <Image
                         width={28}
                         height={28}
-                        onClick={() => router.push('/')}
                         className={"close"}
                         src={closeIcon?.src}
                         alt={"بستن"}
@@ -162,8 +165,12 @@ export default function ({meData, cookies}) {
                         <div className="title">نحوه‌ی تحویل رزومه‌ی خود را انتخاب کنید</div>
                         <div className="caption"> حداقل یک مورد را کامل کنید</div>
                     </Header>
-                    <Container>
+                    <ContainerResumeIndex>
                         <div className={`container_box`}>
+                            <div className={'head'}>
+                                <div className="title">نحوه‌ی تحویل رزومه‌ی خود را انتخاب کنید</div>
+                                <div className="caption"> حداقل یک مورد را کامل کنید</div>
+                            </div>
                             <ResumeBox padding={'true'}>
                                 <Email>
                                     <img className={'icon'} src={Linkedin?.src} alt=""/>
@@ -253,36 +260,31 @@ export default function ({meData, cookies}) {
                                     </Upload>
                                 </Uploader>
                             </ResumeBox>
+                            <div className={'bottom_mobile_container'}>
+                                <Button
+                                    disabled={isHaveResume}
+
+                                    className={`bottom_mobile`}
+                                    onClick={() => router.push("/questioner/information")}
+                                >
+                                    ارسال به ادمین
+                                    <img src={arrowRightIcon?.src}/>
+
+                                </Button>
+                            </div>
                         </div>
-                        {/*onClick={() => router.push('dashboard/collaboration')}*/}
-                        <div style={{
-                            marginRight: '0', width: '100%', display: 'flex', justifyContent: ' end'
-                        }}>
-                            { (meData.role === 'i' || meData.role === 'ie') ? <Button
+                        <div className={'btnContainer'}>
+                            <Button
                                 disabled={isHaveResume}
-                                style={{
-                                    marginTop: '100px',
-                                    padding: '0 15px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '5px'
-                                }}
+
                                 className={`bottom`}
                                 onClick={() => router.push("/questioner/information")}
                             >
-
-                                <p>پنل پرسش‌گری</p>
                                 ارسال به ادمین
                                 <img src={arrowRightIcon?.src}/>
-                            </Button> : <div style={{
-                                marginTop: '100px',
-                                padding: '0 15px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '5px'
-                            }}></div>}
+                            </Button>
                         </div>
-                    </Container>
+                    </ContainerResumeIndex>
                 </motion.div>
             </AnimatePresence>
 

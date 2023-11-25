@@ -57,7 +57,6 @@ const items = [
 
 export default function ({data}) {
     const router = useRouter()
-    console.log(data)
     const [open, setOpen] = useState(false);
     const [chatModal, setChatModal] = useState(false)
     const onChange = (key) => {

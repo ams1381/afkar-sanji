@@ -20,8 +20,6 @@ export default function ({
                              setCurrent,
                              setTitle, year, me
                          }) {
-
-
     const [workData, setWorkData] = useState([]);
     const [isLoading, setIsLoading] = useState(false)
     const getData = () => {
@@ -64,7 +62,6 @@ export default function ({
             const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
             message.error(ERROR_MESSAGE)
         })
-
     }
 
     async function removeWork(id) {
@@ -107,17 +104,47 @@ export default function ({
         }
     };
 
-
     const submit = () => {
-        setCurrent(4)
-        setTitle('اگر در پژوهشی شرکت داشتید در این بخش وارد کنید')
+        if (!workData[workData.length - 1]?.position || !workData[workData.length - 1]?.company || !workData[workData.length - 1]?.start_date || !workData[workData.length - 1]?.end_date) {
+            setCurrent(4)
+            setTitle('اگر در پژوهشی شرکت داشتید در این بخش وارد کنید')
+        } else {
+            axiosInstance.post(`user-api/users/${me?.id}/resume/${me?.resume?.id}/work-backgrounds/`, workData[workData.length - 1]).then(res => {
+                if (res?.status === 201) {
+                    setWorkData([...workData.slice(0, workData.length - 1), res.data, {
+                        position: undefined, company: undefined, start_date: undefined, end_date: undefined
+                    }]);
+                    message.success('با موفقیت اضافه شد')
+                    setCurrent(4)
+                    setTitle('اگر در پژوهشی شرکت داشتید در این بخش وارد کنید')
+                }
+            }).catch(error => {
+                const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
+                message.error(ERROR_MESSAGE)
+            })
+        }
     }
+
+
+    const [width, setWidth] = useState(0)
+
+    useEffect(() => {
+        function handleResize() {
+            setWidth(window.innerWidth);
+        }
+
+        window.addEventListener('resize', handleResize);
+
+        handleResize();
+
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     return (
         <>
             {isLoading ? (
                 <div style={{
-                    display: 'flex',
+                    display: width < 470 ? 'none' : 'flex',
                     alignItems: "center",
                     gap: '20px', flexWrap: 'wrap'
                 }}>
@@ -223,7 +250,7 @@ export default function ({
                         src={add.src} alt="" className="icon"/>
                 </AddBtn>
             </ButtonContainer>
-            <Button disabled={workData.length < 2} typeof='submit'
+            <Button disabled={workData.length < 2 && errors.length} typeof='submit'
                     onClick={submit}
                     className={StyleModules['confirm_button']}
                     type="primary">

@@ -1,7 +1,7 @@
-import {StepForm, StepText} from "@/styles/questioner/resume/resume";
+import {StepForm, StepFormMobile, StepText} from "@/styles/questioner/resume/resume";
 
 
-export default function ({current, onChange}) {
+function Step({current, onChange}) {
     return (
         <StepForm current={current}
                   onChange={onChange}
@@ -38,3 +38,21 @@ export default function ({current, onChange}) {
                   ]}/>
     )
 }
+
+function StepMobile({current, onChange}) {
+    return (
+        <StepFormMobile current={current}
+                        onChange={onChange}
+                        style={{width: '100%'}}
+                        responsive={false}
+                        items={[
+                            {},
+                            {},
+                            {},
+                            {},
+                            {},
+                        ]}/>
+    )
+}
+
+export {Step, StepMobile}

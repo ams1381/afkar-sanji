@@ -13,20 +13,161 @@ export const Container = styled.div`
   gap: 60px;
   position: relative;
   width: 1140px;
+  max-width: 95%;
   margin: 50px auto;
+
+  @media screen and (500px <= width <= 868px) {
+    height: 70vh;
+    margin: 0 auto;
+  }
+
+  @media screen and (max-width: 390px) {
+    height: 120vh;
+    margin: 0 auto;
+  }
 
   & .container_box {
     width: 100%;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     gap: 40px;
     display: flex;
     margin-top: 120px;
+
+
+    .head {
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 180px;
+      display: none;
+
+      @media screen and (max-width: 868px) {
+        display: flex;
+      }
+    }
+
   }
 
-  @media screen and (max-width: 768px) {
+
+  @media screen and (max-width: 868px) {
     .container_box {
       flex-direction: column;
+      margin-top: 0;
+      height: 100vh;
+    }
+  }
+
+  .ant-select-selector {
+    border-radius: 2px !important;
+  }
+`
+
+export const ContainerResumeIndex = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 60vh;
+  gap: 60px;
+  position: relative;
+  width: 1140px;
+  max-width: 95%;
+  margin: 50px auto;
+
+  & .btnContainer {
+    margin-right: 0;
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    @media screen and (max-width: 686px) {
+      display: none;
+    }
+
+    & .bottom {
+      display: flex;
+      padding: 0 15px;
+      align-items: center;
+      gap: 5px;
+   
+    }
+  }
+
+
+  @media screen and (max-width: 898px) {
+    height: 70vh;
+    margin: 0 auto;
+  }
+
+  & .container_box {
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    display: flex;
+    margin-top: 120px;
+
+
+    & .bottom_mobile_container {
+      display: none;
+      @media screen and (max-width: 686px) {
+        margin-right: 0;
+        width: 100%;
+        display: flex;
+        justify-content: end;
+      }
+
+      & .bottom_mobile {
+        @media screen and (max-width: 686px) {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          margin-bottom: 20px;
+          gap: 10px;
+        }
+      }
+    }
+
+    .head {
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 180px;
+      display: none;
+
+      > .title {
+        text-align: center;
+        color: var(--Neutral-Gray9);
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 30px;
+      }
+
+      > .caption {
+        color: var(--Error-color);
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 24px;
+      }
+
+      @media screen and (max-width: 898px) {
+        display: flex;
+      }
+    }
+
+  }
+
+
+  @media screen and (max-width: 898px) {
+    .container_box {
+      flex-direction: column;
+
+      height: 100vh;
     }
   }
 
@@ -42,6 +183,11 @@ export const Header = styled.div`
   align-items: center;
   gap: 10px;
   margin-top: 80px;
+  
+  @media screen and (max-width: 898px) {
+    display: none;
+  }
+  
 
   > .title {
     color: var(--Neutral-Gray9);
@@ -67,6 +213,17 @@ export const ResumeBox = styled.div`
   height: 182px;
   padding: ${p => p.padding ? '24px' : '0'};
   border-radius: 6px;
+  
+  @media screen and (max-width: 898px) {
+    width: 50%;
+  }
+  @media screen and (max-width: 686px) {
+    width: 100%;
+  }
+  
+  & .ant-upload.ant-upload-select {
+    width: 100%;
+  }
 `
 
 export const ResumeBg = styled.div`
@@ -164,7 +321,7 @@ export const BtnCom = styled(Button)`
   border-right: 1px solid var(--neutral-5, #D9D9D9);
   border-bottom: 1px solid var(--neutral-5, #D9D9D9);
   background: var(--neutral-2, #FAFAFA);
-  height:42px;
+  height:40px;
   width:45px;
   display:flex;
   align-items:center;
@@ -173,8 +330,6 @@ export const BtnCom = styled(Button)`
   transform:rotate(180deg);
 `
 
-
-// resume
 export const CreateResume = styled.div`
   display: flex;
   flex-direction: column;
@@ -247,7 +402,7 @@ export const UploaderHeader =  styled.div`
 
 export const ButtonUploader = styled(Button)`
   display: flex;
-  width: 283px;
+  width: 100% !important;
   padding: 19px 12px;
   justify-content: center;
   align-items: center;
@@ -296,11 +451,36 @@ export const MakeHead = styled.div`
   }
 `
 
+export const Row = styled.div`
+  display: flex;
+  align-items: center;
+  @media screen and (max-width: 1114px) {
+    flex-wrap: wrap;
+  }
+  gap: 24px;
+  width: 100%;
+  direction: ${p => p.direction};
+`
+
 export const StepForm = styled(Steps)`
   position: fixed;
   max-width: fit-content;
   top: 20px;
   right: 20px;
+  @media screen and (max-width: 1114px) {
+    display: none !important;
+  }
+`
+
+export const StepFormMobile = styled(Steps)`
+  max-width: fit-content;
+  display: none !important;
+  @media screen and (max-width: 1114px) {
+    display: inline-block !important;
+    flex-wrap: nowrap;
+    margin-top: 60px;
+    margin-bottom: 20px;
+  }
 `
 
 export const StepText = styled.span`
@@ -313,8 +493,13 @@ export const StepText = styled.span`
 
 export const FromStep = styled.form`
   width: 646px;
+  max-width: 95%;
   margin-top: 50px;
-  
+
+  @media screen and (max-width: 1114px) {
+    margin-top: -70px;
+  }
+
   > .title {
     color: #000;
     text-align: right;
@@ -340,17 +525,19 @@ export const FromResumeItem = styled.div`
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
+  flex-wrap: wrap;
   flex-direction: ${p => p.flexDirection};
   gap: 12px;
   margin: 10px 0;
-  > .css-dev-only-do-not-override-pr0fja
-  {
+
+  > .css-dev-only-do-not-override-pr0fja {
     display: flex !important;
     padding: 20px !important;
     border-radius: 100% !important;
     width: 45px;
     height: 45px;
   }
+
   > .close {
     display: flex;
     padding: 15px;
@@ -457,8 +644,8 @@ export const ResumeInputCom = styled.div`
 
 export const ResumeActiveBox = styled.div`
   display: flex;
-  width: 331px;
-  height: 182px;
+  width: 100%;
+  height: 100%;
   padding: 24px;
   flex-direction: column;
   justify-content: center;

@@ -1,10 +1,39 @@
 import {styled} from "styled-components";
+import {QuestionerContentBox} from "@/styles/common";
+
+export const Container = styled(QuestionerContentBox)`
+  width: 84%;
+  display: flex;
+  flex-direction: column-reverse;
+`
 
 export const Collaboration = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  @media screen and (max-width: 768px) {
+    width: 95%;
+  }
 
+  @media screen and (max-width: 550px) {
+    width: 90%;
+  }
+
+  @media screen and (max-width: 450px) {
+    width: 85%;
+  }
+
+
+  & .ant-tabs-nav-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: IRANSans;
+    
+    & .ant-tabs-tab-btn {
+      font-size: 14px;
+    }
+  }
 `
 
 export const CollaborationHeader = styled.div`
@@ -64,6 +93,7 @@ export const CollaborationBody = styled.div`
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
 
+<<<<<<< HEAD
   .infinite-scroll-component__outerdiv
   {
     width: 100%;
@@ -74,6 +104,15 @@ export const CollaborationBody = styled.div`
     display: flex;
     flex-direction: column;
     gap: 16px;
+=======
+
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
+
+  & #scrollableDiv::-webkit-scrollbar {
+    display: none;
+>>>>>>> origin/questioner
   }
 `
 
@@ -148,6 +187,12 @@ export const CollaborationItemHeader = styled.div`
   width: 100%;
 `
 
+export const TabSection = styled.div`
+  display: none;
+  @media screen and (max-width: 768px) {
+    display: inline-block;
+  }
+`
 
 export const CollaborationResult = styled.div`
   width: 100%;

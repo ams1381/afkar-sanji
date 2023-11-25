@@ -9,7 +9,6 @@ import StyleModules from "@/styles/auth/LoginStyles.module.css";
 import {educationalSchema, skillsSchema} from "@/utilities/validators/resumeMaker";
 import {axiosInstance} from "@/utilities/axios";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
-// icon
 import arrowDownIcon from '@/public/Icons/selectDown.svg'
 import editIcon from "@/public/Icons/editEesume.svg";
 
@@ -79,7 +78,6 @@ export default function ({
         try {
             const updatedItem = skillsData.find(item => item.id === id);
             const index = skillsData.findIndex(item => item.id === id);
-
             const response = await axiosInstance.put(`/user-api/users/${me?.id}/resume/${me?.resume?.id}/skills/${id}/`, updatedItem);
             if (response.status === 200) {
                 setSkillsData(prevData => {
@@ -99,14 +97,45 @@ export default function ({
     };
 
     function submit() {
-        setCurrent(p => p + 1)
-        setTitle("افتخارات مرتبط با پرسش‌گری را در این بخش اضافه کنید")
+        if (skillsData.some(skill => !skill.level || !skill.field)) {
+            setCurrent(p => p + 1)
+            setTitle("افتخارات مرتبط با پرسش‌گری را در این بخش اضافه کنید")
+        } else {
+            axiosInstance.post(`user-api/users/${me?.id}/resume/${me?.resume?.id}/skills/`, skillsData[skillsData.length - 1]).then(res => {
+                if (res?.status === 201) {
+                    setSkillsData([...skillsData.slice(0, skillsData.length - 1), res.data, {
+                        level: undefined, field: undefined
+                    }]);
+                    message.success('با موفقیت اضافه شد')
+                    setCurrent(p => p + 1)
+                    setTitle("افتخارات مرتبط با پرسش‌گری را در این بخش اضافه کنید")
+                }
+            }).catch(error => {
+                const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
+                message.error(ERROR_MESSAGE)
+            })
+        }
     }
+
+
+    const [width, setWidth] = useState(0)
+
+    useEffect(() => {
+        function handleResize() {
+            setWidth(window.innerWidth);
+        }
+
+        window.addEventListener('resize', handleResize);
+
+        handleResize();
+
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     return (<>
             {isLoading ? (
                 <div style={{
-                    display: 'flex',
+                    display: width < 470 ? 'none' : 'flex',
                     alignItems: "center",
                     gap: '20px', flexWrap: 'wrap'
                 }}>
@@ -146,7 +175,7 @@ export default function ({
                                     boxShadow: 'none',
                                     direction: 'rtl'
                                 }}
-                                placeholder='از ۱ تا ۱۰'
+                                placeholder='از ۱ تا ۵'
                                 options={score}
                                 value={skillsData[index]?.level}
                                 onChange={e => setSkillsData(prevData => {
@@ -177,7 +206,9 @@ export default function ({
                          src={add.src} alt="" className="icon"/>
                 </AddBtn>
             </ButtonContainer>
-            <Button disabled={skillsData.length < 2} typeof='submit'
+
+            <Button disabled={skillsData.length < 2 && skillsData.some(skill => !skill.level || !skill.field)}
+                    typeof='submit'
                     onClick={submit}
                     className={StyleModules['confirm_button']}
                     type="primary">

@@ -152,10 +152,10 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                                 {/*<Link href={(Auth.role === 'e' || Auth.role === 'n' || !Auth.hasResume) ? '/questioner/' : '/questioner/dashboard/collaboration/'}>*/}
                                     <CommonDrawerItemText active={drawerSelectedItem === 'interview-panel'}
                                           onClick={async () => {
-                                              if(!Auth.hasResume) {
+                                              if(Auth.role === 'e' || Auth.role === 'n') {
                                                   await router.push('/questioner/')
                                               }
-                                              else if(Auth.hasResume && !Auth.askForInterviewRole) {
+                                              else if(!Auth.askForInterviewRole) {
                                                   await router.push('/questioner/dashboard/collaboration/')
                                               }
                                               else {
@@ -258,10 +258,10 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                         {/*}*/}
                         <CommonDrawerItemIcon open={RightDrawerOpen ? 'active' : null}
                               onClick={async () => {
-                                  if(!Auth.hasResume) {
+                                  if(Auth.role === 'e' || Auth.role === 'n') {
                                       await router.push('/questioner/')
                                   }
-                                  else if(Auth.hasResume && !Auth.askForInterviewRole) {
+                                  else if(!Auth.askForInterviewRole) {
                                       await router.push('/questioner/dashboard/collaboration/')
                                   }
                                   else {

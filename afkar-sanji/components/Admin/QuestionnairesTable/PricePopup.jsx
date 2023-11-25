@@ -19,7 +19,7 @@ import {digitsEnToFa} from "@persian-tools/persian-tools";
 export const PricePopup = ({ setActivePrice ,
            setSelectedPricePack,
            selectedPricePack,
-           activePricePopupPopup ,
+           activePricePopup ,
            setEditPricePack ,
            refetch ,
            setPackPopupType

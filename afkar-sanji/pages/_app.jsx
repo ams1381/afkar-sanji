@@ -112,6 +112,8 @@ const RoleSetter = ({ UserData , setRefreshPage }) => {
   else
     Auth.setReqRole('question-api/questionnaires')
 
+  Auth.setUserRole(UserData.role)
+
   if(UserData.ask_for_interview_role)
     Auth.setAskForInterviewRole(true)
   if(UserData.has_wallet)
