@@ -71,19 +71,22 @@ const LevelAssignmentPage = () => {
         QuestionsArray = QuestionsArray.filter(item => item.question !== null)
         try {
             // console.log(`/admin-api/interviews/${InterviewQuery?.data?.data?.uuid}/${InterviewQuery.data?.data.questions[currentSlide]?.question.url_prefix}/${InterviewQuery.data?.data.questions[currentSlide]?.question.id}/`)
-            await axiosInstance.patch(`/interview-api/interviews/${InterviewQuery?.data?.data?.uuid}/${QuestionsArray[currentSlide]?.question?.url_prefix}/${QuestionsArray[currentSlide]?.question?.id}/`,{
+            await axiosInstance.post(`/interview-api/interviews/${InterviewQuery?.data?.data?.uuid}/${QuestionsArray[currentSlide]?.question?.url_prefix}/${QuestionsArray[currentSlide]?.question?.id}/set-level`,{
                 level : LevelNumber
             })
             setQuestionLevel(LevelNumber)
             InterviewQuery.refetch()
         }
         catch (err) {
-            if(err.response?.data)
+            if (err.response?.status === 500 || err.response?.status === 404)
+                MessageApi.error({
+                    content : err.response?.status === 500 ? 'خطای داخلی سرور' : 'یافت نشد',
+                })
+            else if(err.response?.data)
                 MessageApi.error({
                     content : Object.values(err.response?.data)[0],
                 })
-            else
-                console.log(err)
+
         }
         finally {
             setLevelLoading(null);

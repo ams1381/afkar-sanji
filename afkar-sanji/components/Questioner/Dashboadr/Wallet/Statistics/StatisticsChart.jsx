@@ -20,7 +20,6 @@ import styled from "styled-components";
 export default function ({data, setFilterParams}) {
     const [incomeActive, setIncomeActive] = useState(false)
     const [costActive, setCostActive] = useState(false)
-    const [isHaveData, setIsHaveState] = useState(false)
     const [chartData, setChartData] = useState({
         datasets: [
             {
@@ -100,7 +99,7 @@ export default function ({data, setFilterParams}) {
                     </ChartFilterRight>
                 </ChartFilter>
                 <ChartBox>
-                    {data?.plot && data?.plot ? (
+                    {data?.plot ? (
                         <>
                             <Doughnut options={{
                                 elements: {

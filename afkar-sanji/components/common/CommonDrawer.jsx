@@ -75,7 +75,19 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
         if(RightDrawerOpen) {
             if(window.pageYOffset >= 57 && document.querySelector('.drawer-text-column'))
                 document.querySelector('.drawer-text-column').style.height = '100%';
+
+
+           let DrawerTextItems =  document.querySelectorAll('.drawer_item_text');
+           if(DrawerTextItems.length)
+           {
+               // DrawerTextItems.forEach(DrawerTextItem => {
+               //     DrawerTextItem.addEventListener('mouseevnter',() => {
+               //          console.log(document.querySelector(`.i_${DrawerTextItem.className.split(' ')[3]} i`))
+               //     })
+               // })
+           }
         }
+
     },[RightDrawerOpen])
     const LogoutHandler = () => {
         try

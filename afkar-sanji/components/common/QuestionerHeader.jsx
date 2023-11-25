@@ -62,7 +62,8 @@ export const QuestionerHeader = ({ pageName , meData , interviewData }) => {
               <UserIconContainer>
                   {
                       Auth.isAdmin ?
-                          router?.pathname?.includes('admin')  ? <Link href={'/'}>
+                          router?.pathname?.includes('admin')  ? <Link style={{ display : 'flex' , alignItems : 'center' }}
+                                   href={'/'}>
                               <Icon style={{ width : 24 , height : 24 }} name={'AdminIcon'} />
                               </Link> : <Link href={'/admin/'} style={{ display : 'flex' , alignItems : 'center' }}>
                                   <Icon style={{ width : 24 , height : 24 }} name={'AdminIcon'} />

@@ -1,14 +1,16 @@
 import {ChatHeaderTitle, ChatMask, ChatMessageContainer} from "@/styles/common";
-import {PopupContainer,
+import {
+    PopupContainer,
     PopupHeader,
     PricePacksItemsContainer,
-    PopupInfoContainer ,
-    PricePackHeader ,
+    PopupInfoContainer,
+    PricePackHeader,
     PricePack,
     PricePaakEditButton,
     PricePackDeleteButton,
     PricePackEditButtonsContainer,
-    PricePackContainer } from "@/styles/Admin/userInfoPopup";
+    PricePackContainer, ModalMainContainer
+} from "@/styles/Admin/userInfoPopup";
 import {Icon} from "@/styles/icons";
 import React, {useEffect, useState} from "react";
 import {message, Modal, Skeleton, Tooltip} from "antd";
@@ -17,18 +19,16 @@ import {axiosInstance} from "@/utilities/axios";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
 
 export const PricePopup = ({
-           setActivePrice ,
            setSelectedPricePack,
            setActivePricePopup,
            selectedPricePack,
+           setDeletePricePackStatus,
            activePricePopup ,
            setEditPricePack ,
             setPricePacksList,
            refetch ,
            setPackPopupType
            , QuestionnaireList }) => {
-    const [ ActivePricePack , setActivePricePack ] = useState(null);
-    // const [ selectedPricePack , setSelectedPricePack ] = useState(null)
     const [ MessageApi , MessageContext ] = message.useMessage();
     const PricePacksQuery = useQuery(['PricePacksQuery'],
         async () => await axiosInstance.get('/admin-api/price-packs/'),{
@@ -39,15 +39,12 @@ export const PricePopup = ({
         if(PricePacksQuery.data?.data)
             setPricePacksList(PricePacksQuery.data?.data)
     }, [PricePacksQuery]);
-    const [ errMessage , setErrMessage ] = useState(null);
     useEffect(() => {
         if(activePricePopup && QuestionnaireList.find(item => item.id === activePricePopup.id)) {
             setSelectedPricePack(QuestionnaireList.find(item => item.id === activePricePopup.id).price_pack.id)
-            // console.log(QuestionnaireList.find(item => item.id === activePricePopup.id).price_pack)
         }
 
     }, [activePricePopup]);
-    // console.log(QuestionnaireList.find(item => item.id === activePricePopup.id),selectedPricePack)
     const setPricePack = async (PackID) => {
         try {
             // if(selectedPricePack)
@@ -66,20 +63,17 @@ export const PricePopup = ({
                         content : item
                     })
                 })
-
             }
-                // setErrMessage(Object.values(err?.response?.data)[0])
         }
     }
 
     return <>
-        {/*<ChatMask onClick={() => setActivePricePopup(null)} />*/}
         {MessageContext}
         <Modal mask={true}
                preserve={false}
                destroyOnClose={true}
                onCancel={() => setActivePricePopup(false)}
-               modalRender={(ReactNode) => <div style={{ direction : 'ltr' }}>{ReactNode}</div>}
+               modalRender={(ReactNode) => <ModalMainContainer>{ReactNode}</ModalMainContainer>}
                centered={true}
                closeIcon={true}
                title={<></>}
@@ -127,7 +121,12 @@ export const PricePopup = ({
                                 </> :
                                     PricePacksQuery.data.data.map(item => (<PricePack>
                                     { item.id === selectedPricePack && <PricePackEditButtonsContainer>
-                                        <PricePackDeleteButton onClick={() => setPackPopupType('delete')}>
+                                        <PricePackDeleteButton onClick={() => {
+                                            !item.interviews.length ? setDeletePricePackStatus('allow') :
+                                                setDeletePricePackStatus('forbidden')
+                                            console.log(item)
+                                            setPackPopupType('delete')
+                                        }}>
                                             <Icon name={'WhiteTrash'}/>
                                         </PricePackDeleteButton>
                                         <PricePaakEditButton onClick={() => {
@@ -155,8 +154,6 @@ export const PricePopup = ({
                                     </PricePackContainer>
                                 </PricePack>))
                             }
-
-
                         </PricePacksItemsContainer>
                     </PopupInfoContainer>
                 </ChatMessageContainer>
@@ -165,42 +162,4 @@ export const PricePopup = ({
         </Modal>
 
     </>
-}
-const ScrollByDrag = () => {
-    const slider = document.querySelector(".price-items-container");
-    const body = document.querySelector(".popupbody");
-    let isDown = false;
-    let startX;
-    let startY;
-    let scrollTop;
-    let scrollLeft;
-    if(!slider)
-        return
-    slider.addEventListener("mousedown", (e) => {
-        isDown = true;
-        slider.classList.add("active");
-        startX = e.pageX - body.offsetLeft;
-        startY = e.pageY - body.offsetTop;
-        scrollLeft = body.scrollLeft;
-        scrollTop = body.scrollTop;
-
-    });
-    slider.addEventListener("mouseleave", () => {
-        isDown = false;
-        slider.classList.remove("active");
-    });
-    slider.addEventListener("mouseup", () => {
-        isDown = false;
-        slider.classList.remove("active");
-    });
-    slider.addEventListener("mousemove", (e) => {
-        if (!isDown) return;
-        e.preventDefault();
-        const x = e.pageX - body.offsetLeft;
-        const y = e.pageY - body.offsetTop;
-        const yWalk = (y - startY) * 3;
-        const walk = (x - startX) * 3; //scroll-fast
-        slider.scrollLeft = scrollLeft - walk;
-        slider.scrollTop = scrollTop - yWalk;
-    });
 }

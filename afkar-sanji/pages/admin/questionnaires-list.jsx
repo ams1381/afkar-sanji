@@ -31,12 +31,14 @@ const QuestionnairesList = () => {
     const [ pricePackRemovable , setPricePackRemovable ] = useState(false);
     const [ EditPricePack , setEditPricePack ] = useState(false);
     const [ selectedPricePack , setSelectedPricePack ] = useState(null);
+    const [ deletePricePackStatus , setDeletePricePackStatus ] = useState(null);
+    const [ pricePackFilter , setPricePackFilter ] = useState(null);
     const [ pricePacksList , setPricePacksList ] = useState([]);
     const [ QuestionnairesListQuery , MeQuery , RegionsQuery ] = useQueries({
         queries : [
             {
                 queryKey : ['QuestionnairesListQuery'],
-                queryFn : async () => await axiosInstance.get(`/admin-api/interviews/${interviewSearch ? 'search-questions/' : ''}?${!interviewSearch ? `page_size=${pageSize}&page=${CurrentPage}` : ''}${levelFilter}${priceFilter}&search=${interviewSearch ? interviewSearch : ''}`),
+                queryFn : async () => await axiosInstance.get(`/admin-api/interviews/${interviewSearch ? 'search-questions/' : ''}?${!interviewSearch ? `page_size=${pageSize}&page=${CurrentPage}` : ''}${levelFilter}${priceFilter}${pricePackFilter ? pricePackFilter : ''}&search=${interviewSearch ? interviewSearch : ''}`),
                 refetchOnWindowFocus : false,
                 retry : false
             }
@@ -113,6 +115,7 @@ const QuestionnairesList = () => {
                     setActivePricePopup={setActivePricePopup}
                     QuestionnaireList={QuestionnairesListQuery.data.data.results}
                     activePricePopup={activePricePopup}
+                    setDeletePricePackStatus={setDeletePricePackStatus}
                     setPricePacksList={setPricePacksList}
                     selectedPricePack={selectedPricePack}
                     setEditPricePack={setEditPricePack}
@@ -120,6 +123,10 @@ const QuestionnairesList = () => {
                 /> : packPopupType === 'delete' ?
                         <DeletePricePackPopup
                             packPopupType={packPopupType}
+                            selectedPricePack={selectedPricePack}
+                            pricePacksList={pricePacksList}
+                            setPricePackFilter={setPricePackFilter}
+                            deletePricePackStatus={deletePricePackStatus}
                             setPackPopupType={setPackPopupType}
                             setSelectedPricePack={setSelectedPricePack}
                             pricePackRemovable={pricePackRemovable} />  :

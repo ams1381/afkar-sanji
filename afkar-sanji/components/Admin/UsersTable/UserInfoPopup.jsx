@@ -1,13 +1,10 @@
 import {
-    ChatContainer,
-    ChatHeaderContainer,
     ChatHeaderTitle,
-    ChatMask,
     ChatMessageContainer,
-    ChatPromptContainer
 } from "@/styles/common";
 import {Icon} from "@/styles/icons";
 import {
+    ModalMainContainer,
     PopupContainer,
     PopupFooter,
     PopupFooterButton,
@@ -16,7 +13,6 @@ import {
     PopupRowContainer, PopupTopButtonsContainer
 } from "@/styles/Admin/userInfoPopup";
 import {Button, Input, message, Modal} from "antd";
-import {SentMessage} from "@/components/Questioner/ChatModal/SentMessage";
 import React, {useEffect, useState} from "react";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
 import {axiosInstance} from "@/utilities/axios";
@@ -54,22 +50,17 @@ export const UserInfoPopup = ({ usersLists , UserListQuery , setPopupType , Rego
                         content : ErrorItem
                     })
                 })
-
-            // MessageApi.error({
-            //     content : Object.values(err?.response?.data)[0]
-            // })
         }
         finally {
             setInterviewAcceptLoading(false);
         }
     }
     return<>
-    {/*<ChatMask onClick={() => SetActivePopupUser(null)} />*/}
         <Modal mask={true}
                preserve={false}
                destroyOnClose={true}
                onCancel={() => SetActivePopupUser(null)}
-               modalRender={(ReactNode) => <div style={{ direction : 'ltr' }}>{ReactNode}</div>}
+               modalRender={(ReactNode) => <ModalMainContainer>{ReactNode}</ModalMainContainer>}
                centered={true}
                closeIcon={true}
                title={<></>}

@@ -1,11 +1,19 @@
 import { styled } from 'styled-components'
 import {ChatHeaderContainer , ChatContainer} from "@/styles/common";
 import {Button} from "antd";
-
+export const ModalMainContainer = styled.div`
+    direction: ltr;
+    width: fit-content;
+    margin: 0 auto;
+`
 export const PopupContainer = styled(ChatContainer)`
     height : auto;
     width: 576px;
     z-index: 100000;
+  
+  @media screen and (max-width: 600px) {
+    width: 400px;
+  }
 `
 export const PopupHeader = styled(ChatHeaderContainer)`
     box-shadow: 0px -1px 0px 0px #F0F0F0 inset;

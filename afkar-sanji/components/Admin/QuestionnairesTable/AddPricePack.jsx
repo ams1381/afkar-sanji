@@ -1,5 +1,6 @@
 import {ChatHeaderTitle, ChatMask, ChatMessageContainer} from "@/styles/common";
 import {
+    ModalMainContainer,
     PopupContainer, PopupFooter, PopupFooterButton,
     PopupHeader,
     PopupInfoContainer,
@@ -68,7 +69,7 @@ export const AddPricePack = ({ EditMode ,
                preserve={false}
                destroyOnClose={true}
                onCancel={() => setActivePricePopup(null)}
-               modalRender={(ReactNode) => <div style={{ direction : 'ltr' }}>{ReactNode}</div>}
+               modalRender={(ReactNode) => <ModalMainContainer>{ReactNode}</ModalMainContainer>}
                centered={true}
                closeIcon={true}
                title={<></>}

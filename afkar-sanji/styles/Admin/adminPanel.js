@@ -7,6 +7,17 @@ export const AdminPanelContainer = styled.div`
   width: 83.5%;
   margin: 0 auto;
   padding: 24px 0px;
+
+  @media screen and (max-width: 768px) {
+    padding-right: 15px;
+  }
+  //padding-right: 15px;
+  @media screen and (max-width: 480px)
+  {
+    padding-left: 20px;
+    width: 80%;
+    margin: 0;
+  }
 `
 export const AdminPanelHeader = styled.div`
   display: flex;
@@ -34,6 +45,10 @@ export const UsersListTopPartContainer = styled.div`
   justify-content: space-between;
   flex-direction: row-reverse;
   align-items: center;
+
+  @media screen and (max-width: 768px){
+    flex-wrap: wrap;
+  }
 `
 export const UsersListBottomPartContainer = styled.div`
   width: 100%;
@@ -41,18 +56,26 @@ export const UsersListBottomPartContainer = styled.div`
   justify-content: space-between;
   flex-direction: row-reverse;
   align-items: center;
-  
+
   .ant-select-selector
   {
     border-radius: 2px !important;
   }
-
+  @media screen and (max-width: 768px){
+    flex-wrap: wrap;
+    gap: 8px;
+  }
 `
 export const UsersListFiltersContainer = styled.div`
   display: flex;
   align-items: center;
   flex-direction: row-reverse;
   gap: 16px;
+
+  @media screen and (max-width: 480px) {
+    flex-wrap: wrap;
+    
+  }
 `
 export const AdminHeaderButton = styled.button`
   width: 32px;
@@ -116,6 +139,10 @@ export const ResetFiltersContainer = styled.div`
   display: flex;
   gap: 6px;
   flex-direction: row-reverse;
+  
+  @media screen and (max-width: 480px) {
+    flex-wrap: wrap;
+  }
 `
 export const HeaderSearchInput = styled(Input)`
   border-radius: 0 2px 2px 0px;
