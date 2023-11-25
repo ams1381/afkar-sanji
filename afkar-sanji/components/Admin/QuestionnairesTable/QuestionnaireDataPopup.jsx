@@ -21,7 +21,6 @@ export const QuestionnaireDataPopup = ({ setActiveQuestionnairePopup
       setActivePricePopup ,
        ActiveQuestionnairePopup }) => {
     return <>
-        {/*<ChatMask onClick={() => setActiveQuestionnairePopup(null)} />*/}
         <Modal mask={true}
                preserve={false}
                destroyOnClose={true}

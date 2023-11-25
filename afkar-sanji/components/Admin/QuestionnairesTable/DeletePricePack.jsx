@@ -9,6 +9,7 @@ import {axiosInstance} from "@/utilities/axios";
 export const DeletePricePackPopup = ({ pricePackRemovable ,
          pricePacksList ,
          setPricePackFilter,
+         setSelectedPricePack,
          selectedPricePack ,
          deletePricePackStatus,
          packPopupType ,
@@ -57,16 +58,21 @@ export const DeletePricePackPopup = ({ pricePackRemovable ,
                         }}>
                             <p style={{color: 'black', fontSize: 16, fontWeight: 700}}>!امکان حذف این بسته وجود
                                 ندارد</p>
-                            <p>این بسته به پرسش‌نامه های ‍ ، اختصاص یافته است. برای حذف آن ابتدا بسته پرسش‌نامه‌ها ذکر
+                            <p>این بسته به پرسش‌نامه های {
+                                pricePacksList.find(item => item.id === selectedPricePack).interviews.
+                                map(InterviewItem => <span style={{ color : 'var(--primary-color)' }}>
+                                    {InterviewItem.name}</span>)
+                            } ، اختصاص یافته است. برای حذف آن ابتدا بسته پرسش‌نامه‌ها ذکر
                                 شده را تغییر دهید.</p>
                         </div>
                     </div>
                     <div style={{width: '100%', display: 'flex', gap: 8, justifyContent: 'flex-start'}}>
                         <Button type={'primary'} onClick={() => {
+                            setSelectedPricePack(null);
                             setPackPopupType(null);
-                            let pricePacksFilterUrl = '';
-                            pricePacksList.find(item => item.id === selectedPricePack).interviews.map(InterviewItem => InterviewItem.name);
-                            // setPricePackFilter
+                            let InterviewIDsArray = pricePacksList.find(item => item.id === selectedPricePack).interviews
+                                .map(InterviewItem => InterviewItem.id);
+                            setPricePackFilter('&price_pack_id=' + InterviewIDsArray.join('&price_pack_id='))
                         }}>
                             <p>مشاهده پرسش‌نامه‌ها</p>
                         </Button>

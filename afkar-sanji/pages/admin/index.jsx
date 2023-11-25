@@ -30,8 +30,8 @@ const AdminPanel = ({ cookies }) => {
         </Head>
     <PageBox>
         <CommonDrawer isAdmin={true} RightDrawerOpen={RightDrawerOpen} setRightDrawerOpen={setRightDrawerOpen} />
-        <main style={{ width : RightDrawerOpen ? '80%' : '100%', transition : '0.3s' }}>
             <QuestionerHeader pageName='admin-panel' meData={MeQuery?.data?.data}  />
+        <main style={{ width : RightDrawerOpen ? '80%' : '100%', transition : '0.3s' }}>
             <ContentBox>
                 <AdminPanelContainer>
                 <AdminPanelHeader>
@@ -79,7 +79,6 @@ const AdminPanel = ({ cookies }) => {
                         </div>}
                 </AdminPanelContainer>
             </ContentBox>
-
         </main>
     </PageBox>
     </>

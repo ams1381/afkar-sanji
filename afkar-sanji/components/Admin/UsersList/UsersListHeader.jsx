@@ -25,6 +25,7 @@ export const UsersHeader = ({
         InterviewSearch ,
         setHasQuestionerFilter ,
         setLevelFilter,
+        setPricePackFilter,
         setPriceFilter,
         setInterviewSearch ,
         setInterviewRequestFilter,
@@ -100,6 +101,7 @@ export const UsersHeader = ({
                         }
                         setTreeSelectValue([])
                         setSeachInputValue(null)
+                        setPricePackFilter(null)
                     }}>
                         <Icon name={'ResetFilter'} />
                         <p>بازنشانی فیلتر‌ها</p>

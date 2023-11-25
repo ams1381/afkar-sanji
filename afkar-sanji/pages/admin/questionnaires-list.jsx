@@ -38,7 +38,7 @@ const QuestionnairesList = () => {
         queries : [
             {
                 queryKey : ['QuestionnairesListQuery'],
-                queryFn : async () => await axiosInstance.get(`/admin-api/interviews/${interviewSearch ? 'search-questions/' : ''}?${!interviewSearch ? `page_size=${pageSize}&page=${CurrentPage}` : ''}${levelFilter}${priceFilter}${pricePackFilter ? pricePackFilter : ''}&search=${interviewSearch ? interviewSearch : ''}`),
+                queryFn : async () => await axiosInstance.get(`/admin-api/interviews/${interviewSearch ? 'search-questions/' : ''}?${(!interviewSearch && !pricePackFilter) ? `page_size=${pageSize}&page=${CurrentPage}` : ''}${levelFilter}${priceFilter}${pricePackFilter ? pricePackFilter : ''}&search=${interviewSearch ? interviewSearch : ''}`),
                 refetchOnWindowFocus : false,
                 retry : false
             }
@@ -58,7 +58,13 @@ const QuestionnairesList = () => {
 
     useEffect(() => {
         QuestionnairesListQuery.refetch()
-    }, [CurrentPage , levelFilter , interviewSearch , priceFilter , pageSize , hasQuestionerFilter]);
+    }, [CurrentPage ,
+        levelFilter ,
+        interviewSearch ,
+        priceFilter ,
+        pricePackFilter,
+        pageSize ,
+        hasQuestionerFilter]);
     return <>
         <Head>
             <title>Afkar Sanji | Admin Panel | Questonnaires List</title>
@@ -79,6 +85,7 @@ const QuestionnairesList = () => {
                          setInterviewSearch={setInterviewSearch}
                          InterviewSearch={interviewSearch}
                          setSelectedRows={setSelectedRows}
+                         setPricePackFilter={setPricePackFilter}
                          setFilteredIDQuestionnaires={setFilteredIDQuestionnaires}
                          filteredIDQuestionnaires={filteredIDQuestionnaires}
                          setLevelFilter={setLevelFilter}
@@ -130,7 +137,7 @@ const QuestionnairesList = () => {
                             setPackPopupType={setPackPopupType}
                             setSelectedPricePack={setSelectedPricePack}
                             pricePackRemovable={pricePackRemovable} />  :
-                        <AddPricePack activePricePopup={activePricePopup}
+                        packPopupType === 'add-pack' && <AddPricePack activePricePopup={activePricePopup}
                          EditMode={EditPricePack}
                           pricePacksList={pricePacksList}
                         setEditPricePack={setEditPricePack}

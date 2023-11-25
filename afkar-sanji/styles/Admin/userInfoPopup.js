@@ -55,11 +55,12 @@ export const PopupRowContainer = styled.div`
     align-items: center;
     height: 30px;
     color: var(--Neutral-Gray6);
-  
+    overflow: auto;
   span
   {
     color : #525252;
     font-size: 14px;
+    white-space: nowrap;
   }
   a {
     color: var(--primary-color);

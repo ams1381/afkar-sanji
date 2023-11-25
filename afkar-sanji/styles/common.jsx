@@ -328,18 +328,18 @@ export const CommonDrawerContainer = styled.div`
   //  color: var(--primary-color);
   //  //filter: invert(37%) sepia(74%) saturate(1045%) hue-rotate(210deg) brightness(91%) contrast(105%);
   //}
-  .dashboard:hover .i_dashboard i
-  {
-    filter: invert(37%) sepia(74%) saturate(1045%) hue-rotate(210deg) brightness(91%) contrast(105%);
-  }
-    .drawer_item:hover
-    {
-        color: var(--primary-color);
-    }
-    .drawer_item:hover i 
-    {
-        filter: invert(37%) sepia(74%) saturate(1045%) hue-rotate(210deg) brightness(91%) contrast(105%);
-    }
+  //.dashboard:hover .i_dashboard i
+  //{
+  //  filter: invert(37%) sepia(74%) saturate(1045%) hue-rotate(210deg) brightness(91%) contrast(105%);
+  //}
+  //  .drawer_item:hover
+  //  {
+  //      color: var(--primary-color);
+  //  }
+  //  .drawer_item:hover i 
+  //  {
+  //      filter: invert(37%) sepia(74%) saturate(1045%) hue-rotate(210deg) brightness(91%) contrast(105%);
+  //  }
     .drawer_item i
     {
         width : 17px;
@@ -439,7 +439,7 @@ export const CommonDrawerItemText = styled.div`
   &:hover
   {
     background: ${p => p.active ? 'var(--drawer-active-item-bg)' : 'white'};
-    color : var(--primary-color)
+    color : ${p => p.logout ? '#ff1919' : 'var(--primary-color)'};
   }
 `
 export const CommonDrawerItemIcon = styled.div`
@@ -464,9 +464,11 @@ export const CommonDrawerItemIcon = styled.div`
      white-space: nowrap;
      transition: width 0.9s;
    }
-  &:hover
+  &:hover i
   {
-    color: var(--primary-color);
+    filter: ${p => p.logout ? 
+        'invert(28%) sepia(75%) saturate(4490%) hue-rotate(347deg) brightness(95%) contrast(118%)' : 
+        'invert(37%) sepia(74%) saturate(1045%) hue-rotate(210deg) brightness(91%) contrast(105%)'};
   }
 `
 export  const CommonDrawerTopPartContainer = styled.div`

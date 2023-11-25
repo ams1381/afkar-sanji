@@ -80,11 +80,21 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
            let DrawerTextItems =  document.querySelectorAll('.drawer_item_text');
            if(DrawerTextItems.length)
            {
-               // DrawerTextItems.forEach(DrawerTextItem => {
-               //     DrawerTextItem.addEventListener('mouseevnter',() => {
-               //          console.log(document.querySelector(`.i_${DrawerTextItem.className.split(' ')[3]} i`))
-               //     })
-               // })
+               DrawerTextItems.forEach(DrawerTextItem => {
+                   DrawerTextItem.addEventListener('mouseenter',() => {
+                       if(DrawerTextItem.className.split(' ')[3] === 'logout')
+                           document.querySelector(`.i_${DrawerTextItem.className.split(' ')[3]} i`)
+                               .setAttribute('style','filter : invert(28%) sepia(75%) saturate(4490%) hue-rotate(347deg) brightness(95%) contrast(118%);')
+                       else
+                           // console.log(DrawerTextItem.className.split(' ')[3])
+                        document.querySelector(`.i_${DrawerTextItem.className.split(' ')[3]} i`)
+                            .setAttribute('style','filter : invert(37%) sepia(74%) saturate(1045%) hue-rotate(210deg) brightness(91%) contrast(105%);')
+                   })
+                   DrawerTextItem.addEventListener('mouseleave',() => {
+                       document.querySelector(`.i_${DrawerTextItem.className.split(' ')[3]} i`)
+                           .setAttribute('style','')
+                   })
+               })
            }
         }
 
@@ -143,7 +153,6 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                         </CommonDrawerItemText>
                         {
                             !isAdmin ? <>
-                                    {/*{ getItem('role') === 'e' || getItem('role') === 'ie' &&*/}
                                         <CommonDrawerItemText
                                         onClick={() => {
                                             if (getItem('role') === 'e' || getItem('role') === 'ie') {
@@ -160,8 +169,6 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                                         active={drawerSelectedItem === 'employer-panel'}>
                                         <p>پنل کارفرمایی</p>
                                     </CommonDrawerItemText>
-                                    {/*// }*/}
-                                {/*<Link href={(Auth.role === 'e' || Auth.role === 'n' || !Auth.hasResume) ? '/questioner/' : '/questioner/dashboard/collaboration/'}>*/}
                                     <CommonDrawerItemText active={drawerSelectedItem === 'interview-panel'}
                                           onClick={async () => {
                                               if(Auth.role === 'e' || Auth.role === 'n') {
@@ -182,8 +189,6 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                                         </AskForAdminText>}
                                         <p>پنل پرسشگری</p>
                                     </CommonDrawerItemText>
-                                {/*</Link>*/}
-                                {/*<Link href={'/questioner/dashboard/wallet/'}>*/}
                                     <CommonDrawerItemText active={drawerSelectedItem === 'wallet'}
                                           onClick={async () => {
                                               if(Auth.hasWallet) {
@@ -197,7 +202,6 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                                           className='drawer_item_text wallet'>
                                         <p>کیف پول</p>
                                     </CommonDrawerItemText>
-                                {/*</Link>*/}
                                     <CommonDrawerItemText onClick={async () => {
                                         Auth.setReqRole('question-api/questionnaires')
                                         setItem('roleReq','question-api/questionnaires')
@@ -210,14 +214,14 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                             <>
                                 <Link href={'/admin/users-list'}>
                                     <CommonDrawerItemText active={drawerSelectedItem === 'users-list'}
-                                                          className='drawer_item_text'>
+                                                          className='drawer_item_text users-list'>
                                         <p>لیست کاربران</p>
                                     </CommonDrawerItemText>
                                 </Link>
                                     <Link href={'/admin/questionnaires-list'}>
                                         <CommonDrawerItemText
                                             active={drawerSelectedItem === 'questionnaires-list'}
-                                            className='drawer_item_text'>
+                                            className='drawer_item_text questionnaires-list'>
                                             <p>لیست پرسش‌نامه‌ها</p>
                                         </CommonDrawerItemText>
                                     </Link>
@@ -233,7 +237,9 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                             <p>حساب کاربری</p>
                         </CommonDrawerItemText>
                         </Link>}
-                            <CommonDrawerItemText logout={true} onClick={() => LogoutHandler()} className='drawer_item_text'>
+                            <CommonDrawerItemText logout={true}
+                                  onClick={() => LogoutHandler()}
+                                  className='drawer_item_text logout'>
                                 <p>خروج</p>
                             </CommonDrawerItemText>
                     </div>
@@ -243,13 +249,12 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                      className={'drawer-column icons-container'}>
                     <div>
                         <CommonDrawerItemIcon open={RightDrawerOpen ? 'active' : null}
-                          className={'drawer_item dashboard'} onClick={() => MessageApi.info({
+                          className={'drawer_item i_dashboard'} onClick={() => MessageApi.info({
                             content : 'این قابلیت به زودی فعال میشود'
                         })}>
                             <Icon name='DrawerHome' />
                         </CommonDrawerItemIcon>
                         { !isAdmin ? <>
-                                {/*{ getItem('role') === 'e' || getItem('role') === 'ie' &&*/}
                                     <CommonDrawerItemIcon
                                     onClick={() => {
                                         if (getItem('role') === 'e' || getItem('role') === 'ie') {
@@ -284,12 +289,11 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                               }}
                               active={drawerSelectedItem === 'interview-panel'}
                               className='drawer_item i_interviewer'>
-                            <Icon name='InterviewerPanel' style={{ position : 'relative' }}>
+                            <Icon name='InterviewerPanel'>
                                 { Auth.askForInterviewRole && <AskForAdminSign/>}
                             </Icon>
                         </CommonDrawerItemIcon>
                     {/*</Link>*/}
-                    {/*    <Link href={'/questioner/dashboard/wallet/'}>*/}
                             <CommonDrawerItemIcon active={drawerSelectedItem === 'wallet'}
                               onClick={async () => {
                                   if(Auth.hasWallet) {
@@ -303,8 +307,6 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                                   open={RightDrawerOpen ? 'active' : null} className='drawer_item i_wallet'>
                                 <Icon name='DrawerWallet'/>
                             </CommonDrawerItemIcon>
-                        {/*</Link>*/}
-                        {/*<Link href={'/'} >*/}
                             <CommonDrawerItemIcon onClick={() => {
                                 Auth.setReqRole('question-api/questionnaires')
                                 setItem('roleReq','question-api/questionnaires')
@@ -313,20 +315,19 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                                   className='drawer_item i_create-questionaire'>
                                 <Icon name='CreateQuestionnaire' />
                             </CommonDrawerItemIcon>
-                        {/*</Link>*/}
                     </>
                     : <>
                         <Link href={'/admin/users-list/'}>
                             <CommonDrawerItemIcon open={RightDrawerOpen ? 'active' : null}
                                       active={drawerSelectedItem === 'users-list'}
-                                      className='drawer_item i_wallet'>
+                                      className='drawer_item i_users-list'>
                                 <Icon name='UsersList'/>
                             </CommonDrawerItemIcon>
                         </Link>
                         <Link href={'/admin/questionnaires-list/'}>
                             <CommonDrawerItemIcon  open={RightDrawerOpen ? 'active' : null}
                                        active={drawerSelectedItem === 'questionnaires-list'}
-                                       className='drawer_item i_wallet'>
+                                       className='drawer_item i_questionnaires-list'>
                                 <Icon name='QuestionnairesList'/>
                             </CommonDrawerItemIcon>
                         </Link>
@@ -339,11 +340,12 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                        { !isAdmin && <Link href={'/questioner/dashboard/profile'}>
                            <CommonDrawerItemIcon open={RightDrawerOpen ? 'active' : null}
                                                  active={drawerSelectedItem === 'profile'}
-                                                 className='drawer_item'>
+                                                 className='drawer_item i_profile' >
                                <Icon name='UserProfile'/>
                            </CommonDrawerItemIcon>
                        </Link>}
-                       <CommonDrawerItemIcon onClick={() => LogoutHandler()} className='drawer_item i_logout'>
+                       <CommonDrawerItemIcon logout={true} onClick={() => LogoutHandler()}
+                                             className='drawer_item i_logout'>
                            <Icon name='Logout' />
                        </CommonDrawerItemIcon>
                    </div>
