@@ -16,9 +16,16 @@ import {useQuery} from "@tanstack/react-query";
 import {axiosInstance} from "@/utilities/axios";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
 
-export const PricePopup = ({ setActivePricePopup , setEditPricePack , refetch , activePricePopup , setPackPopupType , QuestionnaireList }) => {
+export const PricePopup = ({ setActivePrice ,
+           setSelectedPricePack,
+           selectedPricePack,
+           activePricePopupPopup ,
+           setEditPricePack ,
+           refetch ,
+           setPackPopupType
+           , QuestionnaireList }) => {
     const [ ActivePricePack , setActivePricePack ] = useState(null);
-    const [ selectedPricePack , setSelectedPricePack ] = useState(null)
+    // const [ selectedPricePack , setSelectedPricePack ] = useState(null)
     const [ MessageApi , MessageContext ] = message.useMessage();
     const PricePacksQuery = useQuery(['PricePacksQuery'],
         async () => await axiosInstance.get('/admin-api/price-packs/'),{
@@ -61,7 +68,7 @@ export const PricePopup = ({ setActivePricePopup , setEditPricePack , refetch , 
     //     if(document.querySelector(".price-items-container") && document.querySelector(".popupbody"))
     //         ScrollByDrag()
     // }, [document.querySelector(".price-items-container")]);
-
+    console.log(selectedPricePack)
     return <>
         {/*<ChatMask onClick={() => setActivePricePopup(null)} />*/}
         {MessageContext}
@@ -113,7 +120,7 @@ export const PricePopup = ({ setActivePricePopup , setEditPricePack , refetch , 
                                 </> :
                                     PricePacksQuery.data.data.map(item => (<PricePack>
                                     { item.id === selectedPricePack && <PricePackEditButtonsContainer>
-                                        <PricePackDeleteButton>
+                                        <PricePackDeleteButton onClick={() => setPackPopupType('delete')}>
                                             <Icon name={'WhiteTrash'}/>
                                         </PricePackDeleteButton>
                                         <PricePaakEditButton onClick={() => {

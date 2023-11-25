@@ -62,6 +62,14 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                     document.querySelector('.drawer-text-column').style.height = '91.5%';
             }
         })
+        // let DrawerTextItems = document.querySelectorAll('.drawer_item_text');
+        // if(DrawerTextItems && DrawerTextItems.length) {
+        //     DrawerTextItems.forEach(TextItem => {
+        //         TextItem.addEventListener('mousein',() => {
+        //             console.log('hi')
+        //         })
+        //     })
+        // }
     }, []);
     useEffect(() => {
         if(RightDrawerOpen) {

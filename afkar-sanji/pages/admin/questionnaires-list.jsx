@@ -13,6 +13,7 @@ import {UserInfoPopup} from "@/components/Admin/UsersTable/UserInfoPopup";
 import {QuestionnaireDataPopup} from "@/components/Admin/QuestionnairesTable/QuestionnaireDataPopup";
 import {PricePopup} from "@/components/Admin/QuestionnairesTable/PricePopup";
 import {AddPricePack} from "@/components/Admin/QuestionnairesTable/AddPricePack";
+import {DeletePricePackPopup} from "@/components/Admin/QuestionnairesTable/DeletePricePack";
 
 const QuestionnairesList = () => {
     const [ RightDrawerOpen , setRightDrawerOpen ] = useState(false);
@@ -27,7 +28,9 @@ const QuestionnairesList = () => {
     const [ filteredIDQuestionnaires , setFilteredIDQuestionnaires ] = useState([]);
     const [ hasQuestionerFilter , setHasQuestionerFilter ] = useState('');
     const [ packPopupType , setPackPopupType ] = useState('view');
+    const [ pricePackRemovable , setPricePackRemovable ] = useState(false);
     const [ EditPricePack , setEditPricePack ] = useState(false);
+    const [ selectedPricePack , setSelectedPricePack ] = useState(null);
     const [ QuestionnairesListQuery , MeQuery , RegionsQuery ] = useQueries({
         queries : [
             {
@@ -110,10 +113,18 @@ const QuestionnairesList = () => {
                     QuestionnaireList={QuestionnairesListQuery.data.data.results}
                     activePricePopup={activePricePopup}
                     setEditPricePack={setEditPricePack}
-                /> : <AddPricePack activePricePopup={activePricePopup}
+                    setSelectedPricePack={setSelectedPricePack}
+                /> : packPopupType === 'delete' ?
+                        <DeletePricePackPopup
+                            packPopupType={packPopupType}
+                            setPackPopupType={setPackPopupType}
+                            setSelectedPricePack={setSelectedPricePack}
+                            pricePackRemovable={pricePackRemovable} />  :
+                        <AddPricePack activePricePopup={activePricePopup}
                          EditMode={EditPricePack}
                         setEditPricePack={setEditPricePack}
                          setPackPopupType={setPackPopupType}
+                          selectedPricePack={selectedPricePack}
                         QuestionnaireList={QuestionnairesListQuery.data.data.results}
                         setActivePricePopup={setActivePricePopup} /> : ''}
         </PageBox>

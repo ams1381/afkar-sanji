@@ -54,7 +54,7 @@ const Profile = () => {
                   {
                     width: 370px !important;
                   }
-                  .ant-cascader-checkbox-inner , .ant-select-selection-item
+                  .ant-cascader-checkbox-inner , .ant-select-selection-item , .ant-select-dropdown
                   {
                     border-radius: 2px !important;
                   }
