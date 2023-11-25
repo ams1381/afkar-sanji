@@ -31,6 +31,7 @@ const QuestionnairesList = () => {
     const [ pricePackRemovable , setPricePackRemovable ] = useState(false);
     const [ EditPricePack , setEditPricePack ] = useState(false);
     const [ selectedPricePack , setSelectedPricePack ] = useState(null);
+    const [ pricePacksList , setPricePacksList ] = useState([]);
     const [ QuestionnairesListQuery , MeQuery , RegionsQuery ] = useQueries({
         queries : [
             {
@@ -112,6 +113,8 @@ const QuestionnairesList = () => {
                     setActivePricePopup={setActivePricePopup}
                     QuestionnaireList={QuestionnairesListQuery.data.data.results}
                     activePricePopup={activePricePopup}
+                    setPricePacksList={setPricePacksList}
+                    selectedPricePack={selectedPricePack}
                     setEditPricePack={setEditPricePack}
                     setSelectedPricePack={setSelectedPricePack}
                 /> : packPopupType === 'delete' ?
@@ -122,6 +125,7 @@ const QuestionnairesList = () => {
                             pricePackRemovable={pricePackRemovable} />  :
                         <AddPricePack activePricePopup={activePricePopup}
                          EditMode={EditPricePack}
+                          pricePacksList={pricePacksList}
                         setEditPricePack={setEditPricePack}
                          setPackPopupType={setPackPopupType}
                           selectedPricePack={selectedPricePack}

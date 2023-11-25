@@ -17,13 +17,15 @@ import {axiosInstance} from "@/utilities/axios";
 export const AddPricePack = ({ EditMode ,
          setEditPricePack
          ,setPackPopupType
+            ,pricePacksList
          , activePricePopup ,
+         selectedPricePack,
          setActivePricePopup ,
          QuestionnaireList}) => {
     const [ MessageApi , MessageContext ] = message.useMessage();
-    const [ priceValue , setPriceValue ] = useState(EditMode ? QuestionnaireList.find(item => item.id === activePricePopup.id).price_pack.price : null);
-    const [ priceDescription , setPriceDescription ] = useState(EditMode ? QuestionnaireList.find(item => item.id === activePricePopup.id).price_pack.description : null);
-    const [ priceTitle , setPriceTitle ] = useState(EditMode ? QuestionnaireList.find(item => item.id === activePricePopup.id).price_pack.name : null);
+    const [ priceValue , setPriceValue ] = useState(EditMode ? pricePacksList.find(item => item.id ===selectedPricePack).price : null);
+    const [ priceDescription , setPriceDescription ] = useState(EditMode ? pricePacksList.find(item => item.id === selectedPricePack).description : null);
+    const [ priceTitle , setPriceTitle ] = useState(EditMode ? pricePacksList.find(item => item.id === selectedPricePack).name : null);
     const [ errMessage , setErrMessage ] = useState(null);
     const [ PriceLoading , setPriceLoading ] = useState(false);
 
@@ -36,6 +38,7 @@ export const AddPricePack = ({ EditMode ,
                 price : priceValue ,
                 description : priceDescription
             })
+            setPackPopupType('view')
         } catch (err) {
             if(err?.response?.data)
                 setErrMessage(Object.values(err?.response?.data)[0])
@@ -46,7 +49,7 @@ export const AddPricePack = ({ EditMode ,
     const EditPricePackHandler = async  () => {
         setPriceLoading(true)
         try {
-            await axiosInstance.patch(`/admin-api/price-packs/${QuestionnaireList.find(item => item.id === activePricePopup.id).price_pack.id}`,{
+            await axiosInstance.patch(`/admin-api/price-packs/${selectedPricePack}/`,{
                 name : priceTitle ,
                 price : priceValue ,
                 description : priceDescription
@@ -112,10 +115,10 @@ export const AddPricePack = ({ EditMode ,
                     <AddPricePackButton loading={PriceLoading} type={'primary'} onClick={EditMode ? EditPricePackHandler : AddPricePackHandler}>
                         { EditMode ? <p>
                             ثبت تغییرات
-                        </p> : <>
+                        </p> : <span style={{ display : 'flex' , gap : 8 , alignItems : 'center' }}>
                             <p>افزودن</p>
                             <Icon style={{width : 12 , height : 12}} name={'Add'}/>
-                        </> }
+                        </span> }
                     </AddPricePackButton>
                 </ChatMessageContainer>
             </PopupContainer>

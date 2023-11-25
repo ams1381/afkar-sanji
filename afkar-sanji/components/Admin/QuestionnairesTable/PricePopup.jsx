@@ -16,11 +16,14 @@ import {useQuery} from "@tanstack/react-query";
 import {axiosInstance} from "@/utilities/axios";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
 
-export const PricePopup = ({ setActivePrice ,
+export const PricePopup = ({
+           setActivePrice ,
            setSelectedPricePack,
+           setActivePricePopup,
            selectedPricePack,
            activePricePopup ,
            setEditPricePack ,
+            setPricePacksList,
            refetch ,
            setPackPopupType
            , QuestionnaireList }) => {
@@ -32,6 +35,10 @@ export const PricePopup = ({ setActivePrice ,
             refetchOnWindowFocus : false,
             retry : false
         })
+    useEffect(() => {
+        if(PricePacksQuery.data?.data)
+            setPricePacksList(PricePacksQuery.data?.data)
+    }, [PricePacksQuery]);
     const [ errMessage , setErrMessage ] = useState(null);
     useEffect(() => {
         if(activePricePopup && QuestionnaireList.find(item => item.id === activePricePopup.id)) {
@@ -64,11 +71,7 @@ export const PricePopup = ({ setActivePrice ,
                 // setErrMessage(Object.values(err?.response?.data)[0])
         }
     }
-    // useEffect(() => {
-    //     if(document.querySelector(".price-items-container") && document.querySelector(".popupbody"))
-    //         ScrollByDrag()
-    // }, [document.querySelector(".price-items-container")]);
-    console.log(selectedPricePack)
+
     return <>
         {/*<ChatMask onClick={() => setActivePricePopup(null)} />*/}
         {MessageContext}
@@ -95,7 +98,11 @@ export const PricePopup = ({ setActivePrice ,
                     </ChatHeaderTitle>
                 </PopupHeader>
                 <ChatMessageContainer>
-                    <div onClick={() => setPackPopupType('add-pack')} style={{ textAlign : 'right' , fontSize : 14 , color : 'var(--primary-color)' , cursor : 'pointer' }}>
+                    <div onClick={() => {
+                        setEditPricePack(false)
+                        setPackPopupType('add-pack')
+                    }}
+                         style={{ textAlign : 'right' , fontSize : 14 , color : 'var(--primary-color)' , cursor : 'pointer' }}>
                         <p>یک بسته‌ جدید بسازید</p>
                     </div>
                     <PopupInfoContainer style={{ alignItems : 'flex-end' }} className={'popupbody'}>
