@@ -1,5 +1,10 @@
 import {
-    AddBtnContainer, CollaborationItem, CollaborationItemHeader, CollaborationItemLeft, CollaborationItemRight,
+    AddBtnContainer, AddResultButton, AddResultButtonContainer,
+    CollaborationHeaderTopPart,
+    CollaborationItem,
+    CollaborationItemHeader,
+    CollaborationItemLeft,
+    CollaborationItemRight, CollaborationResultButton,
 } from "@/styles/questioner/dashboard/Collaboration/collaboration";
 import {Icon} from "@/styles/icons";
 import React, {useState} from "react";
