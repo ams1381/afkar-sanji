@@ -11,7 +11,6 @@ import {digitsEnToFa} from "@persian-tools/persian-tools";
 
 
 export default function ({data}) {
-    console.log(data)
     const router = useRouter()
     const [open, setOpen] = useState(false);
     const [chatModal, setChatModal] = useState(false)
