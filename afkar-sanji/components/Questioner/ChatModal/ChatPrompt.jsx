@@ -5,7 +5,7 @@ import {useEffect, useRef, useState} from "react";
 import {axiosInstance} from "@/utilities/axios";
 import {styled} from "styled-components";
 
-export const ChatPrompt = ({ isAdmin , setMessagesItems , Questionnaire , ChatQuery , setEditableMessage , editableMessage  }) => {
+export const ChatPrompt = ({ isAdmin , receiverID , messagesItems , setMessagesItems , Questionnaire , ChatQuery , setEditableMessage , editableMessage  }) => {
     const [ promptValue , setPromptValue ] = useState(null);
     const [ SendMessageLoading , setSendMessageLoading ] = useState(false);
     const inputRef = useRef(null);
@@ -23,13 +23,21 @@ export const ChatPrompt = ({ isAdmin , setMessagesItems , Questionnaire , ChatQu
         if(!promptValue)
             return
         setSendMessageLoading(true)
+        let MessageObject = {
+            text : promptValue
+        }
+
+        if(receiverID)
+            MessageObject.receiver = receiverID;
+        if(Questionnaire)
+            MessageObject.interview = Questionnaire.id;
+        else if(messagesItems.find(item => item.interview !== null)?.interview)
+            MessageObject.interview = messagesItems.find(item => item.interview !== null)?.interview
         try {
-            await axiosInstance.post(`/${!isAdmin ? 'interview' :'admin'}-api/tickets/`,{
-                interview : Questionnaire.id ,
-                text : promptValue
-            })
+            let { data } = await axiosInstance.post(`/${!isAdmin ? 'interview' :'admin'}-api/tickets/`,MessageObject)
+            setMessagesItems(prevState => [...prevState,data])
             setPromptValue(null)
-            ChatQuery.refetch()
+            // ChatQuery.refetch()
         } catch (err) {
 
         }

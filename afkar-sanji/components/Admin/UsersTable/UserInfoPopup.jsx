@@ -81,6 +81,7 @@ export const UserInfoPopup = ({ usersLists , UserListQuery , setPopupType , Rego
                 </PopupHeader>
                 <ChatMessageContainer>
                     <PopupTopButtonsContainer>
+                        <div style={{ display : 'flex' , gap : 10 }}>
                         { UserData.resume && <Button type={'primary'} onClick={() => setPopupType('resume-popup')}>
                             مشاهده رزومه
                         </Button>}
@@ -88,6 +89,10 @@ export const UserInfoPopup = ({ usersLists , UserListQuery , setPopupType , Rego
                             <Button loading={interviewAcceptLoading} onClick={AcceptInterviewRole}>
                             تایید درخواست پرسش‌گری
                         </Button>}
+                        </div>
+                        <Button onClick={() => setPopupType('chat-popup')}>
+                            <Icon name={'SettingChatIcon'} />
+                        </Button>
                     </PopupTopButtonsContainer>
                     <PopupInfoContainer>
                         <PopupRowContainer>

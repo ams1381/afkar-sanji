@@ -19,10 +19,12 @@ export const ChatModal = ({
           isActive,
           setIsActive ,
           Questionnaire ,
+          setPopupType,
+          receiverID,
           isAdmin
       }) => {
     const ChatQuery = useQuery(['ChatQuery'],
-        async () => await axiosInstance.get(`/${!isAdmin ? 'interview' :'admin'}-api/tickets/?interview_id=${Questionnaire.id}`) ,{
+        async () => await axiosInstance.get(`/${!isAdmin ? 'interview' :'admin'}-api/tickets/${isAdmin ? `?sender_id=${receiverID}&` : ''}${Questionnaire ? `?interview_id=${Questionnaire.id}` : ''}`) ,{
             enabled : true,
             refetchOnWindowFocus : false
         })
@@ -104,7 +106,11 @@ export const ChatModal = ({
         <Modal mask={true}
                preserve={false}
                destroyOnClose={true}
-               onCancel={() => setIsActive(null)}
+               onCancel={() => {
+                   setIsActive(null)
+                   if(setPopupType)
+                       setPopupType('user-info')
+               }}
                modalRender={(ReactNode) => <ChatModalContainer>{ReactNode}</ChatModalContainer>}
                centered={true}
                closeIcon={false}
@@ -114,6 +120,7 @@ export const ChatModal = ({
                open={isActive}>
                 <ChatHeader isActive={isActive}
                     isAdmin={isAdmin}
+                    setPopupType={setPopupType}
                     setIsActive={setIsActive}/>
                 <ChatMessageContainer>
                     { ChatQuery.isLoading ? <div style={{ width : '100%' , display : 'flex' , justifyContent : 'center' }}> <TailSpin
@@ -170,8 +177,10 @@ export const ChatModal = ({
             </RecommandedContainer>}
                 <ChatPrompt isAdmin={isAdmin}
                     ChatQuery={ChatQuery}
+                    receiverID={receiverID}
                     setEditableMessage={setEditableMessage}
                     editableMessage={editableMessage}
+                    messagesItems={messagesItems}
                     setMessagesItems={setMessagesItems}
                     Questionnaire={Questionnaire} />
             {/*</ChatContainer>*/}

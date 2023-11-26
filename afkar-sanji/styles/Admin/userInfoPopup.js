@@ -29,6 +29,7 @@ export const PopupFooter = styled.div`
 export const PopupTopButtonsContainer = styled.div`
   display: flex;
   gap: 10px;
+  justify-content: space-between;
 `
 export const PopupFooterButton = styled(Button)`
     display: flex;

@@ -24,6 +24,7 @@ import {UsersTable} from "@/components/Admin/UsersTable/UsersTable";
 import {UserInfoPopup} from "@/components/Admin/UsersTable/UserInfoPopup";
 import {ResumeInfo} from "@/components/Admin/UsersTable/ResumeInfo";
 import {digitsFaToEn} from "@persian-tools/persian-tools";
+import {ChatModal} from "@/components/Questioner/ChatModal/ChatModal";
 
 const UsersListPage = () => {
     const [ RightDrawerOpen , setRightDrawerOpen ] = useState(false);
@@ -37,7 +38,7 @@ const UsersListPage = () => {
     const [ selectedRows , setSelectedRows ] = useState([]);
     const [ InterviewSearch , setInterviewSearch ] = useState(null);
     const [ PopupType , setPopupType ] = useState('user-info')
-    // await axiosInstance.get(`/admin-api/users/${userSearchValue ? 'search-users/' : ''}?role=${roleFilterValue}${interviewRequestFilter ? interviewRequestFilter : ''}&interview_name=${InterviewSearch ? InterviewSearch : ''}&page_size=${!userSearchValue ? pageSize : ''}&page=${(!userSearchValue && CurrentPage) ? CurrentPage : ''}&search=${userSearchValue ? userSearchValue : ''}`),
+
     const [ UserListQuery , MeQuery, RegionsQuery ] = useQueries({
         queries : [
             { queryKey : ['UsersListQuery'] ,
@@ -104,11 +105,16 @@ const UsersListPage = () => {
                  RegoionsData={RegionsQuery.data.data}
                   setPopupType={setPopupType}
                  ActivePopupUser={ActivePopupUser} /> :
-                <ResumeInfo
+                PopupType === 'resume-popup' ? <ResumeInfo
                     usersLists={UserListQuery.data.data.results}
                     SetActivePopupUser={SetActivePopupUser}
                     ActivePopupUser={ActivePopupUser}
-                    setPopupType={setPopupType} /> : ''}
+                    setPopupType={setPopupType} /> :
+                    <ChatModal isAdmin={true}
+                    setPopupType={setPopupType}
+                    setIsActive={SetActivePopupUser}
+                    receiverID={ActivePopupUser.id}
+                    isActive={PopupType === 'chat-popup'} /> : ''}
         </PageBox>
     </>
 
