@@ -77,7 +77,7 @@ export const InfoContainer = ({ BoxName , BoxDataName ,MeQuery , UserData , bold
     }
   return (
     <InfoBox bold={bold} error={ErrorOccured ? 'active' : null}>
-        <p>{BoxName}</p>
+        <p style={{ whiteSpace : 'nowrap' }}>{BoxName}</p>
         {userInfoMessageContext}
         <EditInfoBox editstate={editState}>
             { BoxDataName == 'gender' ?

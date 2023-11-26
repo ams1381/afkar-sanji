@@ -65,7 +65,7 @@ export const InfoBox = styled.div`
     box-shadow: ${p => p.bold ? 'none' : '0px -1px 0px 0px rgba(0, 0, 0, 0.15) inset'};
     font-size: 14px;
     align-items: center;
-    height: 50px;
+    min-height: 50px;
     background: ${p => p.loading ? 'none' : 'white'};
     color: var(--Neutral-Gray9);
     justify-content: space-between;
@@ -90,6 +90,9 @@ export const InfoBox = styled.div`
   .ant-btn
   {
     background-color: var(--primary-color);
+  }
+  @media screen and (max-width: 768px) {
+    flex-wrap: wrap;
   }
 `
 export const EditInfoBox = styled.div`

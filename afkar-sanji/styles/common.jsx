@@ -518,6 +518,8 @@ export const QuestionerContentBox = styled.div`
   
   @media screen and (max-width: 768px) {
     flex-wrap: wrap;
+    margin: 0;
+    padding: 16px 0 0 15px;
   }
 `
 export const LogoutPopoverItem = styled.div`

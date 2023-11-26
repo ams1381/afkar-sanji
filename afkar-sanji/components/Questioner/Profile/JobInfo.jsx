@@ -221,7 +221,7 @@ export const JobInfo = ({ Countries , userData ,MeQuery , regions }) => {
                     </EditButton>
                 </Link>
             </InfoBox> :
-                <InfoBox bold>
+                <InfoBox style={{ gap : 6 }} bold>
                     <p>برای دریافت پروژه این بخش را کامل کنید</p>
                     <Link href={'/questioner/'}>
                         <Button type={'primary'}>وارد کردن رزومه</Button>
