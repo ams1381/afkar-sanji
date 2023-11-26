@@ -36,8 +36,6 @@ import mediumIcon from '@/public/Icons/questionLevel/medium.svg'
 import esIcon from '@/public/Icons/questionLevel/es.svg'
 
 export default function ({data, isInterview, refreshData}) {
-
-    console.log(data)
     const getQuestions = (difficulty) => {
         return data?.questions?.filter(question => question.question.level === difficulty).map((item) => {
             return (

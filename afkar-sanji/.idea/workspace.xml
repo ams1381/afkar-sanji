@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="496321e2-4aea-4348-a674-0e3ff527a71c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Questioner/Dashboadr/Collaboration/CollaborationInterView.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Dashboadr/Collaboration/CollaborationInterView.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,6 +54,7 @@
       <workItem from="1701014083347" duration="797000" />
       <workItem from="1701014888564" duration="87000" />
       <workItem from="1701015218029" duration="445000" />
+      <workItem from="1701015691830" duration="686000" />
     </task>
     <servers />
   </component>
