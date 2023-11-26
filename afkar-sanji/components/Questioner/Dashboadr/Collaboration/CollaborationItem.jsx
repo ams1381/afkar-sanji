@@ -48,6 +48,7 @@ export default function ({data, isInterview, refreshData}) {
         });
     }
 
+    // best function
     function shouldInclude(questions) {
         if (!questions || questions.length === 0) {
             return false;
