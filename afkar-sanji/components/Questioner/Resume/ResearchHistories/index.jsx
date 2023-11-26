@@ -122,6 +122,7 @@ export default function ({year, setGender, me}) {
                 message.error(ERROR_MESSAGE)
             })
         }
+
         if (me?.role === 'n') {
             await axiosInstance.patch('user-api/users/me', {
                 ask_for_interview_role: true

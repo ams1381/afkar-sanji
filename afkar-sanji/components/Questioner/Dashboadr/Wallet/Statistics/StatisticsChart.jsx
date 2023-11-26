@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-// style
+
 import {
     CharContainer,
     ChartBody,
@@ -7,11 +7,9 @@ import {
     ChartHeader, Income,
     Cost, ChartBox, ChartFilterRightEmpty
 } from "@/styles/questioner/dashboard/Wallet/Statistics/StatisticsChart";
-// lib
+
 import {Doughnut, ArcElement} from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
-
-// icon
 import income from 'public/Icons/ArrowGren.svg'
 import cost from 'public/Icons/Arrow Circle Down.svg'
 import {digitsEnToFa} from "@persian-tools/persian-tools";
@@ -71,7 +69,7 @@ export default function ({data, setFilterParams}) {
             <ChartBody>
                 <ChartFilter>
                     <ChartFilterLeft>
-                        <Income disabled={!data} onClick={incomeHandler}
+                        <Income disabled={!data?.plot?.answering && !data?.plot?.interviewing} onClick={incomeHandler}
                                 filter={incomeActive ? 'grayscale(100%) contrast(500%)' : ''}
                                 background={incomeActive ? '#52C41A' : 'transparent'}
                                 color={!incomeActive ? '#52C41A' : '#fff'}>
@@ -80,7 +78,7 @@ export default function ({data, setFilterParams}) {
                                 <div>درآمد</div>
                             </div>
                         </Income>
-                        <Cost disabled={!data} onClick={costHandler} filter={costActive ? 'brightness(103.5)' : ''}
+                        <Cost disabled={!data?.plot?.answering && !data?.plot?.interviewing} onClick={costHandler} filter={costActive ? 'brightness(103.5)' : ''}
                               background={costActive ? '#FF4D4F' : 'transparent'}
                               color={!costActive ? '#FF4D4F' : '#fff'}>
                             <div className="text">
@@ -90,7 +88,7 @@ export default function ({data, setFilterParams}) {
                         </Cost>
                     </ChartFilterLeft>
                     <ChartFilterRight>
-                        {data?.plot && data?.plot ? (
+                        {data?.plot?.answering && data?.plot?.interviewing ? (
                             <>
                                 <ChartFilterRightText color={`#52C41A`}>انجام پروژه پرسش‌گری</ChartFilterRightText>
                                 <ChartFilterRightText color={`#1890FF`}>پر کردن پرسش‌نامه</ChartFilterRightText>
@@ -99,7 +97,7 @@ export default function ({data, setFilterParams}) {
                     </ChartFilterRight>
                 </ChartFilter>
                 <ChartBox>
-                    {data?.plot ? (
+                    {data?.plot?.answering && data?.plot?.interviewing ? (
                         <>
                             <Doughnut options={{
                                 elements: {

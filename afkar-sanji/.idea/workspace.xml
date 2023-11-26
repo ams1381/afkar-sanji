@@ -4,14 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="29154757-47a8-4881-a86b-6567ed6d5799" name="Changes" comment="">
+    <list default="true" id="496321e2-4aea-4348-a674-0e3ff527a71c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Questioner/Resume/Achievements/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Resume/Achievements/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Questioner/Resume/EducationalBackgrounds/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Resume/EducationalBackgrounds/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Questioner/Resume/ResearchHistories/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Resume/ResearchHistories/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Questioner/Resume/Skills/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Resume/Skills/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Questioner/Resume/WorkBackgrounds/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Resume/WorkBackgrounds/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/styles/questioner/resume/resume.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/styles/questioner/resume/resume.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,57 +19,46 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 2
+  &quot;associatedIndex&quot;: 3
 }</component>
-  <component name="ProjectId" id="2Ycoq90M2WBAibFePjGJGHYDIXd" />
+  <component name="ProjectId" id="2YiGVnuI0wVFFwjKapBR07kLlZx" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "questioner",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "editor.preferences.fonts.default",
-    "ts.external.directory.path": "/home/afazsad/JetBrains.WebStorm.2023.2/WebStorm-232.8660.143/plugins/javascript-impl/jsLanguageServicesImpl/external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;questioner&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="29154757-47a8-4881-a86b-6567ed6d5799" name="Changes" comment="" />
-      <created>1700834417017</created>
+      <changelist id="496321e2-4aea-4348-a674-0e3ff527a71c" name="Changes" comment="" />
+      <created>1701001013806</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1700834417017</updated>
-      <workItem from="1700834418299" duration="68000" />
-      <workItem from="1700834495059" duration="220000" />
-      <workItem from="1700834723031" duration="43000" />
-      <workItem from="1700834778668" duration="17758000" />
-      <workItem from="1700887571400" duration="2731000" />
+      <updated>1701001013806</updated>
+      <workItem from="1701001015025" duration="10233000" />
+      <workItem from="1701013403553" duration="574000" />
+      <workItem from="1701014083347" duration="797000" />
+      <workItem from="1701014888564" duration="87000" />
+      <workItem from="1701015218029" duration="445000" />
+      <workItem from="1701015691830" duration="686000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
   </component>
 </project>
