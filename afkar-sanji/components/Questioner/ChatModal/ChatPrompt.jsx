@@ -1,17 +1,21 @@
 import {Button, Input} from "antd";
 import {Icon} from "@/styles/icons";
 import {ChatPromptContainer} from "@/styles/common";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {axiosInstance} from "@/utilities/axios";
 import {styled} from "styled-components";
 
-export const ChatPrompt = ({ isAdmin , Questionnaire , ChatQuery , setEditableMessage , editableMessage  }) => {
+export const ChatPrompt = ({ isAdmin , setMessagesItems , Questionnaire , ChatQuery , setEditableMessage , editableMessage  }) => {
     const [ promptValue , setPromptValue ] = useState(null);
     const [ SendMessageLoading , setSendMessageLoading ] = useState(false);
+    const inputRef = useRef(null);
 
     useEffect(() => {
-        if(editableMessage)
-            setPromptValue(editableMessage.text)
+        if(editableMessage) {
+            setPromptValue(editableMessage.text);
+            inputRef.current?.focus();
+        }
+
         else
             setPromptValue(null)
     }, [editableMessage]);
@@ -42,8 +46,14 @@ export const ChatPrompt = ({ isAdmin , Questionnaire , ChatQuery , setEditableMe
                 text : promptValue
             })
             setEditableMessage(null)
+            setMessagesItems(prevState => {
+                let messeageArrray = prevState;
+                messeageArrray.find(item => item.id === editableMessage.id).text = promptValue;
+
+                return messeageArrray;
+            })
             setPromptValue(null)
-            ChatQuery.refetch()
+            // ChatQuery.refetch()
         } catch (err) {
 
         }
@@ -62,6 +72,8 @@ export const ChatPrompt = ({ isAdmin , Questionnaire , ChatQuery , setEditableMe
         <Input value={promptValue ? promptValue : ''}
                onKeyDown={e => e.key === 'Enter' ? editableMessage ? EditMessage() : SendMessage() : ''}
                onChange={(e) => setPromptValue(e.target.value)}
+               ref={inputRef}
+               style={{ direction : 'rtl' }}
                placeholder={'چیزی بنویسید'} />
     </ChatPromptContainer>
 }

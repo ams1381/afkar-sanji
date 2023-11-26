@@ -15,6 +15,7 @@ import { initialQuestionsSetter } from '@/utilities/stores/QuestionStore';
 import { useSelector } from 'react-redux';
 import { ReactSortable } from 'react-sortablejs';
 import {AuthContext} from "@/utilities/AuthContext";
+import {useLocalStorage} from "@/utilities/useLocalStorage";
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -55,6 +56,7 @@ const QuestionDesignPanel = ({ Questionnaire , RightDrawerOpen , QuestionnaireRe
   const [ActiveQuestion, setActiveQuestion] = useState(null);
   const [ SavedMessage , contextHolder] = message.useMessage();
   const regex = /(<([^>]+)>)/gi;
+  const { getItem } = useLocalStorage()
   const  AllQuestion = useSelector(s => s.reducer.data);
   const NonQuestions = useSelector(s => s.reducer.nonQuestionData);
   let delayTimer;
@@ -303,7 +305,7 @@ const QuestionDesignPanel = ({ Questionnaire , RightDrawerOpen , QuestionnaireRe
                 Questionnaire={Questionnaire}
                 setActiveQuestion={setActiveQuestion}
                 question={NonQuestions[0]}/> :
-                 <AddNonQuestionItem onClick={AddWelcomeHandler}  >
+                 getItem('roleReq') !== 'interview-api/interviews' && <AddNonQuestionItem onClick={AddWelcomeHandler}  >
                   <p>افزودن خوش آمد گویی</p>
                   </AddNonQuestionItem> : 
                   <LoadingQuestionItem className='question_design_item loading-skeleton' >
@@ -360,7 +362,7 @@ const QuestionDesignPanel = ({ Questionnaire , RightDrawerOpen , QuestionnaireRe
                   UUID={Questionnaire.uuid} 
                   Questionnaire={Questionnaire}
                   question={NonQuestions[1]} /> :
-                   <AddNonQuestionItem onClick={AddThanksHandler} style={{  marginTop : 10 }}>
+                     getItem('roleReq') !== 'interview-api/interviews' && <AddNonQuestionItem onClick={AddThanksHandler} style={{  marginTop : 10 }}>
                   <p>افزودن صفحه تشکر</p>
                  </AddNonQuestionItem>
                  : 

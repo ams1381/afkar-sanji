@@ -31,7 +31,7 @@ export default function ({cookies}) {
     const [nextPage, setNextPage] = useState(null);
     const [interviewsNextPage, setInterviewsNextPage] = useState(null);
     const [recommendedError, setRecommendedError] = useState('')
-    const [myInterViewError, setMyInterViewError] = useState('')
+    const [myInterViewError, setMyInterViewError] = useState('');
     const [MeQuery] = useQueries({
         queries: [{
             queryKey: ['MeQuery'],

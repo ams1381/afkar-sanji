@@ -61,8 +61,8 @@ export const DeletePricePackPopup = ({ pricePackRemovable ,
                             <p>این بسته به پرسش‌نامه های {
                                 pricePacksList.find(item => item.id === selectedPricePack).interviews.
                                 map(InterviewItem => <span style={{ color : 'var(--primary-color)' }}>
-                                    {InterviewItem.name}</span>)
-                            } ، اختصاص یافته است. برای حذف آن ابتدا بسته پرسش‌نامه‌ها ذکر
+                                    {InterviewItem.name} , </span>)
+                            }  اختصاص یافته است. برای حذف آن ابتدا بسته پرسش‌نامه‌ها ذکر
                                 شده را تغییر دهید.</p>
                         </div>
                     </div>
@@ -70,9 +70,7 @@ export const DeletePricePackPopup = ({ pricePackRemovable ,
                         <Button type={'primary'} onClick={() => {
                             setSelectedPricePack(null);
                             setPackPopupType(null);
-                            let InterviewIDsArray = pricePacksList.find(item => item.id === selectedPricePack).interviews
-                                .map(InterviewItem => InterviewItem.id);
-                            setPricePackFilter('&price_pack_id=' + InterviewIDsArray.join('&price_pack_id='))
+                            setPricePackFilter('&price_pack_id=' + selectedPricePack)
                         }}>
                             <p>مشاهده پرسش‌نامه‌ها</p>
                         </Button>

@@ -28,7 +28,7 @@ export const InterviewerBadgeText = styled.p`
     border-right: ${p => p.interview ? '2px solid var(--Outline, #D9D9D9)' : 'none'};
 `
 export const QuestionnaireDiv = styled.div`
-    height: fit-content;
+    height: 226px;
     border: ${p => p.isloading ? 'none' : '1px solid #CCCCCC'};
     border-radius: 2px;
     font-family: 'IRANSans';
@@ -137,6 +137,7 @@ export const QuestionnairePreviewButton = styled.button`
     font-family: 'IRANSANS';
     cursor : pointer;
     pointer-events : ${p => p.disabled ? 'none' : 'all'};
+  white-space: nowrap;
 `
 export const QuestionnaireSeeResultButton = styled.button`
     display: flex;
@@ -183,9 +184,12 @@ export const MainContainer = styled.div`
     margin: 0 auto;
     padding: 1rem 0 0 0;
 
-    @media screen and (max-width : 480px)
+    @media screen and (max-width : 768px)
     {
-        width: 90%;
+        //width: 90%;
+      width: 82%;
+      padding-left: 25px;
+      margin: 0;
     }
 `
 export const FolderEditContainer = styled.div`

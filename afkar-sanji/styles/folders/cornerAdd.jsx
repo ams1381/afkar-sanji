@@ -21,7 +21,7 @@ export const CornerAddButton = styled.button`
 
     @media screen and (max-width : 768px)
     {
-        right: 1rem;
+        right: 5rem;
     }
 `
 export const PopoverContainer = styled.div`

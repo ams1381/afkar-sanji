@@ -9,10 +9,12 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { SharePopOverContent } from '../Folders/SharePopover'
 import { useState } from 'react'
+import {ChatModal} from "@/components/Questioner/ChatModal/ChatModal";
 
 export const ChartsHeader = ({ QuestionnaireQuery }) => {
   const router = useRouter();
   const { setItem , getItem } = useLocalStorage();
+  const [ chatModalActive , setChatModalActive ] = useState(false);
   const [ SharePopover , setSharePopOver] = useState(false);
   const TabHeadItems = [
     {
@@ -73,6 +75,8 @@ export const ChartsHeader = ({ QuestionnaireQuery }) => {
             </PanelHeader> 
             </>:
        <>
+           { QuestionnaireQuery.data?.data && chatModalActive && <ChatModal isAdmin={false}
+                Questionnaire={Questionnaire} isActive={chatModalActive} setIsActive={setChatModalActive}/>}
        <PanelHeader>
        <QuestionnaireEditItemsInnerContainer>
             <Tabs
@@ -85,7 +89,7 @@ export const ChartsHeader = ({ QuestionnaireQuery }) => {
             </QuestionnaireEditItemsInnerContainer>
             <QuestionnaireEditButtonContainer>
                 { getItem('roleReq') !== 'interview-api/interviews' && <Link onClick={(e) => {
-                    !Questionnaire.questions.length ? e.preventDefault() : ''
+                    !QuestionnaireQuery.data?.data.questions.length ? e.preventDefault() : ''
                 }}
                      href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/view-questions/`} target='_blank'>
                     <button

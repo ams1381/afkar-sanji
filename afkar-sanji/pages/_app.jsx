@@ -20,6 +20,7 @@ export default function App({ Component, pageProps }) {
   const [ readyToRender , setReadyToRender ] = useState(false);
   const [ refreshedPage , setRefreshPage ] = useState(false);
   const [ UserData , setUserData ]= useState(null);
+  const [ networkError , setNetworkError ] = useState(false);
   // const [ phoneNum, setPhoneNumber ] = useCookie('numberPhone', null);
   axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + pageProps?.cookies?.access_token;
   axiosInstance.defaults.refresh_token = pageProps?.cookies?.refresh_token;
@@ -36,14 +37,18 @@ export default function App({ Component, pageProps }) {
         setUserData(data)
         setReadyToRender(true)
         setRefreshPage(true)
+        setNetworkError(false)
         return
       }
       catch(err)
       {
-        if(err?.response?.status ==  500)
+        if(err?.response?.status ==  500) {
           MessageApi.error({
             content : 'مشکل سمت سرور'
           })
+          setNetworkError(true)
+        }
+
         else
         {
           setTimeout(() => {
@@ -79,7 +84,9 @@ export default function App({ Component, pageProps }) {
       { readyToRender ? <>
       { refreshedPage && <RoleSetter setRefreshPage={setRefreshPage} UserData={UserData}/>}
       <Component {...pageProps} userData={UserData} />
-      </>:
+      </>: networkError ? <div style={{ display : 'flex' , alignItems : 'center' , justifyContent : 'center' , height : '100vh' }}>
+            <p>اتصال خود را چک کنید | خطای سمت سرور</p>
+          </div>:
       <div style={{ display : 'flex' , alignItems : 'center' , justifyContent : 'center' , height : '100vh' }}>
         {MessageContext}
       <ThreeDots

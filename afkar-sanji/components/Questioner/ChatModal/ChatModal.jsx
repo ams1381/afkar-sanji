@@ -13,6 +13,7 @@ import {axiosInstance} from "@/utilities/axios";
 import { VList } from "virtua";
 import {ReadyMessageToSend} from "@/components/Questioner/ChatModal/ReadyMessageToSend";
 import {FidgetSpinner, TailSpin} from "react-loader-spinner";
+import {queryClient} from "@/pages/_app";
 
 export const ChatModal = ({
           isActive,
@@ -21,7 +22,7 @@ export const ChatModal = ({
           isAdmin
       }) => {
     const ChatQuery = useQuery(['ChatQuery'],
-        async () => await axiosInstance.get(`/${!isAdmin ? 'interview' :'admin'}-api/tickets/?interview_id=${Questionnaire.id}&page_size=15`) ,{
+        async () => await axiosInstance.get(`/${!isAdmin ? 'interview' :'admin'}-api/tickets/?interview_id=${Questionnaire.id}`) ,{
             enabled : true,
             refetchOnWindowFocus : false
         })
@@ -30,66 +31,76 @@ export const ChatModal = ({
     const [ count , setCount ] = useState(null);
     const [ nextPageUrl , setNextPageUrl ] = useState(null);
     const [ prevPageUrl , setPrevPageUrl ] = useState(null);
+    const [ loadingMoreMessages , setLoadingMoreMessage ] = useState(false);
     useEffect(() => {
-        if(ChatQuery.data?.data) {
-            setMessagesItems(ChatQuery.data?.data.results)
+        if(ChatQuery.data?.data && !ChatQuery.isRefetching && !ChatQuery.isLoading) {
+            setMessagesItems(ChatQuery.data?.data.results.reverse())
             setNextPageUrl(ChatQuery.data?.data?.next)
             setPrevPageUrl(ChatQuery.data?.data?.prev)
             setCount(ChatQuery.data?.data.count)
         }
     }, [ChatQuery.data?.data]);
-    // console.log(messagesItems)
-    const id = useRef(0);
-    const createRows = (num) => {
-        const heights = [20, 40, 80, 77];
-        return Array.from({
-            length: num
-        }).map(() => {
-            const i = id.current++;
-            return <div key={i} style={{
-                height: heights[i % 4],
-                borderBottom: "solid 1px #ccc",
-                background: "#fff"
-            }}>
-                {i}
-            </div>;
-        });
-    };
+
     const ref = useRef();
     const ready = useRef(false);
 
-    useEffect(() => {
-        // if(messagesItems.length) {
-            setTimeout(() => {
-                ref.current?.scrollBy(300);
-                // ref.current?.scrollToIndex(8)
-                // console.log(ref.current)
+    const handleScroll = async () => {
+        const scrollTop = document.querySelector('.VListContainer').scrollTop;
+        const windowHeight = window.innerHeight;
+        const offset = document.querySelector('.VListContainer').offsetHeight;
 
-            },1500)
-            ready.current = true;
-        // }
+        if(nextPageUrl === null)
+            return
+        if (scrollTop === 0 && !loadingMoreMessages) {
+            console.log(nextPageUrl)
+            setLoadingMoreMessage(true)
+            try {
+                let { data } =  await axiosInstance.get(nextPageUrl.replace('http://mah-api.codintofuture.ir',''))
+                setNextPageUrl(data.next)
+                // console.log(queryClient.getQueriesData(['ChatQuery']))
+                queryClient.setQueryData(['ChatQuery'], (oldData) => {
+
+                    oldData.data.next = data.next;
+                    oldData.data.results = [
+                        ...oldData.data.results,
+                        ...data.results
+                    ]
+                    return oldData
+                });
+                setMessagesItems(prevState => [
+
+                    ...data.results.reverse(),
+                    ...prevState ,
+                ])
+                setPrevPageUrl(data.prev)
+            } catch (err) {
+                console.log(err)
+            } finally {
+                setLoadingMoreMessage(false)
+            }
+        }
+    };
+    useEffect(() => {
+           setTimeout(() => {
+               ref.current?.scrollBy(300);
+           },1500)
+           ready.current = true;
 
     }, []);
-    const fetchItemsFromTop = async () => {
-        // setShifting(true)
-
-        if(!nextPageUrl)
-            return
-        try {
-           let { data } =  await axiosInstance.get(nextPageUrl.replace('http://mah-api.codintofuture.ir',''))
-            setMessagesItems(prevState => [
-                ...prevState ,
-                ...data.results
-            ])
-            setNextPageUrl(data.next)
-            setPrevPageUrl(data.prev)
-            // setCount(data.count)
-        } catch (err) {
-            console.log(err)
+    useEffect(() => {
+        const scrollContainer = document.querySelector('.VListContainer');
+        if (scrollContainer) {
+            scrollContainer.addEventListener('scroll', handleScroll);
         }
-    }
+
+        return () => {
+            if (scrollContainer) {
+                scrollContainer.removeEventListener('scroll', handleScroll);
+            }
+        };
+    }, [nextPageUrl, loadingMoreMessages]);
+
     return <>
-        {/*<ChatMask onClick={() => setIsActive(false)}></ChatMask>*/}
         <Modal mask={true}
                preserve={false}
                destroyOnClose={true}
@@ -117,30 +128,25 @@ export const ChatModal = ({
                         /> </div>:
                         <VList className={'VListContainer'}
                                ref={ref} style={{height: 300}}
-                                // count={2}
                                initialItemSize={7}
-                               initialItemCount={messagesItems?.length}
-                                onRangeChange={async (start, end) => {
-                                    console.log("Start Index:", start, "End Index:", end);
-                                    setTimeout(() => {
-                                        fetchItemsFromTop()
-                                    },500)
-
-                                // if (!ready.current) return;
-                                // if (end + THRESHOLD >  ChatQuery.data?.data.count && endFetchedCountRef.current <  ChatQuery.data?.data.count) {
-                                //     // endFetchedCountRef.current = ChatQuery.data?.data.count;
-                                //
-                                // } else if (start - THRESHOLD < 0 && startFetchedCountRef.current <  ChatQuery.data?.data.count) {
-                                //     // startFetchedCountRef.current = ChatQuery.data?.data.count;
-                                //     // await fetchItemsFromTop()
-                                // }
-                            }}>
+                               initialItemCount={messagesItems?.length}>
                         <>
+                            { loadingMoreMessages &&  <div style={{display: 'flex', justifyContent: 'center', height: 40}}><TailSpin
+                                height="18"
+                                width="18"
+                                color="black"
+                                ariaLabel="tail-spin-loading"
+                                radius="1"
+                                wrapperStyle={{}}
+                                wrapperClass=""
+                                visible={true}
+                            /></div>}
                             {
                                 messagesItems.map(MessageItem => MessageItem.sender === 'me'
                                     ? <SentMessage setEditableMessage={setEditableMessage}
                                            ChatQuery={ChatQuery}
                                            isAdmin={isAdmin}
+                                           setMessagesItems={setMessagesItems}
                                            Questionnaire={Questionnaire}
                                            messageData={MessageItem}/> :
                                     <RecievedMessage messageData={MessageItem}
@@ -155,6 +161,7 @@ export const ChatModal = ({
                 <ReadyMessageToSend MessageText={'لطفا در مورد پروژه بیشتر توضیح بدید'}
                                     Questionnaire={Questionnaire}
                                     isAdmin={isAdmin}
+                                    setMessagesItems={setMessagesItems}
                                     ChatQuery={ChatQuery}/>
                 <ReadyMessageToSend MessageText={'چرا قیمت پایینه؟'}
                                     Questionnaire={Questionnaire}
@@ -165,6 +172,7 @@ export const ChatModal = ({
                     ChatQuery={ChatQuery}
                     setEditableMessage={setEditableMessage}
                     editableMessage={editableMessage}
+                    setMessagesItems={setMessagesItems}
                     Questionnaire={Questionnaire} />
             {/*</ChatContainer>*/}
         </Modal>

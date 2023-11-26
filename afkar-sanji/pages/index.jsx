@@ -70,8 +70,20 @@ export default function Home({ cookies }) {
          CornerButton.current.removeAttribute('style');
       }
   });
+
+
   },[])
- 
+  useEffect(() => {
+    // window.addEventListener('resize',() => {
+      if(addPopOver) {
+        RightDrawerOpen ?
+            document.querySelector('.ant-popover-inner').style.marginRight = window.innerWidth - CornerButton.current.offsetLeft - 295 + 'px'
+            :
+            document.querySelector('.ant-popover-inner').style.marginRight = window.innerWidth - CornerButton.current.offsetLeft - 48 + 'px'
+      }
+      // console.log(window.innerWidth,CornerButton.current.offsetLeft)
+    // })
+  }, [addPopOver , RightDrawerOpen]);
   useEffect(() => {   
       if(getItem('SelectedFolder') && data?.data && data?.data[SelectedFolder])
       {

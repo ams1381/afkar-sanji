@@ -12,12 +12,14 @@ import { axiosInstance } from '@/utilities/axios'
 import { useRouter } from 'next/router'
 import { useLocalStorage } from '@/utilities/useLocalStorage'
 import { SharePopOverContent } from '../Folders/SharePopover'
+import {ChatModal} from "@/components/Questioner/ChatModal/ChatModal";
 
 export const ResultHeader = ({ QuestionnaireQuery }) => {
     const router = useRouter();
     const [ SharePopover , setSharePopOver] = useState(false);
     const { setItem , getItem } = useLocalStorage();
-    const [ SearchValue , setSearchValue ] = useState('')
+    const [ SearchValue , setSearchValue ] = useState('');
+    const [ chatModalActive , setChatModalActive ] = useState(false);
     const { refetch, data , isLoading } = useQuery(
         ["key", "ResultSearch"],
        async () => 
@@ -97,6 +99,8 @@ export const ResultHeader = ({ QuestionnaireQuery }) => {
    <>
    <PanelHeader>
    <QuestionnaireEditItemsInnerContainer>
+       { QuestionnaireQuery.data?.data && chatModalActive && <ChatModal isAdmin={false}
+            Questionnaire={Questionnaire} isActive={chatModalActive} setIsActive={setChatModalActive}/>}
             <Tabs
                 defaultActiveKey='3'
                 items={TabHeadItems}
@@ -107,9 +111,9 @@ export const ResultHeader = ({ QuestionnaireQuery }) => {
             </QuestionnaireEditItemsInnerContainer>
        <QuestionnaireEditButtonContainer>
        { getItem('roleReq') !== 'interview-api/interviews' && <Link onClick={(e) => {
-           !Questionnaire.questions.length ? e.preventDefault() : ''
+           !QuestionnaireQuery.data?.data.questions.length ? e.preventDefault() : ''
        }}
-                                                                    href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/view-questions/`} target='_blank'>
+            href={`/questionnaire/${QuestionnaireQuery.data?.data?.uuid}/view-questions/`} target='_blank'>
            <button
                style={{pointerEvents: (QuestionnaireQuery.data?.data?.questions && QuestionnaireQuery.data?.data?.questions.length) ? 'all' : 'none'}}>
                <Icon name='BlackEye'/>

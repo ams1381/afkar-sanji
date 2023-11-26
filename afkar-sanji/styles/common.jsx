@@ -457,6 +457,9 @@ export const CommonDrawerItemIcon = styled.div`
   border-left: ${p => (!p.open && p.active) ? '1px solid var(--primary-color)' : 'none'};
   transition : 0.3s;
   
+  & i {
+    position: relative;
+  }
    & p
    {
      width: ${p => p.open ? 'auto' : '0%'};

@@ -8,7 +8,7 @@ import {digitsEnToFa} from "@persian-tools/persian-tools";
 import {styled} from "styled-components";
 import { motion } from 'framer-motion';
 
-export const SentMessage = ({ messageData , ChatQuery , isAdmin , Questionnaire , setEditableMessage }) => {
+export const SentMessage = ({ messageData , setMessagesItems , ChatQuery , isAdmin , Questionnaire , setEditableMessage }) => {
     const [ messagePopover , setMessagePopover ] = useState(false);
     const [ deleteMessageLoading , setDeleteLoading ] = useState(false);
     const deleteMessage = async () => {
@@ -16,7 +16,8 @@ export const SentMessage = ({ messageData , ChatQuery , isAdmin , Questionnaire 
         try {
             await axiosInstance.delete(`/${!isAdmin ? 'interview' :'admin'}-api/tickets/${messageData.id}/?interview_id=${Questionnaire.id}`);
 
-            ChatQuery.refetch();
+            setMessagesItems(prevState => prevState.filter(MessageItem => MessageItem.id !== messageData.id))
+            // console.log()
             setTimeout(() => {
                 setMessagePopover(false)
             },200)
