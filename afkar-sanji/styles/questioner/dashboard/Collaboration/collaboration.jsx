@@ -168,6 +168,11 @@ export const CollaborationItemRight = styled.div`
     position: relative;
     width: fit-content;
     opacity: 0.8;
+    }
+  @media screen and (max-height: 768px) {
+    > .caption {
+      font-size: 13px;
+    }
 
     // &::before {
     //   position: absolute;
@@ -187,6 +192,7 @@ export const CollaborationItemLeft = styled.div`
   display: flex;
   align-items: center;
   gap: 17px;
+  width: 100%;
 
   > .price {
     display: flex;
@@ -258,14 +264,13 @@ export const ModalHeader = styled.div`
   align-self: stretch;
   box-shadow: 0px -1px 0px 0px #F0F0F0 inset;
   width: 96%;
-
   & .name {
-    overflow: hidden;
     color: #525252;
     font-size: 20px;
     font-style: normal;
     font-weight: 500;
     line-height: 30px;
+    margin-right: 10px;
   }
 `
 
@@ -304,6 +309,16 @@ export const GetResult = styled.div`
     font-weight: 900;
     line-height: 30px;
   }
+  
+  @media screen and (max-height: 768px) {
+    > .title {
+      font-size: 13px; 
+    }
+    
+    > .data {
+      font-size: 13px;
+    }
+  }
 `
 
 export const Level = styled.div`
@@ -311,6 +326,8 @@ export const Level = styled.div`
   align-items: center;
   gap: 12px;
   direction: rtl;
+  width: 100%;
+  justify-content: flex-end;
 
   > .title {
     color: var(--primary-color);
@@ -320,6 +337,11 @@ export const Level = styled.div`
     font-style: normal;
     font-weight: 400;
     line-height: 24px;
+  }
+
+  & img {
+    width: 14px;
+    height: 18px;
   }
 `
 
@@ -332,6 +354,15 @@ export const ColumnOfData = styled(GetResult)`
   > .data {
     font-weight: 400;
     opacity: 0.8;
+  }
+  
+  @media screen and (max-height: 768px) {
+    & .title {
+      font-size: 13px;
+    }
+    > .data {
+      font-size: 13px;
+    }
   }
 `
 

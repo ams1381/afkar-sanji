@@ -16,7 +16,6 @@ import {digitsEnToFa} from "@persian-tools/persian-tools";
 import styled from "styled-components";
 
 export default function ({data, setFilterParams}) {
-    console.log(data)
     const [incomeActive, setIncomeActive] = useState(false)
     const [costActive, setCostActive] = useState(false)
     const [chartData, setChartData] = useState({

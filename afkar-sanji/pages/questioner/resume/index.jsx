@@ -146,6 +146,62 @@ export default function ({meData, cookies}) {
         setIsUpload(false);
     }
 
+    // const reqBtnRef = useRef(null)
+    // const [reqBtnValue, setReqBtnValue] = useState(!meData?.ask_for_interview_role ? 'صفحه اصلی' : 'ارسال به ادمین')
+    // const [reqLoading, setReqLoading] = useState(false)
+
+
+    // const sendReqHandler = async () => {
+    //     if (!meData?.ask_for_interview_role) {
+    //         setReqLoading(true)
+    //         await axiosInstance.patch('user-api/users/me', {
+    //             ask_for_interview_role: true
+    //         }).then(res => {
+    //             message.success('درخواست شما به ادمین ارسال شد')
+    //             setReqLoading(false)
+    //             setReqBtnValue('رفتن به صفحه اصلی')
+    //         }).catch(error => {
+    //             const errorMessage = error.response?.data[Object.keys(error.response.data)[0]][0];
+    //             setReqLoading(false)
+    //             message.error(errorMessage)
+    //         })
+    //     } else {
+    //         router.push('/')
+    //     }
+    // }
+
+    const [reqLoading, setReqLoading] = useState(false)
+    const [reqBtnValue, setReqBtnValue] = useState(meData?.ask_for_interview_role ? "رفتن به صفحه اصلی" : "ارسال به ادمین")
+
+    console.log(meData?.ask_for_interview_role)
+
+    useEffect(() => {
+        setReqBtnValue(meData?.ask_for_interview_role ? "رفتن به صفحه اصلی" : "ارسال به ادمین")
+    }, [meData?.ask_for_interview_role]);
+    const sendReqHandler = async () => {
+        if (meData?.ask_for_interview_role !== true) {
+            setReqLoading(true)
+            await axiosInstance.patch('user-api/users/me', {
+                ask_for_interview_role: true
+            }).then(res => {
+                message.success('درخواست شما به ادمین ارسال شد')
+                setReqLoading(false)
+                setReqBtnValue('رفتن به صفحه اصلی')
+            }).catch(error => {
+                const errorMessage = error.response?.data[Object.keys(error.response.data)[0]][0];
+                if (error.status !== 400) {
+                    setReqLoading(false)
+                    message.error(errorMessage)
+                }
+                if (error.status === 400) router.push('/')
+            })
+        } else {
+            router.push('/')
+        }
+
+    }
+
+
     return (<>
             <RightLight/>
             <LeftLight/>
@@ -262,12 +318,12 @@ export default function ({meData, cookies}) {
                             </ResumeBox>
                             <div className={'bottom_mobile_container'}>
                                 <Button
-                                    disabled={isHaveResume}
-
+                                    disabled={meData?.resume?.is_empty}
                                     className={`bottom_mobile`}
-                                    onClick={() => router.push("/questioner/information")}
+                                    onClick={sendReqHandler}
+                                    loading={reqLoading}
                                 >
-                                    ارسال به ادمین
+                                    {reqBtnValue}
                                     <img src={arrowRightIcon?.src}/>
 
                                 </Button>
@@ -275,23 +331,23 @@ export default function ({meData, cookies}) {
                         </div>
                         <div className={'btnContainer'}>
                             <Button
-                                disabled={isHaveResume}
-
+                                disabled={meData?.resume?.is_empty}
                                 className={`bottom`}
-                                onClick={() => router.push("/questioner/information")}
+                                onClick={sendReqHandler}
+                                loading={reqLoading}
                             >
-                                ارسال به ادمین
+                                {reqBtnValue}
                                 <img src={arrowRightIcon?.src}/>
                             </Button>
                         </div>
                     </ContainerResumeIndex>
                 </motion.div>
             </AnimatePresence>
-
         </>
-
     )
 }
+
+//
 
 
 export async function getServerSideProps(context) {
