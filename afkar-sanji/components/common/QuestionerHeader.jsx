@@ -64,7 +64,7 @@ export const QuestionerHeader = ({ pageName , meData , interviewData }) => {
                       Auth.isAdmin ?
                           router?.pathname?.includes('admin')  ? <Link style={{ display : 'flex' , alignItems : 'center' }}
                                    href={'/'}>
-                              <Icon style={{ width : 24 , height : 24 }} name={'AdminIcon'} />
+                              <Icon style={{ width : 24 , height : 24 }} name={'AdminOutline'} />
                               </Link> : <Link href={'/admin/'} style={{ display : 'flex' , alignItems : 'center' }}>
                                   <Icon style={{ width : 24 , height : 24 }} name={'AdminIcon'} />
                           </Link>  :
@@ -102,18 +102,22 @@ export const QuestionerHeader = ({ pageName , meData , interviewData }) => {
                 </Popover>
         <QuestionnaireDirectoryContainer>
               <QuestionnaireDirectoryPath>
-              {pathComponentGenerator(pageName,interviewData)}
+              {pathComponentGenerator(pageName,interviewData,router)}
               </QuestionnaireDirectoryPath>
             </QuestionnaireDirectoryContainer>
           </HeaderComponent>
       </HeaderContainer>
   )
 }
-const pathComponentGenerator = (PageName,interviewData) => {
+const pathComponentGenerator = (PageName,interviewData,router) => {
   switch(PageName)
   {
     case 'profile':
-          return <>
+          return window.innerWidth < 768 ? <div onClick={() => router.back()}
+                    style={{ display : 'flex' , cursor : 'pointer' , alignItems : 'center' }} >
+              <p>صفحه ی کاربری</p>
+              <Icon style={{ transform : 'rotate(180deg)' }} name={'ArrowRight'} />
+          </div> : <>
             <p> پروفایل </p> /
              <span> داشبود </span>
 
@@ -124,7 +128,11 @@ const pathComponentGenerator = (PageName,interviewData) => {
               <span> داشبورد </span>
           </>
       case 'result':
-          return <>
+          return window.innerWidth < 768 ? <div onClick={() => router.back()}
+                style={{ display : 'flex' , cursor : 'pointer' , alignItems : 'center' }} >
+              <p>صفحه ی نتایج</p>
+              <Icon style={{ transform : 'rotate(180deg)' }} name={'ArrowRight'} />
+          </div> : <>
               <p> نتایج </p> /
               <span> داشبورد </span>
           </>

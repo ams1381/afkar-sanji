@@ -3,6 +3,8 @@ import {
     CommonDrawerContainer,
     CommonDrawerLogoImageContainer,
     CommonDrawerItemText,
+    CommonDrawerTextItemsContainer,
+    CommonDrawerIconItemsContainer,
     CommonDrawerItemIcon,
     CommonDrawerTopPartContainer, AskForAdminSign, AskForAdminText
 } from '@/styles/common'
@@ -130,7 +132,7 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
             {MessageContext}
             <div className='drawerLogo' onClick={() => setRightDrawerOpen(!RightDrawerOpen)}>
                 <div className={'drawer-logo-container'}>
-                     { RightDrawerOpen && <div className={'drawer-logo-inner-container'}>
+                     { RightDrawerOpen && window.width > 768 && <div className={'drawer-logo-inner-container'}>
                         <p>پنل کاربری ماح</p>
                     </div>}
                     <CommonDrawerLogoImageContainer draweropen={RightDrawerOpen}>
@@ -141,7 +143,7 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
             </div>
             <CommonDrawerTopPartContainer>
                 { RightDrawerOpen &&
-                    <motion.div className={'drawer-text-column'} style={{ width : '100%' , height : '91.5%' , transition : '0.3s' }}
+                    <CommonDrawerTextItemsContainer className={'drawer-text-column'}
                             transition={{ duration : 0.1 }} initial={{ x : 300 }} animate={{ x : 0  }}>
                     <div style={{width: RightDrawerOpen ? '100%' : 0 , height : '100%' }} className={'drawer-column '}>
                     <div>
@@ -244,8 +246,8 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                             </CommonDrawerItemText>
                     </div>
                 </div>
-                    </motion.div>}
-                <div style={{ width : RightDrawerOpen ? '22.5%' : '100%'  , boxShadow : '-1px 0px 0px 0px #F0F0F0' }}
+                    </CommonDrawerTextItemsContainer>}
+                <CommonDrawerIconItemsContainer RightDrawerOpen={RightDrawerOpen}
                      className={'drawer-column icons-container'}>
                     <div>
                         <CommonDrawerItemIcon open={RightDrawerOpen ? 'active' : null}
@@ -349,7 +351,7 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                            <Icon name='Logout' />
                        </CommonDrawerItemIcon>
                    </div>
-                </div>
+                </CommonDrawerIconItemsContainer>
             </CommonDrawerTopPartContainer>
             <div className={'trapezoid'} onClick={() => setRightDrawerOpen(!RightDrawerOpen)}>
                 {/*<img src={Rectangle.src} />*/}

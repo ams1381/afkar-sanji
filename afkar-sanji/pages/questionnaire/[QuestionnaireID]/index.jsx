@@ -111,6 +111,7 @@ const QuestionnairePanel = ({ cookies }) => {
         <QuestionnairePanelContainer>
           <PanelInnerContainer> 
             {  <QuestionnairePanelHeader SideState={SideState} isFetched={isFetched}
+                 RightDrawerOpen={RightDrawerOpen}
                  setChatModalActive={setChatModalActive} chatModalActive={chatModalActive}
             ChangeSide={SetSideState} Questionnaire={data?.data}/>}
             {

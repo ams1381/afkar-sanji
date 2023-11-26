@@ -16,7 +16,13 @@ import { useLocalStorage } from '@/utilities/useLocalStorage';
 import {AuthContext} from "@/utilities/AuthContext";
 import {ChatModal} from "@/components/Questioner/ChatModal/ChatModal";
 
-const QuestionnairePanelHeader = ({ FolderName ,setChatModalActive , chatModalActive , isFetched , Questionnaire , SideState , ChangeSide }) => {
+const QuestionnairePanelHeader = ({ FolderName ,setChatModalActive
+                                    , chatModalActive ,
+                                    isFetched ,
+                                    Questionnaire ,
+                                    SideState ,
+                                    RightDrawerOpen,
+                                    ChangeSide }) => {
   const router = useRouter();
   const { getItem , setItem } = useLocalStorage();
   const Auth = useContext(AuthContext);
@@ -104,7 +110,7 @@ const QuestionnairePanelHeader = ({ FolderName ,setChatModalActive , chatModalAc
   return (
     Questionnaire ? 
     <>
-        <QuestionnaireEditItemsContainer>
+        <QuestionnaireEditItemsContainer RightDrawerOpen={RightDrawerOpen}>
           { Questionnaire && chatModalActive && <ChatModal isAdmin={false}
                            Questionnaire={Questionnaire} isActive={chatModalActive} setIsActive={setChatModalActive}/>}
             <QuestionnaireEditItemsInnerContainer>

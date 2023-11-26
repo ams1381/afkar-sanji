@@ -162,7 +162,29 @@ export const QuestionnaireEditItemsContainer = styled.div`
         flex-direction: column-reverse;
         flex-wrap : auto;
         height : auto;
+
+      .ant-tabs-nav-list {
+        gap : ${p => p.RightDrawerOpen ? '0 !important' : '15px !important'}
+      }
     }
+  @media screen and (max-width: 480x) {
+    .ant-tabs-nav-list {
+      gap : ${p => p.RightDrawerOpen ? '0 !important' : '9px !important'}
+    }
+  }
+`
+export const AntdTabsContainer = styled.div`
+  @media screen and (max-width : 768px)
+  {
+    .ant-tabs-nav-list {
+      gap : ${p => p.RightDrawerOpen ? '0 !important' : '15px !important'}
+    }
+  }
+  @media screen and (max-width: 480x) {
+    .ant-tabs-nav-list {
+      gap : ${p => p.RightDrawerOpen ? '0 !important' : '9px !important'}
+    }
+  }
 `
 export const QuestionnaireEditItemsInnerContainer = styled.div`
     height : ${p => p.loading ? '40px' : 'auto'};

@@ -8,7 +8,7 @@ import {message, Select} from 'antd'
 import { axiosInstance } from '@/utilities/axios'
 import {TailSpin} from "react-loader-spinner";
 
-export const InfoContainer = ({ BoxName , BoxDataName ,MeQuery , UserData , bold , regions}) => {
+export const InfoContainer = ({ BoxName , RightDrawerOpen , BoxDataName ,MeQuery , UserData , bold , regions}) => {
     const [ editState , setEditState ] = useState(false);
     const [ userInfoMessage , userInfoMessageContext ] = message.useMessage();
     const [ InputData , setInputData ] = useState(UserData[BoxDataName]);
@@ -79,7 +79,7 @@ export const InfoContainer = ({ BoxName , BoxDataName ,MeQuery , UserData , bold
     <InfoBox bold={bold} error={ErrorOccured ? 'active' : null}>
         <p style={{ whiteSpace : 'nowrap' }}>{BoxName}</p>
         {userInfoMessageContext}
-        <EditInfoBox editstate={editState}>
+        <EditInfoBox RightDrawerOpen={RightDrawerOpen} editstate={editState}>
             { BoxDataName == 'gender' ?
                 <Select
                     disabled={!editState}
@@ -98,6 +98,7 @@ export const InfoContainer = ({ BoxName , BoxDataName ,MeQuery , UserData , bold
                 BoxDataName == 'province' ?
                     regions && <Select
                         disabled={!editState}
+                        className={'province-selector'}
                         showSearch
                         suffixIcon={<Icon name={'suffixIcon'} style={{ width : 11 }} />}
                         placeholder="استان محل سکونت را انتخاب کنید"

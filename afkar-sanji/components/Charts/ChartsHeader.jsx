@@ -1,7 +1,9 @@
 import { Icon } from '@/styles/icons'
-import { PanelHeader, QuestionnaireDirectoryContainer, 
-  QuestionnaireDirectoryPath,  QuestionnaireEditButtonContainer ,
-  QuestionnaireEditItemsInnerContainer} from '@/styles/questionnairePanel/QuestionnairePanelHeader'
+import {
+    AntdTabsContainer, PanelHeader, QuestionnaireDirectoryContainer,
+    QuestionnaireDirectoryPath, QuestionnaireEditButtonContainer,
+    QuestionnaireEditItemsInnerContainer
+} from '@/styles/questionnairePanel/QuestionnairePanelHeader'
 import { useLocalStorage } from '@/utilities/useLocalStorage'
 import { Popover, Skeleton, Tabs } from 'antd'
 import Link from 'next/link'
@@ -11,7 +13,7 @@ import { SharePopOverContent } from '../Folders/SharePopover'
 import { useState } from 'react'
 import {ChatModal} from "@/components/Questioner/ChatModal/ChatModal";
 
-export const ChartsHeader = ({ QuestionnaireQuery }) => {
+export const ChartsHeader = ({ QuestionnaireQuery , RightDrawerOpen }) => {
   const router = useRouter();
   const { setItem , getItem } = useLocalStorage();
   const [ chatModalActive , setChatModalActive ] = useState(false);
@@ -79,6 +81,7 @@ export const ChartsHeader = ({ QuestionnaireQuery }) => {
                 Questionnaire={Questionnaire} isActive={chatModalActive} setIsActive={setChatModalActive}/>}
        <PanelHeader>
        <QuestionnaireEditItemsInnerContainer>
+           <AntdTabsContainer RightDrawerOpen={RightDrawerOpen}>
             <Tabs
                 defaultActiveKey='4'
                 items={TabHeadItems}
@@ -86,6 +89,7 @@ export const ChartsHeader = ({ QuestionnaireQuery }) => {
                 indicatorSize={(origin) => origin - 16}
                 moreIcon={<Icon name='close' />}
               />
+           </AntdTabsContainer>
             </QuestionnaireEditItemsInnerContainer>
             <QuestionnaireEditButtonContainer>
                 { getItem('roleReq') !== 'interview-api/interviews' && <Link onClick={(e) => {

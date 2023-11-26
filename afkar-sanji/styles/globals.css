@@ -275,9 +275,9 @@ input:-webkit-autofill:active {
 }
 
 @media screen and (max-width: 480px) {
-    .ant-tabs-nav-list {
-        gap: 15px !important;
-    }
+    /*.ant-tabs-nav-list {*/
+    /*    gap: 15px !important;*/
+    /*}*/
 
     .ant-tabs-tab {
         font-size: 14px !important;
@@ -285,9 +285,9 @@ input:-webkit-autofill:active {
 }
 
 @media screen and (max-width: 400px) {
-    .ant-tabs-nav-list {
-        gap: 9px !important;
-    }
+    /*.ant-tabs-nav-list {*/
+    /*    gap: 9px !important;*/
+    /*}*/
 }
 
 

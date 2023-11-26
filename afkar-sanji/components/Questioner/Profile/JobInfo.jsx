@@ -208,7 +208,7 @@ export const JobInfo = ({ Countries , userData ,MeQuery , regions }) => {
             { MeQuery?.data?.data?.resume ? <InfoBox bold>
                 <div className='last_update_container'>
                     <span>رزومه </span>
-                    <span style={{display: 'flex', gap: 5}}>
+                    <span style={{display: 'flex', gap: 5 , whiteSpace : 'nowrap' }}>
                        {
                            MeQuery?.data?.data?.updated_at ? digitsEnToFa(convertDate(convertToRegularTime(MeQuery?.data?.data?.updated_at).split(' ')[0], 'jalali'))
                                : ''}

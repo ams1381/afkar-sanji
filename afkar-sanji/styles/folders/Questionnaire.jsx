@@ -184,13 +184,7 @@ export const MainContainer = styled.div`
     margin: 0 auto;
     padding: 1rem 0 0 0;
 
-    @media screen and (max-width : 768px)
-    {
-        //width: 90%;
-      width: 82%;
-      padding-left: 25px;
-      margin: 0;
-    }
+   
 `
 export const FolderEditContainer = styled.div`
     width: 100%;

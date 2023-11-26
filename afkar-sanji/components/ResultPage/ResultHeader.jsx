@@ -1,6 +1,9 @@
-import { PanelHeader, QuestionnaireDirectoryContainer, 
-    QuestionnaireDirectoryPath,  QuestionnaireEditButtonContainer , QuestionnaireEditItemsContainer,
-    QuestionnaireEditItemsInnerContainer} from '@/styles/questionnairePanel/QuestionnairePanelHeader'
+import {
+    AntdTabsContainer,
+    antdTabsContainer, PanelHeader, QuestionnaireDirectoryContainer,
+    QuestionnaireDirectoryPath, QuestionnaireEditButtonContainer, QuestionnaireEditItemsContainer,
+    QuestionnaireEditItemsInnerContainer
+} from '@/styles/questionnairePanel/QuestionnairePanelHeader'
 import { Skeleton , Select, ConfigProvider, Tabs, Popover } from 'antd'
 
 import { QuestionSearchContainer } from '@/styles/questionnairePanel/QuestionDesignPanel'
@@ -14,7 +17,7 @@ import { useLocalStorage } from '@/utilities/useLocalStorage'
 import { SharePopOverContent } from '../Folders/SharePopover'
 import {ChatModal} from "@/components/Questioner/ChatModal/ChatModal";
 
-export const ResultHeader = ({ QuestionnaireQuery }) => {
+export const ResultHeader = ({ QuestionnaireQuery , RightDrawerOpen }) => {
     const router = useRouter();
     const [ SharePopover , setSharePopOver] = useState(false);
     const { setItem , getItem } = useLocalStorage();
@@ -98,9 +101,10 @@ export const ResultHeader = ({ QuestionnaireQuery }) => {
         :
    <>
    <PanelHeader>
-   <QuestionnaireEditItemsInnerContainer>
+   <QuestionnaireEditItemsInnerContainer >
        { QuestionnaireQuery.data?.data && chatModalActive && <ChatModal isAdmin={false}
             Questionnaire={Questionnaire} isActive={chatModalActive} setIsActive={setChatModalActive}/>}
+       <AntdTabsContainer RightDrawerOpen={RightDrawerOpen}>
             <Tabs
                 defaultActiveKey='3'
                 items={TabHeadItems}
@@ -108,6 +112,7 @@ export const ResultHeader = ({ QuestionnaireQuery }) => {
                 indicatorSize={(origin) => origin - 16}
                 moreIcon={<Icon name='close' />}
               />
+       </AntdTabsContainer>
             </QuestionnaireEditItemsInnerContainer>
        <QuestionnaireEditButtonContainer>
        { getItem('roleReq') !== 'interview-api/interviews' && <Link onClick={(e) => {
@@ -148,6 +153,6 @@ export const ResultHeader = ({ QuestionnaireQuery }) => {
           
         </PanelHeader>
         
-        </> 
+        </>
   )
 }

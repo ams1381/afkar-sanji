@@ -73,17 +73,17 @@ export default function Home({ cookies }) {
 
 
   },[])
-  useEffect(() => {
-    // window.addEventListener('resize',() => {
-      if(addPopOver) {
-        RightDrawerOpen ?
-            document.querySelector('.ant-popover-inner').style.marginRight = window.innerWidth - CornerButton.current.offsetLeft - 295 + 'px'
-            :
-            document.querySelector('.ant-popover-inner').style.marginRight = window.innerWidth - CornerButton.current.offsetLeft - 48 + 'px'
-      }
-      // console.log(window.innerWidth,CornerButton.current.offsetLeft)
-    // })
-  }, [addPopOver , RightDrawerOpen]);
+  // useEffect(() => {
+  //   // window.addEventListener('resize',() => {
+  //     if(addPopOver) {
+  //       RightDrawerOpen ?
+  //           document.querySelector('.ant-popover-inner').style.marginRight = window.innerWidth - CornerButton.current.offsetLeft - 295 + 'px'
+  //           :
+  //           document.querySelector('.ant-popover-inner').style.marginRight = window.innerWidth - CornerButton.current.offsetLeft - 48 + 'px'
+  //     }
+  //     // console.log(window.innerWidth,CornerButton.current.offsetLeft)
+  //   // })
+  // }, [addPopOver , RightDrawerOpen]);
   useEffect(() => {   
       if(getItem('SelectedFolder') && data?.data && data?.data[SelectedFolder])
       {
@@ -178,7 +178,7 @@ export default function Home({ cookies }) {
             overlayInnerStyle={{ 
               boxShadow : 'none' 
               , marginRight : window.innerWidth > 720 ?
-              RightDrawerOpen ? '9.5vw' : '7.7vw' : '4vw'
+              RightDrawerOpen ? '10.5vw' : '7.7vw' : RightDrawerOpen ? '16vw' : '4vw'
                , background : 'transparent'
           }}
             onOpenChange={() => setAddPopover(false)}

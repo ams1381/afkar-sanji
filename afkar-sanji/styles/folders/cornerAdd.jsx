@@ -21,7 +21,7 @@ export const CornerAddButton = styled.button`
 
     @media screen and (max-width : 768px)
     {
-        right: 5rem;
+      right: ${p => p.RightDrawerOpen ? '5rem' : '1rem' };
     }
 `
 export const PopoverContainer = styled.div`

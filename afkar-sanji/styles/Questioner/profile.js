@@ -91,8 +91,11 @@ export const InfoBox = styled.div`
   {
     background-color: var(--primary-color);
   }
-  @media screen and (max-width: 768px) {
-    flex-wrap: wrap;
+  @media screen and (max-width: 480px) {
+    //flex-wrap: wrap;
+    & input {
+      max-width: 60px;
+    }
   }
 `
 export const EditInfoBox = styled.div`
@@ -127,6 +130,12 @@ export const EditInfoBox = styled.div`
   {
     transition: 0.3s;
     filter : ${p => !p.editstate ? 'invert(1%) sepia(0%) saturate(6%) hue-rotate(54deg) brightness(130%) contrast(100%)' : 'none' };
+  }
+  
+  @media screen and (max-width: 480px) {
+    .province-selector {
+      width: ${p => p.RightDrawerOpen ? '100px' : '130px'};
+    }
   }
 `
 export const UserBoldInfoContainer = styled.div`

@@ -4,8 +4,9 @@ import {
     EmptyButtonPage,
     EmptyResultContainer,
     ResultBodyContainer,
-    ResultTableContainer
+    ResultTableContainer,
 } from "@/styles/Result/ResultPage";
+import {QuestionerResultBodyContainer} from "@/styles/Result/QuestionerResult";
 import {QuestionerResultTable} from "@/components/Questioner/Result/QuestionerResultTable";
 import {TableColumnGenerator, TableDataGenerator} from "@/components/Questioner/Result/TableConfigGenerator";
 import {ScrollByDrag, SkeletonTable} from "@/components/ResultPage/ResultBody";
@@ -52,7 +53,7 @@ export const QuestionerResultBody = ({ ResultQuery , PageSize , setPageSize , Se
         }
     },[ResultData , QuestionnaireQuery])
 
-    return <div style={{ width : '86%' , margin : '0 auto' }}>
+    return <QuestionerResultBodyContainer>
         {contextHolder}
         {
             ( ResultQuery.isLoading) ? <SkeletonTable columns={5} rowCount={11} /> :
@@ -134,5 +135,5 @@ export const QuestionerResultBody = ({ ResultQuery , PageSize , setPageSize , Se
                         </EmptyResultContainer>
                     </ResultTableContainer>
         }
-    </div>
+    </QuestionerResultBodyContainer>
 }

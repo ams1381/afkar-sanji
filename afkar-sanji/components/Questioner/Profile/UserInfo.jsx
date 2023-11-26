@@ -12,7 +12,7 @@ import {beforeUpload, detectFileFormat} from "@/components/QuestionnairePanel/Qu
 import {axiosInstance} from "@/utilities/axios";
 
 
-export const UserInfoBox = ({ MeQuery , regions }) => {
+export const UserInfoBox = ({ MeQuery , RightDrawerOpen , regions }) => {
     const [messageApi, contextHolder] = message.useMessage();
     const [fileUploaded, setFileUploaded] = useState(MeQuery?.data?.data?.avatar ? true : null);
     const [ uploadError , setUploadError ] = useState(false);
@@ -204,7 +204,11 @@ export const UserInfoBox = ({ MeQuery , regions }) => {
                      BoxDataName='address' />
             <InfoContainer BoxName='ملیت' MeQuery={MeQuery} UserData={MeQuery?.data?.data} regions={regions}
                             BoxDataName='nationality'/>
-            <InfoContainer BoxName='استان محل سکونت' MeQuery={MeQuery} UserData={MeQuery?.data?.data} regions={regions}
+            <InfoContainer RightDrawerOpen={RightDrawerOpen}
+                           BoxName='استان محل سکونت'
+                           MeQuery={MeQuery}
+                           UserData={MeQuery?.data?.data}
+                           regions={regions}
                             BoxDataName='province'/>
         </div>
     </UserInfoContainer>

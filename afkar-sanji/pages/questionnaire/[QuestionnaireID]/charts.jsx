@@ -53,7 +53,7 @@ const ChartsPage = ({ cookies }) => {
         Questionnaire={QuestionnaireQuery?.data?.data}/>
         <main style={{ width : RightDrawerOpen ? '84%' : '100%', transition : '0.3s' }}>
         <PanelInnerContainer>
-          <ChartsHeader QuestionnaireQuery={QuestionnaireQuery}/>
+          <ChartsHeader RightDrawerOpen={RightDrawerOpen} QuestionnaireQuery={QuestionnaireQuery}/>
           <ChartsBody ChartQuery={ChartQuery} QuestionnaireQuery={QuestionnaireQuery}/>
       </PanelInnerContainer>
       </main>

@@ -81,7 +81,7 @@ const ResultsPage = ({ cookies }) => {
       Questionnaire={QuestionnaireQuery.data?.data}/>
       <main style={{ width : RightDrawerOpen ? '84%' : '100%', transition : '0.3s' }}>
       <PanelInnerContainer>
-        <ResultHeader QuestionnaireQuery={QuestionnaireQuery}/>
+        <ResultHeader RightDrawerOpen={RightDrawerOpen} QuestionnaireQuery={QuestionnaireQuery}/>
         <ResultBody ResultQuery={SearchValue ? SearchQuery : ResultQuery}
         SetCurrentPage={SetCurrentPage} queryStatus={SearchValue ? 'Search' : 'Result'}
         QuestionnaireQuery={QuestionnaireQuery} setEndDate={setEndDate} setSearchValue={setSearchValue}

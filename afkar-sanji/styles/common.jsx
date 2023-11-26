@@ -1,5 +1,6 @@
 import { Button, Input } from "antd";
 import { styled } from "styled-components";
+import {motion} from "framer-motion";
 
 //Header
 
@@ -11,6 +12,10 @@ export const UserIconContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 `
 export const HeaderContainer = styled.div`
     background: var(--surface);
@@ -271,6 +276,11 @@ export const CommonDrawerContainer = styled.div`
     text-decoration: none;
     outline: none;
   }
+  @media screen and (max-width: 768px) {
+    //width: ${p => p.open ? '12%' : '56px'};
+    width: 56px !important;
+    right: ${p => p.open ? '0' : '-56px'};
+  }
     .drawerLogo
     {
         height: 10%;
@@ -288,58 +298,6 @@ export const CommonDrawerContainer = styled.div`
         width : 38px;
         height : 38px;
     }
-    // .drawer_item {
-    //     display: flex;
-    //     padding: ${p => p.open ? '12px' : 'none'};
-    //     //background: var(--hit-box, rgba(255, 255, 255, 0.00));
-    //     cursor: pointer;
-    //     align-items: center;
-    //     //justify-content: ${p => p.open ? 'flex-end' : 'center'};
-    //     justify-content: center;
-    //     color: var(--Neutral-Gray9);
-    //     font-size: 14px;
-    //     gap: 10px;
-    //     height: 40px;
-    //
-    //     transition : 0.3s;
-    // }
-    //.drawer_item_text
-    //{
-    //  display: flex;
-    //  padding: 0 12px 0 var(--Tittle-Padding, 24px);
-    //  align-items: center;
-    //  gap: 10px;
-    //  color: var(--On-Surface, #525252);
-    //  font-family: IRANSans;
-    //  font-size: 14px;
-    //  font-style: normal;
-    //  font-weight: 400;
-    //  justify-content: flex-end;
-    //  height: 40px;
-    //  transition: 0.3s;
-    //  cursor: pointer;
-    //}
-  //.dashboard:hover ~ .drawer-column .dashboard
-  //{
-  //  background-color: red;
-  //}
-  //.dashboard:hover , .employer:hover , .interviewer:hover , .wallet:hover , .create-questionaire:hover , .profile:hover
-  //{
-  //  color: var(--primary-color);
-  //  //filter: invert(37%) sepia(74%) saturate(1045%) hue-rotate(210deg) brightness(91%) contrast(105%);
-  //}
-  //.dashboard:hover .i_dashboard i
-  //{
-  //  filter: invert(37%) sepia(74%) saturate(1045%) hue-rotate(210deg) brightness(91%) contrast(105%);
-  //}
-  //  .drawer_item:hover
-  //  {
-  //      color: var(--primary-color);
-  //  }
-  //  .drawer_item:hover i 
-  //  {
-  //      filter: invert(37%) sepia(74%) saturate(1045%) hue-rotate(210deg) brightness(91%) contrast(105%);
-  //  }
     .drawer_item i
     {
         width : 17px;
@@ -415,6 +373,24 @@ export const CommonDrawerContainer = styled.div`
     width: 12px;
     height: 12px;
     transform: ${p => p.open ? 'rotate(180deg)' : 'none'};
+  }
+`
+
+export const CommonDrawerTextItemsContainer = styled(motion.div)`
+  width : 100%;
+  height : 91.5%;
+  transition : 0.3s;
+  
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
+`
+export const CommonDrawerIconItemsContainer = styled.div`
+    width: ${p => p.RightDrawerOpen ? '22.5%' : '56px'};
+      box-shadow: -1px 0px 0px 0px #F0F0F0;
+
+  @media screen and (max-width: 768px) {
+    width: ${p => p.RightDrawerOpen ? '100%' : '56px'};
   }
 `
 export const CommonDrawerItemText = styled.div`
@@ -502,6 +478,16 @@ export const CommonDrawerLogoImageContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+  
+  @media screen and (max-width: 768px) {
+    width: 100%;
+    
+    > i
+    {
+      width: 34px !important;
+      height: 34px !important;
+    }
+  }
 `
 export const QuestionerPageContainer = styled.div`
     width : 100%;
@@ -518,8 +504,7 @@ export const QuestionerContentBox = styled.div`
   
   @media screen and (max-width: 768px) {
     flex-wrap: wrap;
-    margin: 0;
-    padding: 16px 0 0 15px;
+    width: 92%;
   }
 `
 export const LogoutPopoverItem = styled.div`

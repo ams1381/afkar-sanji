@@ -71,7 +71,7 @@ const Profile = () => {
                         <main style={{ width : RightDrawerOpen ? '84%' : '100%', transition : '0.3s' }}>
                         <QuestionerPageContainer>
                             <QuestionerContentBox>
-                                <UserInfoBox MeQuery={MeQuery}  regions={regions?.data?.data} />
+                                <UserInfoBox RightDrawerOpen={RightDrawerOpen} MeQuery={MeQuery}  regions={regions?.data?.data} />
                                 <JobInfo regions={regions?.data?.data} MeQuery={MeQuery} />
                             </QuestionerContentBox>
                         </QuestionerPageContainer>

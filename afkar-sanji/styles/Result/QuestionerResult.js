@@ -10,12 +10,27 @@ export const QuestionerResultHeader = styled.div`
   flex-direction: row-reverse;
   align-items: center;
   
+  @media screen and (max-width: 480px) {
+    flex-wrap: wrap;
+    width: 90%;
+  }
+`
+export const QuestionerResultBodyContainer = styled.div`
+    width: 86%;
+    margin: 0 auto;
+  
+    @media screen and (max-width: 480px) {
+      width: 90%;
+    }
 `
 export const QuestionerResultChangerContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
   flex-direction: row-reverse;
+  @media screen and (max-width: 480px) {
+    flex-wrap: wrap;
+  }
   .ant-btn
   {
     background: var(--primary-color);
@@ -33,7 +48,11 @@ export const RowSelectorContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
-  
+  @media screen and (max-width: 480px) {
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
   &  > label
   {
     display: flex;
