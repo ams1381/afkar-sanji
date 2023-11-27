@@ -146,40 +146,20 @@ export default function ({meData, cookies}) {
         setIsUpload(false);
     }
 
-    // const reqBtnRef = useRef(null)
-    // const [reqBtnValue, setReqBtnValue] = useState(!meData?.ask_for_interview_role ? 'صفحه اصلی' : 'ارسال به ادمین')
-    // const [reqLoading, setReqLoading] = useState(false)
-
-
-    // const sendReqHandler = async () => {
-    //     if (!meData?.ask_for_interview_role) {
-    //         setReqLoading(true)
-    //         await axiosInstance.patch('user-api/users/me', {
-    //             ask_for_interview_role: true
-    //         }).then(res => {
-    //             message.success('درخواست شما به ادمین ارسال شد')
-    //             setReqLoading(false)
-    //             setReqBtnValue('رفتن به صفحه اصلی')
-    //         }).catch(error => {
-    //             const errorMessage = error.response?.data[Object.keys(error.response.data)[0]][0];
-    //             setReqLoading(false)
-    //             message.error(errorMessage)
-    //         })
-    //     } else {
-    //         router.push('/')
-    //     }
-    // }
-
     const [reqLoading, setReqLoading] = useState(false)
     const [reqBtnValue, setReqBtnValue] = useState(meData?.ask_for_interview_role ? "رفتن به صفحه اصلی" : "ارسال به ادمین")
 
     console.log(meData?.ask_for_interview_role)
 
     useEffect(() => {
-        setReqBtnValue(meData?.ask_for_interview_role ? "رفتن به صفحه اصلی" : "ارسال به ادمین")
+        setReqBtnValue((meData?.role === 'n' || meData?.role === 'e') ?  "ارسال به ادمین" : "رفتن به صفحه اصلی")
     }, [meData?.ask_for_interview_role]);
     const sendReqHandler = async () => {
-        if (meData?.ask_for_interview_role !== true) {
+        if (meData?.role === 'i' || meData?.role === 'ie') {
+            await router.push('/')
+            return
+        }
+        if (!meData?.ask_for_interview_role) {
             setReqLoading(true)
             await axiosInstance.patch('user-api/users/me', {
                 ask_for_interview_role: true
@@ -195,8 +175,6 @@ export default function ({meData, cookies}) {
                 }
                 if (error.status === 400) router.push('/')
             })
-        } else {
-            router.push('/')
         }
 
     }

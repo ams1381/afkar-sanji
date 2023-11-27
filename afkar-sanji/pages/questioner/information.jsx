@@ -194,6 +194,7 @@ export default function () {
                                         className={'notBorder'}
                                         suffixIcon={<img src={arrowDownIcon?.src}/>}
                                         value={[formData?.nationality]}
+                                        dropdownStyle={{ background : 'red' }}
                                         style={{
                                             width: "100%",
                                             height: "40px",
