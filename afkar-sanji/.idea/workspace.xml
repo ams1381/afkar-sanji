@@ -6,19 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="496321e2-4aea-4348-a674-0e3ff527a71c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Questioner/ChatModal/ChatModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/ChatModal/ChatModal.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Questioner/ChatModal/ChatPrompt.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/ChatModal/ChatPrompt.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Questioner/Dashboadr/Collaboration/CollaborationInterView.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Dashboadr/Collaboration/CollaborationInterView.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/Questioner/Dashboadr/Collaboration/CollaborationItem.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Dashboadr/Collaboration/CollaborationItem.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Questioner/Resume/Achievements/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Resume/Achievements/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Questioner/Resume/EducationalBackgrounds/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Resume/EducationalBackgrounds/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Questioner/Resume/ResearchHistories/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Resume/ResearchHistories/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Questioner/Resume/Skills/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Resume/Skills/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Questioner/Resume/WorkBackgrounds/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Resume/WorkBackgrounds/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/questioner/dashboard/collaboration.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/questioner/dashboard/collaboration.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/styles/questioner/dashboard/Collaboration/collaboration.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/styles/questioner/dashboard/Collaboration/collaboration.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/styles/questioner/dashboard/Wallet/wallet.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/styles/questioner/dashboard/Wallet/wallet.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/styles/questioner/resume/resume.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/styles/questioner/resume/resume.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Questioner/Dashboadr/Wallet/Statistics/StatisticsChart.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Dashboadr/Wallet/Statistics/StatisticsChart.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,7 +57,8 @@
       <workItem from="1701014888564" duration="87000" />
       <workItem from="1701015218029" duration="445000" />
       <workItem from="1701015691830" duration="686000" />
-      <workItem from="1701066911813" duration="3165000" />
+      <workItem from="1701066911813" duration="4663000" />
+      <workItem from="1701079432835" duration="296000" />
     </task>
     <servers />
   </component>

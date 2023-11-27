@@ -71,7 +71,7 @@ export const ChatPrompt = ({ isAdmin , receiverID , messagesItems , setMessagesI
 
     }
     return <ChatPromptContainer>
-        { editableMessage ? <SendMessageButton type={'primary'} onClick={EditMessage} loading={SendMessageLoading}>Questionnaire
+        { editableMessage ? <SendMessageButton type={'primary'} onClick={EditMessage} loading={SendMessageLoading}>
             <Icon name={'Check'} />
         </SendMessageButton> : <SendMessageButton type={'primary'} loading={SendMessageLoading}
                             onClick={promptValue ? SendMessage : () => {}}>

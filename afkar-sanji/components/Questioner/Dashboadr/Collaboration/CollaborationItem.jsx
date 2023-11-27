@@ -220,7 +220,7 @@ export default function ({data, isInterview, refreshData}) {
 
                 </ModalBody>
             </Modal>
-            {chatModal && (<ChatModal isActive={chatModal} setIsActive={setChatModal}/>)}
+            {chatModal && (<ChatModal  Questionnaire={data} isActive={chatModal} setIsActive={setChatModal}/>)}
         </CollaborationItem>
     </>)
 }

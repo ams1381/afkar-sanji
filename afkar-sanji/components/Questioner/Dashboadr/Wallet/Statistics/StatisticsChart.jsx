@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-
 import {
     CharContainer,
     ChartBody,
@@ -7,7 +6,6 @@ import {
     ChartHeader, Income,
     Cost, ChartBox, ChartFilterRightEmpty
 } from "@/styles/questioner/dashboard/Wallet/Statistics/StatisticsChart";
-
 import {Doughnut, ArcElement} from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
 import income from 'public/Icons/ArrowGren.svg'
@@ -48,7 +46,6 @@ export default function ({data, setFilterParams}) {
             transaction_type: 'i'
         }))
     }
-
 
     const costHandler = () => {
         setCostActive(p => p = !p)
@@ -120,7 +117,7 @@ export default function ({data, setFilterParams}) {
                                 datasets: [
                                     {
                                         data: [100, 0],
-                                        backgroundColor: ['#fff', '#fff']
+                                        backgroundColor: ['transparent', 'transparent']
                                     }
                                 ]
                             }}/>
