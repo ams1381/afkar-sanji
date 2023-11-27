@@ -347,9 +347,6 @@ export default function ({meData, cookies}) {
     )
 }
 
-//
-
-
 export async function getServerSideProps(context) {
     const {req} = context;
     const cookies = req.headers.cookie;
