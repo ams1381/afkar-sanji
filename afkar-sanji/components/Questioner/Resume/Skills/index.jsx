@@ -1,8 +1,16 @@
 import close from "@/public/Icons/Close.svg";
 import {
-    FromResumeItem, InputCom, ResumeInputCom, FromStepScroll, ButtonContainer, AddBtn, BtnComponent
+    FromResumeItem,
+    InputCom,
+    ResumeInputCom,
+    FromStepScroll,
+    ButtonContainer,
+    AddBtn,
+    BtnComponent,
+    LoadingMakerMobile,
+    LoadingMaker
 } from "@/styles/questioner/resume/resume";
-import {Button, message, Select, Skeleton} from "antd";
+import {Button, message, Select, Skeleton, Spin} from "antd";
 import React, {useEffect, useState} from "react";
 import add from "@/public/Icons/addBlue.svg";
 import StyleModules from "@/styles/auth/LoginStyles.module.css";
@@ -134,14 +142,15 @@ export default function ({
 
     return (<>
             {isLoading ? (
-                <div style={{
-                    display: width < 470 ? 'none' : 'flex',
-                    alignItems: "center",
-                    gap: '20px', flexWrap: 'wrap'
-                }}>
-                    <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '312px'}}/>
-                    <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '313px'}}/>
-                </div>
+                <>
+                    <LoadingMaker>
+                        <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '312px'}}/>
+                        <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '313px'}}/>
+                    </LoadingMaker>
+                    <LoadingMakerMobile>
+                        <Spin/>
+                    </LoadingMakerMobile>
+                </>
             ) : (
                 <FromStepScroll>
                     {skillsData?.map((item, index) => (<FromResumeItem key={index}>

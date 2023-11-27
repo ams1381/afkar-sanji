@@ -1,9 +1,17 @@
 import close from "@/public/Icons/Close.svg";
 import {useRouter} from "next/router";
 import {
-    AddBtn, BtnComponent, ButtonContainer, FromResumeItem, FromStepScroll, InputCom, ResumeInputCom
+    AddBtn,
+    BtnComponent,
+    ButtonContainer,
+    FromResumeItem,
+    FromStepScroll,
+    InputCom,
+    LoadingMaker,
+    LoadingMakerMobile,
+    ResumeInputCom
 } from "@/styles/questioner/resume/resume";
-import {Button, message, Select, Skeleton} from "antd";
+import {Button, message, Select, Skeleton, Spin} from "antd";
 import React, {useEffect, useState} from "react";
 import add from "@/public/Icons/addBlue.svg";
 import StyleModules from "@/styles/auth/LoginStyles.module.css";
@@ -150,13 +158,18 @@ export default function ({year, setGender, me}) {
     }, []);
 
     return (<>
-        {isLoading ? (<div style={{
-            display: width < 470 ? 'none' : 'flex', alignItems: "center", gap: '20px', flexWrap: 'wrap'
-        }}>
-            <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '202px'}}/>
-            <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '202px'}}/> <Skeleton.Input
-            active style={{height: '40px', minWidth: 'auto', width: '202px'}}/>
-        </div>) : (<FromStepScroll>
+        {isLoading ? (
+            <>
+                <LoadingMaker>
+                    <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '202px'}}/>
+                    <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '202px'}}/> <Skeleton.Input
+                    active style={{height: '40px', minWidth: 'auto', width: '202px'}}/>
+                </LoadingMaker>
+                <LoadingMakerMobile>
+                    <Spin/>
+                </LoadingMakerMobile>
+            </>
+        ) : (<FromStepScroll>
             {resumeData.map((item, index) => (<FromResumeItem key={item.id}>
                 {index > 0 && index + 1 !== resumeData.length &&
                     <BtnComponent onClick={() => removeResearch_histories(item?.id || '')}>

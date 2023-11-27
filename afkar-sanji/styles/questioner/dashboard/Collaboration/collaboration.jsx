@@ -12,24 +12,23 @@ export const Collaboration = styled.div`
   flex-direction: column;
   width: 100%;
   @media screen and (max-width: 768px) {
-    width: 95%;
+    width: 100%;
   }
 
   @media screen and (max-width: 550px) {
-    width: 90%;
+    width: 100%;
   }
 
   @media screen and (max-width: 450px) {
-    width: 85%;
+    width: 100%;
   }
-
 
   & .ant-tabs-nav-wrap {
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: IRANSans;
-    
+
     & .ant-tabs-tab-btn {
       font-size: 14px;
     }
@@ -93,18 +92,17 @@ export const CollaborationBody = styled.div`
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
 
-<<<<<<< HEAD
-  .infinite-scroll-component__outerdiv
-  {
+
+  .infinite-scroll-component__outerdiv {
     width: 100%;
-    
+
   }
-  .infinite-scroll-component
-  {
+
+  .infinite-scroll-component {
     display: flex;
     flex-direction: column;
     gap: 16px;
-=======
+  }
 
   @media screen and (max-width: 768px) {
     display: none;
@@ -112,7 +110,6 @@ export const CollaborationBody = styled.div`
 
   & #scrollableDiv::-webkit-scrollbar {
     display: none;
->>>>>>> origin/questioner
   }
 `
 
@@ -154,15 +151,14 @@ export const AddResultButton = styled.button`
   transition: 0.3s;
   flex-direction: row-reverse;
   cursor: pointer;
-  
-  &:hover
-  {
+
+  &:hover {
     width: 100%;
     transition: 0.5s;
     border: 1px solid var(--primary-color);
   }
-  &:hover i
-  {
+
+  &:hover i {
     filter: invert(37%) sepia(74%) saturate(1045%) hue-rotate(210deg) brightness(91%) contrast(105%);
   }
 `

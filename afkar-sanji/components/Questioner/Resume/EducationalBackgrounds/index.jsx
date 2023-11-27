@@ -1,5 +1,14 @@
 import {
-    BtnComponent, FromResumeItem, InputCom, ResumeInputCom, RowCom, FromStepScroll, ButtonContainer, AddBtn, Btn
+    BtnComponent,
+    FromResumeItem,
+    InputCom,
+    ResumeInputCom,
+    RowCom,
+    FromStepScroll,
+    ButtonContainer,
+    AddBtn,
+    Btn,
+    LoadingMaker, LoadingMakerMobile
 } from "@/styles/questioner/resume/resume";
 import {Row} from "@/styles/questioner/resume/resume";
 import {Button, message, Select, Skeleton} from "antd";
@@ -9,10 +18,10 @@ import add from "@/public/Icons/addBlue.svg";
 import StyleModules from "@/styles/auth/LoginStyles.module.css";
 import {educationalSchema} from "@/utilities/validators/resumeMaker";
 import {axiosInstance} from "@/utilities/axios";
-// icon
 import arrowDownIcon from '@/public/Icons/selectDown.svg'
 import editIcon from '@/public/Icons/editEesume.svg'
-
+import {LoadingOutlined} from '@ant-design/icons';
+import {Spin} from 'antd';
 
 export default function ({
                              educations, year, setCurrent, me, setTitle
@@ -149,14 +158,19 @@ export default function ({
     }, []);
 
     return (<>
-            {isLoading ? (<div style={{
-                display: width < 470 ? 'none' : 'flex', alignItems: "center", gap: '20px', flexWrap: 'wrap'
-            }}>
-                <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '200px'}}/>
-                <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '200px'}}/>
-                <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '200px'}}/>
-                <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: ' 646px'}}/>
-            </div>) : (<FromStepScroll>
+            {isLoading ? (
+                <>
+                    <LoadingMaker>
+                        <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '200px'}}/>
+                        <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '200px'}}/>
+                        <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '200px'}}/>
+                        <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: ' 646px'}}/>
+                    </LoadingMaker>
+                    <LoadingMakerMobile>
+                        <Spin/>
+                    </LoadingMakerMobile>
+                </>
+            ) : (<FromStepScroll>
                 {resumeData.map((item, index) => (<FromResumeItem flexDirection={'column'} key={index}>
                     <Row>
                         <ResumeInputCom>

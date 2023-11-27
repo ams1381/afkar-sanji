@@ -86,14 +86,6 @@ export const WalletHeader = styled.div`
     width: 95%;
   }
 
-  @media screen and (max-width: 550px) {
-    width: 90%;
-  }
-
-  @media screen and (max-width: 450px) {
-    width: 85%;
-  }
-  
   @media screen and (max-width: 768px) {
     & .wallet_head_btn {
       & .text {
@@ -145,11 +137,4 @@ export const WalletContainer = styled.div`
     width: 95%;
   }
 
-  @media screen and (max-width: 550px) {
-    width: 90%;
-  }
-
-  @media screen and (max-width: 450px) {
-    width: 85%;
-  }
 `

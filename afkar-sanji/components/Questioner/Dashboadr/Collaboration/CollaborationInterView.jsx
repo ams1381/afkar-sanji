@@ -22,63 +22,71 @@ export default function ({data}) {
 
     return (
         <>
-            <CollaborationItem style={{ gap : 10 }}>
+            <CollaborationItem style={{gap: 10}}>
                 {/*<CollaborationItemHeader>*/}
                 <CollaborationHeaderTopPart>
                     <div>
-                        <p style={{ fontSize : 20 }}>
+                        <p style={{fontSize: 20}}>
                             {data.name}
                         </p>
                     </div>
-                    <div style={{ display : 'flex' , flexDirection : 'row-reverse' , gap : 10 }}>
-                        <div style={{ display : 'flex' , gap : 10 , alignItems : 'center' }}>
-                            { data.price_pack ? <p style={{ opacity : 0.5 }}>
+                    <div style={{display: 'flex', flexDirection: 'row-reverse', gap: 10}}>
+                        <div style={{display: 'flex', gap: 10, alignItems: 'center'}}>
+                            {data.price_pack ? <p style={{opacity: 0.5}}>
                                 {data.price_pack.price && digitsEnToFa(data.price_pack.price)}
-                            </p> : '' }
+                            </p> : ''}
                             {/*<p style={{ opacity : 0.5 }}>۲۱،۷۰۰،۲۴۲</p>*/}
                             <Icon name={'Wallet3'}/>
                         </div>
-                        <CollaborationResultButton onClick={() => router.push(`/questioner/dashboard/${data?.uuid}/questioner-result`)}>
+                        <CollaborationResultButton
+                            onClick={() => router.push(`/questioner/dashboard/${data?.uuid}/questioner-result`)}>
                             <Icon name={'ArrowLeftBlue'}/>
                             <p>نتایج</p>
                         </CollaborationResultButton>
                     </div>
 
                 </CollaborationHeaderTopPart>
-                <div style={{ display : 'flex' , flexDirection : 'row-reverse' , justifyContent : 'space-between' }}>
-                    <div style={{ display : 'flex' , alignItems : 'center' , color : 'var(--Neutral-Gray9)' }}>
-                        <p style={{ opacity : 0.5 }}>{data.owner.first_name}</p>
+                <div style={{display: 'flex', flexDirection: 'row-reverse', justifyContent: 'space-between'}}>
+                    <div style={{display: 'flex', alignItems: 'center', color: 'var(--Neutral-Gray9)'}}>
+                        <p style={{opacity: 0.5}}>{data.owner.first_name ? `${data.owner.first_name} ${data.owner.last_name}` : 'ناشناس'}</p>
                     </div>
                     <div>
                         <div>
-                            <AddResultButton onClick={() => router.push(`/questioner/dashboard/${data?.uuid}/add-result`)}>
+                            <AddResultButton
+                                onClick={() => router.push(`/questioner/dashboard/${data?.uuid}/add-result`)}>
                                 {/*<img src={addIcon?.src} alt=""/>*/}
                                 <AddResultButtonContainer>
-                                    <Icon style={{ width : 22 , height : 22 }} name={'AddDark'} />
+                                    <Icon style={{width: 22, height: 22}} name={'AddDark'}/>
                                 </AddResultButtonContainer>
 
-                                <div style={{ whiteSpace : 'nowrap' , color : 'var(--primary-color)' , padding : '0 5px' , textAlign : 'center' }}>افزودن نتیجه</div>
+                                <div style={{
+                                    whiteSpace: 'nowrap',
+                                    color: 'var(--primary-color)',
+                                    padding: '0 5px',
+                                    textAlign: 'center'
+                                }}>افزودن نتیجه
+                                </div>
                             </AddResultButton>
                         </div>
                     </div>
                 </div>
-                    {/*<CollaborationItemLeft>*/}
-                    {/*    <div onClick={() => router.push(`/questioner/dashboard/${data?.uuid}/questioner-result`)}*/}
-                    {/*         className={`result`}>*/}
-                    {/*        /!*<img src={arrow?.src} alt=""/>*!/*/}
-                    {/*        <Icon name={'ArrowLeftBlue'}/>*/}
-                    {/*        <div className="text">نتایج</div>*/}
-                    {/*    </div>*/}
-                    {/*    <div className={`price`}>*/}
-                    {/*        <div className="text">۲۱،۷۰۰،۲۴۲</div>*/}
-                    {/*        /!*<img src={wallet?.src} alt=""/>*!/*/}
-                    {/*        <Icon name={'Wallet3'}/>*/}
-                    {/*    </div>*/}
-                    {/*</CollaborationItemLeft>*/}
-                    {/*<CollaborationItemRight color={data?.is_active ? '#5360ED' : 'red'}>*/}
-                    {/*    <div className={`title`}>{data.name}</div>*/}
-                    {/*    <div className={`caption`}>{data.owner.first_name}</div>*/}
-                    {/*</CollaborationItemRight>*/}
+                {/*<CollaborationItemLeft>*/}
+                {/*    <div onClick={() => router.push(`/questioner/dashboard/${data?.uuid}/questioner-result`)}*/}
+                {/*         className={`result`}>*/}
+                {/*        /!*<img src={arrow?.src} alt=""/>*!/*/}
+                {/*        <Icon name={'ArrowLeftBlue'}/>*/}
+                {/*        <div className="text">نتایج</div>*/}
+                {/*    </div>*/}
+                {/*    <div className={`price`}>*/}
+                {/*        <div className="text">۲۱،۷۰۰،۲۴۲</div>*/}
+                {/*        /!*<img src={wallet?.src} alt=""/>*!/*/}
+                {/*        <Icon name={'Wallet3'}/>*/}
+                {/*    </div>*/}
+                {/*</CollaborationItemLeft>*/}
+                {/*<CollaborationItemRight color={data?.is_active ? '#5360ED' : 'red'}>*/}
+                {/*    <div className={`title`}>{data.name}</div>*/}
+                {/*    <div className={`caption`}>{data.owner.first_name}</div>*/}
+                {/*</CollaborationItemRight>*/}
                 {/*</CollaborationItemHeader>*/}
                 {/*<Link style={{textDecoration: 'none'}} href={`/questioner/dashboard/${data?.uuid}/add-result`}>*/}
                 {/*    <AddBtnContainer>*/}

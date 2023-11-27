@@ -22,7 +22,7 @@ export const Container = styled.div`
   }
 
   @media screen and (max-width: 390px) {
-    height: 120vh;
+    height: 90vh;
     margin: 0 auto;
   }
 
@@ -450,6 +450,30 @@ export const MakeHead = styled.div`
     gap: 10px;
   }
 `
+
+export const LoadingMaker = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+
+  @media screen and (max-width: 470px) {
+    display: none;
+  }
+`
+
+export const LoadingMakerMobile = styled.div`
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+
+  @media screen and (max-width: 470px) {
+    display: flex;
+  }
+`
+
 
 export const Row = styled.div`
   display: flex;

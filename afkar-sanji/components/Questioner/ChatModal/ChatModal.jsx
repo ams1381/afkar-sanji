@@ -54,14 +54,12 @@ export const ChatModal = ({
         if(nextPageUrl === null)
             return
         if (scrollTop === 0 && !loadingMoreMessages) {
-            console.log(nextPageUrl)
             setLoadingMoreMessage(true)
             try {
                 let { data } =  await axiosInstance.get(nextPageUrl.replace('http://mah-api.codintofuture.ir',''))
                 setNextPageUrl(data.next)
                 // console.log(queryClient.getQueriesData(['ChatQuery']))
                 queryClient.setQueryData(['ChatQuery'], (oldData) => {
-
                     oldData.data.next = data.next;
                     oldData.data.results = [
                         ...oldData.data.results,

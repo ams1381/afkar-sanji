@@ -118,21 +118,27 @@ export default function ({cookies}) {
         }
     }
 
+    const [meData] = useQueries({
+        queries: [{
+            queryKey: ['meData'],
+            queryFn: async () => await axiosInstance.get(`/user-api/users/me/`),
+            refetchOnWindowFocus: false,
+            retry: false
+        }],
+    })
 
     const items = [{
-        key: '1', label: (
-            <div style={{
-                width: '100%',
-                textAlign: 'right',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '5px',
-                justifyContent: 'flex-end'
-            }}>
-                <img src={AlertOn?.src} alt=""/>
-                <p style={{color: '#5360ED'}}>درخواست‌های همکاری </p>
-            </div>
-        ), children: (<div id={'scrollableDiv'} style={{
+        key: '1', label: (<div style={{
+            width: '100%',
+            textAlign: 'right',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '5px',
+            justifyContent: 'flex-end'
+        }}>
+            <img src={AlertOn?.src} alt=""/>
+            <p style={{color: '#5360ED'}}>درخواست‌های همکاری </p>
+        </div>), children: (<div id={'scrollableDiv'} style={{
             width: '100%',
             display: 'flex',
             alignItems: 'center',
@@ -156,26 +162,21 @@ export default function ({cookies}) {
                     next={FetchMoreData}
                     hasMore={nextPage}
                     style={{
-                        width: '100%', gap: '10px',
-                        display: 'flex',
-                        flexDirection: 'column',
+                        width: '100%', gap: '10px', display: 'flex', flexDirection: 'column',
                     }}
                     loader={<h4>Loading...</h4>}
                     scrollableTarget="scrollableDiv">
                     {(!error && recommendedData?.data?.data?.results) ? recommendedData?.data?.data?.results.map((interview, index) => {
                         return <CollaborationItem refreshData={recommendedData}
-                            isInterview={false} data={interview}
-                            key={interview?.id}/>
+                                                  isInterview={false} data={interview}
+                                                  key={interview?.id}/>
                     }) : error && error.response?.status === 500 && <div style={{
                         display: 'flex', alignItems: 'center', justifyContent: 'center', height: '80vh'
                     }}>خطای داخلی سرور</div>}
                 </InfiniteScroll>
                 {!recommendedData?.data?.data?.results.length && (<div
                     style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        height: '75vh'
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', height: '75vh'
                     }}>{' درخواست همکاری‌ای وجود ندارد'}</div>)}
             </div>
         </div>),
@@ -214,10 +215,7 @@ export default function ({cookies}) {
                         </InfiniteScroll>
                         {!interViewData?.data?.data?.results.length && (<div
                             style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                height: '75vh'
+                                display: 'flex', alignItems: 'center', justifyContent: 'center', height: '75vh'
                             }}>{'پرشنامه ای وجود ندارد'}</div>)}
                     </div>
                 </>
@@ -280,7 +278,8 @@ export default function ({cookies}) {
                                                 next={FetchMoreData}
                                                 hasMore={nextPage}
                                                 style={{
-                                                    width: '100%', gap: '10px',
+                                                    width: '100%',
+                                                    gap: '10px',
                                                     display: 'flex',
                                                     flexDirection: 'column',
                                                     marginTop: '20px'

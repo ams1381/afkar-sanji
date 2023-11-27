@@ -8,7 +8,6 @@ import {
     CollapseItem,
     CollapseTitle,
     ColumnOfData,
-    DateOfCreate,
     GetResult,
     Level,
     ModalBody,
@@ -36,6 +35,7 @@ import mediumIcon from '@/public/Icons/questionLevel/medium.svg'
 import esIcon from '@/public/Icons/questionLevel/es.svg'
 
 export default function ({data, isInterview, refreshData}) {
+
     const getQuestions = (difficulty) => {
         return data?.questions?.filter(question => question.question.level === difficulty).map((item) => {
             return (

@@ -4,9 +4,9 @@ import {
     InputCom,
     ResumeInputCom,
     FromStepScroll,
-    ButtonContainer, AddBtn, BtnComponent
+    ButtonContainer, AddBtn, BtnComponent, LoadingMaker, LoadingMakerMobile
 } from "@/styles/questioner/resume/resume";
-import {Button, message, Select, Skeleton} from "antd";
+import {Button, message, Select, Skeleton, Spin} from "antd";
 import React, {useEffect, useState} from "react";
 import add from "@/public/Icons/addBlue.svg";
 import StyleModules from "@/styles/auth/LoginStyles.module.css";
@@ -143,16 +143,17 @@ export default function ({
     return (
         <>
             {isLoading ? (
-                <div style={{
-                    display: width < 470 ? 'none' : 'flex',
-                    alignItems: "center",
-                    gap: '20px', flexWrap: 'wrap'
-                }}>
-                    <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '145px'}}/>
-                    <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '145px'}}/>
-                    <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '145px'}}/>
-                    <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: ' 145px'}}/>
-                </div>
+                <>
+                    <LoadingMaker>
+                        <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '145px'}}/>
+                        <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '145px'}}/>
+                        <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: '145px'}}/>
+                        <Skeleton.Input active style={{height: '40px', minWidth: 'auto', width: ' 145px'}}/>
+                    </LoadingMaker>
+                    <LoadingMakerMobile>
+                        <Spin/>
+                    </LoadingMakerMobile>
+                </>
             ) : (
                 <FromStepScroll>
                     {workData.map((item, index) => (
