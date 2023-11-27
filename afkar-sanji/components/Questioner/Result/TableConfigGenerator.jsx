@@ -438,6 +438,7 @@ export const TableDataGenerator = (ResultData,QuestionnaireQuery,regex,RoleReq) 
                 // answerSetTime
                 rows[rows.length - 1]['answerSetTime'] = digitsEnToFa(convertToRegularTime(AnswerSet.answered_at).split(' ')[1])
                 rows[rows.length - 1]['RowDate'] = digitsEnToFa(convertDate(convertToRegularTime(AnswerSet.answered_at),'jalali'));
+
             }
         }
         else if(!AnswerSet.answers.length)

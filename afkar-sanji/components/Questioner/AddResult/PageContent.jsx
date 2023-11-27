@@ -66,6 +66,9 @@ export const PageContent = ({ questionnaire }) => {
                 })
             await axiosInstance.post(`/interview-api/interviews/${questionnaire.uuid}/answer-sets/${CreatedAnswerSet.id}/add-answer/`,
                 CopiedQuestionAnswerSet)
+            messageApi.success({
+                content : 'با موفقیت ثبت شد میتوانید نتیجه بعد را وارد کنید'
+            })
         }
         catch(err)
         {

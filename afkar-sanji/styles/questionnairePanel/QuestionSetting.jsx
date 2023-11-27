@@ -360,6 +360,12 @@ export const InterviewerBodyRow = styled.div`
   {
     background-color: var(--primary-color);
   }
+  
+  @media screen and (max-width: 480px) {
+    flex-wrap: wrap;
+    height: auto;
+    gap: 10px;
+  }
 `
 export const DistrictSelectorContainer = styled(InterviewerBodyRow)`
   flex-direction: column;
