@@ -162,7 +162,6 @@ export default function ({meData, cookies}) {
 
 
     const sendReqHandler = async () => {
-        if (!me?.data?.data?.ask_for_interview_role) {
             setReqLoading(true)
             await axiosInstance.patch('user-api/users/me', {
                 ask_for_interview_role: true
@@ -175,8 +174,6 @@ export default function ({meData, cookies}) {
                 setReqLoading(false)
                 message.error(errorMessage)
             })
-        }
-
     }
 
 
