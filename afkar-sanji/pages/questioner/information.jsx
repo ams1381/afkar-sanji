@@ -19,11 +19,13 @@ import closeIcon from "@/public/Icons/Dismiss.svg";
 import {useRouter} from "next/router";
 import {Skeleton} from 'antd';
 import {useQueries} from "@tanstack/react-query";
+import {WalletPopup} from "@/components/Folders/walletPopup";
 
 export default function () {
     const [userData, setUserData] = useState();
     const [isLoading, setIsLoading] = useState(false)
     const router = useRouter();
+    const [ walletPopupOpen , setWalletPopupOpen ] = useState(null);
     useEffect(() => {
         setIsLoading(true)
         axiosInstance.get("/user-api/users/me/").then((res) => {
@@ -69,15 +71,28 @@ export default function () {
 
 
     const handleSubmit = () => {
+        if(Object.values(formData).some(item => item === null || item === undefined)) {
+            message.error({
+                content : 'لطفا اطلاعات را کامل کنید'
+            })
+            return
+        }
         axiosInstance.patch('/user-api/users/me/', formData).then(res => {
             if (res?.status === 200) {
                 message.success('با موفقیت انجام شد')
-                router.push('/questioner/resume/')
+                // router.push('/questioner/resume/')
+                if(!userData.has_wallet) {
+                    setWalletPopupOpen(true);
+                }
+                else {
+                    router.push('/questioner/resume/')
+                }
             }
         }).catch(error => {
             const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
             message.error(ERROR_MESSAGE)
         })
+
     }
 
     return (
@@ -85,6 +100,7 @@ export default function () {
             <RightLight/>
             <LeftLight/>
             <AnimatePresence>
+                <WalletPopup distPage={'resume'} walletPopupOpen={walletPopupOpen} setWalletPopupOpen={setWalletPopupOpen} />
                 <motion.div
                     transition={{duration: 1}}
                     initial={{y: 220}}
@@ -194,7 +210,6 @@ export default function () {
                                         className={'notBorder'}
                                         suffixIcon={<img src={arrowDownIcon?.src}/>}
                                         value={[formData?.nationality]}
-                                        dropdownStyle={{ background : 'red' }}
                                         style={{
                                             width: "100%",
                                             height: "40px",
