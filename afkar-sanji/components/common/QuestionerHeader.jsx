@@ -158,7 +158,15 @@ const pathComponentGenerator = (PageName,interviewData,router) => {
               <span> صفحه ی اصلی </span>
               {/*<span> لیست پرسشنامه ها </span> /*/}
 
-
+          </>
+      case 'wallet':
+          return window.innerWidth < 768 ? <div onClick={() => router.back()}
+                    style={{ display : 'flex' , cursor : 'pointer' , alignItems : 'center' }} >
+              <p>کیف پول </p>
+              <Icon style={{ transform : 'rotate(180deg)' }} name={'ArrowRight'} />
+          </div> : <>
+              <p> کیف پول </p> /
+              <span> داشبورد </span>
           </>
   }
 }
