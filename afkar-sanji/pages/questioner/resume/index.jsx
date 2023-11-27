@@ -62,6 +62,7 @@ export default function ({meData, cookies}) {
                 axiosInstance.post(`/user-api/users/${meData?.id}/resume/`, formData)
                     .then(res => {
                         setResumeData(res?.data)
+                        me?.refetch()
                     })
                     .catch(error => {
                         const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
@@ -158,15 +159,9 @@ export default function ({meData, cookies}) {
     }
 
     const [reqLoading, setReqLoading] = useState(false)
-    const [reqBtnValue, setReqBtnValue] = useState((me?.data?.data?.role === 'n' || meData?.role === 'e') ? "ارسال به ادمین" : "رفتن به صفحه اصلی")
 
 
     const sendReqHandler = async () => {
-        if (me?.data?.data?.role === 'i' || me?.data?.data?.role === 'ie') {
-            await router.push('/')
-            me.refetch()
-            return
-        }
         if (!me?.data?.data?.ask_for_interview_role) {
             setReqLoading(true)
             await axiosInstance.patch('user-api/users/me', {
@@ -174,12 +169,11 @@ export default function ({meData, cookies}) {
             }).then(res => {
                 message.success('درخواست شما به ادمین ارسال شد')
                 setReqLoading(false)
-                setReqBtnValue('رفتن به صفحه اصلی')
                 me.refetch()
             }).catch(error => {
                 const errorMessage = error.response?.data[Object.keys(error.response.data)[0]][0];
-                    setReqLoading(false)
-                    message.error(errorMessage)
+                setReqLoading(false)
+                message.error(errorMessage)
             })
         }
 
@@ -197,6 +191,7 @@ export default function ({meData, cookies}) {
                         className={"close"}
                         src={closeIcon?.src}
                         alt={"بستن"}
+                        onClick={() => router.push('/')}
                         style={{
                             position: 'absolute', top: '20px', right: '20px', cursor: 'pointer',
                         }}
@@ -302,12 +297,12 @@ export default function ({meData, cookies}) {
                             </ResumeBox>
                             <div className={'bottom_mobile_container'}>
                                 <Button
-                                    disabled={meData?.resume?.is_empty}
+                                    disabled={me?.data?.data?.resume?.is_empty}
                                     className={`bottom_mobile`}
                                     onClick={sendReqHandler}
                                     loading={reqLoading}
                                 >
-                                    {reqBtnValue}
+                                    ارسال به ادمین
                                     <img src={arrowRightIcon?.src}/>
 
                                 </Button>
@@ -315,12 +310,12 @@ export default function ({meData, cookies}) {
                         </div>
                         <div className={'btnContainer'}>
                             <Button
-                                disabled={meData?.resume?.is_empty}
+                                disabled={me?.data?.data?.resume?.is_empty}
                                 className={`bottom`}
                                 onClick={sendReqHandler}
                                 loading={reqLoading}
                             >
-                                {reqBtnValue}
+                                ارسال به ادمین
                                 <img src={arrowRightIcon?.src}/>
                             </Button>
                         </div>
