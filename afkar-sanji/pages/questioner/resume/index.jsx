@@ -26,6 +26,7 @@ import {LeftLight, RightLight} from "@/styles/auth/Login";
 import Image from "next/image";
 import arrowRightIcon from "@/public/Icons/Chevron Double.svg";
 import {ResumeActiveBox, BtnCom} from '@/styles/questioner/resume/resume'
+import {useQueries} from "@tanstack/react-query";
 
 export default function ({meData, cookies}) {
     const [fileSize, setFileSize] = useState(null)
@@ -37,6 +38,16 @@ export default function ({meData, cookies}) {
     const [isHaveResume, setIsHaveResume] = useState(false);
     const status = useRef(true);
     const [resumeData, setResumeData] = useState(null)
+
+    const [me] = useQueries({
+        queries: [{
+            queryKey: ['meData'],
+            queryFn: async () => await axiosInstance.get(`/user-api/users/me/`),
+            refetchOnWindowFocus: false
+        },],
+    });
+
+    console.log(me?.data?.data)
 
     useEffect(() => {
         if (meData?.resume?.file) setIsUpload(true)
@@ -147,19 +158,16 @@ export default function ({meData, cookies}) {
     }
 
     const [reqLoading, setReqLoading] = useState(false)
-    const [reqBtnValue, setReqBtnValue] = useState(meData?.ask_for_interview_role ? "رفتن به صفحه اصلی" : "ارسال به ادمین")
+    const [reqBtnValue, setReqBtnValue] = useState((me?.data?.data?.role === 'n' || meData?.role === 'e') ? "ارسال به ادمین" : "رفتن به صفحه اصلی")
 
-    console.log(meData?.ask_for_interview_role)
 
-    useEffect(() => {
-        setReqBtnValue((meData?.role === 'n' || meData?.role === 'e') ?  "ارسال به ادمین" : "رفتن به صفحه اصلی")
-    }, [meData?.ask_for_interview_role]);
     const sendReqHandler = async () => {
-        if (meData?.role === 'i' || meData?.role === 'ie') {
+        if (me?.data?.data?.role === 'i' || me?.data?.data?.role === 'ie') {
             await router.push('/')
+            me.refetch()
             return
         }
-        if (!meData?.ask_for_interview_role) {
+        if (!me?.data?.data?.ask_for_interview_role) {
             setReqLoading(true)
             await axiosInstance.patch('user-api/users/me', {
                 ask_for_interview_role: true
@@ -167,13 +175,11 @@ export default function ({meData, cookies}) {
                 message.success('درخواست شما به ادمین ارسال شد')
                 setReqLoading(false)
                 setReqBtnValue('رفتن به صفحه اصلی')
+                me.refetch()
             }).catch(error => {
                 const errorMessage = error.response?.data[Object.keys(error.response.data)[0]][0];
-                if (error.status !== 400) {
                     setReqLoading(false)
                     message.error(errorMessage)
-                }
-                if (error.status === 400) router.push('/')
             })
         }
 
