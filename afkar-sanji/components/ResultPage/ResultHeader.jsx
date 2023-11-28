@@ -103,7 +103,7 @@ export const ResultHeader = ({ QuestionnaireQuery , RightDrawerOpen }) => {
    <PanelHeader>
    <QuestionnaireEditItemsInnerContainer >
        { QuestionnaireQuery.data?.data && chatModalActive && <ChatModal isAdmin={false}
-            Questionnaire={Questionnaire} isActive={chatModalActive} setIsActive={setChatModalActive}/>}
+            Questionnaire={QuestionnaireQuery.data?.data} isActive={chatModalActive} setIsActive={setChatModalActive}/>}
        <AntdTabsContainer RightDrawerOpen={RightDrawerOpen}>
             <Tabs
                 defaultActiveKey='3'
@@ -134,7 +134,8 @@ export const ResultHeader = ({ QuestionnaireQuery , RightDrawerOpen }) => {
                <Icon name='Share'/>
            </button>
        </Popover>}
-       { getItem('roleReq') && getItem('roleReq') === 'interview-api/interviews' && <button className={'header-button'}>
+       { getItem('roleReq') && getItem('roleReq') === 'interview-api/interviews' &&
+           <button onClick={() => setChatModalActive(true)} className={'header-button'}>
            <Icon style={{width: 14}} name={'ChatIcon'}/>
        </button>}
        </QuestionnaireEditButtonContainer>

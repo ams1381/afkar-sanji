@@ -35,7 +35,7 @@ const Login_container = () => {
       <LoginBox filltext={isLoggedIn ? 'true' : null}>
             <div className="login_content">
                 <div className={Classes ["login__header"]}>
-                    <TextProgress filltext={isLoggedIn ? 'true' : null}>
+                    <TextProgress windowWidth={window.innerWidth} filltext={isLoggedIn ? 'true' : null}>
                         مرکز افکار سنجی حی
                         <TextInnerProgress filltext={isLoggedIn ? 'true' : null}
                             halffill={otpHalfFill ? 'active' : null}>

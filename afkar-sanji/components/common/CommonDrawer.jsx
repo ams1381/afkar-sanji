@@ -173,16 +173,17 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                                     </CommonDrawerItemText>
                                     <CommonDrawerItemText active={drawerSelectedItem === 'interview-panel'}
                                           onClick={async () => {
-                                              if(Auth.role === 'e' || Auth.role === 'n') {
+                                              if((Auth.role === 'e' || Auth.role === 'n') && !Auth.askForInterviewRole) {
                                                   await router.push('/questioner/')
                                               }
-                                              else if(!Auth.askForInterviewRole) {
-                                                  await router.push('/questioner/dashboard/collaboration/')
-                                              }
-                                              else {
+                                              else if((Auth.role === 'e' || Auth.role === 'n') && Auth.askForInterviewRole) {
                                                   MessageApi.info({
                                                       content : 'درخواست پرسشگری شما تایید نشده'
                                                   })
+                                                  return
+                                              }
+                                              else if(!Auth.askForInterviewRole) {
+                                                  await router.push('/questioner/dashboard/collaboration/')
                                               }
                                           }}
                                           className='drawer_item_text interviewer'>
@@ -277,16 +278,17 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                         {/*}*/}
                         <CommonDrawerItemIcon open={RightDrawerOpen ? 'active' : null}
                               onClick={async () => {
-                                  if(Auth.role === 'e' || Auth.role === 'n') {
+                                  if((Auth.role === 'e' || Auth.role === 'n') && !Auth.askForInterviewRole) {
                                       await router.push('/questioner/')
                                   }
-                                  else if(!Auth.askForInterviewRole) {
-                                      await router.push('/questioner/dashboard/collaboration/')
-                                  }
-                                  else {
+                                  else if((Auth.role === 'e' || Auth.role === 'n') && Auth.askForInterviewRole) {
                                       MessageApi.info({
                                           content : 'درخواست پرسشگری شما تایید نشده'
                                       })
+                                      return
+                                  }
+                                  else if(!Auth.askForInterviewRole) {
+                                      await router.push('/questioner/dashboard/collaboration/')
                                   }
                               }}
                               active={drawerSelectedItem === 'interview-panel'}

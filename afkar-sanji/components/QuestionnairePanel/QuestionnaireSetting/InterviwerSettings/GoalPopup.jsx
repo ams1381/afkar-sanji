@@ -166,6 +166,10 @@ const ContentContainer = styled.div`
     display: flex;
     gap: 10px;
     padding: 24px 0;
+  
+  @media screen and (max-width: 480px) {
+    flex-wrap: wrap;
+  }
 `
 const ContentColumn = styled.div`
   display: flex;

@@ -215,7 +215,7 @@ export const JobInfo = ({ Countries , userData ,MeQuery , regions }) => {
                         <p>:آخرین به روزرسانی</p>
                    </span>
                 </div>
-                <Link href={'/questioner/resume/make'}>
+                <Link href={'/questioner/resume/make/?redirectProfile=1'}>
                     <EditButton>
                         ویرایش
                     </EditButton>

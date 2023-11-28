@@ -193,14 +193,14 @@ export const TextProgress = styled.div`
 
   @keyframes LoginTitleAnim
   {
-    25% { transform : scale(1.5)  }
+    25% { transform : scale(${p => p.windowWidth < 480 ? '1.25' : '1.5'}) }
     50% { transform : scale(1)  }
-    75% { transform : scale(1.5)  }
+    75% { transform : scale(${p => p.windowWidth < 480 ? '1.25' : '1.5'}) }
     100% { transform : scale(1)  }
   }
   @media screen and (max-width: 480px)
   {
-    font-size: 30px;
+      font-size: 30px;
   }
 `
 export const TextInnerProgress = styled.div`

@@ -91,8 +91,8 @@ export default function () {
 
     return (<PageBox>
         <CommonDrawer RightDrawerOpen={RightDrawerOpen} setRightDrawerOpen={setRightDrawerOpen}/>
+            <QuestionerHeader meData={meData} pageName='wallet'/>
         <main style={{width: RightDrawerOpen ? '80%' : '100%', transition: '0.3s'}}>
-            <QuestionerHeader meData={meData} pageName='profile'/>
             <QuestionerPageContainer>
                 <QuestionerContentBox>
                     <Container>

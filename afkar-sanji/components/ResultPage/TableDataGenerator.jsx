@@ -1,21 +1,14 @@
 import {Tooltip, Upload, Input, Button, Space, Popover} from "antd";
 import {Icon} from "@/styles/icons";
-import { SearchOutlined } from '@ant-design/icons';
 import {QuestionTypeIcon} from "@/utilities/QuestionTypes";
 import React, {useState} from "react";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
-import Highlighter from 'react-highlight-words';
-import DatePicker from "react-multi-date-picker";
 import {
     DateFilterButtonsContainer,
     DateFilterContainer,
     FilterButtonContainer,
     InterviewerCodeSearchContainer
 } from "@/styles/Result/ResultPage";
-import DatePanel from "react-multi-date-picker/plugins/date_panel";
-import persian from "react-date-object/calendars/persian";
-import persian_fa from "react-date-object/locales/persian_fa";
-import {TimePickerContainer} from "@/styles/questionnairePanel/QuestionnaireSetting";
 import {baseurl} from "@/utilities/axios";
 export const TableColumnGenerator = (QuestionsArray,resultMessage,regex,DateFilterPopover
      ,setDateFilterPopover,InterviewerCodePopup,setInterviewerCodepopup,RoleReq) => {
@@ -174,11 +167,6 @@ export const TableColumnGenerator = (QuestionsArray,resultMessage,regex,DateFilt
             showSorterTooltip : false,
             align : 'center' ,
             ellipsis: true,
-            // filtered : true ,
-            // filterIcon : <Icon style={{ width : 14 , height : 14 }} name={'Search'} /> ,
-            // filterDropdown : <div>sdgsdgsdgsdg</div>
-            // ...getColumnSearchProps('name'),
-            // #E2E2E2
         })
         TableColumns.unshift({
             title : <FilterButtonContainer>
@@ -190,62 +178,13 @@ export const TableColumnGenerator = (QuestionsArray,resultMessage,regex,DateFilt
             dataIndex : 'موقعیت مکانی',
             width : 176,
             align : 'center' ,
-            // filtered : true ,
-            // filterIcon : <Icon style={{ width : 17 , height : 17 }} name={'locationFilter'} /> ,
-            // filterDropdown : <div>sdgsdgsdgsdg</div>,
-            // locationFilter
-            // ellipsis: true,
-            // FilterDate
         })
         TableColumns.unshift({
-            // title : <FilterButtonContainer>
-            //     <Popover
-            //         placement={'bottom'}
-            //         trigger={'click'}
-            //         onOpenChange={() => setDateFilterPopover(false)}
-            //         content={<DateFilterContainer>
-            //             <DatePicker
-            //                 rangeHover
-            //                 plugins={[<DatePanel position="left"/>]}
-            //                 calendar={persian}
-            //                 range
-            //                 render={(value, openCalendar) => {
-            //                     return (
-            //                         <TimePickerContainer style={{ cursor : 'pointer' }} onClick={openCalendar}>
-            //                             <input style={{ pointerEvents : 'all' , color : 'black' }}
-            //                                value={value} placeholder='انتخاب تاریخ' />
-            //                             <Icon name='Calender' />
-            //                         </TimePickerContainer>
-            //                     )}}
-            //                 locale={persian_fa} />
-            //             <DateFilterButtonsContainer>
-            //                 <Button className={'search-button'}>
-            //                     <p>جست‌و‌جو</p>
-            //                 </Button>
-            //                 <Button>
-            //                     بازنشانی
-            //                 </Button>
-            //             </DateFilterButtonsContainer>
-            //         </DateFilterContainer>}
-            //         open={DateFilterPopover}>
-            //         <span onClick={() => setDateFilterPopover(!DateFilterPopover)}>
-            //             <Icon style={{ width : 17 , height : 17 }} name={'FilterDate'} />
-            //     </span>
-            //     </Popover>
-            //     <span>
-            //         <Icon style={{ width : 18 , height : 18 }} name={'Sorter'} />
-            //     </span>
-            //     <p>تاریخ</p>
-            // </FilterButtonContainer>,
             title : 'تاریخ',
             dataIndex : 'RowDate',
             width : 176,
             sorter : (a , b) => Date.parse(a.date) - Date.parse(b.date),
             align : 'center' ,
-            // ellipsis: true,
-            // filtered : true ,
-            // filterDropdownOpen : true ,
-            // filterIcon : <Icon style={{ width : 14 , height : 14 }} name={'FilterDate'} /> ,
 
         })
         TableColumns.unshift({
@@ -254,8 +193,6 @@ export const TableColumnGenerator = (QuestionsArray,resultMessage,regex,DateFilt
             width : 176,
             align : 'center',
             ellipsis: true,
-            // ...getColumnSearchProps('name'),
-
         })
     }
 
@@ -334,94 +271,3 @@ export const TableDataGenerator = (ResultData,QuestionnaireQuery,regex) => {
     })
     return rows;
 }
-const getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
-        <div
-            style={{
-                padding: 8,
-            }}
-            onKeyDown={(e) => e.stopPropagation()}
-        >
-            <Input
-                // ref={searchInput}
-                placeholder={`Search ${dataIndex}`}
-                value={selectedKeys[0]}
-                onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-                onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                style={{
-                    marginBottom: 8,
-                    display: 'block',
-                }}
-            />
-            <Space>
-                <Button
-                    type="primary"
-                    // onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                    // icon={<SearchOutlined />}
-                    size="small"
-                    style={{
-                        width: 90,
-                    }}
-                >
-                    Search
-                </Button>
-                <Button
-                    // onClick={() => clearFilters && handleReset(clearFilters)}
-                    size="small"
-                    style={{
-                        width: 90,
-                    }}
-                >
-                    Reset
-                </Button>
-                <Button
-                    type="link"
-                    size="small"
-                    onClick={() => {
-                        confirm({
-                            closeDropdown: false,
-                        });
-                        // setSearchText(selectedKeys[0]);
-                        // setSearchedColumn(dataIndex);
-                    }}
-                >
-                    Filter
-                </Button>
-                <Button
-                    type="link"
-                    size="small"
-                    onClick={() => {
-                        close();
-                    }}
-                >
-                    close
-                </Button>
-            </Space>
-        </div>
-    ),
-    filterIcon: (filtered) => (
-        <Icon name={'search'} />
-        // <SearchOutlined
-        //     style={{
-        //         color: filtered ? '#1677ff' : undefined,
-        //     }}
-        // />
-    ),
-    onFilter: (value, record) =>
-        record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
-    onFilterDropdownOpenChange: (visible) => {
-        // if (visible) {
-        //     setTimeout(() => searchInput.current?.select(), 100);
-        // }
-    },
-    render: (text) =>
-            <Highlighter
-                highlightStyle={{
-                    backgroundColor: '#ffc069',
-                    padding: 0,
-                }}
-                // searchWords={[searchText]}
-                autoEscape
-                textToHighlight={text ? text.toString() : ''}
-            />
-});
