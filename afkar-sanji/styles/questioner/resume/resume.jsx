@@ -447,6 +447,7 @@ export const MakeHead = styled.div`
     padding: 10px;
     justify-content: center;
     align-items: center;
+    text-align: center;
     gap: 10px;
   }
 `
@@ -526,7 +527,7 @@ export const FromStep = styled.form`
 
   > .title {
     color: #000;
-    text-align: right;
+    text-align: center;
     font-size: 12px;
     font-style: normal;
     font-weight: 400;

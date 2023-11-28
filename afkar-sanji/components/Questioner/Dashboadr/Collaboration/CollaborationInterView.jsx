@@ -1,28 +1,24 @@
 import {
-    AddBtnContainer, AddResultButton, AddResultButtonContainer,
+    AddResultButton, AddResultButtonContainer,
     CollaborationHeaderTopPart,
     CollaborationItem,
-    CollaborationItemHeader,
-    CollaborationItemLeft,
-    CollaborationItemRight, CollaborationResultButton,
+ CollaborationResultButton,
 } from "@/styles/questioner/dashboard/Collaboration/collaboration";
 import {Icon} from "@/styles/icons";
 import React, {useState} from "react";
-import {Button, Modal} from 'antd';
-import Link from "next/link";
-import addIcon from '@/public/Icons/AddDark.svg'
 import {useRouter} from "next/router";
 import {digitsEnToFa} from "@persian-tools/persian-tools";
 
 
 export default function ({data}) {
+
     const router = useRouter()
     const [open, setOpen] = useState(false);
     const [chatModal, setChatModal] = useState(false)
 
     return (
         <>
-            <CollaborationItem style={{gap: 10}}>
+            <CollaborationItem isActive={data?.is_active} style={{gap: 10}}>
                 {/*<CollaborationItemHeader>*/}
                 <CollaborationHeaderTopPart>
                     <div>
@@ -46,9 +42,11 @@ export default function ({data}) {
                     </div>
 
                 </CollaborationHeaderTopPart>
-                <div style={{display: 'flex', flexDirection: 'row-reverse', justifyContent: 'space-between'}}>
-                    <div style={{display: 'flex', alignItems: 'center', color: 'var(--Neutral-Gray9)'}}>
-                        <p style={{opacity: 0.5}}>{data.owner.first_name ? `${data.owner.first_name} ${data.owner.last_name}` : 'ناشناس'}</p>
+                <div className={'user_data'}
+                     style={{display: 'flex', flexDirection: 'row-reverse', justifyContent: 'space-between'}}>
+                    <div className={'user_data_container'}
+                         style={{display: 'flex', alignItems: 'center', color: 'var(--Neutral-Gray9)'}}>
+                        <p className={'name'}>{data.owner.first_name ? `${data.owner.first_name} ${data.owner.last_name}` : 'ناشناس'}</p>
                     </div>
                     <div>
                         <div>

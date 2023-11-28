@@ -123,12 +123,36 @@ export const CollaborationItem = styled.div`
   border-radius: var(--radius-XS, 2px);
   background: var(--surface);
   cursor: pointer;
+
+  & .user_data {
+    & .user_data_container {
+      & .name {
+        position: relative;
+        color: #999;
+
+        &::after {
+          position: absolute;
+          content: '';
+          width: 6px;
+          height: 6px;
+          background: ${p => p.isActive ? 'var(--primary-color)' : 'var(--Error-color)'};
+          top: 40%;
+          left: -12px;
+          clip-path: circle();
+        }
+      }
+    }
+  }
 `
 export const CollaborationHeaderTopPart = styled.div`
   display: flex;
   justify-content: space-between;
   flex-direction: row-reverse;
   color: var(--Neutral-Gray9);
+
+
+
+
 `
 export const CollaborationResultButton = styled.div`
   display: flex;
@@ -169,8 +193,8 @@ export const AddResultButtonContainer = styled.div`
   align-items: center;
   justify-content: center;
   flex: none;
-  
-  
+
+
 `
 export const CollaborationItemHeader = styled.div`
   display: flex;
@@ -223,7 +247,8 @@ export const CollaborationItemRight = styled.div`
     position: relative;
     width: fit-content;
     opacity: 0.8;
-    }
+  }
+
   @media screen and (max-height: 768px) {
     > .caption {
       font-size: 13px;
@@ -319,6 +344,7 @@ export const ModalHeader = styled.div`
   align-self: stretch;
   box-shadow: 0px -1px 0px 0px #F0F0F0 inset;
   width: 96%;
+
   & .name {
     color: #525252;
     font-size: 20px;
@@ -364,12 +390,12 @@ export const GetResult = styled.div`
     font-weight: 900;
     line-height: 30px;
   }
-  
+
   @media screen and (max-height: 768px) {
     > .title {
-      font-size: 13px; 
+      font-size: 13px;
     }
-    
+
     > .data {
       font-size: 13px;
     }
@@ -410,11 +436,12 @@ export const ColumnOfData = styled(GetResult)`
     font-weight: 400;
     opacity: 0.8;
   }
-  
+
   @media screen and (max-height: 768px) {
     & .title {
       font-size: 13px;
     }
+
     > .data {
       font-size: 13px;
     }
@@ -490,7 +517,7 @@ export const AddBtnContainer = styled.div`
     transition: all .8s ease;
     padding: 8.5px;
     align-items: center;
-    
+
     &:hover {
       padding: 10px;
       width: 130px;
