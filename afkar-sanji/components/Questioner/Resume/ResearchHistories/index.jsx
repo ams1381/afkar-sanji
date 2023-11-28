@@ -17,7 +17,6 @@ import add from "@/public/Icons/addBlue.svg";
 import StyleModules from "@/styles/auth/LoginStyles.module.css";
 import {researchHistoriestsSchema, workBackgroundstsSchema} from "@/utilities/validators/resumeMaker";
 import {axiosInstance} from "@/utilities/axios";
-// icon
 import arrowDownIcon from '@/public/Icons/selectDown.svg'
 import editIcon from "@/public/Icons/editEesume.svg";
 
@@ -79,7 +78,7 @@ export default function ({year, setGender, me}) {
     }
 
     const editResearch_histories = async (id) => {
-        console.log(id)
+
         try {
             const updatedItem = resumeData.find(item => item.id === id);
             const index = resumeData.findIndex(item => item.id === id);
@@ -115,7 +114,12 @@ export default function ({year, setGender, me}) {
                     message.error(errorMessage)
                 })
             } else {
-                router.push('/questioner/resume')
+                if (location?.href.includes('redirect=1')) {
+                    await router.push('/questioner/dashboard/profile')
+                } else {
+                    await router.push('/questioner/resume')
+                }
+
             }
         } else {
             axiosInstance.post(`user-api/users/${me?.id}/resume/${me?.resume?.id}/research-histories/`, resumeData[resumeData.length - 1]).then(res => {
@@ -135,13 +139,23 @@ export default function ({year, setGender, me}) {
             await axiosInstance.patch('user-api/users/me', {
                 ask_for_interview_role: true
             }).then(res => {
-                router.push('/questioner/resume')
+                if (location?.href.includes('redirect=1')) {
+                    router.push('/questioner/dashboard/profile')
+                } else {
+                    router.push('/questioner/resume')
+                }
+
             }).catch(error => {
                 const errorMessage = error.response?.data[Object.keys(error.response.data)[0]][0];
                 message.error(errorMessage)
             })
         } else {
-            router.push('/questioner/resume')
+            if (location?.href.includes('redirect=1')) {
+                await router.push('/questioner/dashboard/profile')
+            } else {
+                await router.push('/questioner/resume')
+            }
+
         }
     }
 
