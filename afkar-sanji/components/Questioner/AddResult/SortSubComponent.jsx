@@ -11,6 +11,10 @@ export const SortSubComponent = ({ QuestionData , answerSet , ErrorQuestions , s
 
     // const QuestionsAnswerSet = useSelector(state => state.reducer.AnswerSet);
     useEffect(() => {
+        if(!answerSet.find(item => item.question == QuestionData.id)?.answer?.sorted_options && !loadableAnswer) {
+            setSortedOptionArray(QuestionData.options)
+            return;
+        }
         if(answerSet.find(item => item.question == QuestionData.id) && loadableAnswer)
         {
             if(!(answerSet.find(item => item.question == QuestionData.id).answer.sorted_options))

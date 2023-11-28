@@ -36,7 +36,7 @@ const ResultsPage = ({ cookies }) => {
       {
         queryKey: ['result'],
         queryFn: async () =>
-          await axiosInstance.get(`/${getItem('roleReq') ? getItem('roleReq') : 'result-api'}/${router.query.QuestionnaireID}/answer-sets/?answered_at=&end_date=${EndDate}&page=${CurrentPage}&start_date=${StartDate}`) ,
+          await axiosInstance.get(`/${getItem('roleReq') === 'interview-api/interviews' ? getItem('roleReq') : 'result-api'}/${router.query.QuestionnaireID}/answer-sets/?answered_at=&end_date=${EndDate}&page=${CurrentPage}&start_date=${StartDate}`) ,
         refetchOnWindowFocus : false ,
         retry : false
         },

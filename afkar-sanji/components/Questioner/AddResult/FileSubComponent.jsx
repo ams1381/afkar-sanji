@@ -62,6 +62,10 @@ export const FileSubComponent = ({ QuestionData , answerSet , ErrorQuestions , s
         setFileAnswer([newFile]);
     }
     useEffect(() => {
+        if(!answerSet.find(item => item.question === QuestionData.id).file && !loadableAnswer) {
+            setFileAnswer([])
+            setFileUploadedState(false)
+        }
         if(answerSet.find(item => item.question === QuestionData.id) &&
             answerSet.find(item => item.question === QuestionData.id).file && loadableAnswer)
         {
@@ -73,7 +77,7 @@ export const FileSubComponent = ({ QuestionData , answerSet , ErrorQuestions , s
             }]);
             setFileUploadedState(true)
         }
-    },[ QuestionData ])
+    },[ QuestionData , answerSet])
     return <FileQuestionContainer uploaderror={uploadError ? 'occur' : null} fileUploaded={fileUploadedState  ? 'active' : null}>
         {contextHolder}
         <Upload

@@ -12,19 +12,27 @@ export const InputSubComponent = ({ QuestionData , answerSet , ErrorQuestions , 
     const dispatcher = useDispatch();
     const [ InputValue , setInputValue ] = useState(null);
     useEffect(() => {
+        if(!answerSet.find(item => item.question == QuestionData.id).answer[QuestionData.question_type] && !loadableAnswer)
+        {
+            setInputValue(null)
+        }
         if(answerSet.find(item => item.question == QuestionData.id) && loadableAnswer)
         {
+
             if(answerSet.find(item => item.question == QuestionData.id).answer[QuestionData.question_type])
                  setInputValue(digitsFaToEn(answerSet.find(item => item.question == QuestionData.id).answer[QuestionData.question_type]))
+            // else
+            //     setInputValue(null)
+
         }
-        // if(answerSet && answerSet?.answers?.length)
-        // {
-        //     if(answerSet?.answers.find(item => item.question_id === QuestionData.id))
-        //     {
-        //         setInputValue(answerSet?.answers.find(item => item.question_id == QuestionData.id).answer)
-        //     }
-        // }
-    },[QuestionData.id])
+        if(answerSet && answerSet?.answers?.length)
+        {
+            if(answerSet?.answers.find(item => item.question_id === QuestionData.id))
+            {
+                setInputValue(answerSet?.answers.find(item => item.question_id == QuestionData.id).answer)
+            }
+        }
+    },[QuestionData.id , answerSet])
 
     const ChangeInputHandler = (e) => {
         if(QuestionData.pattern.includes('english_letters'))
