@@ -176,10 +176,10 @@ const pathComponentGenerator = (PageName, interviewData, router) => {
     }
     return window.innerWidth < 768 ? <div onClick={() => router.back()}
                                           style={{display: 'flex', cursor: 'pointer', alignItems: 'center'}}>
-        <p> شسمزخشسزدمشسنزد </p>
+        <p> پنل پرسشگری </p>
         <Icon style={{transform: 'rotate(180deg)'}} name={'ArrowRight'}/>
     </div> : <>
-        <p> درخواست همکاری </p> /
+        <p>  پنل پرسشگری </p> /
         <span> داشبورد </span>
     </>
 }

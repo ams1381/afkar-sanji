@@ -137,6 +137,7 @@ export const WalletContainer = styled.div`
     flex-direction: column;
     justify-content: center;
     width: 95%;
+    margin-bottom: 80px;
   }
 
 `
