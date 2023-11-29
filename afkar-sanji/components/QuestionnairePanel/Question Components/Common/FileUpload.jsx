@@ -46,7 +46,6 @@ const FileUpload = ({ QuestionInfo , setQuestionBoxHeight}) => {
       setUploadError(false);
       return
     }
-
     if(detectFileFormat(file.file?.name) == 'UNKNOWN' || detectFileFormat(file.file?.name) == 'Zip' ||
     detectFileFormat(file.file?.name) == 'Audio')
     {
@@ -57,6 +56,7 @@ const FileUpload = ({ QuestionInfo , setQuestionBoxHeight}) => {
           direction: 'rtl'
         }
       })
+
       setFileList([{
         name : file.file.name,
         status: 'error',
@@ -87,6 +87,8 @@ const FileUpload = ({ QuestionInfo , setQuestionBoxHeight}) => {
       return
     }
     file.fileList.length ? setFileUploaded(true) : setFileUploaded(null);
+    // console.log(file.file)
+
     dispatcher(UploadFileHandler(
       {
          QuestionID : QuestionInfo.id , 
@@ -148,9 +150,11 @@ const FileUpload = ({ QuestionInfo , setQuestionBoxHeight}) => {
 }
 export const beforeUpload = (file) => {
   return new Promise((resolve, reject) => {
+
     const ImageOrVideo = file.type === 'image/jpeg' || file.type === 'video/mkv' || file.type === 'video/mp4'
     file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/gif';
-    if (!ImageOrVideo) 
+
+    // if (!ImageOrVideo)
       reject(false);
     
     const isLt5M = file.size / 1024 / 1024 <= 5;
