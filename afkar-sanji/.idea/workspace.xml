@@ -6,16 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="496321e2-4aea-4348-a674-0e3ff527a71c" name="Changes" comment="get medata in client">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Questioner/Dashboadr/Collaboration/CollaborationItem.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Dashboadr/Collaboration/CollaborationItem.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Questioner/Dashboadr/Wallet/Statistics/StatisticsChart.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Dashboadr/Wallet/Statistics/StatisticsChart.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Questioner/Resume/Achievements/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Resume/Achievements/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Questioner/Resume/ResearchHistories/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Resume/ResearchHistories/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Questioner/Resume/WorkBackgrounds/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Resume/WorkBackgrounds/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Questioner/Dashboadr/Collaboration/CollaborationInterView.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Dashboadr/Collaboration/CollaborationInterView.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/questioner/dashboard/collaboration.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/questioner/dashboard/collaboration.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/questioner/resume/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/questioner/resume/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/questioner/resume/make.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/questioner/resume/make.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/styles/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/styles/globals.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/styles/questioner/resume/resume.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/styles/questioner/resume/resume.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/styles/questioner/dashboard/Collaboration/collaboration.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/styles/questioner/dashboard/Collaboration/collaboration.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,7 +67,7 @@
       <workItem from="1701165150354" duration="25000" />
       <workItem from="1701179837121" duration="6179000" />
       <workItem from="1701226232270" duration="1830000" />
-      <workItem from="1701233261248" duration="7081000" />
+      <workItem from="1701233261248" duration="10444000" />
     </task>
     <task id="LOCAL-00001" summary="get medata in client">
       <option name="closed" value="true" />

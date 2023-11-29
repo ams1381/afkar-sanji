@@ -2,7 +2,7 @@ import {
     AddResultButton, AddResultButtonContainer,
     CollaborationHeaderTopPart,
     CollaborationItem,
- CollaborationResultButton,
+    CollaborationResultButton,
 } from "@/styles/questioner/dashboard/Collaboration/collaboration";
 import {Icon} from "@/styles/icons";
 import React, {useState} from "react";
@@ -21,8 +21,8 @@ export default function ({data}) {
             <CollaborationItem isActive={data?.is_active} style={{gap: 10}}>
                 {/*<CollaborationItemHeader>*/}
                 <CollaborationHeaderTopPart>
-                    <div>
-                        <p style={{fontSize: 20}}>
+                    <div className={'title_container'}>
+                        <p>
                             {data.name}
                         </p>
                     </div>
