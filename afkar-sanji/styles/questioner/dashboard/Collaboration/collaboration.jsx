@@ -150,7 +150,14 @@ export const CollaborationHeaderTopPart = styled.div`
   flex-direction: row-reverse;
   color: var(--Neutral-Gray9);
 
-
+  & .title_container {
+    & .title {
+      font-size: 20px;
+      @media screen and (max-width: 768px) {
+        font-size: 14px;
+      }
+    }
+  }
 
 
 `

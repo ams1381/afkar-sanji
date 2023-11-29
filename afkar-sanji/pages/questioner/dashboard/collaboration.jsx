@@ -146,10 +146,10 @@ export default function ({cookies}) {
             alignItems: 'center',
             gap: '10px',
             flexDirection: 'column',
-            maxHeight: ' 80vh',
+            maxHeight: ' 100vh',
             overflow: 'auto',
         }}>
-            {recommendedData?.isLoading && (<div style={{
+            {recommendedData?.isLoading ? (<div style={{
                 width: '100%', display: 'flex', flexDirection: 'column', gap: '10px'
             }}>
                 <Skeleton.Input active style={{width: '100%', height: '200px'}}/>
@@ -157,52 +157,59 @@ export default function ({cookies}) {
                 <Skeleton.Input active style={{width: '100%', height: '200px'}}/>
                 <Skeleton.Input active style={{width: '100%', height: '200px'}}/>
                 <Skeleton.Input active style={{width: '100%', height: '200px'}}/>
-            </div>)}
-            <div style={{width: '100%'}}>
-                <InfiniteScroll
-                    dataLength={recommended?.length} //This is important field to render the next data
-                    next={FetchMoreData}
-                    hasMore={nextPage}
-                    style={{
-                        width: '100%', gap: '10px', display: 'flex', flexDirection: 'column',
-                    }}
-                    loader={<h4>Loading...</h4>}
-                    scrollableTarget="scrollableDiv">
-                    {(!error && recommendedData?.data?.data?.results) ? recommendedData?.data?.data?.results.map((interview, index) => {
-                        return <CollaborationItem refreshData={recommendedData}
-                                                  isInterview={false} data={interview}
-                                                  key={interview?.id}/>
-                    }) : error && error.response?.status === 500 && <div style={{
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', height: '80vh'
-                    }}>خطای داخلی سرور</div>}
-                </InfiniteScroll>
-                {!recommendedData?.data?.data?.results.length && (<div
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        height: '75vh',
-                        gap: '20px'
-                    }}>
-                    {recommendedData?.error?.response?.data?.detail || ' درخواست همکاری‌ای وجود ندارد'}
-                    {recommendedData?.error?.response?.data?.detail && (
-                        <ConfirmButtonContainer style={{textAlign: 'left'}}>
-                            <Button type='primary' onClick={() => router.push('/questioner/dashboard/profile')}>
-                                حساب کاربری
-                            </Button>
-                        </ConfirmButtonContainer>
-                    )}
-                </div>)}
-            </div>
+            </div>) : (
+                <div style={{width: '100%'}}>
+                    <InfiniteScroll
+                        dataLength={recommended?.length} //This is important field to render the next data
+                        next={FetchMoreData}
+                        hasMore={nextPage}
+                        style={{
+                            width: '100%', gap: '10px', display: 'flex', flexDirection: 'column',
+                        }}
+                        loader={<h4>Loading...</h4>}
+                        scrollableTarget="scrollableDiv">
+                        {(!error && recommendedData?.data?.data?.results) ? recommendedData?.data?.data?.results.map((interview, index) => {
+                            return <CollaborationItem refreshData={recommendedData}
+                                                      isInterview={false} data={interview}
+                                                      key={interview?.id}/>
+                        }) : error && error.response?.status === 500 && <div style={{
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', height: '80vh'
+                        }}>خطای داخلی سرور</div>}
+                    </InfiniteScroll>
+                    {!recommendedData?.data?.data?.results.length && (<div
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            height: '75vh',
+                            gap: '20px'
+                        }}>
+                        {recommendedData?.error?.response?.data?.detail || ' درخواست همکاری‌ای وجود ندارد'}
+                        {recommendedData?.error?.response?.data?.detail && (
+                            <ConfirmButtonContainer style={{textAlign: 'left'}}>
+                                <Button type='primary' onClick={() => router.push('/questioner/dashboard/profile')}>
+                                    حساب کاربری
+                                </Button>
+                            </ConfirmButtonContainer>
+                        )}
+                    </div>)}
+                </div>
+            )}
         </div>),
     },
 
         {
-            key: '2', label: 'لیست پرسش‌نامه‌ها', children: (<div id={'interviewsColumn'} style={{
-                width: '100%', display: 'flex', alignItems: 'center', gap: '10px', flexDirection: 'column'
+            key: '2', label: 'لیست پرسش‌نامه‌ها', children: (<div id={'scrollableDiv'} style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                flexDirection: 'column',
+                maxHeight: ' 100vh',
+                overflow: 'auto',
             }}>
-                {isGetData && (<div style={{
+                {interViewData?.isLoading ? (<div style={{
                     width: '100%', display: 'flex', flexDirection: 'column', gap: '10px'
                 }}>
                     <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
@@ -210,31 +217,32 @@ export default function ({cookies}) {
                     <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
                     <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
                     <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
-                </div>)}
-                <>
-                    <div style={{
-                        width: '100%',
-                    }}>
-                        <InfiniteScroll
-                            dataLength={myInterView?.length} //This is important field to render the next data
-                            next={FetchMoreInterview}
-                            hasMore={interviewsNextPage}
-                            style={{
-                                width: '100%', gap: '10px', display: 'flex', flexDirection: 'column'
-                            }}
-                            loader={<h4>Loading...</h4>}
-                            scrollableTarget="interviewsColumn">
-                            {(!error && interViewData?.data?.data?.results) && interViewData?.data?.data?.results.map((interview, index) => {
-                                return <CollaborationInterView refreshData={recommendedData} data={interview}
-                                                               key={interview?.id}/>
-                            })}
-                        </InfiniteScroll>
-                        {!interViewData?.data?.data?.results.length && (<div
-                            style={{
-                                display: 'flex', alignItems: 'center', justifyContent: 'center', height: '75vh'
-                            }}>{'پرشنامه ای وجود ندارد'}</div>)}
-                    </div>
-                </>
+                </div>) : (
+                    <>
+                        <div style={{
+                            width: '100%',
+                        }}>
+                            <InfiniteScroll
+                                dataLength={myInterView?.length} //This is important field to render the next data
+                                next={FetchMoreInterview}
+                                hasMore={interviewsNextPage}
+                                style={{
+                                    width: '100%', gap: '10px', display: 'flex', flexDirection: 'column'
+                                }}
+                                loader={<h4>Loading...</h4>}
+                                scrollableTarget="interviewsColumn">
+                                {(!error && interViewData?.data?.data?.results) && interViewData?.data?.data?.results.map((interview, index) => {
+                                    return <CollaborationInterView refreshData={recommendedData} data={interview}
+                                                                   key={interview?.id}/>
+                                })}
+                            </InfiniteScroll>
+                            {!interViewData?.data?.data?.results.length && (<div
+                                style={{
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center', height: '75vh'
+                                }}>{'پرشنامه ای وجود ندارد'}</div>)}
+                        </div>
+                    </>
+                )}
             </div>),
         },];
 
@@ -268,131 +276,134 @@ export default function ({cookies}) {
                                         overflow: 'auto',
                                         marginTop: '2rem'
                                     }}>
-                                        {recommendedData?.isLoading && (<div style={{
+                                        {recommendedData?.isLoading ? (<div style={{
                                             width: '100%', display: 'flex', flexDirection: 'column', gap: '10px'
                                         }}>
                                             <Skeleton.Input active style={{width: '100%', height: '200px'}}/>
                                             <Skeleton.Input active style={{width: '100%', height: '200px'}}/>
                                             <Skeleton.Input active style={{width: '100%', height: '200px'}}/>
-                                            <Skeleton.Input active style={{width: '100%', height: '200px'}}/>
-                                            <Skeleton.Input active style={{width: '100%', height: '200px'}}/>
-                                        </div>)}
-                                        <div style={{width: '100%'}}>
-                                            <div style={{
-                                                width: '100%',
-                                                textAlign: 'right',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '5px',
-                                                justifyContent: 'flex-end'
-                                            }}>
-                                                <img src={AlertOn?.src} alt=""/>
-                                                <p style={{color: '#5360ED'}}>درخواست‌های همکاری </p>
-                                            </div>
-                                            <InfiniteScroll
-                                                dataLength={recommended?.length} //This is important field to render the next data
-                                                next={FetchMoreData}
-                                                hasMore={nextPage}
-                                                style={{
-                                                    width: '100%',
-                                                    gap: '10px',
-                                                    display: 'flex',
-                                                    flexDirection: 'column',
-                                                    marginTop: '20px'
-                                                }}
-                                                loader={<h4>Loading...</h4>}
-                                                scrollableTarget="scrollableDiv">
-                                                {(!error && recommendedData?.data?.data?.results) ? recommendedData?.data?.data?.results.map((interview, index) => {
-                                                    return <CollaborationItem
-                                                        refreshData={recommendedData}
-                                                        isInterview={false} data={interview}
-                                                        key={interview?.id}/>
-                                                }) : error && error.response?.status === 500 && <div style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    height: '80vh'
-                                                }}>خطای داخلی سرور</div>}
-                                            </InfiniteScroll>
-                                            {!recommendedData?.data?.data?.results.length && (<div
-                                                style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    height: '60vh'
-                                                }}>
+                                        </div>) : (
+                                            <div style={{width: '100%'}}>
                                                 <div style={{
+                                                    width: '100%',
+                                                    textAlign: 'right',
                                                     display: 'flex',
                                                     alignItems: 'center',
-                                                    flexDirection: 'column',
-                                                    justifyContent: 'center',
-                                                    height: '75vh',
-                                                    gap: '20px'
+                                                    gap: '5px',
+                                                    justifyContent: 'flex-end'
                                                 }}>
-
-                                                    {recommendedData?.error?.response?.data?.detail || ' درخواست همکاری‌ای وجود ندارد'}
-                                                    {recommendedData?.error?.response?.data?.detail && (
-                                                        <ConfirmButtonContainer style={{textAlign: 'left'}}>
-                                                            <Button type='primary'
-                                                                    onClick={() => router.push('/questioner/dashboard/profile')}>
-                                                                حساب کاربری
-                                                            </Button>
-                                                        </ConfirmButtonContainer>
-                                                    )}
+                                                    <img src={AlertOn?.src} alt=""/>
+                                                    <p style={{color: '#5360ED'}}>درخواست‌های همکاری </p>
                                                 </div>
-                                                </div>)}
-                                        </div>
-                                    </div>
-                                    <div id={'interviewsColumn'} style={{
-                                        width: '100%',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '10px',
-                                        flexDirection: 'column'
-                                    }}>
-
-                                        {interViewData?.isLoading && (<div style={{
-                                            width: '100%', display: 'flex', flexDirection: 'column', gap: '10px'
-                                        }}>
-                                            <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
-                                            <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
-                                            <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
-                                            <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
-                                            <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
-                                        </div>)}
-                                        <>
-                                            <div style={{width: '100%', textAlign: 'right'}}>
-                                                <p style={{color: '#1D1D1D'}}>لیست پرسش‌نامه‌ها</p>
-                                            </div>
-                                            <div style={{
-                                                width: '100%',
-                                            }}>
                                                 <InfiniteScroll
-                                                    dataLength={myInterView?.length} //This is important field to render the next data
-                                                    next={FetchMoreInterview}
-                                                    hasMore={interviewsNextPage}
+                                                    dataLength={recommended?.length} //This is important field to render the next data
+                                                    next={FetchMoreData}
+                                                    hasMore={nextPage}
                                                     style={{
                                                         width: '100%',
                                                         gap: '10px',
                                                         display: 'flex',
-                                                        flexDirection: 'column'
+                                                        flexDirection: 'column',
+                                                        marginTop: '20px'
                                                     }}
                                                     loader={<h4>Loading...</h4>}
-                                                    scrollableTarget="interviewsColumn">
-                                                    {(!error && interViewData?.data?.data?.results) && interViewData?.data?.data?.results.map((interview, index) => {
-                                                        return <CollaborationInterView data={interview}
-                                                                                       key={interview?.id}/>
-                                                    })}
+                                                    scrollableTarget="scrollableDiv">
+                                                    {(!error && recommendedData?.data?.data?.results) ? recommendedData?.data?.data?.results.map((interview, index) => {
+                                                        return <CollaborationItem
+                                                            refreshData={recommendedData}
+                                                            isInterview={false} data={interview}
+                                                            key={interview?.id}/>
+                                                    }) : error && error.response?.status === 500 && <div style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        height: '80vh'
+                                                    }}>خطای داخلی سرور</div>}
                                                 </InfiniteScroll>
-                                                {!interViewData?.data?.data?.results.length && (<div
+                                                {!recommendedData?.data?.data?.results.length && (<div
                                                     style={{
                                                         display: 'flex',
                                                         alignItems: 'center',
                                                         justifyContent: 'center',
-                                                        height: '75vh'
-                                                    }}>{'پرشنامه ای وجود ندارد'}</div>)}
+                                                        height: '60vh'
+                                                    }}>
+                                                    <div style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        flexDirection: 'column',
+                                                        justifyContent: 'center',
+                                                        height: '75vh',
+                                                        gap: '20px'
+                                                    }}>
+
+                                                        {recommendedData?.error?.response?.data?.detail || ' درخواست همکاری‌ای وجود ندارد'}
+                                                        {recommendedData?.error?.response?.data?.detail && (
+                                                            <ConfirmButtonContainer style={{textAlign: 'left'}}>
+                                                                <Button type='primary'
+                                                                        onClick={() => router.push('/questioner/dashboard/profile')}>
+                                                                    حساب کاربری
+                                                                </Button>
+                                                            </ConfirmButtonContainer>
+                                                        )}
+                                                    </div>
+                                                </div>)}
                                             </div>
-                                        </>
+                                        )}
+
+                                    </div>
+                                    <div id={'scrollableDiv'} style={{
+                                        width: '100%',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '10px',
+                                        flexDirection: 'column',
+                                        maxHeight: ' 80vh',
+                                        overflow: 'auto',
+                                        marginTop: '2rem'
+                                    }}>
+                                        {interViewData?.isLoading ? (<div style={{
+                                            width: '100%', display: 'flex', flexDirection: 'column', gap: '10px'
+                                        }}>
+                                            <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
+                                            <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
+                                            <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
+                                            <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
+                                            <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
+                                        </div>) : (
+                                            <>
+                                                <div style={{width: '100%', textAlign: 'right'}}>
+                                                    <p style={{color: '#1D1D1D'}}>لیست پرسش‌نامه‌ها</p>
+                                                </div>
+                                                <div style={{
+                                                    width: '100%',
+                                                }}>
+                                                    <InfiniteScroll
+                                                        dataLength={myInterView?.length} //This is important field to render the next data
+                                                        next={FetchMoreInterview}
+                                                        hasMore={interviewsNextPage}
+                                                        style={{
+                                                            width: '100%',
+                                                            gap: '10px',
+                                                            display: 'flex',
+                                                            flexDirection: 'column'
+                                                        }}
+                                                        loader={<h4>Loading...</h4>}
+                                                        scrollableTarget="interviewsColumn">
+                                                        {(!error && interViewData?.data?.data?.results) && interViewData?.data?.data?.results.map((interview, index) => {
+                                                            return <CollaborationInterView data={interview}
+                                                                                           key={interview?.id}/>
+                                                        })}
+                                                    </InfiniteScroll>
+                                                    {!interViewData?.data?.data?.results.length && (<div
+                                                        style={{
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            height: '75vh'
+                                                        }}>{'پرشنامه ای وجود ندارد'}</div>)}
+                                                </div>
+                                            </>
+                                        )}
                                     </div>
                                 </CollaborationBody>
                             </Collaboration>
