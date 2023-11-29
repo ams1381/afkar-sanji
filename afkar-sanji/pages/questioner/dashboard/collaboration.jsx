@@ -249,11 +249,76 @@ export default function ({cookies}) {
                 {interViewData?.isLoading ? (<div style={{
                     width: '100%', display: 'flex', flexDirection: 'column', gap: '10px'
                 }}>
-                    <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
-                    <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
-                    <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
-                    <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
-                    <Skeleton.Input active style={{width: '100%', height: '100px'}}/>
+                    <CollaborationInterViewSkeleton>
+                        <div className="colum">
+                            <Skeleton.Button
+                                style={{height: "30px", minWidth: '150px', width: '100%'}}
+                                active/>
+                            <div style={{display: 'flex', alignItems: 'center', gap: '20px'}}>
+                                <Skeleton.Button
+                                    style={{height: "30px", minWidth: '70px', width: '100%'}}
+                                    active/>
+                                <Skeleton.Button
+                                    style={{height: "30px", minWidth: '80px', width: '100%'}}
+                                    active/>
+                            </div>
+                        </div>
+                        <div className="colum" style={{marginTop: '20px'}}>
+                            <Skeleton.Button
+                                style={{height: "30px", minWidth: '120px', width: '100%'}}
+                                active/>
+                            <Skeleton.Button
+                                style={{height: "40px", minWidth: '40px', width: '100%'}}
+                                active/>
+                        </div>
+                    </CollaborationInterViewSkeleton>
+                    <CollaborationInterViewSkeleton>
+                        <div className="colum">
+                            <Skeleton.Button
+                                style={{height: "30px", minWidth: '150px', width: '100%'}}
+                                active/>
+                            <div style={{display: 'flex', alignItems: 'center', gap: '20px'}}>
+                                <Skeleton.Button
+                                    style={{height: "30px", minWidth: '70px', width: '100%'}}
+                                    active/>
+                                <Skeleton.Button
+                                    style={{height: "30px", minWidth: '80px', width: '100%'}}
+                                    active/>
+                            </div>
+                        </div>
+                        <div className="colum" style={{marginTop: '20px'}}>
+                            <Skeleton.Button
+                                style={{height: "30px", minWidth: '120px', width: '100%'}}
+                                active/>
+                            <Skeleton.Button
+                                style={{height: "40px", minWidth: '40px', width: '100%'}}
+                                active/>
+                        </div>
+                    </CollaborationInterViewSkeleton>
+                    <CollaborationInterViewSkeleton>
+                        <div className="colum">
+                            <Skeleton.Button
+                                style={{height: "30px", minWidth: '150px', width: '100%'}}
+                                active/>
+                            <div style={{display: 'flex', alignItems: 'center', gap: '20px'}}>
+                                <Skeleton.Button
+                                    style={{height: "30px", minWidth: '70px', width: '100%'}}
+                                    active/>
+                                <Skeleton.Button
+                                    style={{height: "30px", minWidth: '80px', width: '100%'}}
+                                    active/>
+                            </div>
+                        </div>
+                        <div className="colum" style={{marginTop: '20px'}}>
+                            <Skeleton.Button
+                                style={{height: "30px", minWidth: '120px', width: '100%'}}
+                                active/>
+                            <Skeleton.Button
+                                style={{height: "40px", minWidth: '40px', width: '100%'}}
+                                active/>
+                        </div>
+                    </CollaborationInterViewSkeleton>
+
                 </div>) : (
                     <>
                         <div style={{
@@ -316,9 +381,6 @@ export default function ({cookies}) {
                                         {recommendedData?.isLoading ? (<div style={{
                                             width: '100%', display: 'flex', flexDirection: 'column', gap: '10px'
                                         }}>
-                                            {/*<Skeleton.Input active style={{width: '100%', height: '200px'}}/>*/}
-                                            {/*<Skeleton.Input active style={{width: '100%', height: '200px'}}/>*/}
-                                            {/*<Skeleton.Input active style={{width: '100%', height: '200px'}}/>*/}
                                             <CollaborationRecommendSkeleton>
                                                 <div className="header">
                                                     <Skeleton.Button style={{minWidth: 200, width: '100px'}} active
@@ -350,42 +412,6 @@ export default function ({cookies}) {
                                                     <Skeleton.Input style={{height: "20px"}} active
                                                     />
                                                     <Skeleton.Button style={{height: "20px"}} active
-                                                    />
-                                                </div>
-                                                <Skeleton.Button style={{height: "40px", marginTop: '20px'}} active
-                                                />
-                                            </CollaborationRecommendSkeleton>
-                                            <CollaborationRecommendSkeleton>
-                                                <div className="header">
-                                                    <Skeleton.Button style={{minWidth: 200, width: '100px'}} active
-                                                    />
-                                                    <Skeleton.Input style={{minWidth: 100, width: '100%'}} active
-                                                    />
-                                                </div>
-                                                <Skeleton.Input active
-                                                                style={{height: '20px', marginTop: '20px'}}/>
-                                                <div className="colum">
-                                                    <Skeleton.Input style={{height: "20px"}} active
-                                                    />
-                                                    <Skeleton.Button style={{height: "20px"}} active
-                                                    />
-                                                </div>
-                                                <Skeleton.Button style={{height: "40px", marginTop: '20px'}} active
-                                                />
-                                            </CollaborationRecommendSkeleton>
-                                            <CollaborationRecommendSkeleton>
-                                                <div className="header">
-                                                    <Skeleton.Button style={{minWidth: 200, width: '100px'}} active
-                                                    />
-                                                    <Skeleton.Input style={{minWidth: 100, width: '100%'}} active
-                                                    />
-                                                </div>
-                                                <Skeleton.Input active
-                                                                style={{height: '20px', marginTop: '20px'}}/>
-                                                <div className="colum">
-                                                    <Skeleton.Button style={{height: "20px"}} active
-                                                    />
-                                                    <Skeleton.Input style={{height: "20px"}} active
                                                     />
                                                 </div>
                                                 <Skeleton.Button style={{height: "40px", marginTop: '20px'}} active
@@ -487,7 +513,53 @@ export default function ({cookies}) {
                                                             active/>
                                                     </div>
                                                 </div>
-                                                <div className="colum" style={{marginTop:'20px'}}>
+                                                <div className="colum" style={{marginTop: '20px'}}>
+                                                    <Skeleton.Button
+                                                        style={{height: "30px", minWidth: '120px', width: '100%'}}
+                                                        active/>
+                                                    <Skeleton.Button
+                                                        style={{height: "40px", minWidth: '40px', width: '100%'}}
+                                                        active/>
+                                                </div>
+                                            </CollaborationInterViewSkeleton>
+                                            <CollaborationInterViewSkeleton>
+                                                <div className="colum">
+                                                    <Skeleton.Button
+                                                        style={{height: "30px", minWidth: '200px', width: '100%'}}
+                                                        active/>
+                                                    <div style={{display: 'flex', alignItems: 'center', gap: '20px'}}>
+                                                        <Skeleton.Button
+                                                            style={{height: "30px", minWidth: '70px', width: '100%'}}
+                                                            active/>
+                                                        <Skeleton.Button
+                                                            style={{height: "30px", minWidth: '80px', width: '100%'}}
+                                                            active/>
+                                                    </div>
+                                                </div>
+                                                <div className="colum" style={{marginTop: '20px'}}>
+                                                    <Skeleton.Button
+                                                        style={{height: "30px", minWidth: '120px', width: '100%'}}
+                                                        active/>
+                                                    <Skeleton.Button
+                                                        style={{height: "40px", minWidth: '40px', width: '100%'}}
+                                                        active/>
+                                                </div>
+                                            </CollaborationInterViewSkeleton>
+                                            <CollaborationInterViewSkeleton>
+                                                <div className="colum">
+                                                    <Skeleton.Button
+                                                        style={{height: "30px", minWidth: '200px', width: '100%'}}
+                                                        active/>
+                                                    <div style={{display: 'flex', alignItems: 'center', gap: '20px'}}>
+                                                        <Skeleton.Button
+                                                            style={{height: "30px", minWidth: '70px', width: '100%'}}
+                                                            active/>
+                                                        <Skeleton.Button
+                                                            style={{height: "30px", minWidth: '80px', width: '100%'}}
+                                                            active/>
+                                                    </div>
+                                                </div>
+                                                <div className="colum" style={{marginTop: '20px'}}>
                                                     <Skeleton.Button
                                                         style={{height: "30px", minWidth: '150px', width: '100%'}}
                                                         active/>
@@ -496,6 +568,31 @@ export default function ({cookies}) {
                                                         active/>
                                                 </div>
                                             </CollaborationInterViewSkeleton>
+
+                                            <CollaborationInterViewSkeleton>
+                                                <div className="colum">
+                                                    <Skeleton.Button
+                                                        style={{height: "30px", minWidth: '200px', width: '100%'}}
+                                                        active/>
+                                                    <div style={{display: 'flex', alignItems: 'center', gap: '20px'}}>
+                                                        <Skeleton.Button
+                                                            style={{height: "30px", minWidth: '70px', width: '100%'}}
+                                                            active/>
+                                                        <Skeleton.Button
+                                                            style={{height: "30px", minWidth: '80px', width: '100%'}}
+                                                            active/>
+                                                    </div>
+                                                </div>
+                                                <div className="colum" style={{marginTop: '20px'}}>
+                                                    <Skeleton.Button
+                                                        style={{height: "30px", minWidth: '150px', width: '100%'}}
+                                                        active/>
+                                                    <Skeleton.Button
+                                                        style={{height: "40px", minWidth: '40px', width: '100%'}}
+                                                        active/>
+                                                </div>
+                                            </CollaborationInterViewSkeleton>
+
                                         </div>) : (
                                             <>
                                                 <div style={{width: '100%', textAlign: 'right'}}>
