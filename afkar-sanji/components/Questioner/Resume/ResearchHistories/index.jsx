@@ -9,7 +9,7 @@ import {
     InputCom,
     LoadingMaker,
     LoadingMakerMobile,
-    ResumeInputCom
+    ResumeInputCom, Row
 } from "@/styles/questioner/resume/resume";
 import {Button, message, Select, Skeleton, Spin} from "antd";
 import React, {useEffect, useState} from "react";

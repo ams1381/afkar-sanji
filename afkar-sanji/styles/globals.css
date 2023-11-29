@@ -346,17 +346,8 @@ input:-webkit-autofill:active {
     display: none;
 }
 
-/*.ant-select-selector {*/
-/*    font-family: 'IRANSans' !important;*/
-/*    display: flex !important;*/
-/*    padding: 8px 12px !important;*/
-/*    align-items: center !important;*/
-/*    gap: 4px !important;*/
-/*    border-radius: 2px !important;*/
-/*    border: 1px solid var(--login-input-default-border) !important;*/
-/*    background: #FFF !important;*/
-/*    direction: ltr !important;*/
-/*}*/
-/*step*/
+& .ant-steps-item-icon {
+    border: none !important;
+}
 
 
