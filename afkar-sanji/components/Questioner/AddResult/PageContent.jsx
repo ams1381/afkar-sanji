@@ -98,6 +98,12 @@ export const PageContent = ({ questionnaire }) => {
                 })
                 return
             }
+            else if(err.response?.data?.detail) {
+                messageApi.error({
+                    content : err.response?.data?.detail
+                })
+                return
+            }
             if(err.response?.data)
             {
 

@@ -146,7 +146,7 @@ const SettingPanel = ({ Questionnaire , refetch , setChatModalActive , ChangeSid
      if(data)
      {
       SetSettingChanged(false)
-      // refetch()
+      refetch()
       setItem('tabType','question_design');
       ChangeSide('question_design')
 
