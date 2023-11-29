@@ -6,7 +6,7 @@ import {useEffect, useState} from "react";
 import {useDispatch} from "react-redux";
 import {NumberSelect} from "@/utilities/stores/AnswerStore";
 
-export const DegreeRangeSubComponent = ({ QuestionData , answerSet , ErrorQuestions , setErrorQuestions}) => {
+export const DegreeRangeSubComponent = ({ QuestionData , loadableAnswer , answerSet , ErrorQuestions , setErrorQuestions}) => {
     const [ SelectedItem , SetSelectedItem ] = useState(null);
     const dispatcher = useDispatch();
 
@@ -18,9 +18,14 @@ export const DegreeRangeSubComponent = ({ QuestionData , answerSet , ErrorQuesti
         // console.log(answerSet?.find(item => item.question === QuestionData.id))
         if(answerSet.find(item => item.question === QuestionData.id))
         {
-            SetSelectedItem(answerSet.find(item => item.question === QuestionData.id).answer[QuestionData.question_type] )
+            if(!answerSet.find(item => item.question === QuestionData.id).answer[QuestionData.question_type] && !loadableAnswer) {
+                SetSelectedItem(null)
+            }
+            if(answerSet.find(item => item.question === QuestionData.id).answer[QuestionData.question_type] && loadableAnswer)
+                SetSelectedItem(answerSet.find(item => item.question === QuestionData.id).answer[QuestionData.question_type] )
         }
-    },[QuestionData.id ])
+
+    },[QuestionData.id , answerSet ])
 
     return <DegreeItemsContainer>
         {

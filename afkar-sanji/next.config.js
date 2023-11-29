@@ -4,7 +4,7 @@ const nextConfig = {
     devIndicators: {
         buildActivity: false
     },
-  // reactStrictMode: false,
+  reactStrictMode: false,
   compiler: {
     // Enables the styled-components SWC transform
     styledComponents: {

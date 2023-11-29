@@ -34,6 +34,7 @@ export const PageContent = ({ questionnaire }) => {
                 Questions : questionnaire.questions
             }))
     },[questionnaire])
+
     const ConfirmAnswerHandler = async () => {
         let AnswerSet = AnswerSetsArray;
 
@@ -66,13 +67,16 @@ export const PageContent = ({ questionnaire }) => {
                 })
             await axiosInstance.post(`/interview-api/interviews/${questionnaire.uuid}/answer-sets/${CreatedAnswerSet.id}/add-answer/`,
                 CopiedQuestionAnswerSet)
+            dispatcher(setInitialAnswerSet({
+                Questions : questionnaire.questions
+            }))
+
             messageApi.success({
                 content : 'با موفقیت ثبت شد میتوانید نتیجه بعد را وارد کنید'
             })
         }
         catch(err)
         {
-            // console.log(err.response?.data)
             if(err.response?.status ==  500) {
                 messageApi.error({
                     content : 'مشکل سمت سرور',
@@ -91,6 +95,12 @@ export const PageContent = ({ questionnaire }) => {
                     style : {
                         fontFamily : 'IRANSans'
                     }
+                })
+                return
+            }
+            else if(err.response?.data?.detail) {
+                messageApi.error({
+                    content : err.response?.data?.detail
                 })
                 return
             }

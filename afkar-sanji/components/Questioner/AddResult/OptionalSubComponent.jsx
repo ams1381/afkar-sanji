@@ -29,6 +29,11 @@ export const OptionalSubComponent = ({ QuestionData , answerSet , setErrorQuesti
     },[QuestionData])
     useEffect(() => {
             // console.log(answerSet?.find(item => item.question === QuestionData.id))
+        if(!answerSet?.find(item => item.question === QuestionData.id)?.answer?.selected_options) {
+            setSelectedValues([])
+            setShowInput(false)
+            setOtherInputValue
+        }
 
             if(answerSet.find(item => item.question === QuestionData.id) && loadableAnswer)
             {
