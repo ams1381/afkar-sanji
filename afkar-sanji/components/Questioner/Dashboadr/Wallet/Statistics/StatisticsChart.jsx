@@ -85,7 +85,7 @@ export default function ({data, setFilterParams}) {
                         </Cost>
                     </ChartFilterLeft>
                     <ChartFilterRight>
-                        {data?.plot?.answering && data?.plot?.interviewing ? (
+                        {data?.plot?.answering || data?.plot?.interviewing ? (
                             <>
                                 <ChartFilterRightText color={`#52C41A`}>انجام پروژه پرسش‌گری</ChartFilterRightText>
                                 <ChartFilterRightText color={`#1890FF`}>پر کردن پرسش‌نامه</ChartFilterRightText>
@@ -94,7 +94,7 @@ export default function ({data, setFilterParams}) {
                     </ChartFilterRight>
                 </ChartFilter>
                 <ChartBox>
-                    {data?.plot?.answering && data?.plot?.interviewing ? (
+                    {data?.plot?.answering || data?.plot?.interviewing ? (
                         <>
                             <Doughnut options={{
                                 elements: {
