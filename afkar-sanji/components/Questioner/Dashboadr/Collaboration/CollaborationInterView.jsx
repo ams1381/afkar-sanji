@@ -18,7 +18,7 @@ export default function ({data}) {
 
     return (
         <>
-            <CollaborationItem isActive={data?.is_active} style={{gap: 10}}>
+            <CollaborationItem  isActive={data?.is_active} style={{gap: 10}}>
                 {/*<CollaborationItemHeader>*/}
                 <CollaborationHeaderTopPart>
                     <div className={'title_container'}>
