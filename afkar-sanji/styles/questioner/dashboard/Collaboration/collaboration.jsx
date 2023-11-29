@@ -123,6 +123,24 @@ export const CollaborationItem = styled.div`
   border-radius: var(--radius-XS, 2px);
   background: var(--surface);
   cursor: pointer;
+  position: relative;
+
+      // &::after {
+      //   display: ${p => p.isLoading};
+      //   position: absolute;
+      //   width: 100%;
+      //   height: 100%;
+      //   background: #eee;
+      //   content: '';
+      //   left: 50%;
+      //   top: 50%;
+      //   transform: translate(-50%, -50%);
+      // }
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
 
   & .user_data {
     & .user_data_container {

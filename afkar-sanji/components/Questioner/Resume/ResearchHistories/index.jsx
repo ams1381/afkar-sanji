@@ -108,13 +108,17 @@ export default function ({year, setGender, me}) {
                 await axiosInstance.patch('user-api/users/me', {
                     ask_for_interview_role: true
                 }).then(res => {
-                    router.push('/questioner/resume')
+                    if (location?.href.includes('redirectProfile=1')) {
+                        router.push('/questioner/dashboard/profile')
+                    } else {
+                        router.push('/questioner/resume')
+                    }
                 }).catch(error => {
                     const errorMessage = error.response?.data[Object.keys(error.response.data)[0]][0];
                     message.error(errorMessage)
                 })
             } else {
-                if (location?.href.includes('redirect=1')) {
+                if (location?.href.includes('redirectProfile=1')) {
                     await router.push('/questioner/dashboard/profile')
                 } else {
                     await router.push('/questioner/resume')
@@ -139,7 +143,7 @@ export default function ({year, setGender, me}) {
             await axiosInstance.patch('user-api/users/me', {
                 ask_for_interview_role: true
             }).then(res => {
-                if (location?.href.includes('redirect=1')) {
+                if (location?.href.includes('redirectProfile=1')) {
                     router.push('/questioner/dashboard/profile')
                 } else {
                     router.push('/questioner/resume')
@@ -150,7 +154,7 @@ export default function ({year, setGender, me}) {
                 message.error(errorMessage)
             })
         } else {
-            if (location?.href.includes('redirect=1')) {
+            if (location?.href.includes('redirectProfile=1')) {
                 await router.push('/questioner/dashboard/profile')
             } else {
                 await router.push('/questioner/resume')
