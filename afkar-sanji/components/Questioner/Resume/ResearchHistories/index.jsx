@@ -104,27 +104,12 @@ export default function ({year, setGender, me}) {
 
     const finishHandler = async () => {
         if (!resumeData[resumeData.length - 1]?.link || !resumeData[resumeData.length - 1]?.year || !resumeData[resumeData.length - 1]?.field) {
-            if (me?.role === 'n') {
-                await axiosInstance.patch('user-api/users/me', {
-                    ask_for_interview_role: true
-                }).then(res => {
-                    if (location?.href.includes('redirectProfile=1')) {
-                        router.push('/questioner/dashboard/profile')
-                    } else {
-                        router.push('/questioner/resume')
-                    }
-                }).catch(error => {
-                    const errorMessage = error.response?.data[Object.keys(error.response.data)[0]][0];
-                    message.error(errorMessage)
-                })
+            if (location?.href.includes('redirectProfile=1')) {
+                await router.push('/questioner/dashboard/profile')
             } else {
-                if (location?.href.includes('redirectProfile=1')) {
-                    await router.push('/questioner/dashboard/profile')
-                } else {
-                    await router.push('/questioner/resume')
-                }
-
+                await router.push('/questioner/resume')
             }
+
         } else {
             axiosInstance.post(`user-api/users/${me?.id}/resume/${me?.resume?.id}/research-histories/`, resumeData[resumeData.length - 1]).then(res => {
                 if (res?.status === 201) {
@@ -132,34 +117,16 @@ export default function ({year, setGender, me}) {
                         link: undefined, year: undefined, field: undefined
                     }]);
                     message.success('با موفقیت اضافه شد')
+                    if (location?.href.includes('redirectProfile=1')) {
+                        router.push('/questioner/dashboard/profile')
+                    } else {
+                        router.push('/questioner/resume')
+                    }
                 }
             }).catch(error => {
                 const ERROR_MESSAGE = error.response.data[Object.keys(error.response.data)[0]][0]
                 message.error(ERROR_MESSAGE)
             })
-        }
-
-        if (me?.role === 'n') {
-            await axiosInstance.patch('user-api/users/me', {
-                ask_for_interview_role: true
-            }).then(res => {
-                if (location?.href.includes('redirectProfile=1')) {
-                    router.push('/questioner/dashboard/profile')
-                } else {
-                    router.push('/questioner/resume')
-                }
-
-            }).catch(error => {
-                const errorMessage = error.response?.data[Object.keys(error.response.data)[0]][0];
-                message.error(errorMessage)
-            })
-        } else {
-            if (location?.href.includes('redirectProfile=1')) {
-                await router.push('/questioner/dashboard/profile')
-            } else {
-                await router.push('/questioner/resume')
-            }
-
         }
     }
 

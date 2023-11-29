@@ -34,7 +34,7 @@ import hardIcon from '@/public/Icons/questionLevel/hard.svg'
 import mediumIcon from '@/public/Icons/questionLevel/medium.svg'
 import esIcon from '@/public/Icons/questionLevel/es.svg'
 
-export default function ({data, isInterview, refreshData}) {
+export default function ({data, isInterview, refreshData, isLoading}) {
     const getQuestions = (difficulty) => {
         return data?.questions?.filter(question => question.question.level === difficulty).map((item) => {
             return (
@@ -95,7 +95,6 @@ export default function ({data, isInterview, refreshData}) {
     }
 
     return (<>
-
         <CollaborationItem>
             <CollaborationItemHeader>
                 <CollaborationItemLeft>
@@ -132,7 +131,7 @@ export default function ({data, isInterview, refreshData}) {
             </CollaborationItemHeader>
             {!isInterview ? (<CollaborationResult>
                 <ColumnOfData>
-                    <div className={'title'}>دریافتی برای ثبت یک پاسخ:</div>
+                        <div className={'title'}>دریافتی برای ثبت یک پاسخ:</div>
                     <div
                         className={'data'}>{data?.price_pack?.price ? `${digitsEnToFa(data?.price_pack?.price)}ریال ` : `${digitsEnToFa(555251)} ریال `}</div>
                 </ColumnOfData>
@@ -179,7 +178,6 @@ export default function ({data, isInterview, refreshData}) {
                     <Button loading={modalLoading} onClick={confiremHandler} type="primary">
                         ارسال درخواست
                     </Button>
-                    {/*<Button danger onClick={() => setOpen(false)}>رد کردن</Button>*/}
                 </div>)}
                 width={572}
             >
@@ -206,7 +204,7 @@ export default function ({data, isInterview, refreshData}) {
                         <div className="title">درجه‌ سختی:</div>
                         {data?.difficulty === 3 && <img src={hardIcon?.src} alt=""/>}
                         {data?.difficulty === 2 && <img src={mediumIcon?.src} alt=""/>}
-                        {data?.difficulty === 2 && <img src={esIcon?.src} alt=""/>}
+                        {data?.difficulty === 1 && <img src={esIcon?.src} alt=""/>}
                     </Level>
                     {data?.questions && (
                         <>
@@ -220,7 +218,7 @@ export default function ({data, isInterview, refreshData}) {
 
                 </ModalBody>
             </Modal>
-            {chatModal && (<ChatModal  Questionnaire={data} isActive={chatModal} setIsActive={setChatModal}/>)}
+            {chatModal && (<ChatModal Questionnaire={data} isActive={chatModal} setIsActive={setChatModal}/>)}
         </CollaborationItem>
     </>)
 }
