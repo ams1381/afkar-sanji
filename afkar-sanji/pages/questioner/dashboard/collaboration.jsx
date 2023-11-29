@@ -206,7 +206,7 @@ export default function ({cookies}) {
                         loader={<h4>Loading...</h4>}
                         scrollableTarget="scrollableDiv">
                         {(!error && recommendedData?.data?.data?.results) ? recommendedData?.data?.data?.results.map((interview, index) => {
-                            return <CollaborationItem refreshData={recommendedData}
+                            return <CollaborationItem interViewRefrech={interViewData} refreshData={recommendedData}
                                                       isInterview={false} data={interview}
                                                       key={interview?.id}/>
                         }) : error && error.response?.status === 500 && <div style={{
@@ -445,6 +445,7 @@ export default function ({cookies}) {
                                                     scrollableTarget="scrollableDiv">
                                                     {(!error && recommendedData?.data?.data?.results) ? recommendedData?.data?.data?.results.map((interview, index) => {
                                                         return <CollaborationItem
+                                                            interViewRefrech={interViewData}
                                                             refreshData={recommendedData}
                                                             isInterview={false} data={interview}
                                                             key={interview?.id}/>
@@ -515,13 +516,14 @@ export default function ({cookies}) {
                                                 </div>
                                                 <div className="colum" style={{marginTop: '20px'}}>
                                                     <Skeleton.Button
-                                                        style={{height: "30px", minWidth: '120px', width: '100%'}}
+                                                        style={{height: "30px", minWidth: '150px', width: '100%'}}
                                                         active/>
                                                     <Skeleton.Button
                                                         style={{height: "40px", minWidth: '40px', width: '100%'}}
                                                         active/>
                                                 </div>
                                             </CollaborationInterViewSkeleton>
+
                                             <CollaborationInterViewSkeleton>
                                                 <div className="colum">
                                                     <Skeleton.Button
@@ -538,13 +540,14 @@ export default function ({cookies}) {
                                                 </div>
                                                 <div className="colum" style={{marginTop: '20px'}}>
                                                     <Skeleton.Button
-                                                        style={{height: "30px", minWidth: '120px', width: '100%'}}
+                                                        style={{height: "30px", minWidth: '150px', width: '100%'}}
                                                         active/>
                                                     <Skeleton.Button
                                                         style={{height: "40px", minWidth: '40px', width: '100%'}}
                                                         active/>
                                                 </div>
                                             </CollaborationInterViewSkeleton>
+
                                             <CollaborationInterViewSkeleton>
                                                 <div className="colum">
                                                     <Skeleton.Button

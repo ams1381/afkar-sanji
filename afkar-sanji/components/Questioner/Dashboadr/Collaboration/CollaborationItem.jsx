@@ -34,7 +34,7 @@ import hardIcon from '@/public/Icons/questionLevel/hard.svg'
 import mediumIcon from '@/public/Icons/questionLevel/medium.svg'
 import esIcon from '@/public/Icons/questionLevel/es.svg'
 
-export default function ({data, isInterview, refreshData, isLoading}) {
+export default function ({data, isInterview, refreshData, interViewRefrech}) {
     const getQuestions = (difficulty) => {
         return data?.questions?.filter(question => question.question.level === difficulty).map((item) => {
             return (
@@ -86,6 +86,7 @@ export default function ({data, isInterview, refreshData, isLoading}) {
             message.success("با موفقیت ارسال شد")
             setOpen(false)
             refreshData.refetch()
+            interViewRefrech.refetch()
         })
             .catch(error => {
                 setModalLoading(false)

@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="496321e2-4aea-4348-a674-0e3ff527a71c" name="Changes" comment="get medata in client">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Questioner/Dashboadr/Collaboration/CollaborationItem.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Dashboadr/Collaboration/CollaborationItem.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/questioner/dashboard/collaboration.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/questioner/dashboard/collaboration.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -66,7 +67,7 @@
       <workItem from="1701179837121" duration="6179000" />
       <workItem from="1701226232270" duration="1830000" />
       <workItem from="1701233261248" duration="14000000" />
-      <workItem from="1701247275749" duration="7096000" />
+      <workItem from="1701247275749" duration="10222000" />
     </task>
     <task id="LOCAL-00001" summary="get medata in client">
       <option name="closed" value="true" />
