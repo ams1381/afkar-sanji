@@ -52,6 +52,7 @@ const LevelAssignmentPage = () => {
             },
         ]
     });
+    console.log(currentSlide)
     const [ QuestionLevel , setQuestionLevel ] = useState(0);
     useEffect(() => {
         if(!InterviewQuery.data?.data.questions || !InterviewQuery.data?.data.questions)

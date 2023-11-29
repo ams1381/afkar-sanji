@@ -18,6 +18,7 @@ import {useRouter} from "next/router";
 import {useLocalStorage} from "@/utilities/useLocalStorage";
 import {axiosInstance} from "@/utilities/axios";
 import {WalletPopup} from "@/components/Folders/walletPopup";
+import {ChatModal} from "@/components/Questioner/ChatModal/ChatModal";
 export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin }) => {
     const Auth = useContext(AuthContext);
     const router = useRouter();
@@ -25,6 +26,7 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
     const [ walletPopupOpen , setWalletPopupOpen ] = useState(false);
     const [ MessageApi , MessageContext ] = message.useMessage();
     const [ drawerSelectedItem , setDrawerSelecteditem ] = useState(null);
+    const [ chatModalActive , setChatModalActive ] = useState(false);
     const [ distPage , setDistPage ] = useState(null);
     useEffect(() => {
         if(router.pathname === '/' || router.pathname.includes('questionnaire') && !router.pathname.includes('questionnaires-list')) {
@@ -64,14 +66,6 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                     document.querySelector('.drawer-text-column').style.height = '91.5%';
             }
         })
-        // let DrawerTextItems = document.querySelectorAll('.drawer_item_text');
-        // if(DrawerTextItems && DrawerTextItems.length) {
-        //     DrawerTextItems.forEach(TextItem => {
-        //         TextItem.addEventListener('mousein',() => {
-        //             console.log('hi')
-        //         })
-        //     })
-        // }
     }, []);
     useEffect(() => {
         if(RightDrawerOpen) {
@@ -127,6 +121,8 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
     }
   return (
     <CommonDrawerContainer open={RightDrawerOpen ? 'active' : null} >
+        <ChatModal isAdmin={false}
+                  isActive={chatModalActive} setIsActive={setChatModalActive}/>
         <WalletPopup distPage={distPage} walletPopupOpen={walletPopupOpen} setWalletPopupOpen={setWalletPopupOpen} />
         <div className={'drawer-inner-container'}>
             {MessageContext}
@@ -212,6 +208,10 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                                     }} active={drawerSelectedItem === 'create-questionnaire'}
                                                           className='drawer_item_text create-questionaire'>
                                         <p>ساخت پرسشنامه</p>
+                                    </CommonDrawerItemText>
+                                    <CommonDrawerItemText onClick={() => setChatModalActive(true)}
+                                                          className='drawer_item_text chat'>
+                                        <p>گفت و گو با ادمین</p>
                                     </CommonDrawerItemText>
                             </> :
                             <>
@@ -318,6 +318,9 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                             }} open={RightDrawerOpen ? 'active' : null} active={drawerSelectedItem === 'create-questionnaire'}
                                   className='drawer_item i_create-questionaire'>
                                 <Icon name='CreateQuestionnaire' />
+                            </CommonDrawerItemIcon>
+                            <CommonDrawerItemIcon className={'drawer_item i_chat'} onClick={() => setChatModalActive(true)}>
+                                <Icon name={'OutlineChat'} />
                             </CommonDrawerItemIcon>
                     </>
                     : <>
