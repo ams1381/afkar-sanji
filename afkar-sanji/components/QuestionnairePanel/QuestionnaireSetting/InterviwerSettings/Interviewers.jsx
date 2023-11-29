@@ -133,7 +133,7 @@ export const Interviewers = ({ Questionnaire , ChangeDistrict , refetch , Toggle
                                 </Button>
                             </InterViewAnswerPriceContainer>
                     }
-                </InterviewerBodyRow> : 'بسته قیمتی وجود ندارد'
+                </InterviewerBodyRow> : <p style={{ fontSize : 14 , color : 'var(--Neutral-Gray9)' }}>بسته قیمتی وجود ندارد</p>
             }
                 <InterviewerBodyRow>
                     <p>
