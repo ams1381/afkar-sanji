@@ -8,7 +8,7 @@ import QuestionerHeader from '@/components/common/QuestionerHeader';
 import {
     Collaboration, CollaborationBody, CollaborationHeader, Container, FilterBox, TabSection
 } from "@/styles/questioner/dashboard/Collaboration/collaboration";
-import {Input, Skeleton, Space} from 'antd';
+import {Button, Input, Skeleton, Space} from 'antd';
 import {convertDate} from "@/components/QuestionnairePanel/QuestionnaireSetting/SettingPanel";
 import {digitsFaToEn} from "@persian-tools/persian-tools";
 import CollaborationItem from "@/components/Questioner/Dashboadr/Collaboration/CollaborationItem";
@@ -18,10 +18,12 @@ import CollaborationInterView from "@/components/Questioner/Dashboadr/Collaborat
 import Head from "next/head";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {Tabs} from 'antd';
-import SetQueryParams from "@/utilities/filtering/filter";
 import AlertOn from '@/public/Icons/AlertOn.svg'
+import {useRouter} from "next/router";
+import {ConfirmButtonContainer} from "@/styles/Questioner/profile";
 
 export default function ({cookies}) {
+    const router = useRouter()
     const [RightDrawerOpen, setRightDrawerOpen] = useState(false);
     const [StartDate, setStartDate] = useState('');
     const [EndDate, setEndDate] = useState('');
@@ -176,8 +178,22 @@ export default function ({cookies}) {
                 </InfiniteScroll>
                 {!recommendedData?.data?.data?.results.length && (<div
                     style={{
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', height: '75vh'
-                    }}>{' درخواست همکاری‌ای وجود ندارد'}</div>)}
+                        display: 'flex',
+                        alignItems: 'center',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        height: '75vh',
+                        gap: '20px'
+                    }}>
+                    {recommendedData?.error?.response?.data?.detail || ' درخواست همکاری‌ای وجود ندارد'}
+                    {recommendedData?.error?.response?.data?.detail && (
+                        <ConfirmButtonContainer style={{textAlign: 'left'}}>
+                            <Button type='primary' onClick={() => router.push('/questioner/dashboard/profile')}>
+                                حساب کاربری
+                            </Button>
+                        </ConfirmButtonContainer>
+                    )}
+                </div>)}
             </div>
         </div>),
     },
@@ -303,7 +319,27 @@ export default function ({cookies}) {
                                                     alignItems: 'center',
                                                     justifyContent: 'center',
                                                     height: '60vh'
-                                                }}>{' درخواست همکاری‌ای وجود ندارد'}</div>)}
+                                                }}>
+                                                <div style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    flexDirection: 'column',
+                                                    justifyContent: 'center',
+                                                    height: '75vh',
+                                                    gap: '20px'
+                                                }}>
+
+                                                    {recommendedData?.error?.response?.data?.detail || ' درخواست همکاری‌ای وجود ندارد'}
+                                                    {recommendedData?.error?.response?.data?.detail && (
+                                                        <ConfirmButtonContainer style={{textAlign: 'left'}}>
+                                                            <Button type='primary'
+                                                                    onClick={() => router.push('/questioner/dashboard/profile')}>
+                                                                حساب کاربری
+                                                            </Button>
+                                                        </ConfirmButtonContainer>
+                                                    )}
+                                                </div>
+                                                </div>)}
                                         </div>
                                     </div>
                                     <div id={'interviewsColumn'} style={{

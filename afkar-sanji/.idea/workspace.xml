@@ -6,10 +6,16 @@
   <component name="ChangeListManager">
     <list default="true" id="496321e2-4aea-4348-a674-0e3ff527a71c" name="Changes" comment="get medata in client">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Questioner/Dashboadr/Collaboration/CollaborationItem.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Dashboadr/Collaboration/CollaborationItem.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/Questioner/Dashboadr/Wallet/Statistics/StatisticsChart.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Dashboadr/Wallet/Statistics/StatisticsChart.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/common/QuestionerHeader.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/common/QuestionerHeader.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/questioner/dashboard/wallet.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/questioner/dashboard/wallet.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/styles/questioner/dashboard/Wallet/wallet.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/styles/questioner/dashboard/Wallet/wallet.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Questioner/Resume/Achievements/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Resume/Achievements/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Questioner/Resume/ResearchHistories/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Resume/ResearchHistories/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Questioner/Resume/WorkBackgrounds/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/Questioner/Resume/WorkBackgrounds/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/questioner/dashboard/collaboration.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/questioner/dashboard/collaboration.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/questioner/resume/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/questioner/resume/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/questioner/resume/make.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/questioner/resume/make.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/styles/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/styles/globals.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/styles/questioner/resume/resume.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/styles/questioner/resume/resume.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,23 +36,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;questioner&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/afazsad/Desktop/afkar-sanji/afkar-sanji&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.editor&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/home/afazsad/JetBrains.WebStorm.2023.2/WebStorm-232.8660.143/plugins/javascript-impl/jsLanguageServicesImpl/external&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "questioner",
+    "last_opened_file_path": "/home/afazsad/Desktop/afkar-sanji/afkar-sanji",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "editor.preferences.fonts.default",
+    "ts.external.directory.path": "/home/afazsad/JetBrains.WebStorm.2023.2/WebStorm-232.8660.143/plugins/javascript-impl/jsLanguageServicesImpl/external",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -67,7 +73,8 @@
       <workItem from="1701159045836" duration="18000" />
       <workItem from="1701165150354" duration="25000" />
       <workItem from="1701179837121" duration="6179000" />
-      <workItem from="1701226232270" duration="1399000" />
+      <workItem from="1701226232270" duration="1830000" />
+      <workItem from="1701233261248" duration="7081000" />
     </task>
     <task id="LOCAL-00001" summary="get medata in client">
       <option name="closed" value="true" />

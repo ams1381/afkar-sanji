@@ -5,7 +5,7 @@ import {
     FromResumeItem,
     FromStepScroll,
     InputCom, LoadingMaker, LoadingMakerMobile,
-    ResumeInputCom
+    ResumeInputCom, Row
 } from "@/styles/questioner/resume/resume";
 import {Button, message, Select, Skeleton, Spin} from "antd";
 import React, {useEffect, useState} from "react";
@@ -167,7 +167,6 @@ export default function ({
                 <FromStepScroll>
                     {resumeData?.map((item, index) => (
                         <FromResumeItem key={item.id}>
-
                             {index > 0 && index + 1 !== resumeData.length &&
                                 <BtnComponent onClick={() => removeAchievements(item.id || '')}>
                                     <img
@@ -219,11 +218,12 @@ export default function ({
                             </ResumeInputCom>
                             <ResumeInputCom>
                                 <div className="title">نوع افتخار</div>
-                                <InputCom value={resumeData[index]?.field} onChange={e => setResumeData(prevData => {
-                                    const updatedData = [...prevData];
-                                    updatedData[index].field = e?.target?.value;
-                                    return updatedData;
-                                })} direction="rtl" placeholder={`مثال: دریافت جایزه‌ی زکریا`}/>
+                                <InputCom value={resumeData[index]?.field}
+                                          onChange={e => setResumeData(prevData => {
+                                              const updatedData = [...prevData];
+                                              updatedData[index].field = e?.target?.value;
+                                              return updatedData;
+                                          })} direction="rtl" placeholder={`مثال: دریافت جایزه‌ی زکریا`}/>
                             </ResumeInputCom>
                         </FromResumeItem>
                     ))}

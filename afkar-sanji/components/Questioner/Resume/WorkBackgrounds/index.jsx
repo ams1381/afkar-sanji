@@ -4,7 +4,7 @@ import {
     InputCom,
     ResumeInputCom,
     FromStepScroll,
-    ButtonContainer, AddBtn, BtnComponent, LoadingMaker, LoadingMakerMobile
+    ButtonContainer, AddBtn, BtnComponent, LoadingMaker, LoadingMakerMobile, Row
 } from "@/styles/questioner/resume/resume";
 import {Button, message, Select, Skeleton, Spin} from "antd";
 import React, {useEffect, useState} from "react";
@@ -176,66 +176,66 @@ export default function ({
                                     />
                                 </BtnComponent>
                             }
-                            <ResumeInputCom>
-                                <div className="title">سال پایان</div>
-                                <Select
-                                    suffixIcon={<img src={arrowDownIcon?.src}/>}
-                                    style={{
-                                        width: '100%',
-                                        height: '40px',
-                                        textAlign: 'right',
-                                        padding: '0',
-                                        boxShadow: 'none',
-                                        direction: 'rtl'
-                                    }}
-                                    placeholder={'انتخاب کنید'}
-                                    options={year}
-                                    value={workData[index]?.end_date}
-                                    onChange={e => setWorkData(prevData => {
+                                <ResumeInputCom>
+                                    <div className="title">سال پایان</div>
+                                    <Select
+                                        suffixIcon={<img src={arrowDownIcon?.src}/>}
+                                        style={{
+                                            width: '100%',
+                                            height: '40px',
+                                            textAlign: 'right',
+                                            padding: '0',
+                                            boxShadow: 'none',
+                                            direction: 'rtl'
+                                        }}
+                                        placeholder={'انتخاب کنید'}
+                                        options={year}
+                                        value={workData[index]?.end_date}
+                                        onChange={e => setWorkData(prevData => {
+                                            const updatedData = [...prevData];
+                                            updatedData[index].end_date = e;
+                                            return updatedData;
+                                        })}
+                                    />
+                                </ResumeInputCom>
+                                <ResumeInputCom>
+                                    <div className="title">سال شروع</div>
+                                    <Select
+                                        suffixIcon={<img src={arrowDownIcon?.src}/>}
+                                        style={{
+                                            width: '100%',
+                                            height: '40px',
+                                            textAlign: 'right',
+                                            padding: '0',
+                                            boxShadow: 'none',
+                                            direction: 'rtl'
+                                        }}
+                                        placeholder={'انتخاب کنید'}
+                                        options={year}
+                                        value={workData[index]?.start_date}
+                                        onChange={e => setWorkData(prevData => {
+                                            const updatedData = [...prevData];
+                                            updatedData[index].start_date = e;
+                                            return updatedData;
+                                        })}
+                                    />
+                                </ResumeInputCom>
+                                <ResumeInputCom>
+                                    <div className="title">شرکت</div>
+                                    <InputCom value={workData[index]?.company} onChange={e => setWorkData(prevData => {
                                         const updatedData = [...prevData];
-                                        updatedData[index].end_date = e;
+                                        updatedData[index].company = e?.target?.value;
                                         return updatedData;
-                                    })}
-                                />
-                            </ResumeInputCom>
-                            <ResumeInputCom>
-                                <div className="title">سال شروع</div>
-                                <Select
-                                    suffixIcon={<img src={arrowDownIcon?.src}/>}
-                                    style={{
-                                        width: '100%',
-                                        height: '40px',
-                                        textAlign: 'right',
-                                        padding: '0',
-                                        boxShadow: 'none',
-                                        direction: 'rtl'
-                                    }}
-                                    placeholder={'انتخاب کنید'}
-                                    options={year}
-                                    value={workData[index]?.start_date}
-                                    onChange={e => setWorkData(prevData => {
+                                    })} direction="rtl" placeholder={`مثال: دانشگاه قم`}/>
+                                </ResumeInputCom>
+                                <ResumeInputCom>
+                                    <div className="title">عنوان</div>
+                                    <InputCom value={workData[index]?.position} onChange={e => setWorkData(prevData => {
                                         const updatedData = [...prevData];
-                                        updatedData[index].start_date = e;
+                                        updatedData[index].position = e?.target?.value;
                                         return updatedData;
-                                    })}
-                                />
-                            </ResumeInputCom>
-                            <ResumeInputCom>
-                                <div className="title">شرکت</div>
-                                <InputCom value={workData[index]?.company} onChange={e => setWorkData(prevData => {
-                                    const updatedData = [...prevData];
-                                    updatedData[index].company = e?.target?.value;
-                                    return updatedData;
-                                })} direction="rtl" placeholder={`مثال: دانشگاه قم`}/>
-                            </ResumeInputCom>
-                            <ResumeInputCom>
-                                <div className="title">عنوان</div>
-                                <InputCom value={workData[index]?.position} onChange={e => setWorkData(prevData => {
-                                    const updatedData = [...prevData];
-                                    updatedData[index].position = e?.target?.value;
-                                    return updatedData;
-                                })} direction="rtl" placeholder={`مثال: ریاضی‌محض`}/>
-                            </ResumeInputCom>
+                                    })} direction="rtl" placeholder={`مثال: ریاضی‌محض`}/>
+                                </ResumeInputCom>
                         </FromResumeItem>
                     ))}
                 </FromStepScroll>

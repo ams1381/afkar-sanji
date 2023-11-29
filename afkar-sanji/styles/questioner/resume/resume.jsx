@@ -1,5 +1,5 @@
 // ant design
-import {Input, Button,Steps,Select} from "antd";
+import {Input, Button, Steps, Select} from "antd";
 // style
 import {styled} from "styled-components";
 
@@ -91,7 +91,7 @@ export const ContainerResumeIndex = styled.div`
       padding: 0 15px;
       align-items: center;
       gap: 5px;
-   
+
     }
   }
 
@@ -183,11 +183,11 @@ export const Header = styled.div`
   align-items: center;
   gap: 10px;
   margin-top: 80px;
-  
+
   @media screen and (max-width: 898px) {
     display: none;
   }
-  
+
 
   > .title {
     color: var(--Neutral-Gray9);
@@ -213,14 +213,14 @@ export const ResumeBox = styled.div`
   height: 182px;
   padding: ${p => p.padding ? '24px' : '0'};
   border-radius: 6px;
-  
+
   @media screen and (max-width: 898px) {
     width: 50%;
   }
   @media screen and (max-width: 686px) {
     width: 100%;
   }
-  
+
   & .ant-upload.ant-upload-select {
     width: 100%;
   }
@@ -313,6 +313,7 @@ export const InputCom = styled(Input)`
   border: 1px solid var(--login-input-default-border);
   background: #FFF;
   direction: ${p => p.direction};
+
 `
 
 export const BtnCom = styled(Button)`
@@ -321,13 +322,13 @@ export const BtnCom = styled(Button)`
   border-right: 1px solid var(--neutral-5, #D9D9D9);
   border-bottom: 1px solid var(--neutral-5, #D9D9D9);
   background: var(--neutral-2, #FAFAFA);
-  height:40px;
-  width:45px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  line-height:42px;
-  transform:rotate(180deg);
+  height: 40px;
+  width: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 42px;
+  transform: rotate(180deg);
 `
 
 export const CreateResume = styled.div`
@@ -375,28 +376,28 @@ export const Uploader = styled.div`
   height: 100%;
 `
 
-export const UploaderHeader =  styled.div`
+export const UploaderHeader = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
   flex-shrink: 0;
-  
+
   > .title {
     color: var(--Neutral-Gray9);
     font-size: 16px;
     font-style: normal;
     font-weight: 500;
-    line-height: 30px; 
+    line-height: 30px;
   }
-  
+
   > .fileSize {
     color: var(--Neutral-Gray9);
     font-family: "IRANSans";
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: 30px; 
+    line-height: 30px;
   }
 `
 
@@ -414,15 +415,15 @@ export const ButtonUploader = styled(Button)`
 
   /* drop-shadow/button-secondary */
   box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.02);
-  
- > .text {
-  color: var(--Neutral-Gray9);
-  text-align: right;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 24px;
-}
+
+  > .text {
+    color: var(--Neutral-Gray9);
+    text-align: right;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+  }
 `
 
 
@@ -480,6 +481,19 @@ export const Row = styled.div`
   display: flex;
   align-items: center;
   @media screen and (max-width: 1114px) {
+    grid-template-columns: repeat(2, 1fr);
+    display: grid;
+    margin: 10px 0;
+  }
+  gap: 24px;
+  width: 100%;
+  direction: ${p => p.direction};
+`
+
+export const RowAchiements = styled.div`
+  display: flex;
+  align-items: center;
+  @media screen and (max-width: 1114px) {
     flex-wrap: wrap;
   }
   gap: 24px;
@@ -487,11 +501,15 @@ export const Row = styled.div`
   direction: ${p => p.direction};
 `
 
+
 export const StepForm = styled(Steps)`
   position: fixed;
   max-width: fit-content;
   top: 20px;
   right: 20px;
+
+ 
+
   @media screen and (max-width: 1114px) {
     display: none !important;
   }
@@ -539,10 +557,15 @@ export const FromStep = styled.form`
 export const FromStepScroll = styled.div`
   width: 100%;
   max-height: 300px;
-
   overflow: auto;
-  &::-webkit-scrollbar{
+
+  &::-webkit-scrollbar {
     display: none;
+  }
+
+  &::-webkit-scrollbar {
+    -moz-scrollbar-width: none;
+    -moz-overflow-style: none;
   }
 `
 
@@ -583,6 +606,7 @@ export const RowCom = styled.div`
   gap: 12px;
   margin: 10px 0;
   width: 100%;
+
   > .close {
     display: flex;
     padding: 15px;
@@ -594,9 +618,8 @@ export const RowCom = styled.div`
     box-shadow: 2px 2px 0px 0px rgba(0, 0, 0, 0.06);
     cursor: pointer;
   }
-  
-  > .css-dev-only-do-not-override-pr0fja
-  {
+
+  > .css-dev-only-do-not-override-pr0fja {
     display: flex !important;
     padding: 20px !important;
     border-radius: 100% !important;
@@ -619,11 +642,11 @@ export const BtnComponent = styled(Button)`
 
 
 export const ButtonContainer = styled.div
-`
-  display: flex;
-  align-items: center;
-  justify-content: ${p => p.justify};
-`
+    `
+      display: flex;
+      align-items: center;
+      justify-content: ${p => p.justify};
+    `
 
 export const AddBtn = styled(Button)`
   display: flex;
@@ -633,21 +656,21 @@ export const AddBtn = styled(Button)`
   align-items: center;
   gap: 10px;
   border-radius: 2px;
-  border: 1px solid  #D9D9D9;
-  background:  #FFF;
+  border: 1px solid #D9D9D9;
+  background: #FFF;
   box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.02);
   margin-top: 24px;
   margin-bottom: 9px;
-  
+
   > .text {
-    color: ${p => p.color} ;
+    color: ${p => p.color};
     text-align: right;
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: 24px; 
+    line-height: 24px;
   }
-  
+
 `
 
 export const ResumeInputCom = styled.div`
@@ -681,11 +704,27 @@ export const ResumeActiveBox = styled.div`
   backdrop-filter: blur(4px);
   position: absolute;
   z-index: 2;
-  
+
   & .text {
     color: var(--primary-color);
     font-size: 16px;
     font-weight: 700;
     line-height: 24px;
+  }
+`
+
+
+// responsive
+export const BtnShowStateHidden = styled.div`
+  display: block;
+  @media screen and (max-width: 470px) {
+    display: none;
+  }
+`
+
+export const BtnShowStateActive = styled.div`
+  display: none;
+  @media screen and (max-width: 470px) {
+    display: block;
   }
 `

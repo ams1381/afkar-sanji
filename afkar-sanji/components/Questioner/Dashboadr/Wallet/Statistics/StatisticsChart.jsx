@@ -75,7 +75,8 @@ export default function ({data, setFilterParams}) {
                                 <div>درآمد</div>
                             </div>
                         </Income>
-                        <Cost disabled={!data?.plot?.answering && !data?.plot?.interviewing} onClick={costHandler} filter={costActive ? 'brightness(103.5)' : ''}
+                        <Cost disabled={!data?.plot?.answering && !data?.plot?.interviewing} onClick={costHandler}
+                              filter={costActive ? 'brightness(103.5)' : ''}
                               background={costActive ? '#FF4D4F' : 'transparent'}
                               color={!costActive ? '#FF4D4F' : '#fff'}>
                             <div className="text">
@@ -96,13 +97,7 @@ export default function ({data, setFilterParams}) {
                 <ChartBox>
                     {data?.plot?.answering || data?.plot?.interviewing ? (
                         <>
-                            <Doughnut options={{
-                                elements: {
-                                    arc: {
-                                        borderColor: '#5360ED'
-                                    }
-                                }
-                            }} data={chartData}/>
+                            <Doughnut data={chartData}/>
                             <div className="text">{digitsEnToFa(data?.balance)}</div>
                         </>
                     ) : (
