@@ -14,16 +14,14 @@ import {Button, message, Select, Skeleton, Spin} from "antd";
 import React, {useEffect, useState} from "react";
 import add from "@/public/Icons/addBlue.svg";
 import StyleModules from "@/styles/auth/LoginStyles.module.css";
-import {educationalSchema, skillsSchema} from "@/utilities/validators/resumeMaker";
+import { skillsSchema} from "@/utilities/validators/resumeMaker";
 import {axiosInstance} from "@/utilities/axios";
-import {digitsEnToFa} from "@persian-tools/persian-tools";
 import arrowDownIcon from '@/public/Icons/selectDown.svg'
 import editIcon from "@/public/Icons/editEesume.svg";
 
 export default function ({
                              score, setCurrent, setTitle, me
                          }) {
-
     const [skillsData, setSkillsData] = useState([]);
     const [isLoading, setIsLoading] = useState(false)
 
@@ -125,7 +123,6 @@ export default function ({
         }
     }
 
-
     const [width, setWidth] = useState(0)
 
     useEffect(() => {
@@ -134,9 +131,7 @@ export default function ({
         }
 
         window.addEventListener('resize', handleResize);
-
         handleResize();
-
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 

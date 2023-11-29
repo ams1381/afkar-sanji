@@ -125,17 +125,17 @@ export const CollaborationItem = styled.div`
   cursor: pointer;
   position: relative;
 
-      // &::after {
-      //   display: ${p => p.isLoading};
-      //   position: absolute;
-      //   width: 100%;
-      //   height: 100%;
-      //   background: #eee;
-      //   content: '';
-      //   left: 50%;
-      //   top: 50%;
-      //   transform: translate(-50%, -50%);
-      // }
+  // &::after {
+    //   display: ${p => p.isLoading};
+  //   position: absolute;
+  //   width: 100%;
+  //   height: 100%;
+  //   background: #eee;
+  //   content: '';
+  //   left: 50%;
+  //   top: 50%;
+  //   transform: translate(-50%, -50%);
+  // }
 
   &::-webkit-scrollbar {
     display: none;
@@ -548,5 +548,56 @@ export const AddBtnContainer = styled.div`
       width: 130px;
       gap: 10px;
     }
+  }
+`
+
+export const CollaborationRecommendSkeleton = styled.div`
+  width: 100%;
+  display: flex;
+  padding: 10px;
+  justify-content: space-between;
+  flex-direction: column;
+  border-radius: var(--radius-XS, 2px);
+  background: #eee;
+  cursor: pointer;
+  direction: rtl;
+
+  & .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  & .colum {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`
+
+export const CollaborationInterViewSkeleton = styled.div`
+  width: 100%;
+  display: flex;
+  padding: 10px;
+  justify-content: space-between;
+  flex-direction: column;
+  border-radius: var(--radius-XS, 2px);
+  background: #eee;
+  direction: rtl;
+
+  & .colum {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &::-webkit-scrollbar {
+    display: none;
   }
 `
