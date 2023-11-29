@@ -304,6 +304,7 @@ export default function ({cookies}) {
                                                 scrollableTarget="scrollableDiv">
                                                 {(!error && recommendedData?.data?.data?.results) ? recommendedData?.data?.data?.results.map((interview, index) => {
                                                     return <CollaborationItem
+                                                        refreshData={recommendedData}
                                                         isInterview={false} data={interview}
                                                         key={interview?.id}/>
                                                 }) : error && error.response?.status === 500 && <div style={{

@@ -66,7 +66,11 @@ export const MovableModal = ({ ModalAnswerSet , ResultQuery , setOpenResultModal
             await axiosInstance.post(`/interview-api/interviews/${QuestionnaireUUID}/answer-sets/${ModalAnswerSet.answerSet.id}/add-answer/`,
                 CopiedQuestionAnswerSet)
 
+            messageApi.success({
+                content : 'با موفقیت ثبت شد'
+            })
             ResultQuery.refetch()
+
         }
         catch(err)
         {
@@ -82,6 +86,13 @@ export const MovableModal = ({ ModalAnswerSet , ResultQuery , setOpenResultModal
             }
             if(err.response?.data)
             {
+               if(!Array.isArray(err.response?.data)) {
+                   messageApi.error({
+                       content : Object.values(err.response?.data)[0]
+                   })
+                   return
+               }
+
                 let ErrorsArray = err.response?.data.map(item => {
                     if(Object.keys(item).length)
                         return Object.keys(item)[0]

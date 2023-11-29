@@ -79,7 +79,8 @@ export default function ({data, isInterview, refreshData}) {
     const [chatModal, setChatModal] = useState(false)
     const [modalLoading, setModalLoading] = useState(false)
     const confiremHandler = () => {
-        setModalLoading(true)
+        setModalLoading(true);
+
         axiosInstance.post(`/interview-api/interviews/${data?.uuid}/add-interviewer/`).then(res => {
             setModalLoading(false)
             message.success("با موفقیت ارسال شد")
