@@ -24,7 +24,7 @@ export const SortSubComponent = ({ QuestionData , answerSet , ErrorQuestions , s
                 text : QuestionData.options.find(OptionItem => OptionItem.id == item.id)?.text
             })))
         }
-    },[QuestionData])
+    },[QuestionData , answerSet])
     const reorder = (list, startIndex, endIndex) => {
         const result = Array.from(list);
         const [removed] = result.splice(startIndex, 1);

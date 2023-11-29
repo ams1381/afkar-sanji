@@ -232,7 +232,7 @@ export const QuestionCreator = async (questionsData , QuestionsArray , setQuesti
             });
             sorted_questions_array.forEach((item,index) => !item  ? sorted_questions_array.splice(index,1) : '')
 
-            await axiosInstance.post(`/${Auth.reqRole}/${UUID}/change-questions-placements/`,{
+            await axiosInstance.post(`/question-api/questionnaires/${UUID}/change-questions-placements/`,{
                 'placements' : sorted_questions_array
             })
             QuestionDispatcher(QuestionSorter())

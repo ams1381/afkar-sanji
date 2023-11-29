@@ -48,23 +48,25 @@ export const PageContent = ({ questionnaire }) => {
                 item.answer = null
         })
 
-        FileQuestionQuestions = FileQuestionQuestions.filter(item => item != undefined);
+        FileQuestionQuestions = FileQuestionQuestions.filter(item => item !== undefined && item !== null);
         CopiedQuestionAnswerSet = CopiedQuestionAnswerSet.filter(item => item.file == null);
 
         try
         {
             setAnswerConfirmLoading(true)
             let CreatedAnswerSet;
-            // if(!answerSet) {
+
                 let { data } = await axiosInstance.post(`/interview-api/interviews/${questionnaire.uuid}/answer-sets/`);
                 CreatedAnswerSet = data;
-            // }
 
-            if(FileQuestionQuestions && FileQuestionQuestions.length)
+            if(FileQuestionQuestions && FileQuestionQuestions.length) {
+                axiosInstance.defaults.headers['Content-Type'] = 'multipart/form-data';
                 await axiosInstance.post(`/interview-api/interviews/${questionnaire.uuid}/answer-sets/${CreatedAnswerSet.id}/add-answer/`,
                     AnswerSetFormDataConverter(FileQuestionQuestions),{
-                    'Content-Type' : 'multipart/form-data'
-                })
+                        'Content-Type' : 'multipart/form-data'
+                    })
+            }
+            axiosInstance.defaults.headers['Content-Type'] = 'application/json';
             await axiosInstance.post(`/interview-api/interviews/${questionnaire.uuid}/answer-sets/${CreatedAnswerSet.id}/add-answer/`,
                 CopiedQuestionAnswerSet)
             dispatcher(setInitialAnswerSet({

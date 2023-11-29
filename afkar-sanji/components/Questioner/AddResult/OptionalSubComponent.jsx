@@ -29,7 +29,7 @@ export const OptionalSubComponent = ({ QuestionData , answerSet , setErrorQuesti
     },[QuestionData])
     useEffect(() => {
             // console.log(answerSet?.find(item => item.question === QuestionData.id))
-        if(!answerSet?.find(item => item.question === QuestionData.id)?.answer?.selected_options) {
+        if(!answerSet?.find(item => item.question === QuestionData.id)?.answer?.selected_options && !loadableAnswer) {
             setSelectedValues([])
             setShowInput(false)
             setOtherInputValue
@@ -54,7 +54,7 @@ export const OptionalSubComponent = ({ QuestionData , answerSet , setErrorQuesti
                         setOtherInputValue(answerSet.find(item => item.question == QuestionData.id).answer?.other_text)
                     }
             }
-    },[QuestionData])
+    },[QuestionData , answerSet])
 
     useEffect(() => {
 
