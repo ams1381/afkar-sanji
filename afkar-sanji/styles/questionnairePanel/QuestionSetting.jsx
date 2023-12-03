@@ -1,4 +1,5 @@
 import { styled } from "styled-components"
+import TextArea from "antd/lib/input/TextArea";
 
 export const QuestionFileUploadContainer = styled.div`
     display: flex;
@@ -79,7 +80,7 @@ export const QuestionDescriptionContainer = styled.div`
         marin-top : 0.8rem;
     }
 `
-export const DescriptionTextField = styled.input`
+export const DescriptionTextField = styled(TextArea)`
     width: 100%;
     height: 100%;
     outline: none;

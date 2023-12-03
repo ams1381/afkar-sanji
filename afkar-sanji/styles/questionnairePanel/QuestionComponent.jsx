@@ -438,6 +438,12 @@ export const RangeLabelText = styled.p`
         right : ${p => p.rightL ? '10px' : p.midL ? '50%' : 'auto'};
         transform: translate(-50% , -4px);
     }
+    @media screen and (max-width: 480px) {
+      &::before {
+        left: ${p => p.leftL ? '30px' : p.midL ? '50%' : 'auto'};
+        right : ${p => p.rightL ? '30px' : p.midL ? '50%' : 'auto'};
+      }
+    }
 `
 export const RangeQuestionLabelContainer = styled.div`
     // width: 90%;

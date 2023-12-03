@@ -1,6 +1,7 @@
 import { styled } from "styled-components";
+import {Input} from "antd";
 
-export const AddQuestionnaireModalInput = styled.input`
+export const AddQuestionnaireModalInput = styled(Input)`
     width: 100%;
     padding: 0.5rem;
     border-radius: 2px;

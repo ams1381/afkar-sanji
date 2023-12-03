@@ -143,10 +143,10 @@ const AnswerSetSlice =  createSlice({
     }
 });
 const AnswerStore = configureStore({
-    reducer : AnswerSetSlice , 
+    reducer : AnswerSetSlice ,
     middleware: getDefaultMiddleware =>
         getDefaultMiddleware({
-        serializableCheck: false,
+            serializableCheck: false,
         }),
 })
 export const { setInitialAnswerSet , FileRemoveHandler , setAnswerSetArray ,

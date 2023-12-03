@@ -3,7 +3,7 @@ import { AddQuestionnaireModalInput, ModalButtonsContainer, ModalContentContaine
 import { themeContext } from '@/utilities/ThemeContext'
 import { axiosInstance } from '@/utilities/axios'
 import {Button, ConfigProvider, message, Modal} from 'antd'
-import React, {useContext, useState} from 'react'
+import React, {useContext, useEffect, useRef, useState} from 'react'
 import {AuthContext} from "@/utilities/AuthContext";
 import {useLocalStorage} from "@/utilities/useLocalStorage";
 
@@ -15,6 +15,7 @@ const AddQuestionnairePopUp = ({ AddQuestionnaireModal , FolderReload , folders 
   const [ OperatingState , SetOperatingState ] = useState(false);
   const [ messageApi , messageContext ] = message.useMessage();
   const Auth = useContext(AuthContext);
+  const InputRef = useRef()
     const AddQuestionnaireHandler = async () => {
         SetOperatingState(true);
         if(!NewQuestionnaireName)
@@ -51,6 +52,13 @@ const AddQuestionnairePopUp = ({ AddQuestionnaireModal , FolderReload , folders 
     const CancelPopup = () => {
         setQuestionnaireModalState(false)
     }
+    useEffect(() => {
+        setTimeout(() => {
+            if(InputRef.current)
+                InputRef.current.focus();
+        },300)
+
+    }, [InputRef , AddQuestionnaireModal]);
   return (
     <ConfigProvider theme={themeContext}>
         {messageContext}
@@ -73,7 +81,8 @@ const AddQuestionnairePopUp = ({ AddQuestionnaireModal , FolderReload , folders 
                 </ModalButtonsContainer>}>
             <ModalContentContainer>
                 { getItem('roleReq') === 'interview-api/interviews' ? <p>عنوان پروژه را وارد کنید</p> : <p>عنوان نظرسنجی را وارد کنید</p>}
-                <AddQuestionnaireModalInput placeholder={getItem('roleReq') === 'interview-api/interviews' ? 'پروژه ۱' : 'نظرسنجی ۱'}
+                <AddQuestionnaireModalInput ref={InputRef} autoFocus={true}
+                    placeholder={getItem('roleReq') === 'interview-api/interviews' ? 'پروژه ۱' : 'نظرسنجی ۱'}
             onKeyDown={e => e.key == 'Enter' ? AddQuestionnaireHandler() : ''}
                 onChange={(e) => {
                     setNewQuestionnaireName(e.target.value)

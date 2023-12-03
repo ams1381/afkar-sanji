@@ -182,7 +182,18 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
             });
            }) 
           }
-          await axios.post(`/${Auth.reqRole}/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,AnswerItem.filter(item => !item.file));
+          let AnswersItemsArray;
+          AnswersItemsArray = AnswerItem.map(answerItem => {
+            if(Object.keys(answerItem.answer).length === 0)
+              return {
+              ...answerItem ,
+                answer : null
+              }
+            else
+              return answerItem
+
+          })
+          await axios.post(`/${Auth.reqRole}/${router.query.QuestionnaireID}/answer-sets/${answerSetID}/add-answer/`,AnswersItemsArray.filter(item => !item.file));
           // }
         }  
         setNextQuestionLoading(false)
@@ -190,6 +201,7 @@ const ViewQuestions = ({ answerSetID , Questionnaire , cookies }) => {
       }
       catch(err)
       {
+        console.log(err)
         setNextQuestionLoading(false)
 
         // console.log(Object.values(err?.response?.data[0]))
