@@ -325,8 +325,8 @@ export const ResultTableContainer = styled.div`
     }
     .ant-spin-container
     {
-        max-height: 540px;
-        overflow: scroll;
+        //max-height: 540px;
+        //overflow: scroll;
     }
     .ant-spin-container::-webkit-scrollbar 
     {

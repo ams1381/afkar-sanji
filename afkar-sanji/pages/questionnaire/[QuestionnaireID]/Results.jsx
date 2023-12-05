@@ -64,10 +64,10 @@ const ResultsPage = ({ cookies }) => {
   return (
     <>
     <style global jsx>{`
-            html,
-            body {
-              overflow: hidden;
-            }
+            //html,
+            //body {
+            //  overflow: hidden;
+            //}
     `}</style>
     <Head>
       <title>Afkar Sanji | Result Page</title>

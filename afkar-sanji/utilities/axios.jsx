@@ -1,8 +1,6 @@
 import axios from "axios";
 import { getCookie } from "react-use-cookie";
-// export const baseURL = 'http://mah-api.ariomotion.com/';
-// export const baseURL = 'https://mostafarm7.pythonanywhere.com/'
-// axios.defaults.baseURL = 'https://mostafarm7.pythonanywhere.com/';
+
 export const baseurl = 'https://mah.codintofuture.ir'
 axios.defaults.baseURL = '/api'
 getCookie('role')
@@ -10,7 +8,6 @@ getCookie('role')
 export const axiosInstance = axios.create({
     headers: {
         'Content-Type': 'application/json',
-        // 'Content-Type': 'multipart/form-data'
     }
 });
 
@@ -59,12 +56,6 @@ axiosInstance.interceptors.response.use(function (response) {
         case 403:
             window.location.pathname = '/403'
             break;
-        // case 404:
-        //     window.location.pathname = '/404'
-        //     break;
-        // case 500:
-        //     window.location.pathname = '/500'
-        //     break;
     }
     return Promise.reject(error);
 });

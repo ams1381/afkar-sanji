@@ -308,7 +308,7 @@ export const QuestionItem = ({  ActiveQuestion , childPlacement ,setActiveQuesti
                                           : () => QuestionPatcher(SetSaveButtonLoadingState , UUID , questionsData , QuestionDispatcher , SavedMessage , setQuestionChangedState,Auth)}>
                                   ذخیره
                               </Button>
-                              <Button danger onClick={QuestionOpenHandler}>
+                              <Button danger onClick={() => setActiveQuestion(null)}>
                                   <p>انصراف</p>
                               </Button>
                           </QuestionItemFooter> : ''}

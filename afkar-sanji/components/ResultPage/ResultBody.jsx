@@ -173,7 +173,9 @@ const ResultSearchHandler = async (e) => {
   useEffect(() => {
     if(tableRef.current)
       ScrollByDrag(ResultQuery?.data?.data?.results?.length ? true : false);
-  }, [document.querySelector("thead.ant-table-thead tr") , document.querySelector(".ant-table-tbody .ant-table-body")]);
+  }, [document.querySelector("thead.ant-table-thead tr") ,
+      ResultQuery,
+      document.querySelector(".ant-table-tbody .ant-table-body")]);
   const DeleteRowHandler = async () => {
     try
     {
