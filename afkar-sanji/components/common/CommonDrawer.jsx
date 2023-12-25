@@ -13,12 +13,14 @@ import { message } from 'antd';
 import Rectangle from '../../public/Images/Rectangle.png'
 import { motion} from 'framer-motion';
 import Link from "next/link";
+import MahLogo from '@/public/Images/logo-maah.png'
 import {AuthContext} from "@/utilities/AuthContext";
 import {useRouter} from "next/router";
 import {useLocalStorage} from "@/utilities/useLocalStorage";
 import {axiosInstance} from "@/utilities/axios";
 import {WalletPopup} from "@/components/Folders/walletPopup";
 import {ChatModal} from "@/components/Questioner/ChatModal/ChatModal";
+import Image from "next/image";
 export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin }) => {
     const Auth = useContext(AuthContext);
     const router = useRouter();
@@ -132,7 +134,8 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                         <p>پنل کاربری ماح</p>
                     </div>}
                     <CommonDrawerLogoImageContainer draweropen={RightDrawerOpen}>
-                        <Icon name='MahLogo' />
+                        {/*<Icon name='MahLogo' />*/}
+                        <Image width={40} height={40} src={MahLogo.src} alt={'mah'} />
                     </CommonDrawerLogoImageContainer>
                 </div>
 

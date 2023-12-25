@@ -474,7 +474,7 @@ export const CommonDrawerLogoImageContainer = styled.div`
   @media screen and (max-width: 768px) {
     width: 100%;
 
-    > i {
+    > img {
       width: 34px !important;
       height: 34px !important;
     }
