@@ -50,7 +50,7 @@ export const ChatPrompt = ({ isAdmin , receiverID , messagesItems , setMessagesI
         if(!promptValue)
             return
         try {
-            await axiosInstance.patch(`/${!isAdmin ? 'interview' :'admin'}-api/tickets/${editableMessage.id}/?interview_id=${Questionnaire.id}`,{
+            await axiosInstance.patch(`/${!isAdmin ? 'interview' :'admin'}-api/tickets/${editableMessage.id}/?interview_id=${Questionnaire ? Questionnaire.id : ''}`,{
                 text : promptValue
             })
             setEditableMessage(null)

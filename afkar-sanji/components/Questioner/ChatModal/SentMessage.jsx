@@ -14,7 +14,7 @@ export const SentMessage = ({ messageData , setMessagesItems , ChatQuery , isAdm
     const deleteMessage = async () => {
         setDeleteLoading(true)
         try {
-            await axiosInstance.delete(`/${!isAdmin ? 'interview' :'admin'}-api/tickets/${messageData.id}/?interview_id=${Questionnaire.id}`);
+            await axiosInstance.delete(`/${!isAdmin ? 'interview' :'admin'}-api/tickets/${messageData.id}/?interview_id=${Questionnaire ? Questionnaire.id : ''}`);
 
             setMessagesItems(prevState => prevState.filter(MessageItem => MessageItem.id !== messageData.id))
             // console.log()
@@ -22,7 +22,7 @@ export const SentMessage = ({ messageData , setMessagesItems , ChatQuery , isAdm
                 setMessagePopover(false)
             },200)
         } catch (err) {
-
+            console.log(err)
         } finally {
             setDeleteLoading(false);
 

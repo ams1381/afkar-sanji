@@ -175,7 +175,7 @@ export const LoginHeaderText = styled.h2`
 `
 
 export const TextProgress = styled.div`
-  font-size: 40px;
+  font-size: 20px;
   white-space: nowrap;
   -webkit-text-fill-color: #f5f5f5;
   //-webkit-text-stroke: 0.5px var(--primary-color);
@@ -189,7 +189,7 @@ export const TextProgress = styled.div`
   font-family: 'IRANSANS';
   animation-delay: 800ms;
   font-weight: 800;
-  text-shadow: 0px -1px 4px #000000ab;
+  text-shadow: 0 0 1.4px #000000;
 
   @keyframes LoginTitleAnim
   {
@@ -200,27 +200,27 @@ export const TextProgress = styled.div`
   }
   @media screen and (max-width: 480px)
   {
-      font-size: 30px;
+      font-size: 20px;
   }
 `
 export const TextInnerProgress = styled.div`
-  color: var(--primary-color);
+  color: #6C4EA2;
   position: absolute;
-  -webkit-text-fill-color: var(--primary-color);
+  -webkit-text-fill-color: #6C4EA2;
   top: 0;
   right: 0;
   text-align: center;
   width: ${p => p.filltext ? '100%' : p.halffill ? '50%' : '0'};
   white-space: nowrap;
-  font-size: 40px;
+  font-size: 20px;
   overflow: hidden;
   transition: 0.3s;
-  text-shadow: 0px -1px 4px white;
+  text-shadow: 0px 0px 1px white;
   direction: rtl;
   
   @media screen and (max-width: 480px)
   {
-    font-size: 30px;
+    font-size: 20px;
   }
 `
 export const LoginInput = styled.input`
@@ -254,7 +254,7 @@ export const LoginBox = styled.div`
     left: 50%;
     top: 50%;
     width: 32%;
-    height: 60%;
+    //height: 60%;
     transform: translate(-50%, -50%);
     display: flex;
     justify-content: center;
@@ -330,4 +330,9 @@ export const LoginErrorMessage = styled.span`
     font-family: 'IRANSANS';
     font-size: 14px;
     transition : 0.3s;
+`
+export const MonadaLogoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `

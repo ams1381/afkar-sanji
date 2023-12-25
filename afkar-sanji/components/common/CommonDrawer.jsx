@@ -124,7 +124,8 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
   return (
     <CommonDrawerContainer open={RightDrawerOpen ? 'active' : null} >
         <ChatModal isAdmin={false}
-                  isActive={chatModalActive} setIsActive={setChatModalActive}/>
+                  isActive={chatModalActive}
+                   setIsActive={setChatModalActive}/>
         <WalletPopup distPage={distPage} walletPopupOpen={walletPopupOpen} setWalletPopupOpen={setWalletPopupOpen} />
         <div className={'drawer-inner-container'}>
             {MessageContext}
@@ -135,10 +136,9 @@ export const CommonDrawer = ({ setRightDrawerOpen , RightDrawerOpen , isAdmin })
                     </div>}
                     <CommonDrawerLogoImageContainer draweropen={RightDrawerOpen}>
                         {/*<Icon name='MahLogo' />*/}
-                        <Image width={40} height={40} src={MahLogo.src} alt={'mah'} />
+                        {/*<Image width={40} height={40} src={MahLogo.src} alt={'mah'} />*/}
                     </CommonDrawerLogoImageContainer>
                 </div>
-
             </div>
             <CommonDrawerTopPartContainer>
                 { RightDrawerOpen &&
