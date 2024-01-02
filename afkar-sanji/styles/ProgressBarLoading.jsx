@@ -5,9 +5,9 @@ import { useRouter } from "next/router";
 TopBarProgress.config({
     barColors: {
       "0": "#5360ED",
-      "1.0": "#fff"
+      "1.0": "#e0e0ff"
     },
-    shadowBlur: 5
+    shadowBlur: 2
   });
 
 

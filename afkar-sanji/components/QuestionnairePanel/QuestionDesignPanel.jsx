@@ -33,7 +33,7 @@ export const ReorderPoster = async (UUID,reOrderedArray,Auth) => {
   // ${Auth.reqRole}
   try 
      {
-      await axiosInstance.post(`/question-api/interviews/${UUID}/change-questions-placements/`,{
+      await axiosInstance.post(`/question-api/questionnaires/${UUID}/change-questions-placements/`,{
         'placements' : reOrderedArray
       })
      }

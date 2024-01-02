@@ -406,28 +406,31 @@ export const TableDataGenerator = (ResultData,QuestionnaireQuery,regex,RoleReq) 
                 {
                     if(item.answer.options)
                     {
+                        rows[rows.length - 1][item.question_id] = {}
                         item.answer.options.forEach(optionItem => {
                             optionItem?.text == '<span>سایر</span>' ?
-                                rows[rows.length - 1][optionItem.text] = item.answer.other_text
+                                rows[rows.length - 1][item.question_id][optionItem.text] = item.answer.other_text
                                 :
-                                rows[rows.length - 1][optionItem.text] = optionItem.text != 'null' ? optionItem.text?.replace(regex,"") : ' ';
+                                rows[rows.length - 1][item.question_id][optionItem.text] = optionItem.text != 'null' ? '✔️' : ' ';
+                            // optionItem.text?.replace(regex,"")
                         })
                     }
                     else if (item.question_type == 'drop_down')
                     {
+                        rows[rows.length - 1][item.question_id] = {};
                         item.answer.forEach(optionItem => {
-                            rows[rows.length - 1][optionItem.text] = optionItem.text != 'null' ? optionItem.text : ' ';
+                            rows[rows.length - 1][item.question_id][optionItem.text] = optionItem.text != 'null' ? '☑️' : ' ';
+                            // optionItem.text
                         })
                     }
                     else if(item.question_type == 'sort')
+                    {
+                        rows[rows.length - 1][item.question_id] = {};
                         item.answer.forEach(optionItem => {
-                            rows[rows.length - 1][optionItem.text] = digitsEnToFa(item.answer?.findIndex(item => item.text == optionItem.text) + 1);
+                            rows[rows.length - 1][item.question_id][optionItem.text] = digitsEnToFa(item.answer?.findIndex(item => item.id === optionItem.id) + 1);
                         })
+                    }
                 }
-
-                // rows[rows.length - 1]['key'] = item.id;
-                // rows[rows.length - 1]['ردیف'] = rows.length ;
-
             })
             rows[rows.length - 1]['id'] = AnswerSet.id;
             rows[rows.length - 1]['key'] = AnswerSet.id;

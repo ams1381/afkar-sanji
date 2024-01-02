@@ -136,7 +136,7 @@ export const TableColumnGenerator = (QuestionsArray,resultMessage,regex,DateFilt
                 // key : option.text?.id,
                 width : 53,
                 ellipsis: true,
-                dataIndex : option.text
+                dataIndex : [ item?.question?.id , option.text]
             }))
     }))
 
