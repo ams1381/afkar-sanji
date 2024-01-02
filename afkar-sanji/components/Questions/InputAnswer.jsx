@@ -24,7 +24,7 @@ const InputAnswer = ({ InputPlaceholder , QuestionInfo }) => {
     if(QuestionInfo.pattern.includes('english_letters'))
     {
       const inputValue = event.target.value;
-      const cleanedValue = inputValue.replace(/[^a-zA-Z]/g, '');
+      const cleanedValue = inputValue.replace(/[^a-zA-Z\s]/g, '');
 
       setTextAnswer(cleanedValue)      
     }
@@ -37,7 +37,14 @@ const InputAnswer = ({ InputPlaceholder , QuestionInfo }) => {
     else if(QuestionInfo.pattern.includes('mobile_number') || QuestionInfo.pattern.includes('phone_number'))
     {
       const inputValue = event.target.value;
+      const cleanedValue = inputValue.replace(/[^0-9]/g, '');
+      setTextAnswer(cleanedValue)
 
+    }
+    else if(QuestionInfo.pattern.includes('persian_letters')) {
+      const inputValue = event.target.value;
+      const cleanedValue = inputValue.replace(/[^\u0600-\u06FF\u0660-\u0669]/g, '');
+      setTextAnswer(cleanedValue)
     }
     else 
     {
@@ -56,7 +63,8 @@ const InputAnswer = ({ InputPlaceholder , QuestionInfo }) => {
   return (
     <QuestionWithAnswerContainer>
         <TextAnswerInputBox value={textAnswer}
-        style={{ textAlign : QuestionInfo.pattern == 'english_letters' ? 'left' : 'right' , direction : 'rtl' }}
+        style={{ textAlign : QuestionInfo.pattern == 'english_letters' ? 'left' : 'right' ,
+          direction : QuestionInfo.pattern !== 'english_letters' ? 'rtl' : 'ltr' }}
         type={ QuestionInfo ? (QuestionInfo.pattern.includes('phone_number') || 
         QuestionInfo.pattern.includes('phone_number') || 
           QuestionInfo.pattern.includes('number_character')) ? 'number' : 'text' : 'text' } 
